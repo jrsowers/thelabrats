@@ -18,18 +18,18 @@ const barlowCondensed = Barlow_Condensed({
   weight: ["600", "700", "800"],
 });
 
-const TITLE = 'The Lab Rats'
+const TITLE = 'The Lab Rats Fantasy Football League'
 const DESCRIPTION =
   'A just-for-fun fantasy football league brought to you by Creator Science.'
 
 export const metadata: Metadata = {
-  // Split rather than one long string: the browser tab shows only the title,
-  // and a full sentence there truncates. Search results and link previews
-  // render them together as "The Lab Rats – A just-for-fun fantasy football
-  // league brought to you by Creator Science."
+  // Title and description stay separate: a browser tab renders only the title,
+  // while search results and link previews render both together.
   title: {
     default: TITLE,
-    // Subpages read "Playoff Picture · The Lab Rats".
+    // Page name leads, so it survives the truncation a long suffix invites —
+    // a crowded tab bar shows "League Standings · The Lab R…", which still
+    // says which page you are on.
     template: `%s · ${TITLE}`,
   },
   description: DESCRIPTION,
