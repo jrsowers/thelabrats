@@ -1,0 +1,37 @@
+{
+  "draftDetail": {
+    "drafted": false,
+    "inProgress": false
+  },
+  "gameId": 1,
+  "id": 793230160,
+  "scoringPeriodId": 0,
+  "seasonId": 2026,
+  "segmentId": 0,
+  "status": {
+    "activatedDate": 1786027729943,
+    "createdAsLeagueType": 3,
+    "currentLeagueType": 0,
+    "currentMatchupPeriod": 1,
+    "finalScoringPeriod": 17,
+    "firstScoringPeriod": 1,
+    "isActive": true,
+    "isExpired": false,
+    "isFull": true,
+    "isPlayoffMatchupEdited": false,
+    "isToBeDeleted": false,
+    "isViewable": false,
+    "isWaiverOrderEdited": false,
+    "lastUpdateInfo": {
+      "clientAddress": null,
+      "platform": "lm-processor",
+      "source": "NightlyLeagueUpdateTaskProcessor"
+    },
+    "latestScoringPeriod": 0,
+    "previousSeasons": [],
+    "teamsJoined": 12,
+    "transactionScoringPeriod": 0,
+    "waiverLastExecutionDate": 1787900611896,
+    "waiverProcessStatus": {}
+  }
+}

@@ -1,0 +1,268 @@
+{
+  "draftDetail": {
+    "drafted": false,
+    "inProgress": false
+  },
+  "gameId": 1,
+  "id": 793230160,
+  "schedule": [
+    {
+      "matchupPeriodId": 1
+    },
+    {
+      "matchupPeriodId": 1
+    },
+    {
+      "matchupPeriodId": 1
+    },
+    {
+      "matchupPeriodId": 1
+    },
+    {
+      "matchupPeriodId": 1
+    },
+    {
+      "matchupPeriodId": 1
+    },
+    {
+      "matchupPeriodId": 2
+    },
+    {
+      "matchupPeriodId": 2
+    },
+    {
+      "matchupPeriodId": 2
+    },
+    {
+      "matchupPeriodId": 2
+    },
+    {
+      "matchupPeriodId": 2
+    },
+    {
+      "matchupPeriodId": 2
+    },
+    {
+      "matchupPeriodId": 3
+    },
+    {
+      "matchupPeriodId": 3
+    },
+    {
+      "matchupPeriodId": 3
+    },
+    {
+      "matchupPeriodId": 3
+    },
+    {
+      "matchupPeriodId": 3
+    },
+    {
+      "matchupPeriodId": 3
+    },
+    {
+      "matchupPeriodId": 4
+    },
+    {
+      "matchupPeriodId": 4
+    },
+    {
+      "matchupPeriodId": 4
+    },
+    {
+      "matchupPeriodId": 4
+    },
+    {
+      "matchupPeriodId": 4
+    },
+    {
+      "matchupPeriodId": 4
+    },
+    {
+      "matchupPeriodId": 5
+    },
+    {
+      "matchupPeriodId": 5
+    },
+    {
+      "matchupPeriodId": 5
+    },
+    {
+      "matchupPeriodId": 5
+    },
+    {
+      "matchupPeriodId": 5
+    },
+    {
+      "matchupPeriodId": 5
+    },
+    {
+      "matchupPeriodId": 6
+    },
+    {
+      "matchupPeriodId": 6
+    },
+    {
+      "matchupPeriodId": 6
+    },
+    {
+      "matchupPeriodId": 6
+    },
+    {
+      "matchupPeriodId": 6
+    },
+    {
+      "matchupPeriodId": 6
+    },
+    {
+      "matchupPeriodId": 7
+    },
+    {
+      "matchupPeriodId": 7
+    },
+    {
+      "matchupPeriodId": 7
+    },
+    {
+      "matchupPeriodId": 7
+    },
+    {
+      "matchupPeriodId": 7
+    },
+    {
+      "matchupPeriodId": 7
+    },
+    {
+      "matchupPeriodId": 8
+    },
+    {
+      "matchupPeriodId": 8
+    },
+    {
+      "matchupPeriodId": 8
+    },
+    {
+      "matchupPeriodId": 8
+    },
+    {
+      "matchupPeriodId": 8
+    },
+    {
+      "matchupPeriodId": 8
+    },
+    {
+      "matchupPeriodId": 9
+    },
+    {
+      "matchupPeriodId": 9
+    },
+    {
+      "matchupPeriodId": 9
+    },
+    {
+      "matchupPeriodId": 9
+    },
+    {
+      "matchupPeriodId": 9
+    },
+    {
+      "matchupPeriodId": 9
+    },
+    {
+      "matchupPeriodId": 10
+    },
+    {
+      "matchupPeriodId": 10
+    },
+    {
+      "matchupPeriodId": 10
+    },
+    {
+      "matchupPeriodId": 10
+    },
+    {
+      "matchupPeriodId": 10
+    },
+    {
+      "matchupPeriodId": 10
+    },
+    {
+      "matchupPeriodId": 11
+    },
+    {
+      "matchupPeriodId": 11
+    },
+    {
+      "matchupPeriodId": 11
+    },
+    {
+      "matchupPeriodId": 11
+    },
+    {
+      "matchupPeriodId": 11
+    },
+    {
+      "matchupPeriodId": 11
+    },
+    {
+      "matchupPeriodId": 12
+    },
+    {
+      "matchupPeriodId": 12
+    },
+    {
+      "matchupPeriodId": 12
+    },
+    {
+      "matchupPeriodId": 12
+    },
+    {
+      "matchupPeriodId": 12
+    },
+    {
+      "matchupPeriodId": 12
+    },
+    {
+      "matchupPeriodId": 13
+    },
+    {
+      "matchupPeriodId": 13
+    },
+    {
+      "matchupPeriodId": 13
+    },
+    {
+      "matchupPeriodId": 13
+    },
+    {
+      "matchupPeriodId": 13
+    },
+    {
+      "matchupPeriodId": 13
+    }
+  ],
+  "scoringPeriodId": 0,
+  "seasonId": 2026,
+  "segmentId": 0,
+  "status": {
+    "activatedDate": 1786027729943,
+    "createdAsLeagueType": 3,
+    "currentLeagueType": 0,
+    "currentMatchupPeriod": 1,
+    "finalScoringPeriod": 17,
+    "firstScoringPeriod": 1,
+    "isActive": true,
+    "isExpired": false,
+    "isFull": true,
+    "isPlayoffMatchupEdited": false,
+    "isToBeDeleted": false,
+    "isViewable": false,
+    "isWaiverOrderEdited": false,
+    "latestScoringPeriod": 0,
+    "previousSeasons": [],
+    "teamsJoined": 12,
+    "transactionScoringPeriod": 0,
+    "waiverLastExecutionDate": 1787900611896,
+    "waiverProcessStatus": {}
+  }
+}

@@ -1,0 +1,1674 @@
+{
+  "draftDetail": {
+    "drafted": false,
+    "inProgress": false
+  },
+  "id": 793230160,
+  "schedule": [
+    {
+      "away": {
+        "rosterForCurrentScoringPeriod": {
+          "entries": []
+        },
+        "rosterForMatchupPeriod": {
+          "entries": []
+        },
+        "teamId": 7,
+        "tiebreak": 0,
+        "totalPoints": 0
+      },
+      "home": {
+        "rosterForCurrentScoringPeriod": {
+          "entries": []
+        },
+        "rosterForMatchupPeriod": {
+          "entries": []
+        },
+        "teamId": 3,
+        "tiebreak": 0,
+        "totalPoints": 0
+      },
+      "id": 1,
+      "winner": "UNDECIDED"
+    },
+    {
+      "away": {
+        "rosterForCurrentScoringPeriod": {
+          "entries": []
+        },
+        "rosterForMatchupPeriod": {
+          "entries": []
+        },
+        "teamId": 12,
+        "tiebreak": 0,
+        "totalPoints": 0
+      },
+      "home": {
+        "rosterForCurrentScoringPeriod": {
+          "entries": []
+        },
+        "rosterForMatchupPeriod": {
+          "entries": []
+        },
+        "teamId": 11,
+        "tiebreak": 0,
+        "totalPoints": 0
+      },
+      "id": 2,
+      "winner": "UNDECIDED"
+    },
+    {
+      "away": {
+        "rosterForCurrentScoringPeriod": {
+          "entries": []
+        },
+        "rosterForMatchupPeriod": {
+          "entries": []
+        },
+        "teamId": 5,
+        "tiebreak": 0,
+        "totalPoints": 0
+      },
+      "home": {
+        "rosterForCurrentScoringPeriod": {
+          "entries": []
+        },
+        "rosterForMatchupPeriod": {
+          "entries": []
+        },
+        "teamId": 6,
+        "tiebreak": 0,
+        "totalPoints": 0
+      },
+      "id": 3,
+      "winner": "UNDECIDED"
+    },
+    {
+      "away": {
+        "rosterForCurrentScoringPeriod": {
+          "entries": []
+        },
+        "rosterForMatchupPeriod": {
+          "entries": []
+        },
+        "teamId": 10,
+        "tiebreak": 0,
+        "totalPoints": 0
+      },
+      "home": {
+        "rosterForCurrentScoringPeriod": {
+          "entries": []
+        },
+        "rosterForMatchupPeriod": {
+          "entries": []
+        },
+        "teamId": 2,
+        "tiebreak": 0,
+        "totalPoints": 0
+      },
+      "id": 4,
+      "winner": "UNDECIDED"
+    },
+    {
+      "away": {
+        "rosterForCurrentScoringPeriod": {
+          "entries": []
+        },
+        "rosterForMatchupPeriod": {
+          "entries": []
+        },
+        "teamId": 1,
+        "tiebreak": 0,
+        "totalPoints": 0
+      },
+      "home": {
+        "rosterForCurrentScoringPeriod": {
+          "entries": []
+        },
+        "rosterForMatchupPeriod": {
+          "entries": []
+        },
+        "teamId": 9,
+        "tiebreak": 0,
+        "totalPoints": 0
+      },
+      "id": 5,
+      "winner": "UNDECIDED"
+    },
+    {
+      "away": {
+        "rosterForCurrentScoringPeriod": {
+          "entries": []
+        },
+        "rosterForMatchupPeriod": {
+          "entries": []
+        },
+        "teamId": 8,
+        "tiebreak": 0,
+        "totalPoints": 0
+      },
+      "home": {
+        "rosterForCurrentScoringPeriod": {
+          "entries": []
+        },
+        "rosterForMatchupPeriod": {
+          "entries": []
+        },
+        "teamId": 4,
+        "tiebreak": 0,
+        "totalPoints": 0
+      },
+      "id": 6,
+      "winner": "UNDECIDED"
+    },
+    {
+      "away": {
+        "teamId": 12,
+        "tiebreak": 0,
+        "totalPoints": 0
+      },
+      "home": {
+        "teamId": 7,
+        "tiebreak": 0,
+        "totalPoints": 0
+      },
+      "id": 7,
+      "winner": "UNDECIDED"
+    },
+    {
+      "away": {
+        "teamId": 3,
+        "tiebreak": 0,
+        "totalPoints": 0
+      },
+      "home": {
+        "teamId": 5,
+        "tiebreak": 0,
+        "totalPoints": 0
+      },
+      "id": 8,
+      "winner": "UNDECIDED"
+    },
+    {
+      "away": {
+        "teamId": 11,
+        "tiebreak": 0,
+        "totalPoints": 0
+      },
+      "home": {
+        "teamId": 10,
+        "tiebreak": 0,
+        "totalPoints": 0
+      },
+      "id": 9,
+      "winner": "UNDECIDED"
+    },
+    {
+      "away": {
+        "teamId": 6,
+        "tiebreak": 0,
+        "totalPoints": 0
+      },
+      "home": {
+        "teamId": 1,
+        "tiebreak": 0,
+        "totalPoints": 0
+      },
+      "id": 10,
+      "winner": "UNDECIDED"
+    },
+    {
+      "away": {
+        "teamId": 2,
+        "tiebreak": 0,
+        "totalPoints": 0
+      },
+      "home": {
+        "teamId": 8,
+        "tiebreak": 0,
+        "totalPoints": 0
+      },
+      "id": 11,
+      "winner": "UNDECIDED"
+    },
+    {
+      "away": {
+        "teamId": 9,
+        "tiebreak": 0,
+        "totalPoints": 0
+      },
+      "home": {
+        "teamId": 4,
+        "tiebreak": 0,
+        "totalPoints": 0
+      },
+      "id": 12,
+      "winner": "UNDECIDED"
+    },
+    {
+      "away": {
+        "teamId": 7,
+        "tiebreak": 0,
+        "totalPoints": 0
+      },
+      "home": {
+        "teamId": 5,
+        "tiebreak": 0,
+        "totalPoints": 0
+      },
+      "id": 13,
+      "winner": "UNDECIDED"
+    },
+    {
+      "away": {
+        "teamId": 10,
+        "tiebreak": 0,
+        "totalPoints": 0
+      },
+      "home": {
+        "teamId": 12,
+        "tiebreak": 0,
+        "totalPoints": 0
+      },
+      "id": 14,
+      "winner": "UNDECIDED"
+    },
+    {
+      "away": {
+        "teamId": 1,
+        "tiebreak": 0,
+        "totalPoints": 0
+      },
+      "home": {
+        "teamId": 3,
+        "tiebreak": 0,
+        "totalPoints": 0
+      },
+      "id": 15,
+      "winner": "UNDECIDED"
+    },
+    {
+      "away": {
+        "teamId": 8,
+        "tiebreak": 0,
+        "totalPoints": 0
+      },
+      "home": {
+        "teamId": 11,
+        "tiebreak": 0,
+        "totalPoints": 0
+      },
+      "id": 16,
+      "winner": "UNDECIDED"
+    },
+    {
+      "away": {
+        "teamId": 4,
+        "tiebreak": 0,
+        "totalPoints": 0
+      },
+      "home": {
+        "teamId": 6,
+        "tiebreak": 0,
+        "totalPoints": 0
+      },
+      "id": 17,
+      "winner": "UNDECIDED"
+    },
+    {
+      "away": {
+        "teamId": 9,
+        "tiebreak": 0,
+        "totalPoints": 0
+      },
+      "home": {
+        "teamId": 2,
+        "tiebreak": 0,
+        "totalPoints": 0
+      },
+      "id": 18,
+      "winner": "UNDECIDED"
+    },
+    {
+      "away": {
+        "teamId": 10,
+        "tiebreak": 0,
+        "totalPoints": 0
+      },
+      "home": {
+        "teamId": 7,
+        "tiebreak": 0,
+        "totalPoints": 0
+      },
+      "id": 19,
+      "winner": "UNDECIDED"
+    },
+    {
+      "away": {
+        "teamId": 5,
+        "tiebreak": 0,
+        "totalPoints": 0
+      },
+      "home": {
+        "teamId": 1,
+        "tiebreak": 0,
+        "totalPoints": 0
+      },
+      "id": 20,
+      "winner": "UNDECIDED"
+    },
+    {
+      "away": {
+        "teamId": 12,
+        "tiebreak": 0,
+        "totalPoints": 0
+      },
+      "home": {
+        "teamId": 8,
+        "tiebreak": 0,
+        "totalPoints": 0
+      },
+      "id": 21,
+      "winner": "UNDECIDED"
+    },
+    {
+      "away": {
+        "teamId": 3,
+        "tiebreak": 0,
+        "totalPoints": 0
+      },
+      "home": {
+        "teamId": 4,
+        "tiebreak": 0,
+        "totalPoints": 0
+      },
+      "id": 22,
+      "winner": "UNDECIDED"
+    },
+    {
+      "away": {
+        "teamId": 11,
+        "tiebreak": 0,
+        "totalPoints": 0
+      },
+      "home": {
+        "teamId": 9,
+        "tiebreak": 0,
+        "totalPoints": 0
+      },
+      "id": 23,
+      "winner": "UNDECIDED"
+    },
+    {
+      "away": {
+        "teamId": 6,
+        "tiebreak": 0,
+        "totalPoints": 0
+      },
+      "home": {
+        "teamId": 2,
+        "tiebreak": 0,
+        "totalPoints": 0
+      },
+      "id": 24,
+      "winner": "UNDECIDED"
+    },
+    {
+      "away": {
+        "teamId": 7,
+        "tiebreak": 0,
+        "totalPoints": 0
+      },
+      "home": {
+        "teamId": 1,
+        "tiebreak": 0,
+        "totalPoints": 0
+      },
+      "id": 25,
+      "winner": "UNDECIDED"
+    },
+    {
+      "away": {
+        "teamId": 8,
+        "tiebreak": 0,
+        "totalPoints": 0
+      },
+      "home": {
+        "teamId": 10,
+        "tiebreak": 0,
+        "totalPoints": 0
+      },
+      "id": 26,
+      "winner": "UNDECIDED"
+    },
+    {
+      "away": {
+        "teamId": 4,
+        "tiebreak": 0,
+        "totalPoints": 0
+      },
+      "home": {
+        "teamId": 5,
+        "tiebreak": 0,
+        "totalPoints": 0
+      },
+      "id": 27,
+      "winner": "UNDECIDED"
+    },
+    {
+      "away": {
+        "teamId": 9,
+        "tiebreak": 0,
+        "totalPoints": 0
+      },
+      "home": {
+        "teamId": 12,
+        "tiebreak": 0,
+        "totalPoints": 0
+      },
+      "id": 28,
+      "winner": "UNDECIDED"
+    },
+    {
+      "away": {
+        "teamId": 2,
+        "tiebreak": 0,
+        "totalPoints": 0
+      },
+      "home": {
+        "teamId": 3,
+        "tiebreak": 0,
+        "totalPoints": 0
+      },
+      "id": 29,
+      "winner": "UNDECIDED"
+    },
+    {
+      "away": {
+        "teamId": 6,
+        "tiebreak": 0,
+        "totalPoints": 0
+      },
+      "home": {
+        "teamId": 11,
+        "tiebreak": 0,
+        "totalPoints": 0
+      },
+      "id": 30,
+      "winner": "UNDECIDED"
+    },
+    {
+      "away": {
+        "teamId": 8,
+        "tiebreak": 0,
+        "totalPoints": 0
+      },
+      "home": {
+        "teamId": 7,
+        "tiebreak": 0,
+        "totalPoints": 0
+      },
+      "id": 31,
+      "winner": "UNDECIDED"
+    },
+    {
+      "away": {
+        "teamId": 1,
+        "tiebreak": 0,
+        "totalPoints": 0
+      },
+      "home": {
+        "teamId": 4,
+        "tiebreak": 0,
+        "totalPoints": 0
+      },
+      "id": 32,
+      "winner": "UNDECIDED"
+    },
+    {
+      "away": {
+        "teamId": 10,
+        "tiebreak": 0,
+        "totalPoints": 0
+      },
+      "home": {
+        "teamId": 9,
+        "tiebreak": 0,
+        "totalPoints": 0
+      },
+      "id": 33,
+      "winner": "UNDECIDED"
+    },
+    {
+      "away": {
+        "teamId": 5,
+        "tiebreak": 0,
+        "totalPoints": 0
+      },
+      "home": {
+        "teamId": 2,
+        "tiebreak": 0,
+        "totalPoints": 0
+      },
+      "id": 34,
+      "winner": "UNDECIDED"
+    },
+    {
+      "away": {
+        "teamId": 12,
+        "tiebreak": 0,
+        "totalPoints": 0
+      },
+      "home": {
+        "teamId": 6,
+        "tiebreak": 0,
+        "totalPoints": 0
+      },
+      "id": 35,
+      "winner": "UNDECIDED"
+    },
+    {
+      "away": {
+        "teamId": 3,
+        "tiebreak": 0,
+        "totalPoints": 0
+      },
+      "home": {
+        "teamId": 11,
+        "tiebreak": 0,
+        "totalPoints": 0
+      },
+      "id": 36,
+      "winner": "UNDECIDED"
+    },
+    {
+      "away": {
+        "teamId": 7,
+        "tiebreak": 0,
+        "totalPoints": 0
+      },
+      "home": {
+        "teamId": 4,
+        "tiebreak": 0,
+        "totalPoints": 0
+      },
+      "id": 37,
+      "winner": "UNDECIDED"
+    },
+    {
+      "away": {
+        "teamId": 9,
+        "tiebreak": 0,
+        "totalPoints": 0
+      },
+      "home": {
+        "teamId": 8,
+        "tiebreak": 0,
+        "totalPoints": 0
+      },
+      "id": 38,
+      "winner": "UNDECIDED"
+    },
+    {
+      "away": {
+        "teamId": 2,
+        "tiebreak": 0,
+        "totalPoints": 0
+      },
+      "home": {
+        "teamId": 1,
+        "tiebreak": 0,
+        "totalPoints": 0
+      },
+      "id": 39,
+      "winner": "UNDECIDED"
+    },
+    {
+      "away": {
+        "teamId": 6,
+        "tiebreak": 0,
+        "totalPoints": 0
+      },
+      "home": {
+        "teamId": 10,
+        "tiebreak": 0,
+        "totalPoints": 0
+      },
+      "id": 40,
+      "winner": "UNDECIDED"
+    },
+    {
+      "away": {
+        "teamId": 11,
+        "tiebreak": 0,
+        "totalPoints": 0
+      },
+      "home": {
+        "teamId": 5,
+        "tiebreak": 0,
+        "totalPoints": 0
+      },
+      "id": 41,
+      "winner": "UNDECIDED"
+    },
+    {
+      "away": {
+        "teamId": 3,
+        "tiebreak": 0,
+        "totalPoints": 0
+      },
+      "home": {
+        "teamId": 12,
+        "tiebreak": 0,
+        "totalPoints": 0
+      },
+      "id": 42,
+      "winner": "UNDECIDED"
+    },
+    {
+      "away": {
+        "teamId": 9,
+        "tiebreak": 0,
+        "totalPoints": 0
+      },
+      "home": {
+        "teamId": 7,
+        "tiebreak": 0,
+        "totalPoints": 0
+      },
+      "id": 43,
+      "winner": "UNDECIDED"
+    },
+    {
+      "away": {
+        "teamId": 4,
+        "tiebreak": 0,
+        "totalPoints": 0
+      },
+      "home": {
+        "teamId": 2,
+        "tiebreak": 0,
+        "totalPoints": 0
+      },
+      "id": 44,
+      "winner": "UNDECIDED"
+    },
+    {
+      "away": {
+        "teamId": 8,
+        "tiebreak": 0,
+        "totalPoints": 0
+      },
+      "home": {
+        "teamId": 6,
+        "tiebreak": 0,
+        "totalPoints": 0
+      },
+      "id": 45,
+      "winner": "UNDECIDED"
+    },
+    {
+      "away": {
+        "teamId": 1,
+        "tiebreak": 0,
+        "totalPoints": 0
+      },
+      "home": {
+        "teamId": 11,
+        "tiebreak": 0,
+        "totalPoints": 0
+      },
+      "id": 46,
+      "winner": "UNDECIDED"
+    },
+    {
+      "away": {
+        "teamId": 10,
+        "tiebreak": 0,
+        "totalPoints": 0
+      },
+      "home": {
+        "teamId": 3,
+        "tiebreak": 0,
+        "totalPoints": 0
+      },
+      "id": 47,
+      "winner": "UNDECIDED"
+    },
+    {
+      "away": {
+        "teamId": 5,
+        "tiebreak": 0,
+        "totalPoints": 0
+      },
+      "home": {
+        "teamId": 12,
+        "tiebreak": 0,
+        "totalPoints": 0
+      },
+      "id": 48,
+      "winner": "UNDECIDED"
+    },
+    {
+      "away": {
+        "teamId": 7,
+        "tiebreak": 0,
+        "totalPoints": 0
+      },
+      "home": {
+        "teamId": 2,
+        "tiebreak": 0,
+        "totalPoints": 0
+      },
+      "id": 49,
+      "winner": "UNDECIDED"
+    },
+    {
+      "away": {
+        "teamId": 6,
+        "tiebreak": 0,
+        "totalPoints": 0
+      },
+      "home": {
+        "teamId": 9,
+        "tiebreak": 0,
+        "totalPoints": 0
+      },
+      "id": 50,
+      "winner": "UNDECIDED"
+    },
+    {
+      "away": {
+        "teamId": 11,
+        "tiebreak": 0,
+        "totalPoints": 0
+      },
+      "home": {
+        "teamId": 4,
+        "tiebreak": 0,
+        "totalPoints": 0
+      },
+      "id": 51,
+      "winner": "UNDECIDED"
+    },
+    {
+      "away": {
+        "teamId": 3,
+        "tiebreak": 0,
+        "totalPoints": 0
+      },
+      "home": {
+        "teamId": 8,
+        "tiebreak": 0,
+        "totalPoints": 0
+      },
+      "id": 52,
+      "winner": "UNDECIDED"
+    },
+    {
+      "away": {
+        "teamId": 12,
+        "tiebreak": 0,
+        "totalPoints": 0
+      },
+      "home": {
+        "teamId": 1,
+        "tiebreak": 0,
+        "totalPoints": 0
+      },
+      "id": 53,
+      "winner": "UNDECIDED"
+    },
+    {
+      "away": {
+        "teamId": 5,
+        "tiebreak": 0,
+        "totalPoints": 0
+      },
+      "home": {
+        "teamId": 10,
+        "tiebreak": 0,
+        "totalPoints": 0
+      },
+      "id": 54,
+      "winner": "UNDECIDED"
+    },
+    {
+      "away": {
+        "teamId": 6,
+        "tiebreak": 0,
+        "totalPoints": 0
+      },
+      "home": {
+        "teamId": 7,
+        "tiebreak": 0,
+        "totalPoints": 0
+      },
+      "id": 55,
+      "winner": "UNDECIDED"
+    },
+    {
+      "away": {
+        "teamId": 2,
+        "tiebreak": 0,
+        "totalPoints": 0
+      },
+      "home": {
+        "teamId": 11,
+        "tiebreak": 0,
+        "totalPoints": 0
+      },
+      "id": 56,
+      "winner": "UNDECIDED"
+    },
+    {
+      "away": {
+        "teamId": 9,
+        "tiebreak": 0,
+        "totalPoints": 0
+      },
+      "home": {
+        "teamId": 3,
+        "tiebreak": 0,
+        "totalPoints": 0
+      },
+      "id": 57,
+      "winner": "UNDECIDED"
+    },
+    {
+      "away": {
+        "teamId": 4,
+        "tiebreak": 0,
+        "totalPoints": 0
+      },
+      "home": {
+        "teamId": 12,
+        "tiebreak": 0,
+        "totalPoints": 0
+      },
+      "id": 58,
+      "winner": "UNDECIDED"
+    },
+    {
+      "away": {
+        "teamId": 8,
+        "tiebreak": 0,
+        "totalPoints": 0
+      },
+      "home": {
+        "teamId": 5,
+        "tiebreak": 0,
+        "totalPoints": 0
+      },
+      "id": 59,
+      "winner": "UNDECIDED"
+    },
+    {
+      "away": {
+        "teamId": 1,
+        "tiebreak": 0,
+        "totalPoints": 0
+      },
+      "home": {
+        "teamId": 10,
+        "tiebreak": 0,
+        "totalPoints": 0
+      },
+      "id": 60,
+      "winner": "UNDECIDED"
+    },
+    {
+      "away": {
+        "teamId": 7,
+        "tiebreak": 0,
+        "totalPoints": 0
+      },
+      "home": {
+        "teamId": 11,
+        "tiebreak": 0,
+        "totalPoints": 0
+      },
+      "id": 61,
+      "winner": "UNDECIDED"
+    },
+    {
+      "away": {
+        "teamId": 3,
+        "tiebreak": 0,
+        "totalPoints": 0
+      },
+      "home": {
+        "teamId": 6,
+        "tiebreak": 0,
+        "totalPoints": 0
+      },
+      "id": 62,
+      "winner": "UNDECIDED"
+    },
+    {
+      "away": {
+        "teamId": 12,
+        "tiebreak": 0,
+        "totalPoints": 0
+      },
+      "home": {
+        "teamId": 2,
+        "tiebreak": 0,
+        "totalPoints": 0
+      },
+      "id": 63,
+      "winner": "UNDECIDED"
+    },
+    {
+      "away": {
+        "teamId": 5,
+        "tiebreak": 0,
+        "totalPoints": 0
+      },
+      "home": {
+        "teamId": 9,
+        "tiebreak": 0,
+        "totalPoints": 0
+      },
+      "id": 64,
+      "winner": "UNDECIDED"
+    },
+    {
+      "away": {
+        "teamId": 10,
+        "tiebreak": 0,
+        "totalPoints": 0
+      },
+      "home": {
+        "teamId": 4,
+        "tiebreak": 0,
+        "totalPoints": 0
+      },
+      "id": 65,
+      "winner": "UNDECIDED"
+    },
+    {
+      "away": {
+        "teamId": 1,
+        "tiebreak": 0,
+        "totalPoints": 0
+      },
+      "home": {
+        "teamId": 8,
+        "tiebreak": 0,
+        "totalPoints": 0
+      },
+      "id": 66,
+      "winner": "UNDECIDED"
+    },
+    {
+      "away": {
+        "teamId": 3,
+        "tiebreak": 0,
+        "totalPoints": 0
+      },
+      "home": {
+        "teamId": 7,
+        "tiebreak": 0,
+        "totalPoints": 0
+      },
+      "id": 67,
+      "winner": "UNDECIDED"
+    },
+    {
+      "away": {
+        "teamId": 11,
+        "tiebreak": 0,
+        "totalPoints": 0
+      },
+      "home": {
+        "teamId": 12,
+        "tiebreak": 0,
+        "totalPoints": 0
+      },
+      "id": 68,
+      "winner": "UNDECIDED"
+    },
+    {
+      "away": {
+        "teamId": 6,
+        "tiebreak": 0,
+        "totalPoints": 0
+      },
+      "home": {
+        "teamId": 5,
+        "tiebreak": 0,
+        "totalPoints": 0
+      },
+      "id": 69,
+      "winner": "UNDECIDED"
+    },
+    {
+      "away": {
+        "teamId": 2,
+        "tiebreak": 0,
+        "totalPoints": 0
+      },
+      "home": {
+        "teamId": 10,
+        "tiebreak": 0,
+        "totalPoints": 0
+      },
+      "id": 70,
+      "winner": "UNDECIDED"
+    },
+    {
+      "away": {
+        "teamId": 9,
+        "tiebreak": 0,
+        "totalPoints": 0
+      },
+      "home": {
+        "teamId": 1,
+        "tiebreak": 0,
+        "totalPoints": 0
+      },
+      "id": 71,
+      "winner": "UNDECIDED"
+    },
+    {
+      "away": {
+        "teamId": 4,
+        "tiebreak": 0,
+        "totalPoints": 0
+      },
+      "home": {
+        "teamId": 8,
+        "tiebreak": 0,
+        "totalPoints": 0
+      },
+      "id": 72,
+      "winner": "UNDECIDED"
+    },
+    {
+      "away": {
+        "teamId": 7,
+        "tiebreak": 0,
+        "totalPoints": 0
+      },
+      "home": {
+        "teamId": 12,
+        "tiebreak": 0,
+        "totalPoints": 0
+      },
+      "id": 73,
+      "winner": "UNDECIDED"
+    },
+    {
+      "away": {
+        "teamId": 5,
+        "tiebreak": 0,
+        "totalPoints": 0
+      },
+      "home": {
+        "teamId": 3,
+        "tiebreak": 0,
+        "totalPoints": 0
+      },
+      "id": 74,
+      "winner": "UNDECIDED"
+    },
+    {
+      "away": {
+        "teamId": 10,
+        "tiebreak": 0,
+        "totalPoints": 0
+      },
+      "home": {
+        "teamId": 11,
+        "tiebreak": 0,
+        "totalPoints": 0
+      },
+      "id": 75,
+      "winner": "UNDECIDED"
+    },
+    {
+      "away": {
+        "teamId": 1,
+        "tiebreak": 0,
+        "totalPoints": 0
+      },
+      "home": {
+        "teamId": 6,
+        "tiebreak": 0,
+        "totalPoints": 0
+      },
+      "id": 76,
+      "winner": "UNDECIDED"
+    },
+    {
+      "away": {
+        "teamId": 8,
+        "tiebreak": 0,
+        "totalPoints": 0
+      },
+      "home": {
+        "teamId": 2,
+        "tiebreak": 0,
+        "totalPoints": 0
+      },
+      "id": 77,
+      "winner": "UNDECIDED"
+    },
+    {
+      "away": {
+        "teamId": 4,
+        "tiebreak": 0,
+        "totalPoints": 0
+      },
+      "home": {
+        "teamId": 9,
+        "tiebreak": 0,
+        "totalPoints": 0
+      },
+      "id": 78,
+      "winner": "UNDECIDED"
+    }
+  ],
+  "settings": {
+    "isCustomizable": true,
+    "isPublic": true,
+    "scheduleSettings": {
+      "divisions": [
+        {
+          "id": 0,
+          "name": "League Standings"
+        }
+      ],
+      "matchupPeriods": {
+        "1": [
+          1
+        ],
+        "2": [
+          2
+        ],
+        "3": [
+          3
+        ],
+        "4": [
+          4
+        ],
+        "5": [
+          5
+        ],
+        "6": [
+          6
+        ],
+        "7": [
+          7
+        ],
+        "8": [
+          8
+        ],
+        "9": [
+          9
+        ],
+        "10": [
+          10
+        ],
+        "11": [
+          11
+        ],
+        "12": [
+          12
+        ],
+        "13": [
+          13
+        ],
+        "14": [
+          14
+        ],
+        "15": [
+          15
+        ],
+        "16": [
+          16,
+          17
+        ]
+      },
+      "periodTypeId": 1
+    },
+    "scoringSettings": {
+      "scoringItems": [
+        {
+          "isReverseItem": false,
+          "points": 0,
+          "statId": 123
+        },
+        {
+          "isReverseItem": false,
+          "points": 2,
+          "statId": 57
+        },
+        {
+          "isReverseItem": false,
+          "points": 0,
+          "statId": 135
+        },
+        {
+          "isReverseItem": false,
+          "points": 0,
+          "statId": 130
+        },
+        {
+          "isReverseItem": false,
+          "points": 6,
+          "statId": 25
+        },
+        {
+          "isReverseItem": false,
+          "points": -1,
+          "statId": 82
+        },
+        {
+          "isReverseItem": false,
+          "points": 0,
+          "statId": 136
+        },
+        {
+          "isReverseItem": false,
+          "points": -2,
+          "statId": 72
+        },
+        {
+          "isReverseItem": false,
+          "points": 6,
+          "statId": 43
+        },
+        {
+          "isReverseItem": false,
+          "points": 6,
+          "statId": 102
+        },
+        {
+          "isReverseItem": false,
+          "points": 6,
+          "statId": 103
+        },
+        {
+          "isReverseItem": false,
+          "points": 0.5,
+          "statId": 53
+        },
+        {
+          "isReverseItem": false,
+          "points": 0.1,
+          "statId": 24
+        },
+        {
+          "isReverseItem": false,
+          "points": 6,
+          "statId": 101
+        },
+        {
+          "isReverseItem": false,
+          "points": 6,
+          "statId": 104
+        },
+        {
+          "isReverseItem": false,
+          "points": 0,
+          "statId": 128
+        },
+        {
+          "isReverseItem": false,
+          "points": 0,
+          "statId": 125
+        },
+        {
+          "isReverseItem": false,
+          "points": 0,
+          "statId": 134
+        },
+        {
+          "isReverseItem": false,
+          "points": 0.04,
+          "statId": 3
+        },
+        {
+          "isReverseItem": false,
+          "points": 0,
+          "statId": 124
+        },
+        {
+          "isReverseItem": false,
+          "points": 1,
+          "statId": 86
+        },
+        {
+          "isReverseItem": false,
+          "points": 0,
+          "statId": 89
+        },
+        {
+          "isReverseItem": false,
+          "points": 0.1,
+          "statId": 42
+        },
+        {
+          "isReverseItem": false,
+          "points": 0,
+          "statId": 90
+        },
+        {
+          "isReverseItem": false,
+          "points": -1,
+          "statId": 88
+        },
+        {
+          "isReverseItem": false,
+          "points": 0,
+          "statId": 129
+        },
+        {
+          "isReverseItem": false,
+          "points": 6,
+          "statId": 4
+        },
+        {
+          "isReverseItem": false,
+          "points": -0.5,
+          "statId": 79
+        },
+        {
+          "isReverseItem": false,
+          "points": 2,
+          "statId": 206
+        },
+        {
+          "isReverseItem": false,
+          "points": 0,
+          "statId": 91
+        },
+        {
+          "isReverseItem": false,
+          "points": 1,
+          "statId": 209
+        },
+        {
+          "isReverseItem": false,
+          "points": 0,
+          "statId": 92
+        },
+        {
+          "isReverseItem": false,
+          "points": 0,
+          "statId": 95
+        },
+        {
+          "isReverseItem": false,
+          "points": 6,
+          "statId": 93
+        },
+        {
+          "isReverseItem": false,
+          "points": 0,
+          "statId": 98
+        },
+        {
+          "isReverseItem": false,
+          "points": 0,
+          "statId": 96
+        },
+        {
+          "isReverseItem": false,
+          "points": 2,
+          "statId": 18
+        },
+        {
+          "isReverseItem": false,
+          "points": 0,
+          "statId": 97
+        },
+        {
+          "isReverseItem": false,
+          "points": 2,
+          "statId": 19
+        },
+        {
+          "isReverseItem": false,
+          "points": 3,
+          "statId": 77
+        },
+        {
+          "isReverseItem": false,
+          "points": 6,
+          "statId": 63
+        },
+        {
+          "isReverseItem": false,
+          "points": 3,
+          "statId": 80
+        },
+        {
+          "isReverseItem": false,
+          "points": 2,
+          "statId": 26
+        },
+        {
+          "isReverseItem": false,
+          "points": 0,
+          "statId": 99
+        },
+        {
+          "isReverseItem": false,
+          "points": -1,
+          "statId": 20
+        },
+        {
+          "isReverseItem": false,
+          "points": 2,
+          "statId": 38
+        },
+        {
+          "isReverseItem": false,
+          "points": 2,
+          "statId": 44
+        },
+        {
+          "isReverseItem": false,
+          "points": 6,
+          "statId": 201
+        },
+        {
+          "isReverseItem": false,
+          "points": 5,
+          "statId": 198
+        }
+      ]
+    }
+  },
+  "status": {
+    "currentMatchupPeriod": 1,
+    "finalScoringPeriod": 17,
+    "isActive": true,
+    "latestScoringPeriod": 0
+  },
+  "teams": [
+    {
+      "abbrev": "AVA",
+      "divisionId": 0,
+      "id": 1,
+      "logo": "https://g.espncdn.com/lm-static/ffl/images/default_logos/6.svg",
+      "name": "Avery Alliance",
+      "rankCalculatedFinal": 0,
+      "record": {
+        "overall": {
+          "losses": 0,
+          "ties": 0,
+          "wins": 0
+        }
+      }
+    },
+    {
+      "abbrev": "BYB",
+      "divisionId": 0,
+      "id": 2,
+      "logo": "https://g.espncdn.com/lm-static/ffl/images/default_logos/19.svg",
+      "name": "Bayou Bandits",
+      "rankCalculatedFinal": 0,
+      "record": {
+        "overall": {
+          "losses": 0,
+          "ties": 0,
+          "wins": 0
+        }
+      }
+    },
+    {
+      "abbrev": "COB",
+      "divisionId": 0,
+      "id": 3,
+      "logo": "https://g.espncdn.com/lm-static/logo-packs/ffl/1stStringAllStars-SportsManias/henry-01.svg",
+      "name": "Cobalt Crushers",
+      "rankCalculatedFinal": 0,
+      "record": {
+        "overall": {
+          "losses": 0,
+          "ties": 0,
+          "wins": 0
+        }
+      }
+    },
+    {
+      "abbrev": "DLT",
+      "divisionId": 0,
+      "id": 4,
+      "logo": "https://g.espncdn.com/lm-static/ffl/images/default_logos/12.svg",
+      "name": "Delta Dynamos",
+      "rankCalculatedFinal": 0,
+      "record": {
+        "overall": {
+          "losses": 0,
+          "ties": 0,
+          "wins": 0
+        }
+      }
+    },
+    {
+      "abbrev": "EMB",
+      "divisionId": 0,
+      "id": 5,
+      "logo": "https://g.espncdn.com/lm-static/logo-packs/ffl/SmackTalk-LeoEspinosa/Boom-10.svg",
+      "name": "Ember Eagles",
+      "rankCalculatedFinal": 0,
+      "record": {
+        "overall": {
+          "losses": 0,
+          "ties": 0,
+          "wins": 0
+        }
+      }
+    },
+    {
+      "abbrev": "FRG",
+      "divisionId": 0,
+      "id": 6,
+      "logo": "https://g.espncdn.com/lm-static/logo-packs/ffl/8bitHeros-JoeyEllis/8bit_football-01.svg",
+      "name": "Frost Giants",
+      "rankCalculatedFinal": 0,
+      "record": {
+        "overall": {
+          "losses": 0,
+          "ties": 0,
+          "wins": 0
+        }
+      }
+    },
+    {
+      "abbrev": "GRG",
+      "divisionId": 0,
+      "id": 7,
+      "logo": "https://g.espncdn.com/lm-static/ffl/images/default_logos/11.svg",
+      "name": "Granite Guard",
+      "rankCalculatedFinal": 0,
+      "record": {
+        "overall": {
+          "losses": 0,
+          "ties": 0,
+          "wins": 0
+        }
+      }
+    },
+    {
+      "abbrev": "HRB",
+      "divisionId": 0,
+      "id": 8,
+      "logo": "https://g.espncdn.com/lm-static/ffl/images/default_logos/16.svg",
+      "name": "Harbor Hawks",
+      "rankCalculatedFinal": 0,
+      "record": {
+        "overall": {
+          "losses": 0,
+          "ties": 0,
+          "wins": 0
+        }
+      }
+    },
+    {
+      "abbrev": "IRI",
+      "divisionId": 0,
+      "id": 9,
+      "logo": "https://g.espncdn.com/lm-static/logo-packs/ffl/8bitHeros-JoeyEllis/8bit_football-01.svg",
+      "name": "Iron Ibis",
+      "rankCalculatedFinal": 0,
+      "record": {
+        "overall": {
+          "losses": 0,
+          "ties": 0,
+          "wins": 0
+        }
+      }
+    },
+    {
+      "abbrev": "JDJ",
+      "divisionId": 0,
+      "id": 10,
+      "logo": "https://g.espncdn.com/lm-static/logo-packs/ffl/Xmas-AndrewJanik/XMas_07.svg",
+      "name": "Jade Jackals",
+      "rankCalculatedFinal": 0,
+      "record": {
+        "overall": {
+          "losses": 0,
+          "ties": 0,
+          "wins": 0
+        }
+      }
+    },
+    {
+      "abbrev": "KSK",
+      "divisionId": 0,
+      "id": 11,
+      "logo": "https://g.espncdn.com/lm-static/ffl/images/default_logos/20.svg",
+      "name": "Kestrel Kings",
+      "rankCalculatedFinal": 0,
+      "record": {
+        "overall": {
+          "losses": 0,
+          "ties": 0,
+          "wins": 0
+        }
+      }
+    },
+    {
+      "abbrev": "LMN",
+      "divisionId": 0,
+      "id": 12,
+      "logo": "https://g.espncdn.com/lm-static/ffl/images/default_logos/14.svg",
+      "name": "Lumen Lions",
+      "rankCalculatedFinal": 0,
+      "record": {
+        "overall": {
+          "losses": 0,
+          "ties": 0,
+          "wins": 0
+        }
+      }
+    }
+  ]
+}
