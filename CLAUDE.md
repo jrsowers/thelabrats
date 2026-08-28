@@ -9,6 +9,14 @@ system of record; this is the analytics, entertainment, and history layer.
 2. `AI-References/MEMORY.md` — current state and blockers
 3. `Product Spec – The Lab Rats Fantasy League Command Center.md` — source of truth
 
+## Design
+
+Follow `AI-References/STYLE-GUIDE.md`. The living version is the `/style` route,
+which renders from real tokens — when the doc and the route disagree, the route
+is right. Add new components to `/style` in the same commit, or the guide lies.
+
+Tokens: `src/app/globals.css` · Primitives: `src/components/ui/primitives.tsx`
+
 ## Hard rules
 
 - **ESPN is never called from the browser.** Server-side only, behind

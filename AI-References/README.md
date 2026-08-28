@@ -10,6 +10,7 @@ learned.
 | --- | --- |
 | **`SOUL.md`** | Product identity, voice, non-negotiables, how to decide when the spec is silent. **Start here.** |
 | **`MEMORY.md`** | Current build state, league facts, blockers, open questions, session log. **Update every session.** |
+| **`STYLE-GUIDE.md`** | Design system — color, type, motifs, layout, principles. Live version at `/style`. |
 | **`ESPN-API.md`** | ESPN v3 API reference — endpoints, views, ID maps, gotchas. Everything marked unverified until confirmed against a real payload. |
 | **`METRICS.md`** | Formal definitions of every computed metric. |
 | **`AWARDS-LIBRARY.md`** | Award catalog with formulas and ship status. |

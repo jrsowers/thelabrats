@@ -15,6 +15,7 @@ export interface LeagueOverview {
   playoffTeamCount: number
   seedingRule: string | null
   draftScheduledAt: string | null
+  draftType: string | null
   draftCompleted: boolean
   usesFaab: boolean
   lineupSlotCounts: Record<string, number>
@@ -31,7 +32,7 @@ export async function getLeagueOverview(): Promise<LeagueOverview | null> {
 
   const { data: season } = await db
     .from('seasons')
-    .select('id, year, regular_season_weeks, playoff_team_count, seeding_rule, draft_scheduled_at, draft_completed, uses_faab, lineup_slot_counts')
+    .select('id, year, regular_season_weeks, playoff_team_count, seeding_rule, draft_scheduled_at, draft_type, draft_completed, uses_faab, lineup_slot_counts')
     .eq('league_id', league.id)
     .order('year', { ascending: false })
     .limit(1)
@@ -48,6 +49,7 @@ export async function getLeagueOverview(): Promise<LeagueOverview | null> {
     playoffTeamCount: season.playoff_team_count,
     seedingRule: season.seeding_rule,
     draftScheduledAt: season.draft_scheduled_at,
+    draftType: season.draft_type,
     draftCompleted: season.draft_completed,
     usesFaab: season.uses_faab,
     lineupSlotCounts: (season.lineup_slot_counts ?? {}) as Record<string, number>,

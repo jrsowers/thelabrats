@@ -115,3 +115,20 @@ it cannot silently drift the way a dashboard setting can, and a future re-import
 gets it right automatically.
 **Lesson:** a green build log is not evidence the site works. Verify the
 deployed URL.
+
+## 2026-08-28 · Design system: "Field Lab"
+**Why:** James supplied four references — FantasyPros (layout), Guillotine Leagues
+(dark, aggressive), Fantasy Life (light, dense), Creator Science (brand DNA) — and
+asked for a blend rather than a copy.
+**Concept:** "A sports broadcast graphics package, operated by scientists." The
+league is a Creator Science community called The Lab Rats, so the lab motif is what
+fuses science and football into one language instead of two.
+**Taken:** FantasyPros' persistent dark rail; Guillotine's condensed uppercase
+display voice; Fantasy Life's tag/avatar density; Creator Science's electric blue,
+whitespace, and circular seal (recast as laboratory glassware).
+**Key choices:** the rail stays dark in both themes because it is chrome, not
+content. Structure comes from hairlines, never shadows. Signal colors are reserved
+for state and always paired with a text label. The monospace "eyebrow" is the
+device doing the most work — it makes football data read as measured data.
+**Living guide:** `/style` route renders from real tokens, so it cannot drift from
+the app. A static-only style guide would.

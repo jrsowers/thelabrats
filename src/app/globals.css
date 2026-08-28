@@ -1,54 +1,200 @@
 @import "tailwindcss";
 
-/* Sports-editorial palette. Restrained, high contrast, meaningful color.
-   Light is the base; dark redefines only what changes (SOUL.md). */
+/* ============================================================
+   THE LAB RATS — DESIGN TOKENS
+   A sports broadcast graphics package, operated by scientists.
+   Full rationale: AI-References/STYLE-GUIDE.md
+   ============================================================ */
+
+/* ---- LIGHT (base) ---------------------------------------- */
 :root {
-  --background: #f6f7f9;
-  --surface: #ffffff;
-  --surface-2: #f0f2f5;
-  --border: #dfe3e8;
-  --foreground: #10151c;
-  --muted: #5b6672;
-  --accent: #b91c1c;
-  --accent-fg: #ffffff;
-  --live: #16a34a;
-  --win: #15803d;
+  /* Ground */
+  --bg:            #f2f5f9;
+  --surface:       #ffffff;
+  --surface-2:     #eaeef4;
+  --surface-3:     #dfe5ee;
+  --rail:          #0b0f16;   /* left rail stays dark in both themes */
+  --rail-surface:  #151b25;
+  --rail-text:     #e6ecf5;
+  --rail-muted:    #7b8798;
+
+  /* Ink */
+  --text:          #0a0e15;
+  --text-muted:    #576374;
+  --text-dim:      #8593a5;
+
+  /* Lines */
+  --border:        #d8dfe9;
+  --border-strong: #bcc7d6;
+
+  /* Brand — Creator Science blue, electrified */
+  --brand:         #1d4fd8;
+  --brand-hover:   #1a45bd;
+  --brand-ink:     #ffffff;
+  --brand-soft:    #e5ecff;
+
+  /* States */
+  --live:          #0e9f5c;   /* specimen green */
+  --live-soft:     #dcf5e8;
+  --win:           #0e7a49;
+  --loss:          #cf2222;
+  --loss-soft:     #fde5e5;
+  --warn:          #a86500;
+  --warn-soft:     #fdf0d5;
+
+  /* Data series — sequential, accessible on light ground */
+  --series-1: #1d4fd8;
+  --series-2: #0e9f5c;
+  --series-3: #b8730a;
+  --series-4: #7c3aed;
+  --series-5: #0891a8;
+  --series-6: #c2185b;
+
+  /* Grid paper motif */
+  --grid-line: rgba(10, 14, 21, 0.045);
 }
 
+/* ---- DARK ------------------------------------------------- */
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0b0e13;
-    --surface: #141920;
-    --surface-2: #1b212a;
-    --border: #262d38;
-    --foreground: #e9edf2;
-    --muted: #8d97a5;
-    --accent: #ef4444;
-    --accent-fg: #ffffff;
-    --live: #22c55e;
-    --win: #4ade80;
+    --bg:            #080b11;
+    --surface:       #10151d;
+    --surface-2:     #171d27;
+    --surface-3:     #202834;
+    --rail:          #060910;
+    --rail-surface:  #0e131c;
+    --rail-text:     #e6ecf5;
+    --rail-muted:    #6f7c8f;
+
+    --text:          #e9eff7;
+    --text-muted:    #93a0b2;
+    --text-dim:      #64717f;
+
+    --border:        #232b38;
+    --border-strong: #354052;
+
+    --brand:         #4d7dff;
+    --brand-hover:   #6b93ff;
+    --brand-ink:     #04070d;
+    --brand-soft:    #16223d;
+
+    --live:          #1fd882;
+    --live-soft:     #0d2a1e;
+    --win:           #35e08f;
+    --loss:          #ff5a5a;
+    --loss-soft:     #2c1214;
+    --warn:          #ffb833;
+    --warn-soft:     #2b1f08;
+
+    --series-1: #4d7dff;
+    --series-2: #1fd882;
+    --series-3: #ffb833;
+    --series-4: #a583ff;
+    --series-5: #35c8e0;
+    --series-6: #ff6fa5;
+
+    --grid-line: rgba(233, 239, 247, 0.04);
   }
 }
 
+/* Explicit overrides so a future manual toggle wins in both directions */
+:root[data-theme="light"] { color-scheme: light; }
+:root[data-theme="dark"]  { color-scheme: dark; }
+
 @theme inline {
-  --color-background: var(--background);
+  --color-bg: var(--bg);
   --color-surface: var(--surface);
   --color-surface-2: var(--surface-2);
+  --color-surface-3: var(--surface-3);
+  --color-rail: var(--rail);
+  --color-rail-surface: var(--rail-surface);
+  --color-rail-text: var(--rail-text);
+  --color-rail-muted: var(--rail-muted);
+  --color-text: var(--text);
+  --color-muted: var(--text-muted);
+  --color-dim: var(--text-dim);
   --color-border: var(--border);
-  --color-foreground: var(--foreground);
-  --color-muted: var(--muted);
-  --color-accent: var(--accent);
-  --color-accent-fg: var(--accent-fg);
+  --color-border-strong: var(--border-strong);
+  --color-brand: var(--brand);
+  --color-brand-hover: var(--brand-hover);
+  --color-brand-ink: var(--brand-ink);
+  --color-brand-soft: var(--brand-soft);
   --color-live: var(--live);
+  --color-live-soft: var(--live-soft);
   --color-win: var(--win);
+  --color-loss: var(--loss);
+  --color-loss-soft: var(--loss-soft);
+  --color-warn: var(--warn);
+  --color-warn-soft: var(--warn-soft);
+
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+  --font-display: var(--font-barlow-condensed);
+
+  --radius-tag: 3px;
+  --radius-md: 6px;
+  --radius-lg: 10px;
 }
 
+/* ---- BASE ------------------------------------------------- */
 body {
-  background: var(--background);
-  color: var(--foreground);
+  background: var(--bg);
+  color: var(--text);
+  -webkit-font-smoothing: antialiased;
 }
 
-/* Tabular figures everywhere a number is compared to another number. */
+/* ---- TYPE PRIMITIVES -------------------------------------- */
+
+/* Display: condensed, uppercase, tight. Scoreboard voice. */
+.display {
+  font-family: var(--font-display), ui-sans-serif, system-ui, sans-serif;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: -0.005em;
+  line-height: 0.94;
+}
+
+/* Eyebrow: the specimen tag. Mono, tracked, muted. */
+.eyebrow {
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 10.5px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--text-muted);
+}
+
+/* Every number compared against another number gets tabular figures. */
 .tnum { font-variant-numeric: tabular-nums; }
+
+/* ---- MOTIFS ----------------------------------------------- */
+
+/* Lab notebook grid. Structure without decoration. */
+.grid-paper {
+  background-image:
+    linear-gradient(to right, var(--grid-line) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--grid-line) 1px, transparent 1px);
+  background-size: 22px 22px;
+}
+
+/* State bar: 3px left edge carrying meaning. Never color alone — always
+   paired with a text label (accessibility, §39). */
+.state-bar { box-shadow: inset 3px 0 0 0 var(--state, transparent); }
+
+/* Live pulse. Respects reduced-motion. */
+@keyframes labPulse {
+  0%, 100% { opacity: 1; }
+  50%      { opacity: 0.35; }
+}
+.live-dot { animation: labPulse 2s ease-in-out infinite; }
+@media (prefers-reduced-motion: reduce) {
+  .live-dot { animation: none; }
+}
+
+::selection { background: var(--brand); color: var(--brand-ink); }
+
+:where(a, button, [tabindex]):focus-visible {
+  outline: 2px solid var(--brand);
+  outline-offset: 2px;
+  border-radius: 2px;
+}

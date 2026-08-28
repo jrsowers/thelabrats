@@ -1,61 +1,45 @@
 import Link from 'next/link'
 import {
   getLeagueOverview, getMatchupsForWeek, getPastChampions, getLastSync,
-  type MatchupRow,
 } from '@/lib/league/queries'
 import { LINEUP_SLOT_LABEL } from '@/lib/espn/constants'
 import { isSupabaseConfigured } from '@/lib/supabase/server'
+import { AppShell } from '@/components/navigation/app-shell'
+import { MatchupRow } from '@/components/scoreboard/matchup-row'
+import {
+  Eyebrow, SectionHeader, StatTile, Tag, EmptyState, LabSeal,
+} from '@/components/ui/primitives'
 
-// Live-ish data: never cache the page itself. Freshness comes from ingestion.
 export const dynamic = 'force-dynamic'
 
 const TZ = 'America/New_York'
 
-function fmtDate(iso: string | null) {
+function fmtDate(iso: string | null, opts: Intl.DateTimeFormatOptions = {}) {
   if (!iso) return null
   return new Intl.DateTimeFormat('en-US', {
-    weekday: 'long', month: 'long', day: 'numeric',
-    hour: 'numeric', minute: '2-digit', timeZone: TZ, timeZoneName: 'short',
+    month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit',
+    timeZone: TZ, timeZoneName: 'short', ...opts,
   }).format(new Date(iso))
 }
 
-function TeamCell({
-  side,
-  align = 'left',
-}: {
-  side: MatchupRow['home']
-  align?: 'left' | 'right'
-}) {
-  return (
-    <div className={align === 'right' ? 'text-right' : ''}>
-      <div className="truncate text-sm font-semibold sm:text-base">{side?.name ?? 'TBD'}</div>
-      {side?.manager && <div className="truncate text-xs text-muted">{side.manager}</div>}
-    </div>
-  )
-}
-
-function Stat({ label, value }: { label: string; value: string }) {
-  return (
-    <div className="rounded-lg border border-border bg-surface px-4 py-3">
-      <div className="text-[11px] font-medium uppercase tracking-wider text-muted">{label}</div>
-      <div className="mt-1 text-lg font-semibold tnum">{value}</div>
-    </div>
-  )
+function daysUntil(iso: string | null) {
+  if (!iso) return null
+  const ms = new Date(iso).getTime() - Date.now()
+  return ms > 0 ? Math.ceil(ms / 86_400_000) : null
 }
 
 export default async function Page({
   searchParams,
-}: {
-  searchParams: Promise<{ week?: string }>
-}) {
+}: { searchParams: Promise<{ week?: string }> }) {
   const overview = await getLeagueOverview()
 
   if (!overview) {
     const configured = isSupabaseConfigured()
     return (
-      <main className="mx-auto max-w-xl px-6 py-24">
-        <h1 className="text-2xl font-semibold">
-          {configured ? 'No league data yet' : 'Setup required'}
+      <main className="mx-auto flex min-h-dvh max-w-md flex-col items-center justify-center px-6 text-center">
+        <LabSeal size={96} />
+        <h1 className="display mt-6 text-3xl">
+          {configured ? 'No league data' : 'Setup required'}
         </h1>
         <p className="mt-2 text-sm text-muted">
           {configured
@@ -63,10 +47,10 @@ export default async function Page({
             : 'Database credentials are not configured for this deployment.'}
         </p>
         {!configured && (
-          <ul className="mt-4 space-y-1 text-sm text-muted">
-            <li className="font-mono text-xs">NEXT_PUBLIC_SUPABASE_URL</li>
-            <li className="font-mono text-xs">NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY</li>
-          </ul>
+          <div className="mt-4 space-y-1 font-mono text-[11px] text-dim">
+            <div>NEXT_PUBLIC_SUPABASE_URL</div>
+            <div>NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY</div>
+          </div>
         )}
       </main>
     )
@@ -79,9 +63,7 @@ export default async function Page({
     : 1
 
   const [matchups, champions, lastSync] = await Promise.all([
-    getMatchupsForWeek(week),
-    getPastChampions(),
-    getLastSync(),
+    getMatchupsForWeek(week), getPastChampions(), getLastSync(),
   ])
 
   const starters = Object.entries(overview.lineupSlotCounts)
@@ -89,130 +71,151 @@ export default async function Page({
     .sort((a, b) => Number(a[0]) - Number(b[0]))
     .flatMap(([slot, n]) => Array.from({ length: n }, () => LINEUP_SLOT_LABEL[Number(slot)] ?? slot))
 
+  const countdown = daysUntil(overview.draftScheduledAt)
+
   return (
-    <main className="mx-auto max-w-5xl px-5 py-10 sm:px-8">
-      {/* Header */}
-      <header className="border-b border-border pb-6">
-        <div className="flex flex-wrap items-end justify-between gap-4">
+    <AppShell leagueName={overview.leagueName} season={overview.season}>
+      {/* ---- Header ---- */}
+      <header className="grid-paper -mx-4 mb-7 border-b border-border px-4 pb-6 sm:-mx-6 sm:px-6">
+        <div className="flex flex-wrap items-end justify-between gap-x-6 gap-y-3">
           <div>
-            <h1 className="text-3xl font-bold tracking-tight sm:text-4xl">{overview.leagueName}</h1>
-            <p className="mt-1 text-sm text-muted">
-              {overview.season} Season · {overview.teamCount} teams
+            <Eyebrow>Week {String(week).padStart(2, '0')} · Live Scoreboard</Eyebrow>
+            <h1 className="display mt-1.5 text-[40px] sm:text-[52px]">The Lab Rats</h1>
+            <p className="mt-1.5 text-sm text-muted">
+              {overview.season} season · {overview.teamCount} teams ·{' '}
+              {overview.regularSeasonWeeks}-week regular season
             </p>
           </div>
-          {lastSync?.finished_at && (
-            <p className="text-xs text-muted tnum">
-              Last synced {fmtDate(lastSync.finished_at)}
-            </p>
-          )}
+          <div className="flex flex-col items-start gap-2 sm:items-end">
+            {!overview.draftCompleted && <Tag tone="warn">Preseason</Tag>}
+            {lastSync?.finished_at && (
+              <p className="font-mono text-[10.5px] text-dim tnum">
+                Synced {fmtDate(lastSync.finished_at)}
+              </p>
+            )}
+          </div>
         </div>
       </header>
 
-      {/* Pre-draft banner */}
+      {/* ---- Draft countdown ---- */}
       {!overview.draftCompleted && overview.draftScheduledAt && (
-        <section className="mt-6 rounded-lg border border-accent/30 bg-accent/5 px-5 py-4">
-          <div className="text-[11px] font-semibold uppercase tracking-wider text-accent">
-            Draft not yet held
+        <section className="mb-7 overflow-hidden rounded-lg border border-brand/30 bg-brand-soft">
+          <div className="flex flex-wrap items-center gap-x-8 gap-y-4 px-5 py-4">
+            <div className="min-w-0">
+              <Eyebrow className="!text-brand">Draft Day</Eyebrow>
+              <div className="display mt-1 text-[26px]">
+                {fmtDate(overview.draftScheduledAt, { weekday: 'long' })}
+              </div>
+              <p className="mt-1 text-xs text-muted">
+                {overview.draftType ?? 'Snake'} draft · rosters and scoring go live after
+              </p>
+            </div>
+            {countdown !== null && (
+              <div className="ml-auto text-right">
+                <div className="display text-[46px] leading-none text-brand tnum">{countdown}</div>
+                <Eyebrow className="mt-1">{countdown === 1 ? 'Day out' : 'Days out'}</Eyebrow>
+              </div>
+            )}
           </div>
-          <div className="mt-1 text-lg font-semibold">{fmtDate(overview.draftScheduledAt)}</div>
-          <p className="mt-1 text-sm text-muted">
-            Rosters and scoring appear here once the draft completes.
-          </p>
         </section>
       )}
 
-      {/* League facts — read from ESPN, not hardcoded */}
-      <section className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-4">
-        <Stat label="Regular season" value={`${overview.regularSeasonWeeks} weeks`} />
-        <Stat label="Playoff teams" value={String(overview.playoffTeamCount)} />
-        <Stat label="Seeding" value={overview.seedingRule?.replace(/_/g, ' ') ?? '—'} />
-        <Stat label="Waivers" value={overview.usesFaab ? 'FAAB' : 'Traditional'} />
+      {/* ---- League parameters ---- */}
+      <section className="mb-8">
+        <Eyebrow className="mb-2.5">League Parameters</Eyebrow>
+        <div className="grid grid-cols-2 gap-2.5 sm:grid-cols-4">
+          <StatTile label="Regular Season" value={String(overview.regularSeasonWeeks)} sub="weeks" />
+          <StatTile label="Playoff Berths" value={String(overview.playoffTeamCount)} sub="top 2 seeded bye" tone="brand" />
+          <StatTile label="Seeding" value={overview.seedingRule?.replace(/_/g, ' ') ?? '—'} />
+          <StatTile label="Waivers" value={overview.usesFaab ? 'FAAB' : 'Rolling'} sub={overview.usesFaab ? 'budget' : 'priority'} />
+        </div>
       </section>
 
-      {/* Schedule */}
-      <section className="mt-10">
-        <div className="flex items-center justify-between gap-4">
-          <h2 className="text-xs font-semibold uppercase tracking-wider text-muted">Schedule</h2>
-          <nav className="flex items-center gap-1" aria-label="Week selection">
-            <Link
-              href={`/?week=${Math.max(1, week - 1)}`}
-              aria-disabled={week === 1}
-              className={`rounded px-2 py-1 text-sm ${week === 1 ? 'pointer-events-none text-muted/40' : 'text-muted hover:bg-surface-2 hover:text-foreground'}`}
-            >
-              ←
-            </Link>
-            <span className="min-w-[4.5rem] text-center text-sm font-semibold tnum">Week {week}</span>
-            <Link
-              href={`/?week=${Math.min(overview.regularSeasonWeeks, week + 1)}`}
-              aria-disabled={week === overview.regularSeasonWeeks}
-              className={`rounded px-2 py-1 text-sm ${week === overview.regularSeasonWeeks ? 'pointer-events-none text-muted/40' : 'text-muted hover:bg-surface-2 hover:text-foreground'}`}
-            >
-              →
-            </Link>
-          </nav>
-        </div>
-
-        <div className="mt-3 overflow-hidden rounded-lg border border-border">
+      {/* ---- Scoreboard ---- */}
+      <section className="mb-8">
+        <SectionHeader
+          eyebrow={`${matchups.length} matchups`}
+          title="Scoreboard"
+          action={
+            <nav className="flex items-center gap-0.5" aria-label="Week selection">
+              <Link
+                href={`/?week=${Math.max(1, week - 1)}`}
+                aria-label="Previous week"
+                className={`rounded px-2 py-1 font-mono text-xs ${week === 1 ? 'pointer-events-none text-dim/40' : 'text-muted hover:bg-surface-2 hover:text-text'}`}
+              >
+                ←
+              </Link>
+              <span className="display min-w-[5.5rem] text-center text-lg tnum">Week {week}</span>
+              <Link
+                href={`/?week=${Math.min(overview.regularSeasonWeeks, week + 1)}`}
+                aria-label="Next week"
+                className={`rounded px-2 py-1 font-mono text-xs ${week === overview.regularSeasonWeeks ? 'pointer-events-none text-dim/40' : 'text-muted hover:bg-surface-2 hover:text-text'}`}
+              >
+                →
+              </Link>
+            </nav>
+          }
+        />
+        <div className="overflow-hidden rounded-lg border border-border">
           {matchups.length === 0 ? (
-            <p className="bg-surface px-5 py-8 text-center text-sm text-muted">
-              No matchups scheduled for week {week}.
-            </p>
+            <div className="bg-surface">
+              <EmptyState title={`No matchups scheduled for week ${week}.`} />
+            </div>
           ) : (
             <ul className="divide-y divide-border">
-              {matchups.map((m) => (
-                <li key={m.id} className="grid grid-cols-[1fr_auto_1fr] items-center gap-3 bg-surface px-4 py-3 sm:gap-6 sm:px-5">
-                  <TeamCell side={m.away} />
-                  <span className="text-[10px] font-semibold uppercase tracking-wider text-muted tnum">
-                    {m.status === 'SCHEDULED'
-                      ? 'vs'
-                      : `${m.away?.score.toFixed(1)}\u2013${m.home?.score.toFixed(1)}`}
-                  </span>
-                  <TeamCell side={m.home} align="right" />
-                </li>
+              {matchups.map((m, i) => (
+                <MatchupRow key={m.id} matchup={m} index={i} />
               ))}
             </ul>
           )}
         </div>
       </section>
 
-      {/* Lineup + champions */}
-      <section className="mt-10 grid gap-6 sm:grid-cols-2">
-        <div>
-          <h2 className="text-xs font-semibold uppercase tracking-wider text-muted">Starting lineup</h2>
-          <div className="mt-3 flex flex-wrap gap-1.5">
+      {/* ---- Roster construction + champions ---- */}
+      <section className="grid gap-6 md:grid-cols-5">
+        <div className="md:col-span-3">
+          <SectionHeader eyebrow="Roster construction" title="Starting Lineup" />
+          <div className="flex flex-wrap gap-1.5">
             {starters.map((slot, i) => (
-              <span key={i} className="rounded border border-border bg-surface px-2 py-1 text-xs font-medium">
+              <span
+                key={i}
+                className="rounded-[3px] border border-border bg-surface px-2 py-1 font-mono text-[11px] font-semibold uppercase tracking-wider"
+              >
                 {slot}
               </span>
             ))}
           </div>
-          <p className="mt-2 text-xs text-muted">
+          <p className="mt-2.5 font-mono text-[11px] text-dim">
             {starters.length} starters · {overview.lineupSlotCounts['20'] ?? 0} bench ·{' '}
             {overview.lineupSlotCounts['21'] ?? 0} IR
           </p>
         </div>
 
-        <div>
-          <h2 className="text-xs font-semibold uppercase tracking-wider text-muted">Past champions</h2>
+        <div className="md:col-span-2">
+          <SectionHeader eyebrow="Record book" title="Champions" />
           {champions.length === 0 ? (
-            <p className="mt-3 text-sm text-muted">No champions recorded yet.</p>
+            <p className="text-sm text-muted">No champions recorded yet.</p>
           ) : (
-            <ul className="mt-3 space-y-2">
+            <ul className="space-y-2">
               {champions.map((c) => (
-                <li key={c.year} className="flex items-baseline gap-3 rounded-lg border border-border bg-surface px-4 py-3">
-                  <span className="text-sm font-semibold tnum text-accent">{c.year}</span>
-                  <span className="text-sm font-medium">{c.manager}</span>
-                  {c.note && <span className="ml-auto text-xs text-muted">{c.note}</span>}
+                <li
+                  key={c.year}
+                  className="state-bar flex items-center gap-3 rounded-lg border border-border bg-surface px-4 py-3"
+                  style={{ '--state': 'var(--warn)' } as React.CSSProperties}
+                >
+                  <span className="display text-xl text-warn tnum">{c.year}</span>
+                  <span className="display truncate text-[17px]">{c.manager}</span>
+                  {c.note && (
+                    <span className="ml-auto shrink-0 font-mono text-[10px] uppercase tracking-wider text-dim">
+                      {c.note}
+                    </span>
+                  )}
                 </li>
               ))}
             </ul>
           )}
         </div>
       </section>
-
-      <footer className="mt-12 border-t border-border pt-5 text-xs text-muted">
-        ESPN is the system of record. This is the league&apos;s analytics and history layer.
-      </footer>
-    </main>
+    </AppShell>
   )
 }
