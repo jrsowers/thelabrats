@@ -84,7 +84,10 @@ function Card({
             {team && (
               <TeamAvatar
                 photoUrl={team.photoUrl} logoUrl={team.logoUrl} abbrev={team.abbrev}
-                size={28} champion={team.isChampion} championYear={team.championYear}
+                /* Matches PlayerHeadshot above — a manager and a player are
+                   equally the subject of their award, so neither outranks the
+                   other visually. */
+                size={38} champion={team.isChampion} championYear={team.championYear}
               />
             )}
             <div className="min-w-0">
