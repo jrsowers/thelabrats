@@ -138,6 +138,72 @@ export function BracketIcon({
   )
 }
 
+/* ---------- Team avatar ----------
+   Identity, in order of preference: the member's own photo, then the ESPN team
+   logo, then a mono abbreviation chip. A real face beats a stock helmet.
+
+   The reigning champion gets a crown. It lives here rather than in the
+   scoreboard so every future surface — standings, awards, record books — picks
+   it up for free instead of reimplementing it. */
+export function TeamAvatar({
+  photoUrl, logoUrl, abbrev, size = 36, champion = false, championYear,
+}: {
+  photoUrl?: string | null
+  logoUrl?: string | null
+  abbrev?: string | null
+  size?: number
+  champion?: boolean
+  championYear?: number | null
+}) {
+  const src = photoUrl ?? logoUrl
+  const isPhoto = Boolean(photoUrl)
+  const label = championYear ? `Reigning champion, ${championYear}` : 'Reigning champion'
+
+  return (
+    <div className="relative shrink-0" style={{ width: size, height: size }}>
+      {src ? (
+        // Plain <img>: ESPN logos are remote SVGs and next/image would need
+        // dangerouslyAllowSVG. Eager because these sit at the top of the page
+        // and all twelve together are ~223KB.
+        // eslint-disable-next-line @next/next/no-img-element
+        <img
+          src={src}
+          alt=""
+          width={size}
+          height={size}
+          loading="eager"
+          decoding="async"
+          className={`size-full border object-cover ${isPhoto ? 'rounded-full' : 'rounded-md'} ${
+            champion ? 'border-warn/70' : 'border-border'
+          } bg-surface-2`}
+        />
+      ) : (
+        <div
+          aria-hidden
+          className="flex size-full items-center justify-center rounded-md border border-border bg-surface-2 font-mono text-[10px] font-bold text-muted"
+        >
+          {abbrev ?? '—'}
+        </div>
+      )}
+
+      {champion && (
+        <span
+          title={label}
+          aria-label={label}
+          role="img"
+          className="absolute -right-1 -top-1.5 flex items-center justify-center rounded-full bg-warn text-[#1a1205] shadow-sm ring-2 ring-surface"
+          style={{ width: size * 0.5, height: size * 0.5 }}
+        >
+          {/* Crown, drawn small enough to stay legible at 16px. */}
+          <svg viewBox="0 0 24 24" fill="currentColor" style={{ width: '72%', height: '72%' }} aria-hidden>
+            <path d="M3 7.5l3.6 3L12 4l5.4 6.5 3.6-3-1.8 10.2H4.8L3 7.5zM4.9 19.8h14.2v1.7H4.9v-1.7z" />
+          </svg>
+        </span>
+      )}
+    </div>
+  )
+}
+
 /* ---------- The seal ----------
    Creator Science's circular badge, recast as lab glassware. */
 export function LabSeal({ size = 88 }: { size?: number }) {

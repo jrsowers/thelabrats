@@ -1,5 +1,5 @@
 import type { MatchupRow as Matchup, MatchupSide } from '@/lib/league/queries'
-import { Tag, LiveBadge } from '@/components/ui/primitives'
+import { Tag, LiveBadge, TeamAvatar } from '@/components/ui/primitives'
 
 /**
  * The signature component. Broadcast lower-third: identity outward, scores inward.
@@ -13,48 +13,6 @@ import { Tag, LiveBadge } from '@/components/ui/primitives'
  *  - A live leader is marked, never declared a winner (§19.2).
  *  - State is carried by a bar AND a label, never color alone (§39).
  */
-/**
- * Identity, in order of preference:
- *   1. the league member's own photo (editorial, supplied by the commissioner)
- *   2. the ESPN team logo
- *   3. the mono abbreviation chip
- *
- * A real face beats a stock helmet — it makes the scoreboard read as this
- * league rather than any league.
- */
-function TeamLogo({ side }: { side: MatchupSide }) {
-  const src = side.photoUrl ?? side.logoUrl
-  if (src) {
-    const isPhoto = Boolean(side.photoUrl)
-    return (
-      // Plain <img>: ESPN logos are remote SVGs and next/image would need
-      // dangerouslyAllowSVG. Not worth the risk for a 36px mark.
-      // eslint-disable-next-line @next/next/no-img-element
-      <img
-        src={src}
-        alt=""
-        width={36}
-        height={36}
-        /* Eager, not lazy. All twelve avatars together are ~223KB, and they are
-           the first thing anyone looks at — deferring them made the scoreboard
-           render as a column of empty circles that filled in late. Lazy loading
-           is for long lists of large images, which this is not. */
-        loading="eager"
-        decoding="async"
-        className={`size-9 shrink-0 border border-border bg-surface-2 object-cover ${isPhoto ? 'rounded-full' : 'rounded-md'}`}
-      />
-    )
-  }
-  return (
-    <div
-      aria-hidden
-      className="flex size-9 shrink-0 items-center justify-center rounded-md border border-border bg-surface-2 font-mono text-[10px] font-bold text-muted"
-    >
-      {side.abbrev ?? '—'}
-    </div>
-  )
-}
-
 function Side({
   side, leading, showScore, align = 'left',
 }: {
@@ -71,7 +29,15 @@ function Side({
 
   return (
     <div className={`flex min-w-0 items-center gap-3 ${right ? 'flex-row-reverse text-right' : ''}`}>
-      <div className="hidden sm:block"><TeamLogo side={side} /></div>
+      <div className="hidden sm:block">
+        <TeamAvatar
+          photoUrl={side.photoUrl}
+          logoUrl={side.logoUrl}
+          abbrev={side.abbrev}
+          champion={side.isChampion}
+          championYear={side.championYear}
+        />
+      </div>
 
       <div className="min-w-0 flex-1">
         <div className="display truncate text-[17px] leading-tight sm:text-[19px]">{side.name}</div>

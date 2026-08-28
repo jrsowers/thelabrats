@@ -12,13 +12,13 @@ const RAIL_LOGO = 'brand/lab-rats-logo-rail.png'
  * needed once the file lands.
  */
 export function AppShell({
-  leagueName, season, children,
-}: { leagueName: string; season: number; children: ReactNode }) {
+  leagueName, children,
+}: { leagueName: string; children: ReactNode }) {
   const logoUrl = existsSync(join(process.cwd(), 'public', RAIL_LOGO)) ? `/${RAIL_LOGO}` : null
 
   return (
     <div className="min-h-full">
-      <SideNav leagueName={leagueName} season={season} logoUrl={logoUrl} />
+      <SideNav leagueName={leagueName} logoUrl={logoUrl} />
       {/* Rail is 14rem on desktop; bottom bar needs clearance on mobile. */}
       <div className="lg:pl-56">
         <div className="mx-auto max-w-6xl px-4 pb-24 pt-6 sm:px-6 lg:pb-10 lg:pt-8">

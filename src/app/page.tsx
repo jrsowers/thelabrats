@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import {
   getLeagueOverview, getMatchupsForWeek, getTeamRecords, getLastSync,
+  getReigningChampion,
 } from '@/lib/league/queries'
 import { isSupabaseConfigured } from '@/lib/supabase/server'
 import { AppShell } from '@/components/navigation/app-shell'
@@ -54,9 +55,12 @@ export default async function Page({
   )
 
 
-  const records = await getTeamRecords(overview.seasonId)
+  const [records, champion] = await Promise.all([
+    getTeamRecords(overview.seasonId),
+    getReigningChampion(),
+  ])
   const [realMatchups, lastSync] = await Promise.all([
-    getMatchupsForWeek(week, records),
+    getMatchupsForWeek(week, records, champion),
     getLastSync(),
   ])
 
@@ -66,7 +70,7 @@ export default async function Page({
   const matchups = isPreview ? applyLivePreview(realMatchups, week) : realMatchups
 
   return (
-    <AppShell leagueName={overview.leagueName} season={overview.season}>
+    <AppShell leagueName={overview.leagueName}>
       {/* ---- Header ---- */}
       <header className="relative -mx-4 mb-7 overflow-hidden border-b border-border px-4 pb-6 sm:-mx-6 sm:px-6">
         <FieldBackdrop />

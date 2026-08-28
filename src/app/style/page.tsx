@@ -1,9 +1,10 @@
 import type { Metadata } from 'next'
 import {
-  Eyebrow, SectionHeader, Tag, LiveBadge, StatTile, Card, EmptyState, Skeleton, LabSeal,
+  Eyebrow, SectionHeader, Tag, LiveBadge, StatTile, Card, EmptyState, Skeleton,
+  LabSeal, TeamAvatar, BracketIcon,
 } from '@/components/ui/primitives'
 
-export const metadata: Metadata = { title: 'Style Guide · The Lab Rats' }
+export const metadata: Metadata = { title: 'Style Guide' }
 
 /* Living style guide. Renders from the same tokens the app uses, so it cannot
    drift from reality the way a static spec can. */
@@ -137,6 +138,40 @@ export default function StyleGuide() {
             <Tag tone="win">Won</Tag>
             <Tag tone="loss">Lost</Tag>
             <Tag tone="warn">Provisional</Tag>
+          </div>
+        </Row>
+
+        <Row label="Avatars">
+          <div className="flex flex-wrap items-end gap-5">
+            {[28, 36, 48, 64].map((size) => (
+              <div key={size} className="text-center">
+                <TeamAvatar photoUrl="/members/chenell-basilio.jpg" size={size} champion championYear={2025} />
+                <div className="mt-1.5 font-mono text-[9.5px] text-dim tnum">{size}px</div>
+              </div>
+            ))}
+            <div className="text-center">
+              <TeamAvatar photoUrl="/members/james-sowers.jpg" size={48} />
+              <div className="mt-1.5 font-mono text-[9.5px] text-dim">no crown</div>
+            </div>
+            <div className="text-center">
+              <TeamAvatar abbrev="JST" size={48} />
+              <div className="mt-1.5 font-mono text-[9.5px] text-dim">fallback</div>
+            </div>
+          </div>
+          <p className="mt-2.5 text-[11px] text-dim">
+            The crown marks the reigning champion and follows them everywhere their
+            avatar appears. It carries an accessible label, not just a colour.
+          </p>
+        </Row>
+
+        <Row label="Icons">
+          <div className="flex items-center gap-5 text-muted">
+            {[16, 24, 34].map((n) => (
+              <div key={n} className="text-center">
+                <BracketIcon size={n} />
+                <div className="mt-1.5 font-mono text-[9.5px] text-dim tnum">{n}px</div>
+              </div>
+            ))}
           </div>
         </Row>
 

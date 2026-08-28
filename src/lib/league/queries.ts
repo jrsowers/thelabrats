@@ -69,6 +69,8 @@ export interface MatchupSide {
   abbrev: string | null
   logoUrl: string | null
   photoUrl: string | null
+  isChampion: boolean
+  championYear: number | null
   score: number
   projected: number | null
   record: string
@@ -89,6 +91,22 @@ export interface MatchupRow {
  * once the standings engine exists, and duplicating it now would create two
  * sources of truth that can disagree.
  */
+/**
+ * The most recent champion, for the crown on their avatar. Reads from the
+ * editorial `champions` table (§13) rather than being inferred, since seasons
+ * predating the app have no ESPN data to infer from.
+ */
+export async function getReigningChampion(): Promise<{ franchiseId: number; year: number } | null> {
+  const db = createPublicClient()
+  const { data } = await db
+    .from('champions')
+    .select('franchise_id, year')
+    .order('year', { ascending: false })
+    .limit(1)
+    .maybeSingle()
+  return data ? { franchiseId: data.franchise_id, year: data.year } : null
+}
+
 export async function getTeamRecords(seasonId: number): Promise<Map<number, string>> {
   const db = createPublicClient()
   const { data } = await db
@@ -125,6 +143,7 @@ export async function getTeamRecords(seasonId: number): Promise<Map<number, stri
 export async function getMatchupsForWeek(
   week: number,
   records: Map<number, string> = new Map(),
+  champion: { franchiseId: number; year: number } | null = null,
 ): Promise<MatchupRow[]> {
   const db = createPublicClient()
   const { data } = await db
@@ -132,8 +151,8 @@ export async function getMatchupsForWeek(
     .select(`
       id, matchup_period, status, home_score, away_score,
       home_projected_score, away_projected_score,
-      home:home_team_id ( id, team_name, abbreviation, logo_url, franchises ( manager_name, photo_url ) ),
-      away:away_team_id ( id, team_name, abbreviation, logo_url, franchises ( manager_name, photo_url ) )
+      home:home_team_id ( id, team_name, abbreviation, logo_url, franchises ( id, manager_name, photo_url ) ),
+      away:away_team_id ( id, team_name, abbreviation, logo_url, franchises ( id, manager_name, photo_url ) )
     `)
     .eq('matchup_period', week)
     .order('id')
@@ -143,7 +162,7 @@ export async function getMatchupsForWeek(
     team_name: string
     abbreviation: string | null
     logo_url: string | null
-    franchises: { manager_name: string; photo_url: string | null } | null
+    franchises: { id: number; manager_name: string; photo_url: string | null } | null
   } | null
 
   const toSide = (raw: Side, score: unknown, projected: unknown): MatchupSide | null =>
@@ -154,6 +173,8 @@ export async function getMatchupsForWeek(
           abbrev: raw.abbreviation,
           logoUrl: raw.logo_url,
           photoUrl: raw.franchises?.photo_url ?? null,
+          isChampion: Boolean(champion && raw.franchises?.id === champion.franchiseId),
+          championYear: champion?.year ?? null,
           manager: raw.franchises?.manager_name ?? null,
           score: Number(score),
           projected: projected == null ? null : Number(projected),

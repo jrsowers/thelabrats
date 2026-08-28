@@ -5,7 +5,7 @@ import { FieldBackdrop } from '@/components/ui/field-backdrop'
 import { Eyebrow, BracketIcon } from '@/components/ui/primitives'
 
 export const dynamic = 'force-dynamic'
-export const metadata: Metadata = { title: 'Playoff Picture · The Lab Rats' }
+export const metadata: Metadata = { title: 'Playoff Picture' }
 
 /**
  * The seeding engine (§21.7) is not built yet, and before any game is final
@@ -18,7 +18,7 @@ export default async function PlayoffsPage() {
   if (!overview) return null
 
   return (
-    <AppShell leagueName={overview.leagueName} season={overview.season}>
+    <AppShell leagueName={overview.leagueName}>
       <header className="relative -mx-4 mb-8 overflow-hidden border-b border-border px-4 pb-6 sm:-mx-6 sm:px-6">
         <FieldBackdrop />
         <div className="relative">

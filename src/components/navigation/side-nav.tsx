@@ -13,8 +13,8 @@ import { LabSeal } from '@/components/ui/primitives'
  * Mobile: collapses to a bottom bar rather than eating 25-30% of the width.
  */
 export function SideNav({
-  leagueName, season, logoUrl,
-}: { leagueName: string; season: number; logoUrl: string | null }) {
+  leagueName, logoUrl,
+}: { leagueName: string; logoUrl: string | null }) {
   const pathname = usePathname()
 
   return (
@@ -41,14 +41,12 @@ export function SideNav({
                 loading="eager"
                 decoding="async"
               />
-              <div className="eyebrow mt-2 !text-rail-muted">{season} Season</div>
             </>
           ) : (
             <div className="flex items-center gap-2.5">
               <div className="shrink-0"><LabSeal size={38} /></div>
               <div className="min-w-0">
                 <div className="display truncate text-[17px] text-rail-text">{leagueName}</div>
-                <div className="eyebrow mt-0.5 !text-rail-muted">{season} Season</div>
               </div>
             </div>
           )}
@@ -101,13 +99,6 @@ export function SideNav({
           })}
         </ul>
 
-        <div className="border-t border-white/8 px-4 py-3">
-          <p className="font-mono text-[10px] leading-relaxed text-rail-muted">
-            ESPN is the system of record.
-            <br />
-            This is the lab.
-          </p>
-        </div>
       </nav>
 
       {/* Mobile bottom bar */}

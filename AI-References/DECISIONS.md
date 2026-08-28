@@ -239,3 +239,23 @@ banner is unmissable, the draft countdown hides (preseason furniture), and
 preview persists across week navigation so you can browse in it.
 **Shape:** two games final, three live, one scheduled — a believable mid-Sunday,
 chosen because it exercises every visual state at once.
+
+## 2026-08-28 · Reigning champion wears a crown
+**Why:** James wanted the defending champion marked wherever she appears.
+**Where:** on `TeamAvatar` in `primitives.tsx`, not in the scoreboard. Every
+future surface — standings, awards, record books — picks it up for free rather
+than reimplementing it.
+**Source of truth:** the editorial `champions` table, most recent year. Not
+inferred, because seasons predating the app have no ESPN data to infer from.
+**Accessibility:** the crown carries `role="img"` and a label naming the year, so
+it is not a colour-only signal (§39).
+**Amber, per the palette:** `--warn` is already defined as "provisional,
+championships". No new colour was introduced.
+
+## 2026-08-28 · Metadata split rather than one long title
+**Why:** James asked for the title and description to be "The Lab Rats – A
+just-for-fun fantasy football league brought to you by Creator Science."
+**How:** title `The Lab Rats`, description the rest. A full sentence in a browser
+tab truncates to nonsense; search results and link previews render the two
+together as the intended string. A title template gives subpages
+"Playoff Picture · The Lab Rats". OpenGraph and Twitter cards use the badge.
