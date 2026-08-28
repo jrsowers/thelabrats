@@ -500,3 +500,15 @@ show what an actual week will look like.
 **Ranges are per-award:** a bench MVP and a win-probability collapse are not the
 same kind of number, so each has its own plausible band rather than one generic
 random score.
+
+## 2026-08-28 · Award card hierarchy: the award name leads
+The card originally set the award name as a small mono eyebrow and the
+recipient in display type — inverted, since the award name is what people scan
+for. The name is now display 21px at the top of the card; the recipient drops to
+15px beneath it.
+**The metric keeps its size** but is set in the section accent, so name and
+number read as different KINDS of information rather than competing for the same
+rank. Two large elements do not fight when only one of them is coloured.
+**Section headings take the normal text colour.** Green and red on the headings
+duplicated a distinction the cards' edge bars and metric colours already carry,
+and coloured headings made the page read as an alert rather than a scoreboard.

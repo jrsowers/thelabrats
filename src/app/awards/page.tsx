@@ -32,11 +32,15 @@ function Card({
       className="state-bar flex flex-col overflow-hidden rounded-lg border border-border bg-surface"
       style={{ '--state': accent } as React.CSSProperties}
     >
-      <div className="flex items-center justify-between gap-2 border-b border-border px-4 py-2.5">
-        <Eyebrow>{card.def.name}</Eyebrow>
+      {/* The award name is what people scan for, so it leads the card and
+          outranks the recipient. The metric keeps its size but is set in the
+          section accent, so the two read as different kinds of information
+          rather than competing for the same rank. */}
+      <div className="flex items-start justify-between gap-2 border-b border-border px-4 py-3">
+        <h3 className="display text-[21px] leading-[1.05]">{card.def.name}</h3>
         {card.placeholder && (
           <span
-            className="shrink-0 font-mono text-[8.5px] uppercase tracking-[0.14em] text-warn"
+            className="mt-0.5 shrink-0 font-mono text-[8.5px] uppercase tracking-[0.14em] text-warn"
             title={`Needs: ${card.def.needs.map((n) => NEED_LABEL[n]).join(', ')}`}
           >
             Sample
@@ -48,7 +52,7 @@ function Card({
         {/* Recipient: a player for player awards, otherwise the team(s). */}
         {card.playerName ? (
           <div>
-            <div className="display text-[19px] leading-tight">{card.playerName}</div>
+            <div className="display text-[16px] leading-tight">{card.playerName}</div>
             <div className="mt-0.5 flex items-center gap-1.5 text-[11.5px] text-muted">
               <span className="font-mono uppercase tracking-wider text-dim">{card.playerMeta}</span>
               {team && (
@@ -64,11 +68,11 @@ function Card({
             {team && (
               <TeamAvatar
                 photoUrl={team.photoUrl} logoUrl={team.logoUrl} abbrev={team.abbrev}
-                size={30} champion={team.isChampion} championYear={team.championYear}
+                size={28} champion={team.isChampion} championYear={team.championYear}
               />
             )}
             <div className="min-w-0">
-              <div className="display truncate text-[16px] leading-tight">
+              <div className="display truncate text-[15px] leading-tight">
                 {team?.name ?? 'TBD'}
               </div>
               {opponent ? (
@@ -183,15 +187,15 @@ export default async function AwardsPage({
         </div>
       )}
 
-      {([['STUDS', studs], ['DUDS', duds]] as const).map(([label, list]) => (
-        <section key={label} className="mb-10">
-          <div className="mb-5 flex items-baseline justify-between gap-4 border-b border-border pb-1.5">
-            <h2 className="display text-2xl" style={{ color: SECTION_ACCENT[label] }}>
-              {label}
-            </h2>
-            <span className="font-mono text-[10.5px] uppercase tracking-wider text-dim tnum">
-              {list.length} awards
-            </span>
+      {([
+        ['STUDS', 'Studs Of The Week', studs],
+        ['DUDS', 'Duds Of The Week', duds],
+      ] as const).map(([key, heading, list]) => (
+        <section key={key} className="mb-10">
+          {/* Heading takes the normal text colour; the stud/dud distinction is
+              already carried by each card's edge bar and metric. */}
+          <div className="mb-5 border-b border-border pb-1.5">
+            <h2 className="display text-2xl">{heading}</h2>
           </div>
           <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
             {list.map((c) => (
