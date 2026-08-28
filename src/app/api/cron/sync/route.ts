@@ -4,6 +4,7 @@ import { createEspnClientFromEnv } from '@/lib/espn/client'
 import { syncLeague } from '@/lib/ingest/syncLeague'
 import { syncPlayers } from '@/lib/ingest/syncPlayers'
 import { decideSync } from '@/lib/sync/cadence'
+import { captureSnapshots } from '@/lib/ingest/snapshots'
 
 export const dynamic = 'force-dynamic'
 // Sync is a handful of ESPN calls plus upserts; well inside Vercel's ceiling,
@@ -71,8 +72,17 @@ export async function GET(request: Request) {
     if (!result.ok) console.error('player sync failed:', result.error)
   }
 
+  // History must be captured as it happens — ESPN never exposes a past score.
+  let snapshots = null
+  const { data: seasonRow } = await db.from('seasons').select('id')
+    .order('year', { ascending: false }).limit(1).maybeSingle()
+  if (seasonRow && league.ok) {
+    snapshots = await captureSnapshots(seasonRow.id)
+  }
+
   return NextResponse.json({
     action: decision.action,
+    snapshots,
     reason: decision.reason,
     league: { ok: league.ok, records: league.recordsProcessed, detail: league.detail },
     players,
