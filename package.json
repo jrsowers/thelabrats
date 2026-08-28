@@ -11,7 +11,8 @@
     "test:watch": "vitest",
     "fixtures:sanitize": "node scripts/sanitize-fixtures.mjs",
     "fixtures:check": "node scripts/check-fixture-leaks.mjs",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "verify:rls": "node scripts/verify-rls.mjs"
   },
   "dependencies": {
     "next": "16.3.3",

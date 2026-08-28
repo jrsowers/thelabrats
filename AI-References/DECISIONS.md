@@ -91,3 +91,15 @@ global state.
 rotating all. New `sb_publishable_` / `sb_secret_` keys revoke independently, and
 the legacy pair is on a deprecation path.
 **Note:** env var renamed `SUPABASE_SERVICE_ROLE_KEY` -> `SUPABASE_SECRET_KEY`.
+
+## 2026-08-28 · Display: team name primary, real manager name secondary
+**Why:** James's call. "Da Reigning Champ / Manager: Chenell Basilio".
+**Consequence:** Real names ship on a public, ungated site — accepted knowingly.
+Manager name never appears without its team name.
+
+## 2026-08-28 · 2025 champion is editorial data, not ingested
+**Why:** Chenell Basilio won 2025, but ESPN holds no 2025 season under this
+league ID. Nothing to sync.
+**How:** `champions` table keyed to `franchise_id`, seeded by migration. Marked
+editorial (§13) so no sync ever overwrites it. Keyed to franchise, not team, so
+it survives renames.

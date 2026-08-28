@@ -124,10 +124,27 @@ from them, not from team IDs or names (§25).
 
 ---
 
-## Past champion — needs input
+## Past champions
 
-Team 3 is named **"Da Reigning Champ"** (Chenell Basilio), which suggests she won
-2025 — but **that is an inference from a team name, not data.** ESPN holds no
-2025 season under this league ID, so Past Champions must be entered manually.
+| Season | Champion | Source |
+| --- | --- | --- |
+| 2025 | **Chenell Basilio** | ✅ Confirmed by James, 2026-08-28 |
 
-**Ask James:** who won 2025, and was that league under a different ESPN ID?
+ESPN holds no 2025 season under this league ID, so this is **editorial data**
+(spec §13) — entered manually, never overwritten by a sync. Stored in the
+`champions` table keyed to the franchise, so it survives team renames.
+
+---
+
+## Display names
+
+**Team name is primary. Manager name is secondary, and real names are allowed.**
+Confirmed by James, 2026-08-28.
+
+```
+Da Reigning Champ
+Manager: Chenell Basilio
+```
+
+Applies to scoreboard cards, standings, awards, and record books. Team name
+alone is fine where space is tight; manager name never appears without its team.
