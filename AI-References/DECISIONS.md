@@ -448,3 +448,32 @@ The scoreboard is labelled live and the data behind it now refreshes every
 minute during games, but the page does not update without a manual reload. That
 is the largest gap between what the app is and what it appears to promise on a
 Sunday. Needs Supabase Realtime or a 30s refetch (§36) before week 1.
+
+## 2026-08-28 · Auto-refresh via router.refresh(), not Supabase Realtime
+Realtime would be more elegant, but it needs a table publication, a WebSocket
+per viewer and reconnection handling — for data that changes at most once a
+minute, for twelve people. `router.refresh()` polls our own server (never ESPN,
+so viewer count costs ESPN nothing) and re-renders in place, so scores update
+without the scoreboard blanking (§37). Spec §36 allows this as the MVP.
+**Only runs when something can change:** current week, not preview, and at least
+one matchup live or scheduled. Pauses on a hidden tab and catches up on return.
+
+## 2026-08-28 · Projected playoff mode is not needed
+James: he wants a moment-in-time snapshot of who is in and out, which is what
+the page already does. §21.1's PROJECTED mode is dropped from scope rather than
+built and left unused.
+
+## 2026-08-28 · 2025 history is editorial and partly unlinkable
+The 2025 season was played on Yahoo, so no ESPN payload exists — now or ever.
+Seeded by hand into `champions` + `season_podium`.
+**`season_podium.franchise_id` is nullable on purpose:** Avery Smith finished
+second in 2025 but is not in the 2026 ESPN league, so there is no franchise row
+to point at. Recording the name anyway beats dropping a real result because the
+person left. The seed script reports which entries linked and which did not.
+**Firsts and Worsts** therefore starts empty: there is no game-level 2025 data to
+import, only final standings. James regains Yahoo history access on Sept 15.
+
+## 2026-08-28 · Admin is at /admin, unlisted, shared-secret only
+No user accounts exist, so the same CRON_SECRET is the whole auth model. The key
+is posted as a form field rather than a query string so it never lands in
+browser history, access logs or a Referer header. Page is noindex.

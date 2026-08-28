@@ -15,7 +15,8 @@
     "verify:rls": "node scripts/verify-rls.mjs",
     "sync": "tsx scripts/sync.ts",
     "seed:photos": "tsx scripts/seed-member-photos.ts",
-    "logo:transparent": "python3 scripts/make-logo-transparent.py"
+    "logo:transparent": "python3 scripts/make-logo-transparent.py",
+    "seed:history": "tsx scripts/seed-history.ts"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.112.4",

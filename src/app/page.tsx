@@ -8,6 +8,7 @@ import { AppShell } from '@/components/navigation/app-shell'
 import { MatchupRow } from '@/components/scoreboard/matchup-row'
 import { FieldBackdrop } from '@/components/ui/field-backdrop'
 import { DraftCountdown } from '@/components/ui/draft-countdown'
+import { LiveRefresh } from '@/components/ui/live-refresh'
 import { Eyebrow, EmptyState, LabSeal, BracketIcon, Tag } from '@/components/ui/primitives'
 import { applyLivePreview } from '@/lib/league/preview'
 
@@ -69,6 +70,12 @@ export default async function Page({
   const isPreview = params.preview === 'live'
   const matchups = isPreview ? applyLivePreview(realMatchups, week) : realMatchups
 
+  // Refresh only while something can actually change. Polling a finished week
+  // costs the viewer battery and us nothing but noise.
+  const anyLive = matchups.some((m) => m.status === 'LIVE')
+  const anyScheduled = matchups.some((m) => m.status === 'SCHEDULED')
+  const shouldAutoRefresh = !isPreview && week === overview.currentWeek && (anyLive || anyScheduled)
+
   return (
     <AppShell leagueName={overview.leagueName}>
       {/* ---- Header ---- */}
@@ -82,12 +89,15 @@ export default async function Page({
               {overview.season} season · {overview.teamCount} Contenders · 1 Champion
             </p>
           </div>
-          {lastSync?.finished_at && (
-            <p className="font-mono text-[10.5px] text-dim tnum">
-              <span className="font-bold text-muted">Last data sync:</span>{' '}
-              {fmtDate(lastSync.finished_at)}
-            </p>
-          )}
+          <div className="flex flex-col items-start gap-1 sm:items-end">
+            {lastSync?.finished_at && (
+              <p className="font-mono text-[10.5px] text-dim tnum">
+                <span className="font-bold text-muted">Last data sync:</span>{' '}
+                {fmtDate(lastSync.finished_at)}
+              </p>
+            )}
+            <LiveRefresh active={shouldAutoRefresh} />
+          </div>
         </div>
       </header>
 

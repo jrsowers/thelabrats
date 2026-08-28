@@ -10,7 +10,7 @@ export type Database = {
   // Allows to automatically instantiate createClient with right options
   // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
   __InternalSupabase: {
-    PostgrestVersion: "14.17"
+    PostgrestVersion: "14.5"
   }
   public: {
     Tables: {
@@ -104,7 +104,12 @@ export type Database = {
           id: number
           league_id: number
           note: string | null
+          platform: string | null
+          record: string | null
           team_name: string | null
+          title_game_opponent: string | null
+          title_game_score_against: number | null
+          title_game_score_for: number | null
           year: number
         }
         Insert: {
@@ -113,7 +118,12 @@ export type Database = {
           id?: never
           league_id: number
           note?: string | null
+          platform?: string | null
+          record?: string | null
           team_name?: string | null
+          title_game_opponent?: string | null
+          title_game_score_against?: number | null
+          title_game_score_for?: number | null
           year: number
         }
         Update: {
@@ -122,7 +132,12 @@ export type Database = {
           id?: never
           league_id?: number
           note?: string | null
+          platform?: string | null
+          record?: string | null
           team_name?: string | null
+          title_game_opponent?: string | null
+          title_game_score_against?: number | null
+          title_game_score_for?: number | null
           year?: number
         }
         Relationships: [
@@ -719,6 +734,57 @@ export type Database = {
           },
         ]
       }
+      season_podium: {
+        Row: {
+          created_at: string
+          franchise_id: number | null
+          id: number
+          league_id: number
+          manager_name: string
+          place: number
+          record: string | null
+          team_name: string
+          year: number
+        }
+        Insert: {
+          created_at?: string
+          franchise_id?: number | null
+          id?: never
+          league_id: number
+          manager_name: string
+          place: number
+          record?: string | null
+          team_name: string
+          year: number
+        }
+        Update: {
+          created_at?: string
+          franchise_id?: number | null
+          id?: never
+          league_id?: number
+          manager_name?: string
+          place?: number
+          record?: string | null
+          team_name?: string
+          year?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "season_podium_franchise_id_fkey"
+            columns: ["franchise_id"]
+            isOneToOne: false
+            referencedRelation: "franchises"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "season_podium_league_id_fkey"
+            columns: ["league_id"]
+            isOneToOne: false
+            referencedRelation: "leagues"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       season_teams: {
         Row: {
           abbreviation: string | null
@@ -1089,7 +1155,7 @@ export type Database = {
       }
     }
     Functions: {
-      [_ in never]: never
+      trigger_espn_sync: { Args: never; Returns: undefined }
     }
     Enums: {
       [_ in never]: never

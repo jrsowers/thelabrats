@@ -149,7 +149,7 @@ Apex, www, and `thelabrats-gray.vercel.app` all resolve.
 | 5 | Playoff Picture — bracket + bubble | ✅ |
 | 6 | Transactions | 🔨 UI + filters done; parser unverified until a real move |
 | 7 | Studs & Duds | 🔨 7 of 14 awards; player awards need week 1 |
-| 8 | Record Books | ⬜ accumulates with the season |
+| 8 | Record Books | ✅ Champions Corner + Firsts and Worsts (records accumulate) |
 
 ---
 

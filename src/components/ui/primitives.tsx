@@ -138,6 +138,55 @@ export function BracketIcon({
   )
 }
 
+/* ---------- Trophy ----------
+   Place decides the metal: gold, silver, bronze. Colour alone never carries it
+   — the place number sits beside it (§39). */
+const TROPHY_METAL: Record<number, { from: string; to: string; label: string }> = {
+  1: { from: '#ffe89a', to: '#b8790a', label: 'First place' },
+  2: { from: '#e8edf3', to: '#8d98a6', label: 'Second place' },
+  3: { from: '#f0c9a4', to: '#8a5524', label: 'Third place' },
+}
+
+export function Trophy({ place, size = 14 }: { place: number; size?: number }) {
+  const metal = TROPHY_METAL[place] ?? TROPHY_METAL[3]
+  const id = `trophy-${place}`
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" role="img" aria-label={metal.label}>
+      <defs>
+        <linearGradient id={id} x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stopColor={metal.from} />
+          <stop offset="100%" stopColor={metal.to} />
+        </linearGradient>
+      </defs>
+      <path
+        fill={`url(#${id})`}
+        d="M7 3h10v2h3a1 1 0 0 1 1 1v2a4 4 0 0 1-4 4h-.3A5 5 0 0 1 13 15.9V18h3a1 1 0 0 1 0 2H8a1 1 0 0 1 0-2h3v-2.1A5 5 0 0 1 7.3 12H7a4 4 0 0 1-4-4V6a1 1 0 0 1 1-1h3V3zm0 4H5v1a2 2 0 0 0 2 2V7zm10 3a2 2 0 0 0 2-2V7h-2v3z"
+      />
+    </svg>
+  )
+}
+
+/* ---------- Unknown champion ----------
+   A silhouette for a season nobody has won yet. */
+export function MysteryAvatar({ size = 36 }: { size?: number }) {
+  return (
+    <div
+      className="flex shrink-0 items-center justify-center rounded-full border border-dashed border-border-strong bg-surface-2"
+      style={{ width: size, height: size }}
+      role="img"
+      aria-label="Champion not yet decided"
+    >
+      <svg width={size * 0.6} height={size * 0.6} viewBox="0 0 24 24" fill="none" aria-hidden>
+        <circle cx="12" cy="8.5" r="3.6" fill="currentColor" className="text-dim" opacity="0.5" />
+        <path
+          d="M4.5 20.5c0-3.9 3.4-6.5 7.5-6.5s7.5 2.6 7.5 6.5"
+          fill="currentColor" className="text-dim" opacity="0.5"
+        />
+      </svg>
+    </div>
+  )
+}
+
 /* ---------- Clinch lock ----------
    Shown only when a playoff berth is mathematically certain. */
 export function LockIcon({ size = 13, className }: { size?: number; className?: string }) {

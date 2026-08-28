@@ -270,6 +270,84 @@ export async function getSeasonResults(seasonId: number) {
   }))
 }
 
+export interface PodiumEntry {
+  place: number
+  teamName: string
+  managerName: string
+  /** Null when the manager has since left the league. */
+  franchiseId: number | null
+  record: string | null
+}
+
+export interface SeasonHistory {
+  year: number
+  platform: string | null
+  champion: {
+    teamName: string
+    managerName: string
+    franchiseId: number
+    record: string | null
+    photoUrl: string | null
+    titleGame: { opponent: string; scoreFor: number; scoreAgainst: number } | null
+    note: string | null
+  } | null
+  podium: PodiumEntry[]
+}
+
+/** Completed seasons, newest first. Editorial data (§13). */
+export async function getSeasonHistory(): Promise<SeasonHistory[]> {
+  const db = createPublicClient()
+  const [{ data: champions }, { data: podium }] = await Promise.all([
+    db.from('champions')
+      .select('year, team_name, record, platform, note, title_game_opponent, title_game_score_for, title_game_score_against, franchise_id, franchises ( manager_name, photo_url )')
+      .order('year', { ascending: false }),
+    db.from('season_podium')
+      .select('year, place, team_name, manager_name, franchise_id, record')
+      .order('year', { ascending: false })
+      .order('place'),
+  ])
+
+  const years = [...new Set([
+    ...(champions ?? []).map((c) => c.year),
+    ...(podium ?? []).map((p) => p.year),
+  ])].sort((a, b) => b - a)
+
+  return years.map((year) => {
+    const c = (champions ?? []).find((x) => x.year === year)
+    const f = c?.franchises as unknown as { manager_name: string; photo_url: string | null } | null
+    return {
+      year,
+      platform: c?.platform ?? null,
+      champion: c && c.franchise_id
+        ? {
+            teamName: c.team_name ?? 'Champion',
+            managerName: f?.manager_name ?? 'Unknown',
+            franchiseId: c.franchise_id,
+            record: c.record ?? null,
+            photoUrl: f?.photo_url ?? null,
+            titleGame: c.title_game_opponent && c.title_game_score_for != null
+              ? {
+                  opponent: c.title_game_opponent,
+                  scoreFor: Number(c.title_game_score_for),
+                  scoreAgainst: Number(c.title_game_score_against ?? 0),
+                }
+              : null,
+            note: c.note ?? null,
+          }
+        : null,
+      podium: (podium ?? [])
+        .filter((p) => p.year === year)
+        .map((p) => ({
+          place: p.place,
+          teamName: p.team_name,
+          managerName: p.manager_name,
+          franchiseId: p.franchise_id,
+          record: p.record,
+        })),
+    }
+  })
+}
+
 export async function getLastSync() {
   const db = createPublicClient()
   const { data } = await db

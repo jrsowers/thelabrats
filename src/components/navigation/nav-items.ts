@@ -17,7 +17,11 @@ export interface NavItem {
   ready: boolean
 }
 
-/** Order set by James, 2026-08-28. */
+/**
+ * Order set by James, 2026-08-28.
+ *
+ * /admin, /awards and /recaps are deliberately absent — reachable by URL only.
+ */
 export const NAV_ITEMS: NavItem[] = [
   { href: '/',             label: 'Live Scoreboard',  short: 'Scores',  icon: Radio,          ready: true  },
   { href: '/standings',    label: 'League Standings', short: 'Table',   icon: Trophy,         ready: true  },
@@ -25,5 +29,5 @@ export const NAV_ITEMS: NavItem[] = [
   { href: '/transactions', label: 'Transaction Log',  short: 'Moves',   icon: ArrowLeftRight, ready: true  },
   { href: '/recaps',       label: 'Weekly Recaps',    short: 'Recaps',  icon: Newspaper,      ready: false },
   { href: '/awards',       label: 'Studs & Duds',     short: 'Awards',  icon: Award,          ready: false },
-  { href: '/records',      label: 'Record Books',     short: 'Records', icon: BookOpen,       ready: false },
+  { href: '/records',      label: 'Record Books',     short: 'Records', icon: BookOpen,       ready: true  },
 ]
