@@ -5,11 +5,14 @@ import {
 } from '@/lib/league/queries'
 import { simulateSeason } from '@/lib/league/preview'
 import { buildAwardCards } from '@/lib/awards/build'
-import { NEED_LABEL, CADENCE_LABEL, type AwardSection } from '@/lib/awards/catalog'
+import {
+  NEED_LABEL, CADENCE_LABEL, awardsBySection, type AwardSection,
+} from '@/lib/awards/catalog'
 import type { AwardCard } from '@/lib/awards/placeholder'
 import { AppShell } from '@/components/navigation/app-shell'
 import { FieldBackdrop } from '@/components/ui/field-backdrop'
 import { WeekSelect } from '@/components/ui/week-select'
+import { PlayerHeadshot } from '@/components/ui/player-headshot'
 import { Eyebrow, TeamAvatar, Tag } from '@/components/ui/primitives'
 
 export const dynamic = 'force-dynamic'
@@ -37,7 +40,10 @@ function Card({
           section accent, so the two read as different kinds of information
           rather than competing for the same rank. */}
       <div className="flex items-start justify-between gap-2 border-b border-border px-4 py-3">
-        <h3 className="display text-[21px] leading-[1.05]">{card.def.name}</h3>
+        <div className="min-w-0">
+          <h3 className="display text-[21px] leading-[1.05]">{card.def.name}</h3>
+          <p className="mt-1 text-[12px] leading-snug text-muted">{card.def.blurb}</p>
+        </div>
         {card.placeholder && (
           <span
             className="mt-0.5 shrink-0 font-mono text-[8.5px] uppercase tracking-[0.14em] text-warn"
@@ -54,16 +60,23 @@ function Card({
       <div className="flex flex-1 flex-col gap-3 px-4 py-3.5">
         {/* Recipient: a player for player awards, otherwise the team(s). */}
         {card.playerName ? (
-          <div>
-            <div className="display text-[16px] leading-tight">{card.playerName}</div>
-            <div className="mt-0.5 flex items-center gap-1.5 text-[11.5px] text-muted">
-              <span className="font-mono uppercase tracking-wider text-dim">{card.playerMeta}</span>
-              {team && (
-                <>
-                  <span className="text-dim" aria-hidden>·</span>
-                  <span className="truncate">{team.name}</span>
-                </>
-              )}
+          <div className="flex items-center gap-2.5">
+            <PlayerHeadshot
+              espnPlayerId={card.espnPlayerId}
+              name={card.playerName}
+              size={38}
+            />
+            <div className="min-w-0">
+              <div className="display truncate text-[16px] leading-tight">{card.playerName}</div>
+              <div className="flex items-center gap-1.5 text-[11.5px] text-muted">
+                <span className="font-mono uppercase tracking-wider text-dim">{card.playerMeta}</span>
+                {team && (
+                  <>
+                    <span className="text-dim" aria-hidden>·</span>
+                    <span className="truncate">{team.name}</span>
+                  </>
+                )}
+              </div>
             </div>
           </div>
         ) : (
@@ -153,8 +166,18 @@ export default async function AwardsPage({
     players,
   })
 
-  const studs = cards.filter((c) => c.def.section === 'STUDS')
-  const duds = cards.filter((c) => c.def.section === 'DUDS')
+  // Catalog order: manager judgement, then matchups, then players.
+  const order = new Map(
+    (['STUDS', 'DUDS'] as const).flatMap((sec) =>
+      awardsBySection(sec).map((def, i) => [def.key, i] as const)),
+  )
+  const inOrder = (section: AwardSection) =>
+    cards
+      .filter((c) => c.def.section === section)
+      .sort((a, b) => (order.get(a.def.key) ?? 0) - (order.get(b.def.key) ?? 0))
+
+  const studs = inOrder('STUDS')
+  const duds = inOrder('DUDS')
   const sampleCount = cards.filter((c) => c.placeholder).length
 
   return (
@@ -208,11 +231,6 @@ export default async function AwardsPage({
         </section>
       ))}
 
-      <p className="max-w-3xl font-mono text-[10px] leading-relaxed text-dim">
-        Every award has a documented formula and is recomputed from stored data, never
-        written by hand. Hover a <span className="text-warn">Sample</span> marker to see
-        what that award is still waiting on.
-      </p>
     </AppShell>
   )
 }

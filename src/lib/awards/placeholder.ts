@@ -25,6 +25,7 @@ export interface AwardCard {
   opponentId: number | null
   /** Player name, for player awards. */
   playerName: string | null
+  espnPlayerId: number | null
   playerMeta: string | null
   metricValue: string
   headline: string
@@ -53,8 +54,8 @@ const f1 = (n: number) => n.toFixed(1)
 
 export interface PlaceholderPools {
   teamIds: number[]
-  /** { name, position, nflTeam } from the real player pool. */
-  players: { name: string; position: string; nflTeam: string }[]
+  /** From the real synced player pool, ids included so headshots resolve. */
+  players: { espnPlayerId: number; name: string; position: string; nflTeam: string }[]
 }
 
 export function placeholderAward(
@@ -175,6 +176,65 @@ export function placeholderAward(
         supporting: [{ label: 'Projected', value: f1(proj) }, { label: 'Actual', value: f1(act) }],
       }
     },
+    // The score-based awards compute for real once games are final; these
+    // headlines only appear before week 1. They must not repeat the card's
+    // description, which now sits directly above them.
+    manager_of_the_week: () => {
+      const pts = between(r, 132, 168)
+      return {
+        value: f1(pts),
+        headline: `${f1(pts)} points — nobody else came within twenty.`,
+        supporting: [{ label: 'Opponent', value: f1(pts - between(r, 22, 40)) }],
+      }
+    },
+    highway_robbery: () => {
+      const pts = between(r, 78, 94)
+      return {
+        value: f1(pts),
+        headline: `Won with ${f1(pts)}. Six teams scored more and lost.`,
+        supporting: [{ label: 'Opponent', value: f1(pts - between(r, 1, 6)) }],
+      }
+    },
+    photo_finish: () => {
+      const margin = between(r, 0.2, 1.8)
+      return {
+        value: f1(margin),
+        headline: `Separated by ${f1(margin)} after four days of football.`,
+        supporting: [{ label: 'Final', value: `${f1(between(r, 108, 126))}` }],
+      }
+    },
+    shootout: () => {
+      const total = between(r, 268, 312)
+      return {
+        value: f1(total),
+        headline: `${f1(total)} points between them. Neither defence turned up.`,
+        supporting: [{ label: 'Final', value: `${f1(total / 2 + 8)}` }],
+      }
+    },
+    bad_beat: () => {
+      const pts = between(r, 138, 158)
+      return {
+        value: f1(pts),
+        headline: `Scored ${f1(pts)} and lost. Would have beaten every other team.`,
+        supporting: [{ label: 'Margin', value: `-${f1(between(r, 0.5, 5))}` }],
+      }
+    },
+    public_execution: () => {
+      const margin = between(r, 62, 88)
+      return {
+        value: f1(margin),
+        headline: `A ${f1(margin)}-point margin. This was not a contest.`,
+        supporting: [{ label: 'Final', value: `${f1(between(r, 150, 172))}` }],
+      }
+    },
+    dumpster_fire: () => {
+      const total = between(r, 118, 142)
+      return {
+        value: f1(total),
+        headline: `${f1(total)} combined. Somebody had to win it.`,
+        supporting: [{ label: 'Final', value: `${f1(total / 2 + 3)}` }],
+      }
+    },
     heartbreak_kid: () => {
       const swing = between(r, 8, 21)
       return {
@@ -187,7 +247,8 @@ export function placeholderAward(
 
   const built = spec[def.key]?.() ?? {
     value: f1(between(r, 80, 150)),
-    headline: def.blurb,
+    // Never fall back to def.blurb — it is rendered directly above this line.
+    headline: 'Sample figures until week 1 scoring lands.',
     supporting: [],
   }
 
@@ -196,6 +257,7 @@ export function placeholderAward(
     teamId,
     opponentId: def.player ? null : opponentId,
     playerName: def.player ? player?.name ?? null : null,
+    espnPlayerId: def.player ? player?.espnPlayerId ?? null : null,
     playerMeta: def.player && player ? `${player.position} · ${player.nflTeam}` : null,
     metricValue: built.value,
     headline: built.headline,

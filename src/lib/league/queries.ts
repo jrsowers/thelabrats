@@ -354,13 +354,14 @@ export async function getPlayerSample(limit = 120) {
   const db = createPublicClient()
   const { data } = await db
     .from('players')
-    .select('full_name, position, nfl_team')
+    .select('espn_player_id, full_name, position, nfl_team')
     .eq('active', true)
     .not('position', 'in', '("K","D/ST")')
     .order('id')
     .limit(limit)
 
   return (data ?? []).map((p) => ({
+    espnPlayerId: p.espn_player_id,
     name: p.full_name,
     position: p.position ?? '',
     nflTeam: p.nfl_team ?? '',

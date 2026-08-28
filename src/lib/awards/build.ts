@@ -30,6 +30,7 @@ export function buildAwardCards(
       teamId: computed.teamIds[0] ?? null,
       opponentId: computed.teamIds[1] ?? null,
       playerName: null,
+      espnPlayerId: null,
       playerMeta: null,
       metricValue: computed.metric.value,
       headline: computed.headline,

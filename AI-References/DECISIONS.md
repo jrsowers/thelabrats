@@ -530,3 +530,25 @@ points exceeded the final margin by the most" — reads only the final boxscore
 and the final margin. Corrected to PLAYER_SCORES / WEEKLY_BOXSCORE. The
 over-cautious tag would have made the continuous-capture case look twice as
 strong as it is.
+
+## 2026-08-28 · Award names are nouns; every card carries a one-line definition
+James: "Manager Of The Week" is boring, "Fantasy Nostradamus" is fun; and
+"Highway Robbery" names an act rather than a thing. Every award is now a noun
+phrase naming a character or a scene — The Mastermind, The Cat Burglar, The
+Prime Specimen, The Crime Scene, The Lead Balloon — with a plain one-sentence
+definition beneath the title so nobody has to guess what earned it.
+**Ordering** within each section: manager judgement, then matchup outcomes, then
+individual performances, driven by a `category` field rather than array order.
+
+## 2026-08-28 · Player headshots come from ESPN's image combiner
+`a.espncdn.com/combiner/i?img=/i/headshots/nfl/players/full/{id}.png&w=..&h=..`
+The raw asset is ~240KB; the combiner at display size is ~16KB.
+**A fallback is mandatory, not optional:** a player with no photo returns a
+404 with a 1-byte body, not a placeholder image. Rookies, practice-squad
+call-ups and team defences all miss, so the component swaps in initials onError.
+
+## 2026-08-28 · Placeholder headlines must not repeat the card description
+Adding the one-line definition under each title exposed a duplication: the
+generic placeholder fallback used `def.blurb` as its headline, so seven cards
+printed the same sentence twice. Each score-based award now has its own sample
+headline, and the fallback explicitly never reuses the blurb.
