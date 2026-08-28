@@ -12,7 +12,6 @@ import type { AwardCard } from '@/lib/awards/placeholder'
 import { AppShell } from '@/components/navigation/app-shell'
 import { FieldBackdrop } from '@/components/ui/field-backdrop'
 import { WeekSelect } from '@/components/ui/week-select'
-import { PlayerHeadshot } from '@/components/ui/player-headshot'
 import { Eyebrow, TeamAvatar, Tag } from '@/components/ui/primitives'
 import { AwardGrid } from '@/components/awards/award-grid'
 
@@ -53,7 +52,6 @@ function CardBody({
 }: { card: AwardCard; teams: Map<number, StandingsTeam> }) {
   const accent = SECTION_ACCENT[card.def.section]
   const team = card.teamId != null ? teams.get(card.teamId) : null
-  const opponent = card.opponentId != null ? teams.get(card.opponentId) : null
 
   return (
     <>
@@ -76,28 +74,15 @@ function CardBody({
         </div>
       </div>
 
-      {card.playerName && (
-        <div className="flex items-center gap-2 rounded-md border border-border bg-surface-2/50 px-2.5 py-1.5">
-          <PlayerHeadshot espnPlayerId={card.espnPlayerId} name={card.playerName} size={26} />
-          <div className="min-w-0">
-            <div className="truncate text-[13px] font-semibold leading-tight">
-              {card.playerName}
-            </div>
-            <div className="font-mono text-[9.5px] uppercase tracking-wider text-dim">
-              {card.playerMeta}
-            </div>
-          </div>
-        </div>
-      )}
-
-      {!card.playerName && opponent && (
-        <div className="flex items-center gap-2 rounded-md border border-border bg-surface-2/50 px-2.5 py-1.5">
-          <span className="font-mono text-[9.5px] uppercase tracking-wider text-dim">vs</span>
-          <span className="truncate text-[13px] font-semibold">{opponent.name}</span>
-        </div>
-      )}
-
-      <p className="text-[13px] leading-relaxed text-muted">{card.headline}</p>
+      {/* Commentary carries the player and opponent inline, in bold, instead
+          of separate chips — every card then has the same shape. */}
+      <p className="text-[13px] leading-relaxed text-muted">
+        {card.commentary.map((seg, i) =>
+          seg.bold
+            ? <strong key={i} className="font-semibold text-text">{seg.text}</strong>
+            : <span key={i}>{seg.text}</span>,
+        )}
+      </p>
 
       <div className="mt-auto flex items-end justify-between gap-4 border-t border-border pt-3">
         <div>
@@ -158,7 +143,9 @@ export default async function AwardsPage({
   }))
 
   const cards = buildAwardCards(awardMatchups, week, {
-    teamIds: teams.map((t) => t.seasonTeamId),
+    teams: teams.map((t) => ({
+      seasonTeamId: t.seasonTeamId, name: t.name, manager: t.manager,
+    })),
     players,
   })
 

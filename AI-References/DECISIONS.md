@@ -616,3 +616,15 @@ Its regex required a class to be followed by `{` or `,`, which false-negatived
 on compound selectors like `.reveal-card:hover`. Now matches the class as a
 selector token. Re-verified against the real failure mode — deleting the whole
 block — which correctly fails four assertions.
+
+## 2026-08-28 · Commentary replaces the player and opponent chips
+Award cards previously carried a player chip or an opponent chip beneath the
+manager, which meant cards had different shapes depending on the award type.
+Those details now live inside a single commentary sentence with the names and
+numbers in bold, so every card has identical structure.
+**One builder serves real and sample awards** (`commentary.ts`), so the voice
+cannot diverge between what you see before week 1 and after it.
+**Managers are referred to by first name** — that is how the league talks about
+each other, and it reads far better than "Jesse Anderson lost to Mr. Anderson".
+`PlayerHeadshot` is now unused on this page but kept: matchup expansion needs it
+once player scoring exists.

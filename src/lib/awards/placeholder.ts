@@ -16,6 +16,7 @@
  * what an actual week will look like rather than "Player A".
  */
 import type { AwardDef } from './catalog'
+import { buildCommentary, firstName, type Segment } from './commentary'
 
 export interface AwardCard {
   def: AwardDef
@@ -28,7 +29,8 @@ export interface AwardCard {
   espnPlayerId: number | null
   playerMeta: string | null
   metricValue: string
-  headline: string
+  /** Bolded sentence naming the manager, the player or opponent, and the number. */
+  commentary: Segment[]
   supporting: { label: string; value: string }[]
   placeholder: boolean
 }
@@ -53,7 +55,8 @@ const between = (r: () => number, lo: number, hi: number) => lo + r() * (hi - lo
 const f1 = (n: number) => n.toFixed(1)
 
 export interface PlaceholderPools {
-  teamIds: number[]
+  /** Real teams, so sample commentary uses real names. */
+  teams: { seasonTeamId: number; name: string; manager: string | null }[]
   /** From the real synced player pool, ids included so headshots resolve. */
   players: { espnPlayerId: number; name: string; position: string; nflTeam: string }[]
 }
@@ -62,12 +65,15 @@ export function placeholderAward(
   def: AwardDef, week: number, pools: PlaceholderPools,
 ): AwardCard {
   const r = rng(hash(def.key) + week * 7919)
-  const teamId = pools.teamIds[Math.floor(r() * pools.teamIds.length)] ?? null
-  let opponentId = pools.teamIds[Math.floor(r() * pools.teamIds.length)] ?? null
-  if (opponentId === teamId) {
-    const i = pools.teamIds.indexOf(teamId!)
-    opponentId = pools.teamIds[(i + 1) % pools.teamIds.length] ?? null
+  const teams = pools.teams
+  const winner = teams[Math.floor(r() * teams.length)] ?? null
+  let foe = teams[Math.floor(r() * teams.length)] ?? null
+  if (foe && winner && foe.seasonTeamId === winner.seasonTeamId) {
+    const i = teams.findIndex((x) => x.seasonTeamId === winner.seasonTeamId)
+    foe = teams[(i + 1) % teams.length] ?? null
   }
+  const teamId = winner?.seasonTeamId ?? null
+  const opponentId = foe?.seasonTeamId ?? null
 
   const player = pools.players.length > 0
     ? pools.players[Math.floor(r() * pools.players.length)]
@@ -75,12 +81,16 @@ export function placeholderAward(
 
   // Each award gets a value in a range that is plausible FOR THAT AWARD —
   // a bench MVP and a win-probability collapse are not the same kind of number.
-  const spec: Record<string, () => { value: string; headline: string; supporting: { label: string; value: string }[] }> = {
+  // Each award supplies its own plausible number and supporting stats; the
+  // sentence itself comes from the shared commentary builder.
+  const spec: Record<string, () => {
+    value: string
+    supporting: { label: string; value: string }[]
+  }> = {
     waiver_wire_wizard: () => {
       const pts = between(r, 41, 78)
       return {
         value: f1(pts),
-        headline: `Picked up three weeks ago and has scored ${f1(pts)} since.`,
         supporting: [{ label: 'Added', value: `Week ${Math.max(1, week - 3)}` }],
       }
     },
@@ -89,7 +99,6 @@ export function placeholderAward(
       const act = proj + between(r, 12, 24)
       return {
         value: `+${f1(act - proj)}`,
-        headline: `Projected for ${f1(proj)}. Scored ${f1(act)}. Started anyway.`,
         supporting: [{ label: 'Projected', value: f1(proj) }, { label: 'Actual', value: f1(act) }],
       }
     },
@@ -97,7 +106,6 @@ export function placeholderAward(
       const left = between(r, 26, 44)
       return {
         value: f1(left),
-        headline: `The optimal lineup would have scored ${f1(left)} more.`,
         supporting: [{ label: 'Efficiency', value: `${between(r, 68, 79).toFixed(0)}%` }],
       }
     },
@@ -105,7 +113,6 @@ export function placeholderAward(
       const moves = Math.round(between(r, 5, 11))
       return {
         value: String(moves),
-        headline: `Made ${moves} roster moves this week and still lost.`,
         supporting: [{ label: 'Result', value: 'Loss' }],
       }
     },
@@ -113,7 +120,6 @@ export function placeholderAward(
       const edge = between(r, 18, 34)
       return {
         value: `+${f1(edge)}`,
-        headline: `Projected to win by ${f1(edge)}. Lost anyway.`,
         supporting: [{ label: 'Result', value: 'Loss' }],
       }
     },
@@ -124,7 +130,6 @@ export function placeholderAward(
       const left = between(r, 0.4, 3.8)
       return {
         value: f1(left),
-        headline: `Left just ${f1(left)} points on the bench — the tightest lineup in the league.`,
         supporting: [{ label: 'Efficiency', value: `${between(r, 96, 99.6).toFixed(1)}%` }],
       }
     },
@@ -132,7 +137,6 @@ export function placeholderAward(
       const pts = between(r, 31, 46)
       return {
         value: f1(pts),
-        headline: `Started him. He went for ${f1(pts)}.`,
         supporting: [{ label: 'Slot', value: 'FLEX' }],
       }
     },
@@ -140,7 +144,6 @@ export function placeholderAward(
       const deficit = between(r, 18, 34)
       return {
         value: `-${f1(deficit)}`,
-        headline: `Projected to lose by ${f1(deficit)}. Won anyway.`,
         supporting: [{ label: 'Result', value: 'Win' }],
       }
     },
@@ -148,7 +151,6 @@ export function placeholderAward(
       const pts = between(r, 78, 94)
       return {
         value: f1(pts),
-        headline: `Won with ${f1(pts)}. Six teams scored more and lost.`,
         supporting: [{ label: 'Opponent', value: f1(pts - between(r, 1, 6)) }],
       }
     },
@@ -156,7 +158,6 @@ export function placeholderAward(
       const pts = between(r, 138, 158)
       return {
         value: f1(pts),
-        headline: `Scored ${f1(pts)} and lost. Would have beaten every other team.`,
         supporting: [{ label: 'Margin', value: `-${f1(between(r, 0.5, 5))}` }],
       }
     },
@@ -164,7 +165,6 @@ export function placeholderAward(
       const margin = between(r, 62, 88)
       return {
         value: f1(margin),
-        headline: `A ${f1(margin)}-point margin. This was not a contest.`,
         supporting: [{ label: 'Final', value: `${f1(between(r, 150, 172))}` }],
       }
     },
@@ -172,7 +172,6 @@ export function placeholderAward(
       const total = between(r, 118, 142)
       return {
         value: f1(total),
-        headline: `${f1(total)} combined. Somebody had to win it.`,
         supporting: [{ label: 'Final', value: `${f1(total / 2 + 3)}` }],
       }
     },
@@ -181,7 +180,6 @@ export function placeholderAward(
   const built = spec[def.key]?.() ?? {
     value: f1(between(r, 80, 150)),
     // Never fall back to def.blurb — it is rendered directly above this line.
-    headline: 'Sample figures until week 1 scoring lands.',
     supporting: [],
   }
 
@@ -196,7 +194,16 @@ export function placeholderAward(
     playerMeta: def.evidence === 'PLAYER' && player
       ? `${player.position} · ${player.nflTeam}` : null,
     metricValue: built.value,
-    headline: built.headline,
+    commentary: buildCommentary(def.key, {
+      managerFirst: firstName(winner?.manager),
+      teamName: winner?.name ?? 'TBD',
+      opponentTeam: foe?.name ?? null,
+      opponentManager: foe?.manager ?? null,
+      playerName: def.evidence === 'PLAYER' ? player?.name ?? null : null,
+      playerMeta: def.evidence === 'PLAYER' && player
+        ? `${player.position} - ${player.nflTeam}` : null,
+      value: built.value,
+    }),
     supporting: built.supporting,
     placeholder: true,
   }
