@@ -117,17 +117,27 @@ wobble, and a wobbling scoreboard reads as amateur.
 
 ## Motifs
 
-**Field lines** — a football field rendered as four stacked gradients behind page
-headers: 5-yard lines every 56px, heavier 10-yard lines every 112px, and two rows
-of one-yard hash marks at 32% and 68% height, matching a real field's inbound lines.
+**Field lines** — a football field behind page headers (`FieldBackdrop`): 5-yard
+lines every 56px, heavier 10-yard lines every 112px, two rows of one-yard hash
+marks at 32% and 68% height matching a real field's inbound lines, and yard numbers
+running 10-20-30-40-50-40-30-20-10 on the 10-yard marks.
 
-At a typical content width the pattern spans roughly one full 100-yard field.
+Lines are CSS gradients because they tile cleanly at any width. Numbers are real
+elements — a gradient cannot draw a 40. At typical content width the pattern spans
+roughly one full 100-yard field.
 
-Tuning notes, in case it is revisited: hash ticks are 6px tall against 11.2px
-spacing. An earlier 9px height made them merge into two dashed rules instead of
-reading as discrete ticks — keep the tick shorter than its gap. The 10-yard lines
-carry the rhythm and need meaningfully more contrast than the 5-yard lines, or the
-whole thing flattens into plain vertical stripes.
+**Tuning notes**, all learned the hard way:
+
+- Hash ticks are 6px tall against 11.2px spacing. At 9px they merged into two
+  dashed rules instead of reading as ticks. **Keep the tick shorter than its gap.**
+- 10-yard lines need meaningfully more contrast than 5-yard lines, or the pattern
+  flattens into plain vertical stripes with no football rhythm.
+- Numbers get their **own, lighter token** (`--field-number`). A glyph covers far
+  more pixels than a 1px stroke, so matching the line alpha makes numbers shout.
+- The whole backdrop carries a left-to-right mask (28% → 100% at 52%) so the page
+  title always wins. Text beats texture.
+- Judge all of this at **1:1 pixel scale**. Downscaled screenshots hid the merged
+  hash marks entirely.
 
 Structure, not decoration. Headers only; never behind data.
 
@@ -138,8 +148,8 @@ amber champion, red eliminated. Cheap, scannable, works in a dense list.
 flask, a wordmark ring, `THE LAB RATS · FANTASY FOOTBALL · EST 2025`. Appears in the
 rail and on empty states. Draws the two brands into one mark.
 
-**Abbreviation chips** — three-letter team codes in mono on a bordered square, like a
-broadcast bug. Gives every team a visual anchor before logos exist.
+**Team logos** — ESPN supplies a logo per team; every matchup row leads with one at
+36px. The mono abbreviation chip remains as the fallback when a logo is missing.
 
 ---
 

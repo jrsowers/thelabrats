@@ -9,6 +9,7 @@
 import { createPublicClient, isSupabaseConfigured } from '@/lib/supabase/server'
 
 export interface LeagueOverview {
+  seasonId: number
   leagueName: string
   season: number
   regularSeasonWeeks: number
@@ -43,6 +44,7 @@ export async function getLeagueOverview(): Promise<LeagueOverview | null> {
     .from('season_teams').select('id', { count: 'exact', head: true }).eq('season_id', season.id)
 
   return {
+    seasonId: season.id,
     leagueName: league.name,
     season: season.year,
     regularSeasonWeeks: season.regular_season_weeks,
@@ -57,38 +59,110 @@ export async function getLeagueOverview(): Promise<LeagueOverview | null> {
   }
 }
 
+export interface MatchupSide {
+  teamId: number
+  name: string
+  manager: string | null
+  abbrev: string | null
+  logoUrl: string | null
+  score: number
+  projected: number | null
+  record: string
+}
+
 export interface MatchupRow {
   id: number
   matchupPeriod: number
   status: string
-  home: { name: string; manager: string | null; abbrev: string | null; score: number } | null
-  away: { name: string; manager: string | null; abbrev: string | null; score: number } | null
+  home: MatchupSide | null
+  away: MatchupSide | null
 }
 
-export async function getMatchupsForWeek(week: number): Promise<MatchupRow[]> {
+/**
+ * Win/loss/tie per team, computed from FINAL matchups only.
+ *
+ * Derived rather than stored: standings_snapshots is the right home for this
+ * once the standings engine exists, and duplicating it now would create two
+ * sources of truth that can disagree.
+ */
+export async function getTeamRecords(seasonId: number): Promise<Map<number, string>> {
+  const db = createPublicClient()
+  const { data } = await db
+    .from('matchups')
+    .select('home_team_id, away_team_id, home_score, away_score, winner_team_id, status')
+    .eq('season_id', seasonId)
+    .eq('status', 'FINAL')
+
+  const tally = new Map<number, [number, number, number]>() // w, l, t
+  const bump = (id: number | null, idx: 0 | 1 | 2) => {
+    if (id == null) return
+    const cur = tally.get(id) ?? [0, 0, 0]
+    cur[idx] += 1
+    tally.set(id, cur)
+  }
+
+  for (const m of data ?? []) {
+    const tie = Number(m.home_score) === Number(m.away_score)
+    if (tie) {
+      bump(m.home_team_id, 2)
+      bump(m.away_team_id, 2)
+      continue
+    }
+    const homeWon = m.winner_team_id === m.home_team_id
+    bump(m.home_team_id, homeWon ? 0 : 1)
+    bump(m.away_team_id, homeWon ? 1 : 0)
+  }
+
+  const out = new Map<number, string>()
+  for (const [id, [w, l, t]] of tally) out.set(id, t > 0 ? `${w}-${l}-${t}` : `${w}-${l}`)
+  return out
+}
+
+export async function getMatchupsForWeek(
+  week: number,
+  records: Map<number, string> = new Map(),
+): Promise<MatchupRow[]> {
   const db = createPublicClient()
   const { data } = await db
     .from('matchups')
     .select(`
       id, matchup_period, status, home_score, away_score,
-      home:home_team_id ( team_name, abbreviation, franchises ( manager_name ) ),
-      away:away_team_id ( team_name, abbreviation, franchises ( manager_name ) )
+      home_projected_score, away_projected_score,
+      home:home_team_id ( id, team_name, abbreviation, logo_url, franchises ( manager_name ) ),
+      away:away_team_id ( id, team_name, abbreviation, logo_url, franchises ( manager_name ) )
     `)
     .eq('matchup_period', week)
     .order('id')
 
-  type Side = { team_name: string; abbreviation: string | null; franchises: { manager_name: string } | null } | null
-  return (data ?? []).map((m) => {
-    const home = m.home as unknown as Side
-    const away = m.away as unknown as Side
-    return {
-      id: m.id,
-      matchupPeriod: m.matchup_period,
-      status: m.status,
-      home: home ? { name: home.team_name, abbrev: home.abbreviation, manager: home.franchises?.manager_name ?? null, score: Number(m.home_score) } : null,
-      away: away ? { name: away.team_name, abbrev: away.abbreviation, manager: away.franchises?.manager_name ?? null, score: Number(m.away_score) } : null,
-    }
-  })
+  type Side = {
+    id: number
+    team_name: string
+    abbreviation: string | null
+    logo_url: string | null
+    franchises: { manager_name: string } | null
+  } | null
+
+  const toSide = (raw: Side, score: unknown, projected: unknown): MatchupSide | null =>
+    raw
+      ? {
+          teamId: raw.id,
+          name: raw.team_name,
+          abbrev: raw.abbreviation,
+          logoUrl: raw.logo_url,
+          manager: raw.franchises?.manager_name ?? null,
+          score: Number(score),
+          projected: projected == null ? null : Number(projected),
+          record: records.get(raw.id) ?? '0-0',
+        }
+      : null
+
+  return (data ?? []).map((m) => ({
+    id: m.id,
+    matchupPeriod: m.matchup_period,
+    status: m.status,
+    home: toSide(m.home as unknown as Side, m.home_score, m.home_projected_score),
+    away: toSide(m.away as unknown as Side, m.away_score, m.away_projected_score),
+  }))
 }
 
 export async function getPastChampions() {

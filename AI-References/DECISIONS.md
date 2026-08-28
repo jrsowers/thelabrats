@@ -141,3 +141,23 @@ texture was free to say "football" instead of repeating "science."
 one-yard hash marks at the real field's inbound positions.
 **Tuning:** first attempt used 9px hash ticks at 11.2px spacing, which merged into
 two dashed rules. Shortened to 6px and raised 10-yard contrast so the rhythm reads.
+
+## 2026-08-28 · Scoreboard drew from Yahoo and ESPN, kept our own frame
+**Why:** James supplied Yahoo and ESPN fantasy scoreboard screenshots as reference.
+**Taken:** ESPN's team logos (already in `season_teams.logo_url` — all 12 present),
+Yahoo's record-under-team-name and projected-under-score, and Yahoo's card header
+with week identity left and state right ("Not started yet").
+**Not taken:** ESPN's two-column card grid. Our single-column list with condensed
+display type carries the broadcast voice better, and with the supporting sections
+removed the scoreboard is the page — a list reads stronger than a grid there.
+**Records are derived,** not stored: computed from FINAL matchups on read.
+`standings_snapshots` is the right home once the standings engine exists, and
+storing them now would create two sources of truth that can disagree.
+
+## 2026-08-28 · Homepage reduced to header, draft countdown, scoreboard
+**Why:** James removed League Parameters, Roster Construction, and Record Books
+from the homepage. Those facts belong on their own sections, not the scoreboard.
+**Effect:** the scoreboard is now unambiguously the page, which is what §4 asks for
+— the fantasy league is the product, not a dashboard about it.
+**Copy:** "12 Contenders · 1 Champion" replaces the neutral team/week count. It
+states the stakes rather than the configuration.

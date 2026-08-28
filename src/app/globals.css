@@ -51,9 +51,10 @@
   --series-6: #c2185b;
 
   /* Field motif — yard lines, 10-yard lines, and hash marks */
-  --field-line:   rgba(10, 14, 21, 0.055);
-  --field-major:  rgba(10, 14, 21, 0.13);
-  --field-hash:   rgba(10, 14, 21, 0.06);
+  --field-line:   rgba(10, 14, 21, 0.032);
+  --field-major:  rgba(10, 14, 21, 0.07);
+  --field-hash:   rgba(10, 14, 21, 0.035);
+  --field-number: rgba(10, 14, 21, 0.055);
 }
 
 /* ---- DARK ------------------------------------------------- */
@@ -95,9 +96,10 @@
     --series-5: #35c8e0;
     --series-6: #ff6fa5;
 
-    --field-line:   rgba(233, 239, 247, 0.055);
-    --field-major:  rgba(233, 239, 247, 0.14);
-    --field-hash:   rgba(233, 239, 247, 0.055);
+    --field-line:   rgba(233, 239, 247, 0.035);
+    --field-major:  rgba(233, 239, 247, 0.075);
+    --field-hash:   rgba(233, 239, 247, 0.032);
+    --field-number: rgba(233, 239, 247, 0.055);
   }
 }
 
@@ -177,6 +179,9 @@ body {
    rows of one-yard hash marks between them. Structure, not decoration —
    headers only, never behind data. */
 .field-lines {
+  /* Eased back on the left so the page title always wins. */
+  -webkit-mask-image: linear-gradient(to right, rgba(0,0,0,0.28), #000 52%);
+  mask-image: linear-gradient(to right, rgba(0,0,0,0.28), #000 52%);
   background-image:
     /* upper hash row */
     repeating-linear-gradient(to right, var(--field-hash) 0 1px, transparent 1px 11.2px),
@@ -215,6 +220,14 @@ body {
 .live-dot { animation: labPulse 2s ease-in-out infinite; }
 @media (prefers-reduced-motion: reduce) {
   .live-dot { animation: none; }
+}
+
+/* Yard numbers. Lighter than the lines: a glyph covers far more pixels than a
+   1px stroke, so matching their alpha makes the numbers shout. */
+.field-numbers {
+  color: var(--field-number);
+  -webkit-mask-image: linear-gradient(to right, rgba(0,0,0,0.28), #000 52%);
+  mask-image: linear-gradient(to right, rgba(0,0,0,0.28), #000 52%);
 }
 
 ::selection { background: var(--brand); color: var(--brand-ink); }
