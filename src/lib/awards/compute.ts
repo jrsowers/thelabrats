@@ -1,19 +1,18 @@
 /**
- * Weekly awards ("Studs & Duds").
+ * Award computation.
  *
- * Pure and deterministic (§22.8). Every award is computed from stored data and
- * regenerable; the LLM never selects or calculates one — it only phrases them
- * later, for recaps.
+ * Pure and deterministic (§22.8): every award is derived from stored data and
+ * regenerable, so a failed sync delays an award but never loses it. Nothing is
+ * written — the awards table stays empty by design.
  *
- * SCOPE: this file computes the MATCHUP-level awards, which need only final
- * scores. The player-level awards (Stud, Dud, Bench Boss, Start/Sit Crime,
- * Projection Smasher/Disaster, Waiver Wizard) need `player_week_scores`, which
- * cannot be populated until games are actually played. They are declared in
- * AWARD_CATALOG with `blocked: true` so the gap is visible rather than silently
- * missing.
+ * SCOPE: this file computes the awards that need only FINAL TEAM SCORES. Awards
+ * requiring player-level scoring, projections, the lineup optimizer or
+ * transaction history are declared in catalog.ts with their dependency and fall
+ * back to sample values until that data exists.
  *
- * An award with no meaningful candidate is omitted entirely (§22.2) — never
- * shown empty.
+ * Every award here is won by a MANAGER, not a matchup — including the ones that
+ * describe a matchup outcome. "Lost by the largest margin" belongs to the team
+ * that lost it.
  */
 
 export interface AwardMatchup {
@@ -26,217 +25,138 @@ export interface AwardMatchup {
   status: string
 }
 
-/** Maps the engine's internal types onto catalog keys. */
-export const AWARD_TYPE_TO_KEY: Record<string, string> = {
-  BAD_BEAT: 'bad_beat',
-  HIGHWAY_ROBBERY: 'highway_robbery',
-  PUBLIC_EXECUTION: 'public_execution',
-  DUMPSTER_FIRE: 'dumpster_fire',
-  // MANAGER_OF_THE_WEEK is intentionally unmapped: The Mastermind now measures
-  // lineup optimality, not raw score, so the engine's highest-score result is
-  // no longer the right answer for it.
-  // PHOTO_FINISH and SHOOTOUT are computed but no longer surfaced — the awards
-  // were removed from the Studs list. Left in the engine because the Duds list
-  // is still being revised.
-}
+/** Keys match catalog.ts, so no translation layer can drift. */
+export type ComputedAwardKey =
+  | 'cat_burglar'
+  | 'dumpster_fire'
+  | 'bad_beat'
+  | 'public_execution'
 
-export type AwardType =
-  | 'BAD_BEAT'
-  | 'HIGHWAY_ROBBERY'
-  | 'PHOTO_FINISH'
-  | 'PUBLIC_EXECUTION'
-  | 'SHOOTOUT'
-  | 'DUMPSTER_FIRE'
-  | 'MANAGER_OF_THE_WEEK'
-
-export interface Award {
-  type: AwardType
-  name: string
-  /** One line explaining what earned it, built from real values. */
+export interface ComputedAward {
+  key: ComputedAwardKey
+  /** The manager who receives it. */
+  teamId: number
+  /** The other side of the matchup, where relevant. */
+  opponentId: number | null
+  metricValue: string
   headline: string
-  /** The number this award is really about. */
-  metric: { label: string; value: string }
-  /** Team(s) the award attaches to. */
-  teamIds: number[]
-  matchupId: number
   supporting: { label: string; value: string }[]
 }
 
-/** @deprecated superseded by src/lib/awards/catalog.ts — kept for the tests. */
-export const AWARD_CATALOG: {
-  type: string
-  name: string
-  description: string
-  blocked?: string
-}[] = [
-  { type: 'MANAGER_OF_THE_WEEK', name: 'Manager of the Week', description: 'Highest score of the week' },
-  { type: 'BAD_BEAT', name: 'Bad Beat', description: 'Highest-scoring team that still lost' },
-  { type: 'HIGHWAY_ROBBERY', name: 'Highway Robbery', description: 'Lowest-scoring team that still won' },
-  { type: 'PHOTO_FINISH', name: 'Photo Finish', description: 'Closest matchup of the week' },
-  { type: 'PUBLIC_EXECUTION', name: 'Public Execution', description: 'Largest margin of victory' },
-  { type: 'SHOOTOUT', name: 'Shootout', description: 'Highest combined score' },
-  { type: 'DUMPSTER_FIRE', name: 'Dumpster Fire', description: 'Lowest combined score' },
-  { type: 'STUD_OF_THE_WEEK', name: 'Stud of the Week', description: 'Highest-impact starter', blocked: 'needs player_week_scores' },
-  { type: 'DUD_OF_THE_WEEK', name: 'Dud of the Week', description: 'Worst starter against projection', blocked: 'needs player_week_scores' },
-  { type: 'BENCH_BOSS', name: 'Bench Boss', description: 'Most points left on the bench', blocked: 'needs player_week_scores + lineup optimizer' },
-  { type: 'START_SIT_CRIME', name: 'Start/Sit Crime', description: 'Most consequential lineup mistake', blocked: 'needs player_week_scores + lineup optimizer' },
-  { type: 'PROJECTION_SMASHER', name: 'Projection Smasher', description: 'Largest actual over projected', blocked: 'needs player_week_scores' },
-  { type: 'PROJECTION_DISASTER', name: 'Projection Disaster', description: 'Largest projected over actual', blocked: 'needs player_week_scores' },
-  { type: 'WAIVER_WIRE_WIZARD', name: 'Waiver Wire Wizard', description: 'Best recent acquisition', blocked: 'needs player_week_scores + transactions' },
-]
-
 const f1 = (n: number) => n.toFixed(1)
 
-interface Side { teamId: number; score: number; opponentScore: number; matchupId: number }
+interface Side {
+  teamId: number
+  opponentId: number | null
+  score: number
+  against: number
+  matchupId: number
+}
 
-/** Flatten matchups into one row per team, which most awards reason over. */
+/** One row per team, which is the shape every manager award reasons over. */
 function toSides(matchups: AwardMatchup[]): Side[] {
   const out: Side[] = []
   for (const m of matchups) {
     if (m.homeTeamId != null) {
-      out.push({ teamId: m.homeTeamId, score: m.homeScore, opponentScore: m.awayScore, matchupId: m.matchupId })
+      out.push({ teamId: m.homeTeamId, opponentId: m.awayTeamId, score: m.homeScore, against: m.awayScore, matchupId: m.matchupId })
     }
     if (m.awayTeamId != null) {
-      out.push({ teamId: m.awayTeamId, score: m.awayScore, opponentScore: m.homeScore, matchupId: m.matchupId })
+      out.push({ teamId: m.awayTeamId, opponentId: m.homeTeamId, score: m.awayScore, against: m.homeScore, matchupId: m.matchupId })
     }
   }
   return out
 }
 
-export function computeWeeklyAwards(all: AwardMatchup[], week: number): Award[] {
-  // Only completed games. A live game has no result to award anything for.
+/**
+ * Compute every score-based award for a week.
+ *
+ * An award with no qualifying candidate is OMITTED rather than returned empty
+ * (§22.2) — a week where nobody lost has no Bad Beat, and saying so is better
+ * than showing a blank card.
+ */
+export function computeWeeklyAwards(all: AwardMatchup[], week: number): ComputedAward[] {
   const matchups = all.filter((m) => m.week === week && m.status === 'FINAL')
   if (matchups.length === 0) return []
 
   const sides = toSides(matchups)
-  const awards: Award[] = []
+  const awards: ComputedAward[] = []
 
-  const best = [...sides].sort((a, b) => b.score - a.score)[0]
-  if (best) {
+  // A win requires outscoring the opponent; a tie is neither a win nor a loss.
+  const winners = sides.filter((s) => s.score > s.against)
+  const losers = sides.filter((s) => s.score < s.against)
+
+  // ---- The Cat Burglar: lowest score that still won ----
+  const thief = [...winners].sort((a, b) => a.score - b.score)[0]
+  if (thief) {
     awards.push({
-      type: 'MANAGER_OF_THE_WEEK',
-      name: 'Manager of the Week',
-      headline: `Top score of the week at ${f1(best.score)}.`,
-      metric: { label: 'Points', value: f1(best.score) },
-      teamIds: [best.teamId],
-      matchupId: best.matchupId,
-      supporting: [{ label: 'Opponent', value: f1(best.opponentScore) }],
+      key: 'cat_burglar',
+      teamId: thief.teamId,
+      opponentId: thief.opponentId,
+      metricValue: f1(thief.score),
+      headline: `Won with ${f1(thief.score)} — the lowest winning score of the week.`,
+      supporting: [{ label: 'Opponent', value: f1(thief.against) }],
     })
   }
 
-  // Losers, best first. Winning is score > opponent; a tie is neither.
-  const losers = sides.filter((s) => s.score < s.opponentScore).sort((a, b) => b.score - a.score)
-  if (losers[0]) {
-    const s = losers[0]
+  // ---- The Dumpster Fire: lowest team score in the league ----
+  const worst = [...sides].sort((a, b) => a.score - b.score)[0]
+  if (worst) {
     awards.push({
-      type: 'BAD_BEAT',
-      name: 'Bad Beat',
-      headline: `Scored ${f1(s.score)} and still lost by ${f1(s.opponentScore - s.score)}.`,
-      metric: { label: 'Points in a loss', value: f1(s.score) },
-      teamIds: [s.teamId],
-      matchupId: s.matchupId,
-      supporting: [{ label: 'Margin', value: `-${f1(s.opponentScore - s.score)}` }],
+      key: 'dumpster_fire',
+      teamId: worst.teamId,
+      opponentId: worst.opponentId,
+      metricValue: f1(worst.score),
+      headline: `${f1(worst.score)} points. Nobody in the league did worse.`,
+      supporting: [{ label: 'Opponent', value: f1(worst.against) }],
     })
   }
 
-  const winners = sides.filter((s) => s.score > s.opponentScore).sort((a, b) => a.score - b.score)
-  if (winners[0]) {
-    const s = winners[0]
+  // ---- The Bad Beat: highest score that still lost ----
+  const unlucky = [...losers].sort((a, b) => b.score - a.score)[0]
+  if (unlucky) {
     awards.push({
-      type: 'HIGHWAY_ROBBERY',
-      name: 'Highway Robbery',
-      headline: `Won with just ${f1(s.score)} — the week's lowest winning score.`,
-      metric: { label: 'Points in a win', value: f1(s.score) },
-      teamIds: [s.teamId],
-      matchupId: s.matchupId,
-      supporting: [{ label: 'Opponent', value: f1(s.opponentScore) }],
+      key: 'bad_beat',
+      teamId: unlucky.teamId,
+      opponentId: unlucky.opponentId,
+      metricValue: f1(unlucky.score),
+      headline: `Scored ${f1(unlucky.score)} and still lost by ${f1(unlucky.against - unlucky.score)}.`,
+      supporting: [{ label: 'Margin', value: `-${f1(unlucky.against - unlucky.score)}` }],
     })
   }
 
-  const byMargin = [...matchups]
-    .map((m) => ({ m, margin: Math.abs(m.homeScore - m.awayScore) }))
-    .sort((a, b) => a.margin - b.margin)
-
-  const closest = byMargin[0]
-  if (closest && closest.margin > 0) {
+  // ---- The Public Execution: lost by the largest margin ----
+  const beaten = [...losers].sort((a, b) => (b.against - b.score) - (a.against - a.score))[0]
+  if (beaten) {
+    const margin = beaten.against - beaten.score
     awards.push({
-      type: 'PHOTO_FINISH',
-      name: 'Photo Finish',
-      headline: `Decided by ${f1(closest.margin)} points.`,
-      metric: { label: 'Margin', value: f1(closest.margin) },
-      teamIds: [closest.m.homeTeamId, closest.m.awayTeamId].filter((x): x is number => x != null),
-      matchupId: closest.m.matchupId,
-      supporting: [{ label: 'Final', value: `${f1(closest.m.homeScore)}–${f1(closest.m.awayScore)}` }],
-    })
-  }
-
-  const widest = byMargin[byMargin.length - 1]
-  // Only interesting if it is actually a blowout, and not the same game as the
-  // photo finish — which happens in a one-game week.
-  if (widest && widest.margin >= 30 && widest.m.matchupId !== closest?.m.matchupId) {
-    awards.push({
-      type: 'PUBLIC_EXECUTION',
-      name: 'Public Execution',
-      headline: `A ${f1(widest.margin)}-point beating.`,
-      metric: { label: 'Margin', value: f1(widest.margin) },
-      teamIds: [widest.m.homeTeamId, widest.m.awayTeamId].filter((x): x is number => x != null),
-      matchupId: widest.m.matchupId,
-      supporting: [{ label: 'Final', value: `${f1(widest.m.homeScore)}–${f1(widest.m.awayScore)}` }],
-    })
-  }
-
-  const byCombined = [...matchups]
-    .map((m) => ({ m, total: m.homeScore + m.awayScore }))
-    .sort((a, b) => b.total - a.total)
-
-  const hottest = byCombined[0]
-  if (hottest) {
-    awards.push({
-      type: 'SHOOTOUT',
-      name: 'Shootout',
-      headline: `${f1(hottest.total)} points between them.`,
-      metric: { label: 'Combined', value: f1(hottest.total) },
-      teamIds: [hottest.m.homeTeamId, hottest.m.awayTeamId].filter((x): x is number => x != null),
-      matchupId: hottest.m.matchupId,
-      supporting: [{ label: 'Final', value: `${f1(hottest.m.homeScore)}–${f1(hottest.m.awayScore)}` }],
-    })
-  }
-
-  const coldest = byCombined[byCombined.length - 1]
-  if (coldest && coldest.m.matchupId !== hottest?.m.matchupId) {
-    awards.push({
-      type: 'DUMPSTER_FIRE',
-      name: 'Dumpster Fire',
-      headline: `Only ${f1(coldest.total)} points between them. Nobody won here.`,
-      metric: { label: 'Combined', value: f1(coldest.total) },
-      teamIds: [coldest.m.homeTeamId, coldest.m.awayTeamId].filter((x): x is number => x != null),
-      matchupId: coldest.m.matchupId,
-      supporting: [{ label: 'Final', value: `${f1(coldest.m.homeScore)}–${f1(coldest.m.awayScore)}` }],
+      key: 'public_execution',
+      teamId: beaten.teamId,
+      opponentId: beaten.opponentId,
+      metricValue: f1(margin),
+      headline: `Beaten by ${f1(margin)}. This was not a contest.`,
+      supporting: [{ label: 'Final', value: `${f1(beaten.score)}–${f1(beaten.against)}` }],
     })
   }
 
   return awards
 }
 
-/** Season tallies — who has collected which award most often (§22.7). */
+/** Season tallies — who collects which award most often (§22.7). */
 export function computeAwardLeaderboard(
   all: AwardMatchup[], throughWeek: number,
-): Map<AwardType, { teamId: number; count: number }[]> {
-  const tally = new Map<AwardType, Map<number, number>>()
+): Map<ComputedAwardKey, { teamId: number; count: number }[]> {
+  const tally = new Map<ComputedAwardKey, Map<number, number>>()
   for (let w = 1; w <= throughWeek; w++) {
     for (const award of computeWeeklyAwards(all, w)) {
-      if (!tally.has(award.type)) tally.set(award.type, new Map())
-      const inner = tally.get(award.type)!
-      // Matchup awards attach to both teams; count the first, which is the
-      // team the award is actually about.
-      const teamId = award.teamIds[0]
-      if (teamId != null) inner.set(teamId, (inner.get(teamId) ?? 0) + 1)
+      if (!tally.has(award.key)) tally.set(award.key, new Map())
+      const inner = tally.get(award.key)!
+      inner.set(award.teamId, (inner.get(award.teamId) ?? 0) + 1)
     }
   }
 
-  const out = new Map<AwardType, { teamId: number; count: number }[]>()
-  for (const [type, inner] of tally) {
-    out.set(type, [...inner.entries()]
+  const out = new Map<ComputedAwardKey, { teamId: number; count: number }[]>()
+  for (const [key, inner] of tally) {
+    out.set(key, [...inner.entries()]
       .map(([teamId, count]) => ({ teamId, count }))
       .sort((a, b) => b.count - a.count))
   }

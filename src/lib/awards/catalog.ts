@@ -81,42 +81,43 @@ export interface AwardDef {
 
 export const AWARDS: AwardDef[] = [
   // ---------------- STUDS ----------------
-  // Every Stud is won by a MANAGER. Where a player drives the result, the
-  // player is shown as evidence beneath the manager, not as the recipient.
+  // Every award is won by a MANAGER. Where a player or a matchup drives the
+  // result, it is shown beneath as evidence rather than as the recipient.
   {
-    key: 'manager_of_the_week', name: 'The Mastermind', section: 'STUDS', category: 'MANAGER',
+    key: 'mastermind', name: 'The Mastermind', section: 'STUDS', category: 'MANAGER',
     blurb: 'The manager who started the most optimal lineup.',
-    formula: 'Smallest gap between actual starter points and the highest-scoring legal lineup. Requires a slot-aware optimizer — greedy bench substitution gives the wrong answer in a superflex league.',
+    formula: 'Smallest gap between actual starter points and the highest-scoring legal lineup. Needs a slot-aware optimizer — greedy bench substitution is wrong in a superflex league, where the OP slot competes with QB for the same players.',
     needs: ['PLAYER_SCORES', 'LINEUP_OPTIMIZER'], capture: 'WEEKLY_BOXSCORE',
     metricLabel: 'Points left on bench',
   },
   {
     key: 'waiver_wire_wizard', name: 'The Waiver Wire Wizard', section: 'STUDS', category: 'MANAGER',
     blurb: 'The manager who grabbed the highest scoring free agent.',
-    formula: 'Highest score by a player acquired from waivers or free agency this week, counted for the manager who claimed them.',
+    formula: 'Highest score by a player acquired from waivers or free agency this week, credited to the manager who claimed them.',
     needs: ['TRANSACTIONS', 'PLAYER_SCORES'], capture: 'WEEKLY_BOXSCORE',
     metricLabel: 'Points from the pickup', evidence: 'PLAYER',
   },
   {
     key: 'nostradamus', name: 'Fantasy Nostradamus', section: 'STUDS', category: 'MANAGER',
     blurb: 'The manager who started the player with the highest score above projection.',
-    formula: 'Largest actual-minus-projected among all started players, credited to the manager who started them.',
+    formula: 'Largest actual-minus-projected among started players, credited to the manager who started them.',
     needs: ['PLAYER_SCORES', 'PROJECTIONS'], capture: 'PREGAME_PROJECTION',
     metricLabel: 'Over projection', evidence: 'PLAYER',
   },
   {
-    key: 'highway_robbery', name: 'The Cat Burglar', section: 'STUDS', category: 'MANAGER',
+    key: 'cat_burglar', name: 'The Cat Burglar', section: 'STUDS', category: 'MANAGER',
     blurb: 'The manager with the lowest score who still got a win.',
     formula: 'Lowest team score among winning teams.',
     needs: ['FINAL_SCORES'], capture: 'FINAL_ONLY',
     metricLabel: 'Points in a win', evidence: 'MATCHUP',
   },
   {
-    key: 'bench_bum', name: 'The Bench Bum', section: 'STUDS', category: 'MANAGER',
-    blurb: 'The manager with the highest scoring player on their bench.',
-    formula: 'Highest-scoring player in a bench slot, credited to the manager who benched them.',
-    needs: ['PLAYER_SCORES'], capture: 'WEEKLY_BOXSCORE',
-    metricLabel: 'Points on the bench', evidence: 'PLAYER',
+    key: 'giant_killer', name: 'The Giant Killer', section: 'STUDS', category: 'MANAGER',
+    blurb: 'The biggest upset against the pregame projections.',
+    // The mirror image of The Choke Artist: same matchup, opposite manager.
+    formula: 'Largest pregame projected deficit that still ended in a win.',
+    needs: ['PROJECTIONS'], capture: 'PREGAME_PROJECTION',
+    metricLabel: 'Projected deficit', evidence: 'MATCHUP',
   },
   {
     key: 'prime_specimen', name: 'The Prime Specimen', section: 'STUDS', category: 'MANAGER',
@@ -127,69 +128,50 @@ export const AWARDS: AwardDef[] = [
   },
 
   // ---------------- DUDS ----------------
-  // Not yet reworked — James is revising this list separately.
+  // Also all manager awards. Where a matchup outcome is the subject, the award
+  // belongs to the manager it happened TO — the loser, not the winner.
   {
-    key: 'bench_boss', name: 'The Bench Boss', section: 'DUDS', category: 'MANAGER',
-    blurb: 'The manager who left the most points sitting on his bench.',
-    formula: 'Largest gap between actual starter points and the highest-scoring legal lineup.',
-    needs: ['PLAYER_SCORES', 'LINEUP_OPTIMIZER'], capture: 'WEEKLY_BOXSCORE',
-    metricLabel: 'Points left behind',
+    key: 'dumpster_fire', name: 'The Dumpster Fire', section: 'DUDS', category: 'MANAGER',
+    blurb: 'The manager who had the lowest team score in the entire league.',
+    formula: 'Lowest single-team score of the week, win or lose.',
+    needs: ['FINAL_SCORES'], capture: 'FINAL_ONLY',
+    metricLabel: 'Points', evidence: 'MATCHUP',
   },
   {
-    key: 'start_sit_crime', name: 'The Crime Scene', section: 'DUDS', category: 'MANAGER',
-    blurb: 'The lineup decision that cost a manager the matchup.',
-    formula: 'Largest benched-minus-started difference within a slot, where the gap exceeds the final margin.',
-    needs: ['PLAYER_SCORES', 'LINEUP_OPTIMIZER'], capture: 'WEEKLY_BOXSCORE',
-    metricLabel: 'Decision cost', evidence: 'PLAYER',
+    key: 'choke_artist', name: 'The Choke Artist', section: 'DUDS', category: 'MANAGER',
+    blurb: 'The manager who was projected to win comfortably, but lost their matchup.',
+    // The mirror image of The Giant Killer: same matchup, opposite manager.
+    formula: 'Largest pregame projected advantage that still ended in a loss.',
+    needs: ['PROJECTIONS'], capture: 'PREGAME_PROJECTION',
+    metricLabel: 'Projected advantage', evidence: 'MATCHUP',
   },
   {
-    key: 'too_cute', name: 'The Galaxy Brain', section: 'DUDS', category: 'MANAGER',
-    blurb: 'The clever start that backfired completely.',
-    formula: 'Started a player projected 6+ points below an available alternative, and lost the matchup.',
-    needs: ['PLAYER_SCORES', 'PROJECTIONS'], capture: 'PREGAME_PROJECTION',
-    metricLabel: 'Cost of cleverness', evidence: 'PLAYER',
-  },
-  {
-    key: 'bad_beat', name: 'The Bad Beat', section: 'DUDS', category: 'MATCHUP',
-    blurb: 'The highest score that still lost its matchup.',
+    key: 'bad_beat', name: 'The Bad Beat', section: 'DUDS', category: 'MANAGER',
+    blurb: 'The manager with the highest score that still lost their matchup.',
     formula: 'Highest team score among losing teams.',
     needs: ['FINAL_SCORES'], capture: 'FINAL_ONLY',
     metricLabel: 'Points in a loss', evidence: 'MATCHUP',
   },
   {
-    key: 'choke_job', name: 'The Meltdown', section: 'DUDS', category: 'MATCHUP',
-    blurb: 'The largest collapse from a winning position.',
-    formula: 'Largest drop from peak in-game win probability to a loss.',
-    needs: ['LIVE_EVENTS'], capture: 'CONTINUOUS',
-    metricLabel: 'Win probability lost',
-  },
-  {
-    key: 'public_execution', name: 'The Public Execution', section: 'DUDS', category: 'MATCHUP',
-    blurb: 'The matchup with the largest margin of victory.',
-    formula: 'Largest margin of victory.',
+    key: 'public_execution', name: 'The Public Execution', section: 'DUDS', category: 'MANAGER',
+    blurb: 'The manager who lost their matchup by the largest margin.',
+    formula: 'Largest losing margin, credited to the team that was beaten.',
     needs: ['FINAL_SCORES'], capture: 'FINAL_ONLY',
-    metricLabel: 'Margin', evidence: 'MATCHUP',
+    metricLabel: 'Losing margin', evidence: 'MATCHUP',
   },
   {
-    key: 'dumpster_fire', name: 'The Dumpster Fire', section: 'DUDS', category: 'MATCHUP',
-    blurb: 'The matchup with the lowest combined score.',
-    formula: 'Lowest combined score across both teams.',
-    needs: ['FINAL_SCORES'], capture: 'FINAL_ONLY',
-    metricLabel: 'Combined', evidence: 'MATCHUP',
+    key: 'bench_bum', name: 'The Bench Bum', section: 'DUDS', category: 'MANAGER',
+    blurb: 'The manager who left the most points on their bench.',
+    formula: 'Largest gap between actual starter points and the highest-scoring legal lineup — the inverse of The Mastermind.',
+    needs: ['PLAYER_SCORES', 'LINEUP_OPTIMIZER'], capture: 'WEEKLY_BOXSCORE',
+    metricLabel: 'Points left behind',
   },
   {
-    key: 'dud_of_the_week', name: 'The Lead Balloon', section: 'DUDS', category: 'PLAYER',
-    blurb: 'The starter who fell furthest short of his projection.',
-    formula: 'Largest projected-minus-actual among starters projected above 10 points.',
-    needs: ['PLAYER_SCORES', 'PROJECTIONS'], capture: 'PREGAME_PROJECTION',
-    metricLabel: 'Under projection', player: true, evidence: 'PLAYER',
-  },
-  {
-    key: 'heartbreak_kid', name: 'The Heartbreak Kid', section: 'DUDS', category: 'PLAYER',
-    blurb: 'The opposing player who single-handedly decided a matchup.',
-    formula: 'Opposing player whose points exceeded the final margin by the most.',
-    needs: ['PLAYER_SCORES'], capture: 'WEEKLY_BOXSCORE',
-    metricLabel: 'Margin swing', player: true, evidence: 'PLAYER',
+    key: 'galaxy_brain', name: 'The Galaxy Brain', section: 'DUDS', category: 'MANAGER',
+    blurb: 'The manager who made the most roster moves this week and lost their matchup.',
+    formula: 'Most adds, drops and trades within the scoring period, among managers who lost.',
+    needs: ['TRANSACTIONS', 'FINAL_SCORES'], capture: 'FINAL_ONLY',
+    metricLabel: 'Roster moves', evidence: 'MATCHUP',
   },
 ]
 

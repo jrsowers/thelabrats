@@ -93,7 +93,7 @@ export function placeholderAward(
         supporting: [{ label: 'Projected', value: f1(proj) }, { label: 'Actual', value: f1(act) }],
       }
     },
-    bench_boss: () => {
+    bench_bum: () => {
       const left = between(r, 26, 44)
       return {
         value: f1(left),
@@ -101,44 +101,26 @@ export function placeholderAward(
         supporting: [{ label: 'Efficiency', value: `${between(r, 68, 79).toFixed(0)}%` }],
       }
     },
-    start_sit_crime: () => {
-      const cost = between(r, 14, 27)
-      const margin = between(r, 1.5, cost - 2)
+    galaxy_brain: () => {
+      const moves = Math.round(between(r, 5, 11))
       return {
-        value: f1(cost),
-        headline: `Benched a ${f1(cost + between(r, 6, 12))}-point player and lost by ${f1(margin)}.`,
-        supporting: [{ label: 'Final margin', value: `-${f1(margin)}` }],
-      }
-    },
-    too_cute: () => {
-      const cost = between(r, 9, 19)
-      return {
-        value: f1(cost),
-        headline: `Chased a matchup and left ${f1(cost)} points on the table for it.`,
+        value: String(moves),
+        headline: `Made ${moves} roster moves this week and still lost.`,
         supporting: [{ label: 'Result', value: 'Loss' }],
       }
     },
-    choke_job: () => {
-      const peak = between(r, 88, 97)
+    choke_artist: () => {
+      const edge = between(r, 18, 34)
       return {
-        value: `${peak.toFixed(0)}%`,
-        headline: `Peaked at a ${peak.toFixed(0)}% win probability. Lost.`,
-        supporting: [{ label: 'Final margin', value: `-${f1(between(r, 0.8, 6))}` }],
-      }
-    },
-    dud_of_the_week: () => {
-      const proj = between(r, 14, 21)
-      const act = between(r, 0.4, 3.2)
-      return {
-        value: `-${f1(proj - act)}`,
-        headline: `Projected for ${f1(proj)}. Managed ${f1(act)}.`,
-        supporting: [{ label: 'Projected', value: f1(proj) }, { label: 'Actual', value: f1(act) }],
+        value: `+${f1(edge)}`,
+        headline: `Projected to win by ${f1(edge)}. Lost anyway.`,
+        supporting: [{ label: 'Result', value: 'Loss' }],
       }
     },
     // Studs are manager awards; headlines name the player or matchup that
     // earned it. They must not repeat the card's description, which sits
     // directly above them.
-    manager_of_the_week: () => {
+    mastermind: () => {
       const left = between(r, 0.4, 3.8)
       return {
         value: f1(left),
@@ -154,15 +136,15 @@ export function placeholderAward(
         supporting: [{ label: 'Slot', value: 'FLEX' }],
       }
     },
-    bench_bum: () => {
-      const pts = between(r, 22, 34)
+    giant_killer: () => {
+      const deficit = between(r, 18, 34)
       return {
-        value: f1(pts),
-        headline: `Scored ${f1(pts)} without ever leaving the bench.`,
-        supporting: [{ label: 'Slot', value: 'BE' }],
+        value: `-${f1(deficit)}`,
+        headline: `Projected to lose by ${f1(deficit)}. Won anyway.`,
+        supporting: [{ label: 'Result', value: 'Win' }],
       }
     },
-    highway_robbery: () => {
+    cat_burglar: () => {
       const pts = between(r, 78, 94)
       return {
         value: f1(pts),
@@ -192,14 +174,6 @@ export function placeholderAward(
         value: f1(total),
         headline: `${f1(total)} combined. Somebody had to win it.`,
         supporting: [{ label: 'Final', value: `${f1(total / 2 + 3)}` }],
-      }
-    },
-    heartbreak_kid: () => {
-      const swing = between(r, 8, 21)
-      return {
-        value: f1(swing),
-        headline: `Outscored the final margin by ${f1(swing)} — on the other team.`,
-        supporting: [{ label: 'Final margin', value: `-${f1(between(r, 1, 5))}` }],
       }
     },
   }

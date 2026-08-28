@@ -569,3 +569,27 @@ slot-aware optimizer. That drops the computable-today count for Studs from four
 to one (The Cat Burglar).
 PHOTO_FINISH and SHOOTOUT remain in the engine but are unmapped, pending the
 Duds revision.
+
+## 2026-08-28 · Awards finalised: six Studs, six Duds, all manager awards
+Every one of the twelve is won by a MANAGER. Where a player or a matchup drives
+the result, it renders beneath as evidence rather than as the recipient — the
+`evidence` field decides which.
+**Matchup awards belong to the manager it happened TO.** The Public Execution
+goes to the team that was beaten, not the one that did the beating.
+**Two awards are mirror images:** The Giant Killer (largest projected deficit
+that still won) and The Choke Artist (largest projected advantage that still
+lost) describe the same matchup from opposite sides. Both fall out of the same
+pregame projection capture.
+**The Mastermind and The Bench Bum are also inverses** — smallest and largest
+gap to the optimal lineup — so one optimizer implementation serves both.
+**Computable today: 4 of 12** (Cat Burglar, Dumpster Fire, Bad Beat, Public
+Execution). The rest need the weekly boxscore, the pregame projection pull, or
+real transactions.
+
+## 2026-08-28 · Engine keys are catalog keys
+`computeWeeklyAwards` now emits catalog keys directly instead of internal enum
+values translated through a lookup table. The mapping layer had already drifted
+once — MANAGER_OF_THE_WEEK still pointed at a highest-score computation after
+The Mastermind was redefined as lineup optimality. A test now asserts in both
+directions: every award marked computable is produced, and every award produced
+exists in the catalog.

@@ -7,7 +7,7 @@
  * replaced one award at a time — no page change required.
  */
 import { AWARDS, type AwardDef } from './catalog'
-import { computeWeeklyAwards, AWARD_TYPE_TO_KEY, type AwardMatchup } from './compute'
+import { computeWeeklyAwards, type AwardMatchup } from './compute'
 import { placeholderAward, type AwardCard, type PlaceholderPools } from './placeholder'
 
 export function buildAwardCards(
@@ -15,11 +15,10 @@ export function buildAwardCards(
   week: number,
   pools: PlaceholderPools,
 ): AwardCard[] {
-  const real = new Map<string, ReturnType<typeof computeWeeklyAwards>[number]>()
-  for (const a of computeWeeklyAwards(matchups, week)) {
-    const key = AWARD_TYPE_TO_KEY[a.type]
-    if (key) real.set(key, a)
-  }
+  // Engine keys ARE catalog keys, so there is no mapping layer to drift.
+  const real = new Map<string, ReturnType<typeof computeWeeklyAwards>[number]>(
+    computeWeeklyAwards(matchups, week).map((a) => [a.key as string, a]),
+  )
 
   return AWARDS.map((def: AwardDef): AwardCard => {
     const computed = real.get(def.key)
@@ -27,12 +26,12 @@ export function buildAwardCards(
 
     return {
       def,
-      teamId: computed.teamIds[0] ?? null,
-      opponentId: computed.teamIds[1] ?? null,
+      teamId: computed.teamId,
+      opponentId: computed.opponentId,
       playerName: null,
       espnPlayerId: null,
       playerMeta: null,
-      metricValue: computed.metric.value,
+      metricValue: computed.metricValue,
       headline: computed.headline,
       supporting: computed.supporting,
       placeholder: false,
