@@ -47,3 +47,6 @@ Thumbs.db
 # ---- Local ESPN capture (may contain league/personal data) ----
 /fixtures/raw/
 /tmp/
+
+# TS build info
+*.tsbuildinfo
