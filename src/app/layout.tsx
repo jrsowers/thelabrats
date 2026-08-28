@@ -40,13 +40,16 @@ export const metadata: Metadata = {
     url: '/',
     siteName: TITLE,
     type: 'website',
-    images: [{ url: '/brand/lab-rats-badge.png', width: 552, height: 552, alt: TITLE }],
+    // 1200x630 is what Slack, iMessage, X and Facebook all crop toward.
+    // A square badge got rendered as a small thumbnail card; this fills the
+    // wide layout instead.
+    images: [{ url: '/brand/og-image.jpg', width: 1200, height: 630, alt: TITLE }],
   },
   twitter: {
-    card: 'summary',
+    card: 'summary_large_image',
     title: TITLE,
     description: DESCRIPTION,
-    images: ['/brand/lab-rats-badge.png'],
+    images: ['/brand/og-image.jpg'],
   },
 };
 

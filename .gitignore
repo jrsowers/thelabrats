@@ -56,3 +56,6 @@ Thumbs.db
 
 # Sync-service duplicate files (iCloud/Dropbox create "name 2.ext")
 *[0-9].tsbuildinfo
+
+# Generated image sources — composited output ships in public/brand
+/logos/generated/

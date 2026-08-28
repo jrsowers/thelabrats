@@ -354,3 +354,24 @@ corrupting existing data.
 ids only. Resolving them needs a player sync from the roster views, which cannot
 be built until rosters exist after the Sept 3 draft. Until then the log reads
 from preview data.
+
+## 2026-08-28 · og:image is a composite, not a bare logo
+**Why:** the square badge rendered as a small thumbnail card. Link previews are
+built for 1200x630, which every major platform crops toward.
+**How:** `scripts/make-og-image.py` composites the landscape lockup over an
+AI-generated nighttime stadium photograph. The background is cover-cropped
+rather than squashed, then given an overall scrim and a centre vignette — white
+logo lettering was otherwise competing with stadium floodlights depending on
+where the crop landed.
+**JPEG, not PNG.** As PNG the card was 938KB for a photograph; JPEG at q88 is
+112KB and visually identical. A link preview that loads slowly often does not
+render at all.
+**twitter:card** raised from `summary` to `summary_large_image` to match.
+**Source image** (7.5MB) is gitignored; only the 112KB composite ships.
+
+## 2026-08-28 · Browser tabs show only the title
+James expected the meta description beside the favicon. Tabs render the
+`<title>` and nothing else — descriptions appear in search results and link
+previews. The title stays short deliberately: Chrome truncates hard once
+several tabs are open, so a full sentence would read as "The Lab Rats — A
+just-for-f…".
