@@ -63,6 +63,11 @@ Full rationale in `DECISIONS.md`.
 
 ---
 
+## Pending work
+
+- Seed 2025 champion (Chenell Basilio) — blocked on first ingestion creating
+  franchises; `champions.franchise_id` has nothing to reference yet.
+
 ## Blocked on James
 
 1. **Go-ahead to push** — first push publishes to a public repo and triggers a
@@ -75,6 +80,8 @@ Full rationale in `DECISIONS.md`.
 ~~Supabase keys~~ → new-format publishable + secret, in `.env.local`
 ~~Supabase MCP~~ → hard-denied; CLI linked instead
 ~~gh auth~~ → not needed; SSH `git@github.com` already resolves to `jrsowers`
+~~2025 champion~~ → Chenell Basilio
+~~Display names~~ → team name primary, real manager name secondary
 
 ## Resolved since last session
 
@@ -115,7 +122,7 @@ Full rationale in `DECISIONS.md`.
 
 | # | Milestone | Status |
 | --- | --- | --- |
-| 1 | Foundation — scaffold ✅, ESPN adapter ✅, migrations ⬜, demo mode ⬜ | 🔨 |
+| 1 | Foundation — scaffold ✅, ESPN adapter ✅, migrations ✅, RLS ✅, ingestion ⬜, demo mode ⬜ | 🔨 |
 | 2 | ESPN league import | ⬜ |
 | 3 | Live Scoreboard | ⬜ |
 | 4 | Standings | ⬜ |
