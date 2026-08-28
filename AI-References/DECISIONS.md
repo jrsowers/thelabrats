@@ -593,3 +593,26 @@ once — MANAGER_OF_THE_WEEK still pointed at a highest-score computation after
 The Mastermind was redefined as lineup optimality. A test now asserts in both
 directions: every award marked computable is produced, and every award produced
 exists in the catalog.
+
+## 2026-08-28 · Award reveal: hover, tap AND keyboard — never hover alone
+The frosted-glass reveal fires on pointer hover, on tap/click, and on keyboard
+focus, plus a page-level "Reveal all" switch. Hover alone would have hidden
+every award from touch and keyboard users entirely.
+**Content is only blurred, never removed or `aria-hidden`.** Screen readers get
+the whole card regardless — a visual effect must not become an accessibility
+wall. The interactive layer is a real `<button>` so Enter and Space work and the
+state is announced via `aria-expanded`.
+
+## 2026-08-28 · Reveal written as hand-authored CSS, not Tailwind variants
+The first attempt used `group-hover:blur-0`. **Tailwind v4 has no `blur-0`** —
+only `blur-none` — so it generated no rule at all and the reveal silently never
+worked. Nothing errored; the cards simply stayed frosted.
+Rewritten as explicit rules in globals.css, which the CSS contract test can
+assert. This is the second time a Tailwind class that does not exist has failed
+silently; hand-authored CSS for effects is the safer default here.
+
+## 2026-08-28 · The CSS contract test was itself too strict
+Its regex required a class to be followed by `{` or `,`, which false-negatived
+on compound selectors like `.reveal-card:hover`. Now matches the class as a
+selector token. Re-verified against the real failure mode — deleting the whole
+block — which correctly fails four assertions.

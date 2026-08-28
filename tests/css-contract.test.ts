@@ -26,6 +26,9 @@ const CUSTOM_CLASSES = [
   'live-dot',       // pulsing live indicator
   'field-lines',    // football field backdrop
   'field-numbers',  // yard numbers
+  'reveal-card',    // award reveal container
+  'reveal-body',    // blurred award detail
+  'reveal-hint',    // "Reveal" prompt
 ] as const
 
 const css = readFileSync('src/app/globals.css', 'utf8')
@@ -43,8 +46,11 @@ const sources = walk('src').map((f) => ({ file: f, text: readFileSync(f, 'utf8')
 
 describe('custom CSS classes', () => {
   it.each(CUSTOM_CLASSES)('.%s is defined in globals.css', (name) => {
-    // Matches ".name {" or ".name," allowing for chained selectors.
-    const defined = new RegExp(`\\.${name}\\s*[,{]`).test(css)
+    // Match the class as a selector TOKEN — followed by anything that is not
+    // another name character. An earlier version required "{" or "," right
+    // after, which false-negatived on compound selectors like
+    // ".reveal-card:hover" and ".reveal-card[data-revealed]".
+    const defined = new RegExp(`\\.${name}(?![\\w-])`).test(css)
     expect(defined, `.${name} is used by components but not defined in globals.css`).toBe(true)
   })
 
@@ -55,7 +61,7 @@ describe('custom CSS classes', () => {
         new RegExp(`["\\s\`]${name}[\\s"\`]`).test(s.text),
       )
       if (usedIn.length === 0) continue
-      if (!new RegExp(`\\.${name}\\s*[,{]`).test(css)) {
+      if (!new RegExp(`\\.${name}(?![\\w-])`).test(css)) {
         missing.push(`${name} (used in ${usedIn.length} file(s))`)
       }
     }

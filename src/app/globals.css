@@ -233,6 +233,40 @@ body {
   color: var(--gold-ink);
 }
 
+/* Award reveal.
+   Written as explicit CSS rather than Tailwind variants: `group-hover:blur-0`
+   generated no rule at all (v4 has no blur-0, only blur-none) and the effect
+   failed silently — nothing errored, the cards simply never revealed. Hand-
+   written rules can be asserted by the CSS contract test. */
+.reveal-body {
+  filter: blur(5px);
+  opacity: 0.45;
+  transition: filter 300ms ease-out, opacity 300ms ease-out;
+}
+
+.reveal-card:hover .reveal-body,
+.reveal-card:focus-within .reveal-body,
+.reveal-card[data-revealed='true'] .reveal-body {
+  filter: blur(0);
+  opacity: 1;
+}
+
+.reveal-hint {
+  opacity: 1;
+  transition: opacity 200ms ease-out;
+}
+
+.reveal-card:hover .reveal-hint,
+.reveal-card:focus-within .reveal-hint,
+.reveal-card[data-revealed='true'] .reveal-hint {
+  opacity: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal-body,
+  .reveal-hint { transition: none; }
+}
+
 /* Live pulse. Respects reduced-motion. */
 @keyframes labPulse {
   0%, 100% { opacity: 1; }

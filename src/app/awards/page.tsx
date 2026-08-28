@@ -14,6 +14,7 @@ import { FieldBackdrop } from '@/components/ui/field-backdrop'
 import { WeekSelect } from '@/components/ui/week-select'
 import { PlayerHeadshot } from '@/components/ui/player-headshot'
 import { Eyebrow, TeamAvatar, Tag } from '@/components/ui/primitives'
+import { AwardGrid } from '@/components/awards/award-grid'
 
 export const dynamic = 'force-dynamic'
 export const metadata: Metadata = { title: 'Studs & Duds' }
@@ -23,7 +24,31 @@ const SECTION_ACCENT: Record<AwardSection, string> = {
   DUDS: 'var(--loss)',
 }
 
-function Card({
+/** Header: always visible, even behind the frost. */
+function CardHeader({ card }: { card: AwardCard }) {
+  return (
+    <div className="flex items-start justify-between gap-2 border-b border-border px-4 py-3">
+      <div className="min-w-0">
+        <h3 className="display text-[21px] leading-[1.05]">{card.def.name}</h3>
+        <p className="mt-1 text-[12px] leading-snug text-muted">{card.def.blurb}</p>
+      </div>
+      {card.placeholder && (
+        <span
+          className="mt-0.5 shrink-0 font-mono text-[8.5px] uppercase tracking-[0.14em] text-warn"
+          title={
+            `Needs: ${card.def.needs.map((n) => NEED_LABEL[n]).join(', ')}` +
+            `\nCapture: ${CADENCE_LABEL[card.def.capture]}`
+          }
+        >
+          Sample
+        </span>
+      )}
+    </div>
+  )
+}
+
+/** Body: the answer. Blurred until the card is revealed. */
+function CardBody({
   card, teams,
 }: { card: AwardCard; teams: Map<number, StandingsTeam> }) {
   const accent = SECTION_ACCENT[card.def.section]
@@ -31,100 +56,68 @@ function Card({
   const opponent = card.opponentId != null ? teams.get(card.opponentId) : null
 
   return (
-    <article
-      className="state-bar flex flex-col overflow-hidden rounded-lg border border-border bg-surface"
-      style={{ '--state': accent } as React.CSSProperties}
-    >
-      {/* The award name is what people scan for, so it leads the card and
-          outranks the recipient. The metric keeps its size but is set in the
-          section accent, so the two read as different kinds of information
-          rather than competing for the same rank. */}
-      <div className="flex items-start justify-between gap-2 border-b border-border px-4 py-3">
+    <>
+      {/* The manager wins the award. Where a player earned it, the player
+          appears beneath as evidence rather than as the recipient. */}
+      <div className="flex items-center gap-2.5">
+        {team && (
+          <TeamAvatar
+            photoUrl={team.photoUrl} logoUrl={team.logoUrl} abbrev={team.abbrev}
+            size={38} champion={team.isChampion} championYear={team.championYear}
+          />
+        )}
         <div className="min-w-0">
-          <h3 className="display text-[21px] leading-[1.05]">{card.def.name}</h3>
-          <p className="mt-1 text-[12px] leading-snug text-muted">{card.def.blurb}</p>
+          <div className="display truncate text-[16px] leading-tight">
+            {team?.name ?? 'TBD'}
+          </div>
+          {team?.manager && (
+            <div className="truncate text-[11.5px] text-muted">{team.manager}</div>
+          )}
         </div>
-        {card.placeholder && (
-          <span
-            className="mt-0.5 shrink-0 font-mono text-[8.5px] uppercase tracking-[0.14em] text-warn"
-            title={
-              `Needs: ${card.def.needs.map((n) => NEED_LABEL[n]).join(', ')}` +
-              `\nCapture: ${CADENCE_LABEL[card.def.capture]}`
-            }
-          >
-            Sample
-          </span>
-        )}
       </div>
 
-      <div className="flex flex-1 flex-col gap-3 px-4 py-3.5">
-        {/* Recipient: a player for player awards, otherwise the team(s). */}
-        {/* The manager wins the award. Where a player earned it, the player
-            appears beneath as evidence rather than as the recipient. */}
-        <div className="flex items-center gap-2.5">
-          {team && (
-            <TeamAvatar
-              photoUrl={team.photoUrl} logoUrl={team.logoUrl} abbrev={team.abbrev}
-              size={38} champion={team.isChampion} championYear={team.championYear}
-            />
-          )}
+      {card.playerName && (
+        <div className="flex items-center gap-2 rounded-md border border-border bg-surface-2/50 px-2.5 py-1.5">
+          <PlayerHeadshot espnPlayerId={card.espnPlayerId} name={card.playerName} size={26} />
           <div className="min-w-0">
-            <div className="display truncate text-[16px] leading-tight">
-              {team?.name ?? 'TBD'}
+            <div className="truncate text-[13px] font-semibold leading-tight">
+              {card.playerName}
             </div>
-            {team?.manager && (
-              <div className="truncate text-[11.5px] text-muted">{team.manager}</div>
-            )}
+            <div className="font-mono text-[9.5px] uppercase tracking-wider text-dim">
+              {card.playerMeta}
+            </div>
           </div>
         </div>
+      )}
 
-        {card.playerName && (
-          <div className="flex items-center gap-2 rounded-md border border-border bg-surface-2/50 px-2.5 py-1.5">
-            <PlayerHeadshot
-              espnPlayerId={card.espnPlayerId}
-              name={card.playerName}
-              size={26}
-            />
-            <div className="min-w-0">
-              <div className="truncate text-[13px] font-semibold leading-tight">
-                {card.playerName}
-              </div>
-              <div className="font-mono text-[9.5px] uppercase tracking-wider text-dim">
-                {card.playerMeta}
-              </div>
-            </div>
-          </div>
-        )}
-
-        {!card.playerName && opponent && (
-          <div className="flex items-center gap-2 rounded-md border border-border bg-surface-2/50 px-2.5 py-1.5">
-            <span className="font-mono text-[9.5px] uppercase tracking-wider text-dim">vs</span>
-            <span className="truncate text-[13px] font-semibold">{opponent.name}</span>
-          </div>
-        )}
-
-        <p className="text-[13px] leading-relaxed text-muted">{card.headline}</p>
-
-        <div className="mt-auto flex items-end justify-between gap-4 border-t border-border pt-3">
-          <div>
-            <Eyebrow>{card.def.metricLabel}</Eyebrow>
-            <div className="display mt-0.5 text-[28px] tnum" style={{ color: accent }}>
-              {card.metricValue}
-            </div>
-          </div>
-          {card.supporting.length > 0 && (
-            <dl className="text-right">
-              {card.supporting.slice(0, 2).map((s) => (
-                <div key={s.label} className="mt-0.5 first:mt-0">
-                  <dt className="font-mono text-[9px] uppercase tracking-wider text-dim">{s.label}</dt>
-                  <dd className="font-mono text-[12px] tnum">{s.value}</dd>
-                </div>
-              ))}
-            </dl>
-          )}
+      {!card.playerName && opponent && (
+        <div className="flex items-center gap-2 rounded-md border border-border bg-surface-2/50 px-2.5 py-1.5">
+          <span className="font-mono text-[9.5px] uppercase tracking-wider text-dim">vs</span>
+          <span className="truncate text-[13px] font-semibold">{opponent.name}</span>
         </div>
+      )}
+
+      <p className="text-[13px] leading-relaxed text-muted">{card.headline}</p>
+
+      <div className="mt-auto flex items-end justify-between gap-4 border-t border-border pt-3">
+        <div>
+          <Eyebrow>{card.def.metricLabel}</Eyebrow>
+          <div className="display mt-0.5 text-[28px] tnum" style={{ color: accent }}>
+            {card.metricValue}
+          </div>
+        </div>
+        {card.supporting.length > 0 && (
+          <dl className="text-right">
+            {card.supporting.slice(0, 2).map((s) => (
+              <div key={s.label} className="mt-0.5 first:mt-0">
+                <dt className="font-mono text-[9px] uppercase tracking-wider text-dim">{s.label}</dt>
+                <dd className="font-mono text-[12px] tnum">{s.value}</dd>
+              </div>
+            ))}
+          </dl>
+        )}
       </div>
-    </article>
+    </>
   )
 }
 
@@ -216,24 +209,30 @@ export default async function AwardsPage({
         </div>
       )}
 
-      {([
-        ['STUDS', 'Studs Of The Week', studs],
-        ['DUDS', 'Duds Of The Week', duds],
-      ] as const).map(([key, heading, list]) => (
-        <section key={key} className="mb-10">
-          {/* Heading takes the normal text colour; the stud/dud distinction is
-              already carried by each card's edge bar and metric. */}
-          <div className="mb-5 border-b border-border pb-1.5">
-            <h2 className="display text-2xl">{heading}</h2>
-          </div>
-          <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
-            {list.map((c) => (
-              <Card key={c.def.key} card={c} teams={byId} />
-            ))}
-          </div>
-        </section>
-      ))}
-
+      <AwardGrid
+        sections={[
+          {
+            key: 'STUDS',
+            heading: 'Studs Of The Week',
+            items: studs.map((c) => ({
+              key: c.def.key,
+              accent: SECTION_ACCENT.STUDS,
+              header: <CardHeader card={c} />,
+              body: <CardBody card={c} teams={byId} />,
+            })),
+          },
+          {
+            key: 'DUDS',
+            heading: 'Duds Of The Week',
+            items: duds.map((c) => ({
+              key: c.def.key,
+              accent: SECTION_ACCENT.DUDS,
+              header: <CardHeader card={c} />,
+              body: <CardBody card={c} teams={byId} />,
+            })),
+          },
+        ]}
+      />
     </AppShell>
   )
 }
