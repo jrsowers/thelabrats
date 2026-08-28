@@ -53,3 +53,6 @@ Thumbs.db
 
 # Source photos — optimized copies live in public/members
 /member photos/
+
+# Sync-service duplicate files (iCloud/Dropbox create "name 2.ext")
+*[0-9].tsbuildinfo

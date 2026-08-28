@@ -188,58 +188,38 @@ body {
 
 /* ---- MOTIFS ----------------------------------------------- */
 
-/* Football field. Yard lines every 5, heavier lines every 10, and the two
-   rows of one-yard hash marks between them. Structure, not decoration —
-   headers only, never behind data. */
+/* Football field.
+   Everything is sized in PERCENTAGES so exactly one 100-yard field spans the
+   header at any width, and the yard numbers land on the 10-yard lines. Fixed
+   pixel spacing drifted out of alignment as the viewport changed. */
 .field-lines {
   /* Eased back on the left so the page title always wins. */
   -webkit-mask-image: linear-gradient(to right, rgba(0,0,0,0.28), #000 52%);
   mask-image: linear-gradient(to right, rgba(0,0,0,0.28), #000 52%);
   background-image:
-    /* upper hash row */
-    repeating-linear-gradient(to right, var(--field-hash) 0 1px, transparent 1px 11.2px),
+    /* upper hash row — one tick per yard */
+    linear-gradient(to right, var(--field-hash) 0 1px, transparent 1px),
     /* lower hash row */
-    repeating-linear-gradient(to right, var(--field-hash) 0 1px, transparent 1px 11.2px),
+    linear-gradient(to right, var(--field-hash) 0 1px, transparent 1px),
     /* 10-yard lines */
-    repeating-linear-gradient(to right, var(--field-major) 0 1.5px, transparent 1.5px 112px),
+    linear-gradient(to right, var(--field-major) 0 1.5px, transparent 1.5px),
     /* 5-yard lines */
-    repeating-linear-gradient(to right, var(--field-line) 0 1px, transparent 1px 56px);
+    linear-gradient(to right, var(--field-line) 0 1px, transparent 1px);
   background-size:
-    100% 6px,
-    100% 6px,
-    100% 100%,
-    100% 100%;
+    1% 6px,
+    1% 6px,
+    10% 100%,
+    5% 100%;
   background-position:
     0 32%,
     0 68%,
     0 0,
     0 0;
   background-repeat:
-    no-repeat,
-    no-repeat,
-    repeat,
-    repeat;
-}
-
-/* State bar: 3px left edge carrying meaning. Never color alone — always
-   paired with a text label (accessibility, §39). */
-.state-bar { box-shadow: inset 3px 0 0 0 var(--state, transparent); }
-
-/* Champion crown. A flat fill reads as a yellow dot; the gradient is what makes
-   it read as metal — highlight top-left, deeper tone bottom-right. */
-.crown-badge {
-  background: linear-gradient(148deg, var(--gold-hi) 0%, var(--gold) 52%, var(--gold-lo) 100%);
-  color: var(--gold-ink);
-}
-
-/* Live pulse. Respects reduced-motion. */
-@keyframes labPulse {
-  0%, 100% { opacity: 1; }
-  50%      { opacity: 0.35; }
-}
-.live-dot { animation: labPulse 2s ease-in-out infinite; }
-@media (prefers-reduced-motion: reduce) {
-  .live-dot { animation: none; }
+    repeat-x,
+    repeat-x,
+    repeat-x,
+    repeat-x;
 }
 
 /* Yard numbers. Lighter than the lines: a glyph covers far more pixels than a

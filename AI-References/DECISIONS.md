@@ -298,3 +298,30 @@ from it should be labelled unofficial until then.
 ## 2026-08-28 · Columns dropped: Waiver and Moves
 James's call. Waiver priority belongs on the Transaction Log where the moves it
 governs actually live, not in a standings table.
+
+## 2026-08-28 · Tiebreaker CONFIRMED: head-to-head record
+James confirmed the league's seeding tiebreaker is head-to-head. The engine now
+applies it before points-for, and the earlier "unverified" caveat is resolved.
+**Three-plus-way ties** use a mini round-robin — each tied team scored only on
+its record against the others in the tie. That is why tiebreaking cannot be a
+simple comparator: a team's tiebreak value depends on which teams it is tied
+WITH, so tied blocks are resolved as groups.
+**Points-for** still breaks what head-to-head cannot (teams that never met, or
+an even split). Every row carries a `tiebreakNote` explaining why it sits where
+it does (§21.6).
+
+## 2026-08-28 · Clinching is conservative, except when it can be exact
+A team is marked CLINCHED only if it cannot miss even losing out while every
+rival wins out. That can lag a full elimination analysis by a week — rivals who
+play each other cannot all win out, which a rigorous answer would exploit via
+the max-flow argument used for baseball elimination. Being late is acceptable;
+claiming a berth that is not certain is not (§66).
+**One exact case:** with zero games remaining the table IS the result, so rank
+alone decides. Without that carve-out, teams tied on wins at season's end showed
+as unresolved — 5 of 6 berths clinched in a finished season, which is wrong.
+
+## 2026-08-28 · Field geometry is proportional, not pixel-based
+Yard lines and hash marks are sized in percentages (5%, 10%, 1%) so exactly one
+100-yard field spans the header at any width, and the nine yard numbers at 10%
+intervals land on the 10-yard lines. The previous fixed-pixel spacing tiled a
+partial second field, producing a tenth number and a duplicate 10.

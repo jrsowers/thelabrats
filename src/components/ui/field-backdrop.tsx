@@ -1,40 +1,33 @@
 /**
  * Football field behind page headers: yard lines, hash marks, and yard numbers.
  *
- * Lines are CSS gradients (they tile cleanly at any width). Numbers are real
- * elements positioned on the 10-yard lines, because a gradient cannot draw a 40.
+ * Lines are CSS gradients sized in percentages, so exactly one 100-yard field
+ * spans the header at any width. Numbers are real elements — a gradient cannot
+ * draw a 40 — positioned on the 10-yard marks at 10% intervals, which is why
+ * they stay aligned with the lines.
  *
  * Tuning notes live in AI-References/STYLE-GUIDE.md.
  */
 
-/** 10-yard spacing, matching --field-major in globals.css. */
-const YARD_10 = 112
-
 /**
- * Yard numbers as a triangle wave: up to the 50, back down, repeat.
- *
- * The endpoint is deliberately NOT repeated. A literal field reads
- * 10-20-30-40-50-40-30-20-10, but tiling that nine-element run puts two 10s
- * side by side at every seam. Dropping the trailing 10 makes the wrap land on
- * 20-10-20 — a continuous zigzag with no duplicate.
+ * One field, end to end: 10 through the 50 and back down. Exactly nine numbers,
+ * on the 10 through 90 yard lines. Not a repeating pattern — an earlier version
+ * tiled this and produced a tenth number, so the field read as 1½ fields.
  */
-const SEQUENCE = [10, 20, 30, 40, 50, 40, 30, 20]
+const YARD_NUMBERS = [10, 20, 30, 40, 50, 40, 30, 20, 10]
 
-export function FieldBackdrop({ count = 18 }: { count?: number }) {
+export function FieldBackdrop() {
   return (
     <div aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden">
       <div className="field-lines absolute inset-0" />
-      {/* The box is sized to the glyphs and each number is anchored to its
-          bottom. Previously the container was h-[1em] (16px) while the text was
-          27px, so the numbers overflowed and were clipped by the header edge. */}
       <div className="field-numbers absolute inset-x-0 bottom-6 h-[28px]">
-        {Array.from({ length: count }, (_, i) => (
+        {YARD_NUMBERS.map((n, i) => (
           <span
             key={i}
             className="display absolute bottom-0 -translate-x-1/2 text-[27px] leading-none"
-            style={{ left: `${(i + 1) * YARD_10}px` }}
+            style={{ left: `${(i + 1) * 10}%` }}
           >
-            {SEQUENCE[i % SEQUENCE.length]}
+            {n}
           </span>
         ))}
       </div>

@@ -135,8 +135,10 @@ export async function getTeamRecords(seasonId: number): Promise<Map<number, stri
     bump(m.away_team_id, homeWon ? 1 : 0)
   }
 
+  // Always W-L-T, even at 0-0-0. A record that changes shape once someone ties
+  // makes the column jump, and a fantasy record is conventionally three parts.
   const out = new Map<number, string>()
-  for (const [id, [w, l, t]] of tally) out.set(id, t > 0 ? `${w}-${l}-${t}` : `${w}-${l}`)
+  for (const [id, [w, l, t]] of tally) out.set(id, `${w}-${l}-${t}`)
   return out
 }
 
@@ -178,7 +180,7 @@ export async function getMatchupsForWeek(
           manager: raw.franchises?.manager_name ?? null,
           score: Number(score),
           projected: projected == null ? null : Number(projected),
-          record: records.get(raw.id) ?? '0-0',
+          record: records.get(raw.id) ?? '0-0-0',
         }
       : null
 

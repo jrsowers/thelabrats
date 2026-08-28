@@ -57,8 +57,8 @@ export function applyLivePreview(matchups: MatchupRow[], week: number): MatchupR
     // Records reflect the weeks already played, so week 1 stays 0-0.
     const played = Math.max(0, week - 1)
     const wins = played === 0 ? 0 : Math.round(between(r, 0, played))
-    const awayRec = `${wins}-${played - wins}`
-    const homeRec = `${played - wins}-${wins}`
+    const awayRec = `${wins}-${played - wins}-0`
+    const homeRec = `${played - wins}-${wins}-0`
 
     const away = m.away ? { ...m.away, ...side(awayRec) } : null
     const home = m.home ? { ...m.home, ...side(homeRec) } : null

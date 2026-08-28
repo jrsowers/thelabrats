@@ -3,11 +3,13 @@ import Link from 'next/link'
 import {
   getLeagueOverview, getSeasonTeams, getSeasonResults, getReigningChampion, getLastSync,
 } from '@/lib/league/queries'
-import { computeStandings, computeMovement, latestCompletedWeek } from '@/lib/standings/compute'
+import {
+  computeStandings, computeMovement, latestCompletedWeek, computePlayoffStatus,
+} from '@/lib/standings/compute'
 import { simulateSeason } from '@/lib/league/preview'
 import { AppShell } from '@/components/navigation/app-shell'
 import { FieldBackdrop } from '@/components/ui/field-backdrop'
-import { Eyebrow, TeamAvatar, Tag, EmptyState } from '@/components/ui/primitives'
+import { Eyebrow, TeamAvatar, Tag, EmptyState, LockIcon } from '@/components/ui/primitives'
 
 export const dynamic = 'force-dynamic'
 export const metadata: Metadata = { title: 'League Standings' }
@@ -47,7 +49,7 @@ function Movement({ delta }: { delta: number }) {
 
 export default async function StandingsPage({
   searchParams,
-}: { searchParams: Promise<{ preview?: string }> }) {
+}: { searchParams: Promise<{ preview?: string; week?: string }> }) {
   const overview = await getLeagueOverview()
   if (!overview) return null
 
@@ -61,14 +63,22 @@ export default async function StandingsPage({
     getLastSync(),
   ])
 
-  // Preview simulates a season through week 8 so ranks, streaks and movement
-  // are all exercised. Never written — decorated on the way to the view (§16).
-  const results = isPreview ? simulateSeason(rawResults, 8) : rawResults
+  // Preview simulates the season to a given week so every state can be seen:
+  // week 8 for mid-season jockeying, week 12+ for clinches and eliminations.
+  // Never written — decorated on the way to the view (§16).
+  const previewWeek = Math.min(
+    Math.max(Number(params.week) || 8, 1),
+    overview.regularSeasonWeeks,
+  )
+  const results = isPreview ? simulateSeason(rawResults, previewWeek) : rawResults
 
   const throughWeek = latestCompletedWeek(results)
   const metas = teams.map((t) => ({ seasonTeamId: t.seasonTeamId, name: t.name }))
   const rows = computeStandings(results, metas, throughWeek || 1)
   const movement = computeMovement(results, metas, throughWeek)
+  const playoffStatus = computePlayoffStatus(
+    rows, overview.regularSeasonWeeks, throughWeek, overview.playoffTeamCount,
+  )
   const byId = new Map(teams.map((t) => [t.seasonTeamId, t]))
 
   const hasPlayed = throughWeek > 0
@@ -90,15 +100,30 @@ export default async function StandingsPage({
         <div className="mb-6 flex flex-wrap items-center gap-x-3 gap-y-2 rounded-lg border border-warn/40 bg-warn-soft px-4 py-3">
           <Tag tone="warn">Preview</Tag>
           <p className="text-[13px] text-muted">
-            A simulated season through week 8, so you can see the table populated.
-            Nothing here is real and nothing was saved.
+            A simulated season through week {previewWeek}, so you can see the table
+            populated. Nothing here is real and nothing was saved.
           </p>
-          <Link
-            href="/standings"
-            className="ml-auto font-mono text-[10.5px] uppercase tracking-wider text-brand hover:underline"
-          >
-            Exit preview →
-          </Link>
+          <div className="ml-auto flex items-center gap-3">
+            <nav className="flex items-center gap-1" aria-label="Preview week">
+              {[4, 8, 12, overview.regularSeasonWeeks].map((w) => (
+                <Link
+                  key={w}
+                  href={`/standings?preview=live&week=${w}`}
+                  className={`rounded px-1.5 py-0.5 font-mono text-[10.5px] tnum ${
+                    w === previewWeek ? 'bg-brand text-brand-ink' : 'text-muted hover:bg-surface-2'
+                  }`}
+                >
+                  Wk {w}
+                </Link>
+              ))}
+            </nav>
+            <Link
+              href="/standings"
+              className="font-mono text-[10.5px] uppercase tracking-wider text-brand hover:underline"
+            >
+              Exit →
+            </Link>
+          </div>
         </div>
       )}
 
@@ -120,15 +145,17 @@ export default async function StandingsPage({
                 const team = byId.get(row.seasonTeamId)
                 if (!team) return null
                 const delta = movement.get(row.seasonTeamId) ?? 0
+                const status = playoffStatus.get(row.seasonTeamId)
                 const inPlayoffs = row.rank <= playoffLine
                 const isCutoff = row.rank === playoffLine
+                const eliminated = status === 'ELIMINATED'
 
                 return (
                   <tr
                     key={row.seasonTeamId}
                     className={`state-bar border-b border-border bg-surface last:border-0 ${
-                      isCutoff ? '!border-b-2 !border-b-brand/45' : ''
-                    }`}
+                      isCutoff ? '!border-b-2 !border-b-brand/55' : ''
+                    } ${eliminated ? 'opacity-55' : ''}`}
                     style={{ '--state': inPlayoffs ? 'var(--brand)' : 'transparent' } as React.CSSProperties}
                   >
                     <td className="px-3 py-2.5 sm:px-4">
@@ -148,9 +175,33 @@ export default async function StandingsPage({
                           championYear={team.championYear}
                         />
                         <div className="min-w-0">
-                          <div className="display truncate text-[15.5px] leading-tight">{team.name}</div>
+                          <div className="flex items-center gap-1.5">
+                            <span className="display truncate text-[15.5px] leading-tight">
+                              {team.name}
+                            </span>
+                            {status === 'CLINCHED' && (
+                              <span
+                                className="shrink-0 text-brand"
+                                title="Clinched playoff berth"
+                                aria-label="Clinched playoff berth"
+                                role="img"
+                              >
+                                <LockIcon />
+                              </span>
+                            )}
+                            {eliminated && (
+                              <span className="shrink-0 font-mono text-[9px] uppercase tracking-wider text-loss">
+                                Out
+                              </span>
+                            )}
+                          </div>
                           {team.manager && (
                             <div className="truncate text-[11px] text-muted">{team.manager}</div>
+                          )}
+                          {row.tiebreakNote && (
+                            <div className="truncate font-mono text-[9.5px] text-dim">
+                              {row.tiebreakNote}
+                            </div>
                           )}
                         </div>
                       </div>
@@ -200,10 +251,16 @@ export default async function StandingsPage({
           <span className="font-bold text-muted">Last standings update:</span>{' '}
           {fmtStandingsUpdate(lastSync?.finished_at ?? null) ?? 'never'}
         </p>
-        <p className="flex items-center gap-1.5 font-mono text-[10.5px] uppercase tracking-wider text-dim">
-          <span className="inline-block h-3 w-[3px] rounded-full bg-brand" aria-hidden />
-          Top {playoffLine} make the playoffs
-        </p>
+        <dl className="flex flex-wrap items-center gap-x-5 gap-y-1.5 font-mono text-[10.5px] text-dim">
+          <div className="flex items-center gap-1.5">
+            <dt className="inline-block h-[2px] w-5 rounded-full bg-brand" aria-hidden />
+            <dd>Playoff &ldquo;In Or Out&rdquo; Projection</dd>
+          </div>
+          <div className="flex items-center gap-1.5">
+            <dt className="text-brand" aria-hidden><LockIcon size={12} /></dt>
+            <dd>Clinched Playoff Berth</dd>
+          </div>
+        </dl>
       </div>
     </AppShell>
   )

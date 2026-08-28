@@ -138,6 +138,21 @@ export function BracketIcon({
   )
 }
 
+/* ---------- Clinch lock ----------
+   Shown only when a playoff berth is mathematically certain. */
+export function LockIcon({ size = 13, className }: { size?: number; className?: string }) {
+  return (
+    <svg
+      width={size} height={size} viewBox="0 0 24 24" className={className}
+      fill="none" stroke="currentColor" strokeWidth={2.4}
+      strokeLinecap="round" strokeLinejoin="round" aria-hidden
+    >
+      <rect x="4" y="10.5" width="16" height="11" rx="2.2" fill="currentColor" stroke="none" />
+      <path d="M8 10.5V7a4 4 0 0 1 8 0v3.5" />
+    </svg>
+  )
+}
+
 /* ---------- Team avatar ----------
    Identity, in order of preference: the member's own photo, then the ESPN team
    logo, then a mono abbreviation chip. A real face beats a stock helmet.
