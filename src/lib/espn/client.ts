@@ -6,7 +6,10 @@
  */
 import { ESPN_BASE } from './constants'
 import { EspnHttpError, EspnValidationError } from './errors'
-import { leagueResponseSchema, type LeagueResponse } from './schemas'
+import {
+  leagueResponseSchema, playerPoolResponseSchema,
+  type LeagueResponse, type PlayerPoolResponse,
+} from './schemas'
 
 export interface EspnClientConfig {
   leagueId: number
@@ -61,13 +64,34 @@ export class EspnClient {
     return parsed.data
   }
 
-  private async fetchWithRetry(url: string): Promise<unknown> {
+  /**
+   * Player pool. Needs an `x-fantasy-filter` header — without it ESPN returns
+   * an unbounded set and the request is enormous.
+   */
+  async getPlayerPool(limit = 1200): Promise<PlayerPoolResponse> {
+    const url = new URL(this.baseUrl)
+    url.searchParams.append('view', 'kona_player_info')
+
+    const filter = JSON.stringify({
+      players: { limit, sortPercOwned: { sortAsc: false, sortPriority: 1 } },
+    })
+
+    const raw = await this.fetchWithRetry(url.toString(), { 'x-fantasy-filter': filter })
+    const parsed = playerPoolResponseSchema.safeParse(raw)
+    if (!parsed.success) throw new EspnValidationError('kona_player_info', parsed.error.issues)
+    return parsed.data
+  }
+
+  private async fetchWithRetry(url: string, extraHeaders: Record<string, string> = {}): Promise<unknown> {
     const doFetch = this.config.fetchImpl ?? fetch
     let lastError: unknown
 
     for (let attempt = 1; attempt <= MAX_ATTEMPTS; attempt++) {
       try {
-        const res = await doFetch(url, { headers: this.headers, cache: 'no-store' })
+        const res = await doFetch(url, {
+          headers: { ...this.headers, ...extraHeaders },
+          cache: 'no-store',
+        })
         if (!res.ok) {
           const body = await res.text().catch(() => undefined)
           const err = new EspnHttpError(res.status, url, body?.slice(0, 500))

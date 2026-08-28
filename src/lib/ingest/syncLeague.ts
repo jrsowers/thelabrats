@@ -19,13 +19,13 @@ export interface SyncResult {
   error?: string
 }
 
-export async function syncLeague(): Promise<SyncResult> {
+export async function syncLeague(syncType = 'league-metadata'): Promise<SyncResult> {
   const db = createServiceClient()
   const season = Number(process.env.ESPN_SEASON)
 
   const { data: run } = await db
     .from('sync_runs')
-    .insert({ sync_type: 'league-metadata', status: 'RUNNING' })
+    .insert({ sync_type: syncType, status: 'RUNNING' })
     .select('id')
     .single()
 

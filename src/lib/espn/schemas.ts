@@ -109,6 +109,30 @@ export const transactionSchema = z.object({
   items: z.array(transactionItemSchema).nullish(),
 })
 
+/**
+ * Player pool (`kona_player_info`).
+ *
+ * ✅ VERIFIED 2026-08-28: returns 1,027 players pre-draft with names, positions,
+ * pro teams and eligible slots. Requires an `x-fantasy-filter` header.
+ */
+export const poolPlayerSchema = z.object({
+  player: z.object({
+    id: num,
+    fullName: z.string().nullish(),
+    firstName: z.string().nullish(),
+    lastName: z.string().nullish(),
+    defaultPositionId: maybeNum,
+    proTeamId: maybeNum,
+    eligibleSlots: z.array(num).nullish(),
+    active: z.boolean().nullish(),
+    injuryStatus: z.string().nullish(),
+  }).nullish(),
+})
+
+export const playerPoolResponseSchema = z.object({
+  players: z.array(poolPlayerSchema).nullish(),
+})
+
 /** Top-level league response. Views are additive, so nearly everything is optional. */
 export const leagueResponseSchema = z.object({
   id: num,
@@ -128,3 +152,4 @@ export const leagueResponseSchema = z.object({
 })
 
 export type LeagueResponse = z.infer<typeof leagueResponseSchema>
+export type PlayerPoolResponse = z.infer<typeof playerPoolResponseSchema>

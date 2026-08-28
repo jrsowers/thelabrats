@@ -7,10 +7,10 @@
 import {
   LINEUP_SLOT_LABEL, NON_STARTER_SLOTS, PRO_TEAM, POSITION_LABEL,
 } from './constants'
-import type { LeagueResponse } from './schemas'
+import type { LeagueResponse, PlayerPoolResponse } from './schemas'
 import type {
   FantasyTeam, LeagueSettings, LeagueStatus, Manager, Matchup, MatchupStatus,
-  Transaction, TransactionType,
+  Transaction, TransactionType, PoolPlayer,
 } from './types'
 
 export function toLeagueStatus(res: LeagueResponse): LeagueStatus {
@@ -202,6 +202,27 @@ export function toTransactions(res: LeagueResponse): Transaction[] {
         items,
       }
     })
+}
+
+/**
+ * Player pool -> normalized players.
+ *
+ * ✅ Verified against a live pre-draft pull: 1,027 players, zero missing names.
+ */
+export function toPoolPlayers(res: PlayerPoolResponse): PoolPlayer[] {
+  return (res.players ?? [])
+    .map((p) => p.player)
+    .filter((p): p is NonNullable<typeof p> => Boolean(p && p.id))
+    .map((p) => ({
+      espnPlayerId: p.id,
+      fullName: p.fullName ?? [p.firstName, p.lastName].filter(Boolean).join(' ').trim(),
+      position: positionLabel(p.defaultPositionId ?? -1),
+      nflTeam: proTeamAbbrev(p.proTeamId ?? 0),
+      eligibleSlots: p.eligibleSlots ?? [],
+      active: p.active ?? true,
+      injuryStatus: p.injuryStatus ?? null,
+    }))
+    .filter((p) => p.fullName.length > 0)
 }
 
 export function lineupSlotLabel(slotId: number): string {

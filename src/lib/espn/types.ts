@@ -104,6 +104,17 @@ export interface Transaction {
   items: TransactionItem[]
 }
 
+export interface PoolPlayer {
+  espnPlayerId: number
+  fullName: string
+  position: string
+  nflTeam: string
+  /** Lineup slot ids this player may fill. Superflex detection lives here. */
+  eligibleSlots: number[]
+  active: boolean
+  injuryStatus: string | null
+}
+
 export interface LeagueStatus {
   currentMatchupPeriod: number
   latestScoringPeriod: number
