@@ -28,7 +28,7 @@ export function SideNav({
             per James's request, rather than whichever preview host is serving. */}
         <a
           href="https://www.labratsfantasy.com"
-          className="block px-4 py-5 transition-opacity hover:opacity-85"
+          className="block px-4 pb-2 pt-6 transition-opacity hover:opacity-85"
           aria-label={`${leagueName} — home`}
         >
           {logoUrl ? (
@@ -52,7 +52,7 @@ export function SideNav({
           )}
         </a>
 
-        <ul className="mt-2 flex-1 space-y-0.5 px-2">
+        <ul className="mt-9 flex-1 space-y-0.5 px-2">
           {NAV_ITEMS.map((item) => {
             const active = pathname === item.href
             const Icon = item.icon

@@ -50,6 +50,13 @@
   --series-5: #0891a8;
   --series-6: #c2185b;
 
+  /* Trophy gold. Deliberately separate from --warn: warn means "provisional"
+     and must stay a muted amber, while a championship should read as metal. */
+  --gold-hi:  #ffe89a;
+  --gold:     #f0b420;
+  --gold-lo:  #b8790a;
+  --gold-ink: #40290a;
+
   /* Field motif — yard lines, 10-yard lines, and hash marks */
   --field-line:   rgba(10, 14, 21, 0.032);
   --field-major:  rgba(10, 14, 21, 0.07);
@@ -96,6 +103,11 @@
     --series-5: #35c8e0;
     --series-6: #ff6fa5;
 
+    --gold-hi:  #ffeead;
+    --gold:     #ffc832;
+    --gold-lo:  #c98d12;
+    --gold-ink: #3a2506;
+
     --field-line:   rgba(233, 239, 247, 0.035);
     --field-major:  rgba(233, 239, 247, 0.075);
     --field-hash:   rgba(233, 239, 247, 0.032);
@@ -131,6 +143,7 @@
   --color-loss: var(--loss);
   --color-loss-soft: var(--loss-soft);
   --color-warn: var(--warn);
+  --color-gold: var(--gold);
   --color-warn-soft: var(--warn-soft);
 
   --font-sans: var(--font-geist-sans);
@@ -211,6 +224,13 @@ body {
 /* State bar: 3px left edge carrying meaning. Never color alone — always
    paired with a text label (accessibility, §39). */
 .state-bar { box-shadow: inset 3px 0 0 0 var(--state, transparent); }
+
+/* Champion crown. A flat fill reads as a yellow dot; the gradient is what makes
+   it read as metal — highlight top-left, deeper tone bottom-right. */
+.crown-badge {
+  background: linear-gradient(148deg, var(--gold-hi) 0%, var(--gold) 52%, var(--gold-lo) 100%);
+  color: var(--gold-ink);
+}
 
 /* Live pulse. Respects reduced-motion. */
 @keyframes labPulse {

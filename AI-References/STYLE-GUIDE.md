@@ -56,10 +56,16 @@ overlays (modals, popovers). A card is a 1px border and a background shift — n
 | `--live` | `#0e9f5c` | `#1fd882` | In progress, right now |
 | `--win` | `#0e7a49` | `#35e08f` | Victory, positive delta |
 | `--loss` | `#cf2222` | `#ff5a5a` | Defeat, negative delta, elimination |
-| `--warn` | `#a86500` | `#ffb833` | Provisional, championships |
+| `--warn` | `#a86500` | `#ffb833` | Provisional |
+| `--gold` | `#f0b420` | `#ffc832` | Championships |
 
 `--brand` is Creator Science's blue, pushed a few degrees more electric so it holds
 up against a scoreboard.
+
+Gold is deliberately separate from amber. `--warn` means *provisional* and has to
+stay muted so it never competes with real results; a championship should read as
+**metal**. The crown badge uses a three-stop gradient (`--gold-hi` → `--gold` →
+`--gold-lo`) because a flat fill reads as a yellow dot rather than a trophy.
 
 **Never communicate state by color alone** (§39). Every colored state carries a text
 label: a live row shows a green bar *and* the word LIVE.

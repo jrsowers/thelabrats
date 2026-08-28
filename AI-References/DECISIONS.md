@@ -259,3 +259,18 @@ just-for-fun fantasy football league brought to you by Creator Science."
 tab truncates to nonsense; search results and link previews render the two
 together as the intended string. A title template gives subpages
 "Playoff Picture · The Lab Rats". OpenGraph and Twitter cards use the badge.
+
+## 2026-08-28 · Gold is its own token, not a brighter amber
+**Why:** The crown initially used `--warn`, whose light-mode value (#a86500) is
+brown enough to read as bronze. Brightening `--warn` was the wrong fix — it means
+"provisional" and has to stay muted so it never competes with real results.
+**How:** a separate `--gold-hi / --gold / --gold-lo / --gold-ink` set, applied as
+a three-stop gradient. A flat fill reads as a yellow dot; the gradient is what
+makes it read as metal.
+
+## 2026-08-28 · Scores render in every state, including 0.0 pregame
+**Why:** James could not see the score layout because scores only rendered for
+LIVE and FINAL matchups.
+**Also correct on the merits:** both Yahoo and ESPN show 0.00 before kickoff. An
+empty score column reads as broken rather than as pregame, and it hides the
+column widths that the layout depends on.

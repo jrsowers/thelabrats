@@ -14,11 +14,10 @@ import { Tag, LiveBadge, TeamAvatar } from '@/components/ui/primitives'
  *  - State is carried by a bar AND a label, never color alone (§39).
  */
 function Side({
-  side, leading, showScore, align = 'left',
+  side, leading, align = 'left',
 }: {
   side: MatchupSide | null
   leading: boolean
-  showScore: boolean
   align?: 'left' | 'right'
 }) {
   const right = align === 'right'
@@ -52,18 +51,16 @@ function Side({
         </div>
       </div>
 
-      {showScore && (
-        <div className="shrink-0">
+      <div className="shrink-0">
           <div className={`display text-[30px] leading-none tnum sm:text-[34px] ${leading ? 'text-text' : 'text-dim'}`}>
             {side.score.toFixed(1)}
           </div>
-          {side.projected != null && (
-            <div className="mt-1 font-mono text-[10px] text-dim tnum">
-              proj {side.projected.toFixed(1)}
-            </div>
-          )}
-        </div>
-      )}
+        {side.projected != null && (
+          <div className="mt-1 font-mono text-[10px] text-dim tnum">
+            proj {side.projected.toFixed(1)}
+          </div>
+        )}
+      </div>
     </div>
   )
 }
@@ -72,7 +69,8 @@ export function MatchupRow({ matchup, index }: { matchup: Matchup; index: number
   const { home, away, status } = matchup
   const isFinal = status === 'FINAL'
   const isLive = status === 'LIVE'
-  const showScore = isFinal || isLive
+  // Scores show in every state, including 0.0 before kickoff. Both Yahoo and
+  // ESPN do this, and an empty column reads as broken rather than as pregame.
 
   const homeLeads = (home?.score ?? 0) > (away?.score ?? 0)
   const awayLeads = (away?.score ?? 0) > (home?.score ?? 0)
@@ -82,7 +80,7 @@ export function MatchupRow({ matchup, index }: { matchup: Matchup; index: number
       className="state-bar grid grid-cols-[1fr_auto_1fr] items-center gap-3 bg-surface px-4 py-3.5 transition-colors hover:bg-surface-2/60 sm:gap-6 sm:px-5"
       style={{ '--state': isLive ? 'var(--live)' : isFinal ? 'var(--border-strong)' : 'transparent' } as React.CSSProperties}
     >
-      <Side side={away} leading={awayLeads} showScore={showScore} />
+      <Side side={away} leading={awayLeads} />
 
       <div className="flex shrink-0 flex-col items-center gap-1">
         {isLive ? (
@@ -99,7 +97,7 @@ export function MatchupRow({ matchup, index }: { matchup: Matchup; index: number
         )}
       </div>
 
-      <Side side={home} leading={homeLeads} showScore={showScore} align="right" />
+      <Side side={home} leading={homeLeads} align="right" />
     </li>
   )
 }

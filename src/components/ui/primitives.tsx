@@ -174,7 +174,7 @@ export function TeamAvatar({
           loading="eager"
           decoding="async"
           className={`size-full border object-cover ${isPhoto ? 'rounded-full' : 'rounded-md'} ${
-            champion ? 'border-warn/70' : 'border-border'
+            champion ? 'border-gold/80' : 'border-border'
           } bg-surface-2`}
         />
       ) : (
@@ -191,7 +191,7 @@ export function TeamAvatar({
           title={label}
           aria-label={label}
           role="img"
-          className="absolute -right-1 -top-1.5 flex items-center justify-center rounded-full bg-warn text-[#1a1205] shadow-sm ring-2 ring-surface"
+          className="crown-badge absolute -right-1 -top-1.5 flex items-center justify-center rounded-full shadow-sm ring-2 ring-surface"
           style={{ width: size * 0.5, height: size * 0.5 }}
         >
           {/* Crown, drawn small enough to stay legible at 16px. */}
