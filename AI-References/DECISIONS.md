@@ -477,3 +477,26 @@ import, only final standings. James regains Yahoo history access on Sept 15.
 No user accounts exist, so the same CRON_SECRET is the whole auth model. The key
 is posted as a form field rather than a query string so it never lands in
 browser history, access logs or a Referer header. Page is noindex.
+
+## 2026-08-28 · Award catalog declares its data dependencies
+All 20 awards live in `src/lib/awards/catalog.ts` with a documented formula
+(§22.8) and an explicit `needs` list: FINAL_SCORES, PLAYER_SCORES, PROJECTIONS,
+LINEUP_OPTIMIZER, TRANSACTIONS, LIVE_EVENTS. Seven satisfy today; thirteen do
+not.
+**Why declare rather than omit:** an award that is simply absent looks like an
+oversight. One that says what it is waiting on is a plan. It also means the page
+needs no change as data arrives — `buildAwardCards` prefers real computation and
+falls back to a placeholder, so each award converts on its own the moment its
+dependency lands.
+
+## 2026-08-28 · Placeholder awards are marked, seeded, and drawn from real players
+Thirteen cards show representative values so the layout can be judged before
+week 1. Three rules keep that honest: nothing is written, values are
+deterministic (seeded by award key and week, so screenshots reproduce and the
+page does not reshuffle), and every placeholder carries a "Sample" marker whose
+tooltip names the missing dependency.
+Player names come from the real synced pool rather than "Player A", so the cards
+show what an actual week will look like.
+**Ranges are per-award:** a bench MVP and a win-probability collapse are not the
+same kind of number, so each has its own plausible band rather than one generic
+random score.

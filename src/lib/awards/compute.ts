@@ -26,6 +26,17 @@ export interface AwardMatchup {
   status: string
 }
 
+/** Maps the engine's internal types onto catalog keys. */
+export const AWARD_TYPE_TO_KEY: Record<string, string> = {
+  MANAGER_OF_THE_WEEK: 'manager_of_the_week',
+  BAD_BEAT: 'bad_beat',
+  HIGHWAY_ROBBERY: 'highway_robbery',
+  PHOTO_FINISH: 'photo_finish',
+  PUBLIC_EXECUTION: 'public_execution',
+  SHOOTOUT: 'shootout',
+  DUMPSTER_FIRE: 'dumpster_fire',
+}
+
 export type AwardType =
   | 'BAD_BEAT'
   | 'HIGHWAY_ROBBERY'
@@ -48,7 +59,7 @@ export interface Award {
   supporting: { label: string; value: string }[]
 }
 
-/** Every award in the library, including the ones we cannot compute yet. */
+/** @deprecated superseded by src/lib/awards/catalog.ts — kept for the tests. */
 export const AWARD_CATALOG: {
   type: string
   name: string

@@ -348,6 +348,25 @@ export async function getSeasonHistory(): Promise<SeasonHistory[]> {
   })
 }
 
+/** A sample of the synced player pool, used to make placeholder awards
+ *  look like a real week rather than "Player A". */
+export async function getPlayerSample(limit = 120) {
+  const db = createPublicClient()
+  const { data } = await db
+    .from('players')
+    .select('full_name, position, nfl_team')
+    .eq('active', true)
+    .not('position', 'in', '("K","D/ST")')
+    .order('id')
+    .limit(limit)
+
+  return (data ?? []).map((p) => ({
+    name: p.full_name,
+    position: p.position ?? '',
+    nflTeam: p.nfl_team ?? '',
+  }))
+}
+
 export async function getLastSync() {
   const db = createPublicClient()
   const { data } = await db
