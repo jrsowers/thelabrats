@@ -148,8 +148,18 @@ amber champion, red eliminated. Cheap, scannable, works in a dense list.
 flask, a wordmark ring, `THE LAB RATS · FANTASY FOOTBALL · EST 2025`. Appears in the
 rail and on empty states. Draws the two brands into one mark.
 
-**Team logos** — ESPN supplies a logo per team; every matchup row leads with one at
-36px. The mono abbreviation chip remains as the fallback when a logo is missing.
+**Member photos** — every matchup row leads with the league member's own face at
+36px, circular. Fallback order: member photo → ESPN team logo (rounded square, so
+the shape itself signals which you are looking at) → mono abbreviation chip.
+
+Photos are editorial data on `franchises.photo_url` — they belong to the persistent
+person, not to one season's team, and no sync may write that column. Source files
+are optimized to 256px squares in `public/members` (5.9MB of originals became
+223KB) and linked by `npm run seed:photos`, which fails loudly on any name it
+cannot match rather than quietly leaving one avatar as a fallback.
+
+A real face beats a stock helmet — it makes the scoreboard read as *this* league
+rather than any league.
 
 ---
 

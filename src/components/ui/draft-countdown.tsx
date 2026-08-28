@@ -8,8 +8,8 @@ import { Eyebrow } from './primitives'
  *
  * Rendered client-side: the server has no idea what "now" is for the viewer, and
  * rendering a server-computed value would flash a stale figure on hydration.
- * Ticks every 30s — the display only resolves to minutes, so a 1s interval would
- * burn work for no visible gain.
+ * Ticks every second. Seconds are shown deliberately: without them a countdown
+ * looks frozen, and the point of putting it on the page is that it visibly moves.
  */
 function parts(msRemaining: number) {
   const total = Math.max(0, msRemaining)
@@ -17,6 +17,7 @@ function parts(msRemaining: number) {
     days: Math.floor(total / 86_400_000),
     hours: Math.floor((total % 86_400_000) / 3_600_000),
     minutes: Math.floor((total % 3_600_000) / 60_000),
+    seconds: Math.floor((total % 60_000) / 1000),
   }
 }
 
@@ -37,13 +38,13 @@ export function DraftCountdown({ target }: { target: string }) {
   useEffect(() => {
     const tick = () => setRemaining(new Date(target).getTime() - Date.now())
     tick()
-    const id = setInterval(tick, 30_000)
+    const id = setInterval(tick, 1000)
     return () => clearInterval(id)
   }, [target])
 
   // Pre-hydration placeholder keeps the layout from jumping.
   if (remaining === null) {
-    return <div className="h-[58px] w-[190px] sm:h-[66px]" aria-hidden />
+    return <div className="h-[58px] w-[250px] sm:h-[66px]" aria-hidden />
   }
 
   if (remaining <= 0) {
@@ -55,16 +56,20 @@ export function DraftCountdown({ target }: { target: string }) {
     )
   }
 
-  const { days, hours, minutes } = parts(remaining)
+  const { days, hours, minutes, seconds } = parts(remaining)
   return (
     <div
-      className="flex items-start gap-5 sm:gap-7"
+      className="flex items-start gap-4 sm:gap-6"
       role="timer"
-      aria-label={`${days} days, ${hours} hours and ${minutes} minutes until the draft`}
+      /* Polite, not assertive: a per-second timer on an assertive region would
+         make screen readers unusable. */
+      aria-live="off"
+      aria-label={`${days} days, ${hours} hours, ${minutes} minutes and ${seconds} seconds until the draft`}
     >
       <Unit value={days} label="Days" />
       <Unit value={hours} label="Hrs" />
       <Unit value={minutes} label="Min" />
+      <Unit value={seconds} label="Sec" />
     </div>
   )
 }

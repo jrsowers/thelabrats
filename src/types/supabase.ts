@@ -233,6 +233,7 @@ export type Database = {
           league_id: number
           logo_url: string | null
           manager_name: string
+          photo_url: string | null
           short_name: string | null
           updated_at: string
         }
@@ -245,6 +246,7 @@ export type Database = {
           league_id: number
           logo_url?: string | null
           manager_name: string
+          photo_url?: string | null
           short_name?: string | null
           updated_at?: string
         }
@@ -257,6 +259,7 @@ export type Database = {
           league_id?: number
           logo_url?: string | null
           manager_name?: string
+          photo_url?: string | null
           short_name?: string | null
           updated_at?: string
         }
@@ -774,6 +777,7 @@ export type Database = {
         Row: {
           acquisition_type: string | null
           created_at: string
+          current_matchup_period: number
           draft_completed: boolean
           draft_scheduled_at: string | null
           draft_type: string | null
@@ -781,6 +785,7 @@ export type Database = {
           final_scoring_period: number
           has_divisions: boolean
           id: number
+          latest_scoring_period: number
           league_id: number
           lineup_slot_counts: Json
           playoff_team_count: number
@@ -794,6 +799,7 @@ export type Database = {
         Insert: {
           acquisition_type?: string | null
           created_at?: string
+          current_matchup_period?: number
           draft_completed?: boolean
           draft_scheduled_at?: string | null
           draft_type?: string | null
@@ -801,6 +807,7 @@ export type Database = {
           final_scoring_period: number
           has_divisions?: boolean
           id?: never
+          latest_scoring_period?: number
           league_id: number
           lineup_slot_counts?: Json
           playoff_team_count: number
@@ -814,6 +821,7 @@ export type Database = {
         Update: {
           acquisition_type?: string | null
           created_at?: string
+          current_matchup_period?: number
           draft_completed?: boolean
           draft_scheduled_at?: string | null
           draft_type?: string | null
@@ -821,6 +829,7 @@ export type Database = {
           final_scoring_period?: number
           has_divisions?: boolean
           id?: never
+          latest_scoring_period?: number
           league_id?: number
           lineup_slot_counts?: Json
           playoff_team_count?: number

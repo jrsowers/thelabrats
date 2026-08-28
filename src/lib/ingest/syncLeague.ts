@@ -75,6 +75,8 @@ export async function syncLeague(): Promise<SyncResult> {
           draft_type: settings.draft.type,
           draft_scheduled_at: settings.draft.scheduledAt,
           draft_completed: settings.draft.completed,
+          current_matchup_period: status.currentMatchupPeriod,
+          latest_scoring_period: status.latestScoringPeriod,
         },
         { onConflict: 'league_id,year' },
       )

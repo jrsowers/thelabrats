@@ -17,6 +17,7 @@ export interface LeagueOverview {
   seedingRule: string | null
   draftScheduledAt: string | null
   draftType: string | null
+  currentWeek: number
   draftCompleted: boolean
   usesFaab: boolean
   lineupSlotCounts: Record<string, number>
@@ -33,7 +34,7 @@ export async function getLeagueOverview(): Promise<LeagueOverview | null> {
 
   const { data: season } = await db
     .from('seasons')
-    .select('id, year, regular_season_weeks, playoff_team_count, seeding_rule, draft_scheduled_at, draft_type, draft_completed, uses_faab, lineup_slot_counts')
+    .select('id, year, regular_season_weeks, playoff_team_count, seeding_rule, draft_scheduled_at, draft_type, draft_completed, uses_faab, lineup_slot_counts, current_matchup_period')
     .eq('league_id', league.id)
     .order('year', { ascending: false })
     .limit(1)
@@ -52,6 +53,8 @@ export async function getLeagueOverview(): Promise<LeagueOverview | null> {
     seedingRule: season.seeding_rule,
     draftScheduledAt: season.draft_scheduled_at,
     draftType: season.draft_type,
+    // ESPN's own view of where the season is — never a hardcoded 1.
+    currentWeek: season.current_matchup_period ?? 1,
     draftCompleted: season.draft_completed,
     usesFaab: season.uses_faab,
     lineupSlotCounts: (season.lineup_slot_counts ?? {}) as Record<string, number>,
@@ -65,6 +68,7 @@ export interface MatchupSide {
   manager: string | null
   abbrev: string | null
   logoUrl: string | null
+  photoUrl: string | null
   score: number
   projected: number | null
   record: string
@@ -128,8 +132,8 @@ export async function getMatchupsForWeek(
     .select(`
       id, matchup_period, status, home_score, away_score,
       home_projected_score, away_projected_score,
-      home:home_team_id ( id, team_name, abbreviation, logo_url, franchises ( manager_name ) ),
-      away:away_team_id ( id, team_name, abbreviation, logo_url, franchises ( manager_name ) )
+      home:home_team_id ( id, team_name, abbreviation, logo_url, franchises ( manager_name, photo_url ) ),
+      away:away_team_id ( id, team_name, abbreviation, logo_url, franchises ( manager_name, photo_url ) )
     `)
     .eq('matchup_period', week)
     .order('id')
@@ -139,7 +143,7 @@ export async function getMatchupsForWeek(
     team_name: string
     abbreviation: string | null
     logo_url: string | null
-    franchises: { manager_name: string } | null
+    franchises: { manager_name: string; photo_url: string | null } | null
   } | null
 
   const toSide = (raw: Side, score: unknown, projected: unknown): MatchupSide | null =>
@@ -149,6 +153,7 @@ export async function getMatchupsForWeek(
           name: raw.team_name,
           abbrev: raw.abbreviation,
           logoUrl: raw.logo_url,
+          photoUrl: raw.franchises?.photo_url ?? null,
           manager: raw.franchises?.manager_name ?? null,
           score: Number(score),
           projected: projected == null ? null : Number(projected),

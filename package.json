@@ -13,7 +13,8 @@
     "fixtures:check": "node scripts/check-fixture-leaks.mjs",
     "typecheck": "tsc --noEmit",
     "verify:rls": "node scripts/verify-rls.mjs",
-    "sync": "tsx scripts/sync.ts"
+    "sync": "tsx scripts/sync.ts",
+    "seed:photos": "tsx scripts/seed-member-photos.ts"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.112.4",

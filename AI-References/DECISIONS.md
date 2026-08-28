@@ -161,3 +161,28 @@ from the homepage. Those facts belong on their own sections, not the scoreboard.
 — the fantasy league is the product, not a dashboard about it.
 **Copy:** "12 Contenders · 1 Champion" replaces the neutral team/week count. It
 states the stakes rather than the configuration.
+
+## 2026-08-28 · Member photos replace ESPN team logos
+**Why:** James supplied a photo per league member. A real face makes the
+scoreboard read as this league rather than any league.
+**Where:** `franchises.photo_url` — editorial data (§13) on the persistent person,
+not on a season's team, so it survives renames and never gets written by a sync.
+Verified: after a full re-sync all 12 photo_url values were still intact.
+**Processing:** 5.9MB of originals -> 223KB of 256px squares in `public/members`.
+Serving a 1MB PNG for a 36px avatar would be indefensible.
+**Matching:** `npm run seed:photos` matches on a name slug and exits non-zero on
+any unmatched franchise OR orphan file, suggesting the closest filename. Written
+that way because a near-miss spelling looks fine until someone notices one avatar
+is a fallback — and I had in fact misread one filename by eye beforehand.
+
+## 2026-08-28 · Scoreboard defaults to the live week
+**Why:** Hardcoding week 1 means the page is wrong from September onward.
+**How:** `seasons.current_matchup_period`, written each sync from ESPN
+`mStatus.currentMatchupPeriod`. `?week=` still overrides for browsing, and the
+current week is badged CURRENT so it is obvious when you have navigated away.
+
+## 2026-08-28 · Countdown shows seconds
+**Why:** James noted that stopping at minutes makes it look frozen. Seconds are
+the whole reason to put a live timer on the page.
+**Cost:** a 1s interval instead of 30s. The timer carries `aria-live="off"` — a
+per-second assertive region would make screen readers unusable.

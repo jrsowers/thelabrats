@@ -50,3 +50,6 @@ Thumbs.db
 
 # TS build info
 *.tsbuildinfo
+
+# Source photos — optimized copies live in public/members
+/member photos/

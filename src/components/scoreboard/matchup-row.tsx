@@ -13,19 +13,30 @@ import { Tag, LiveBadge } from '@/components/ui/primitives'
  *  - A live leader is marked, never declared a winner (§19.2).
  *  - State is carried by a bar AND a label, never color alone (§39).
  */
+/**
+ * Identity, in order of preference:
+ *   1. the league member's own photo (editorial, supplied by the commissioner)
+ *   2. the ESPN team logo
+ *   3. the mono abbreviation chip
+ *
+ * A real face beats a stock helmet — it makes the scoreboard read as this
+ * league rather than any league.
+ */
 function TeamLogo({ side }: { side: MatchupSide }) {
-  if (side.logoUrl) {
+  const src = side.photoUrl ?? side.logoUrl
+  if (src) {
+    const isPhoto = Boolean(side.photoUrl)
     return (
-      // Plain <img>: these are remote SVGs, and next/image would require
-      // dangerouslyAllowSVG. Not worth the risk for a 36px logo.
+      // Plain <img>: ESPN logos are remote SVGs and next/image would need
+      // dangerouslyAllowSVG. Not worth the risk for a 36px mark.
       // eslint-disable-next-line @next/next/no-img-element
       <img
-        src={side.logoUrl}
+        src={src}
         alt=""
         width={36}
         height={36}
         loading="lazy"
-        className="size-9 shrink-0 rounded-md border border-border bg-surface-2 object-cover"
+        className={`size-9 shrink-0 border border-border bg-surface-2 object-cover ${isPhoto ? 'rounded-full' : 'rounded-md'}`}
       />
     )
   }

@@ -53,9 +53,13 @@ export default async function Page({
 
   const params = await searchParams
   const requested = Number(params.week)
-  const week = Number.isFinite(requested)
-    ? Math.min(Math.max(requested, 1), overview.regularSeasonWeeks)
-    : 1
+  // No ?week= means "wherever the season actually is", from ESPN's
+  // mStatus.currentMatchupPeriod — never a hardcoded 1.
+  const week = Math.min(
+    Math.max(Number.isFinite(requested) ? requested : overview.currentWeek, 1),
+    overview.regularSeasonWeeks,
+  )
+  const isCurrentWeek = week === overview.currentWeek
 
   const records = await getTeamRecords(overview.seasonId)
   const [matchups, lastSync] = await Promise.all([
@@ -80,7 +84,8 @@ export default async function Page({
           </div>
           {lastSync?.finished_at && (
             <p className="font-mono text-[10.5px] text-dim tnum">
-              Last data sync: {fmtDate(lastSync.finished_at)}
+              <span className="font-bold text-muted">Last data sync:</span>{' '}
+              {fmtDate(lastSync.finished_at)}
             </p>
           )}
         </div>
@@ -95,9 +100,6 @@ export default async function Page({
               <div className="display mt-1 text-[26px]">
                 {fmtDate(overview.draftScheduledAt, { weekday: 'long' })}
               </div>
-              <p className="mt-1 text-xs text-muted">
-                {overview.draftType ?? 'Snake'} draft · rosters and scoring go live after
-              </p>
             </div>
             <DraftCountdown target={overview.draftScheduledAt} />
           </div>
@@ -111,9 +113,11 @@ export default async function Page({
           <div className="flex items-center justify-between gap-4 border-b border-border bg-surface-2 px-4 py-2.5 sm:px-5">
             <div className="flex items-baseline gap-2.5">
               <h2 className="display text-lg">Week {week}</h2>
-              <span className="font-mono text-[10.5px] uppercase tracking-wider text-dim">
-                {matchups.length} matchups
-              </span>
+              {isCurrentWeek && (
+                <span className="font-mono text-[10px] uppercase tracking-[0.12em] text-brand">
+                  Current
+                </span>
+              )}
             </div>
             <div className="flex items-center gap-3">
               {status && (
@@ -121,20 +125,22 @@ export default async function Page({
                   {status}
                 </span>
               )}
-              <nav className="flex items-center gap-0.5" aria-label="Week selection">
+              <nav className="flex items-center gap-1" aria-label="Week selection">
                 <Link
                   href={`/?week=${Math.max(1, week - 1)}`}
-                  aria-label="Previous week"
-                  className={`rounded px-2 py-1 font-mono text-xs ${week === 1 ? 'pointer-events-none text-dim/40' : 'text-muted hover:bg-surface-3 hover:text-text'}`}
+                  className={`flex items-center gap-1.5 rounded px-2 py-1 font-mono text-[10.5px] uppercase tracking-wider ${week === 1 ? 'pointer-events-none text-dim/40' : 'text-muted hover:bg-surface-3 hover:text-text'}`}
                 >
-                  ←
+                  <span aria-hidden>←</span>
+                  <span className="hidden sm:inline">Prev Week</span>
+                  <span className="sr-only sm:hidden">Previous week</span>
                 </Link>
                 <Link
                   href={`/?week=${Math.min(overview.regularSeasonWeeks, week + 1)}`}
-                  aria-label="Next week"
-                  className={`rounded px-2 py-1 font-mono text-xs ${week === overview.regularSeasonWeeks ? 'pointer-events-none text-dim/40' : 'text-muted hover:bg-surface-3 hover:text-text'}`}
+                  className={`flex items-center gap-1.5 rounded px-2 py-1 font-mono text-[10.5px] uppercase tracking-wider ${week === overview.regularSeasonWeeks ? 'pointer-events-none text-dim/40' : 'text-muted hover:bg-surface-3 hover:text-text'}`}
                 >
-                  →
+                  <span className="hidden sm:inline">Next Week</span>
+                  <span className="sr-only sm:hidden">Next week</span>
+                  <span aria-hidden>→</span>
                 </Link>
               </nav>
             </div>
