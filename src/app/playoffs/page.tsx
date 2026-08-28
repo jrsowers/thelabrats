@@ -109,19 +109,15 @@ export default async function PlayoffsPage({
 
       {/* ---- Bracket ---- */}
       <section className="mb-9">
-        <div className="mb-2.5 border-b border-border pb-1.5">
+        <div className="mb-6 border-b border-border pb-1.5">
           <h2 className="display text-2xl">Current Projection</h2>
         </div>
         <Bracket rounds={rounds} teams={byId} />
-        <p className="mt-3 font-mono text-[10.5px] text-dim">
-          <span className="font-bold text-muted">Last standings update:</span>{' '}
-          {fmtStandingsUpdate(lastSync?.finished_at ?? null) ?? 'never'}
-        </p>
       </section>
 
       {/* ---- Bubble (§21.4) ---- */}
       <section>
-        <div className="mb-2.5 border-b border-border pb-1.5">
+        <div className="mb-6 border-b border-border pb-1.5">
           <h2 className="display text-2xl">Outside Looking In</h2>
         </div>
 
@@ -177,6 +173,10 @@ export default async function PlayoffsPage({
           </ul>
         </div>
 
+        <p className="mt-3 font-mono text-[10.5px] text-dim">
+          <span className="font-bold text-muted">Last projection update:</span>{' '}
+          {fmtStandingsUpdate(lastSync?.finished_at ?? null) ?? 'never'}
+        </p>
       </section>
     </AppShell>
   )
