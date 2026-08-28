@@ -1,12 +1,19 @@
-import {
-  Radio, Trophy, GitBranch, Award, ArrowLeftRight, BookOpen, type LucideIcon,
-} from 'lucide-react'
+import type { ComponentType } from 'react'
+import { Radio, Trophy, Award, ArrowLeftRight, BookOpen } from 'lucide-react'
+import { BracketIcon } from '@/components/ui/primitives'
+
+/** Lucide icons and our own BracketIcon both satisfy this. */
+type IconComponent = ComponentType<{
+  size?: number
+  strokeWidth?: number
+  className?: string
+}>
 
 export interface NavItem {
   href: string
   label: string
   short: string
-  icon: LucideIcon
+  icon: IconComponent
   ready: boolean
 }
 
@@ -14,7 +21,7 @@ export interface NavItem {
 export const NAV_ITEMS: NavItem[] = [
   { href: '/',             label: 'Live Scoreboard', short: 'Scores',  icon: Radio,          ready: true },
   { href: '/standings',    label: 'League Standings', short: 'Table',  icon: Trophy,         ready: false },
-  { href: '/playoffs',     label: 'Playoff Picture',  short: 'Bracket',icon: GitBranch,      ready: true  },
+  { href: '/playoffs',     label: 'Playoff Picture',  short: 'Bracket',icon: BracketIcon,    ready: true  },
   { href: '/awards',       label: 'Studs & Duds',     short: 'Awards', icon: Award,          ready: false },
   { href: '/transactions', label: 'Transaction Log',  short: 'Moves',  icon: ArrowLeftRight, ready: false },
   { href: '/records',      label: 'Record Books',     short: 'Records',icon: BookOpen,       ready: false },

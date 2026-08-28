@@ -105,11 +105,15 @@ export function Skeleton({ className = '' }: { className?: string }) {
    Mirrors ESPN's playoff-bracket mark: two seeds on the left joined by a
    bracket into one on the right. Lucide has no close equivalent, so it is
    drawn here rather than approximated with a merge or network glyph. */
-export function BracketIcon({ size = 16 }: { size?: number }) {
+export function BracketIcon({
+  size = 16,
+  className,
+}: { size?: number; className?: string; strokeWidth?: number }) {
   return (
     <svg
       width={size}
       height={size}
+      className={className}
       viewBox="0 0 24 24"
       fill="none"
       stroke="currentColor"

@@ -17,11 +17,14 @@ export function FieldBackdrop({ count = 18 }: { count?: number }) {
   return (
     <div aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden">
       <div className="field-lines absolute inset-0" />
-      <div className="field-numbers absolute inset-x-0 bottom-4 h-[1em]">
+      {/* The box is sized to the glyphs and each number is anchored to its
+          bottom. Previously the container was h-[1em] (16px) while the text was
+          27px, so the numbers overflowed and were clipped by the header edge. */}
+      <div className="field-numbers absolute inset-x-0 bottom-6 h-[28px]">
         {Array.from({ length: count }, (_, i) => (
           <span
             key={i}
-            className="display absolute -translate-x-1/2 text-[27px] leading-none"
+            className="display absolute bottom-0 -translate-x-1/2 text-[27px] leading-none"
             style={{ left: `${(i + 1) * YARD_10}px` }}
           >
             {SEQUENCE[i % SEQUENCE.length]}

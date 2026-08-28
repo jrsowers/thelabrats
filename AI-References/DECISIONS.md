@@ -199,3 +199,23 @@ season ends.
 **Bracket icon:** drawn by hand in `primitives.tsx` to mirror ESPN's mark (two
 seeds left, joined into one right). Lucide has no close equivalent and
 approximating with a merge or network glyph read as the wrong concept.
+
+## 2026-08-28 · Logo background removed by flood fill, not by AI generation
+**Why not regenerate:** James asked whether an image model could produce a
+transparent version. It could produce *a* logo, but not *this* logo — a
+different rat, different lettering, different shield. That is a new brand asset,
+not a transparent copy of an existing one. For a brand mark, fidelity is the
+entire requirement.
+**Why not an ML background remover:** those are built for photographic subjects.
+On hard vector edges they feather the outline and tend to mangle thin shapes —
+here, the rat's tail and whiskers. And the naive alternative, keying out every
+white pixel, would punch holes through the artwork's own white: the "LAB RATS"
+lettering, the lab coat, the shield outline.
+**What we do instead:** `scripts/make-logo-transparent.py` flood-fills inward
+from the image border and clears only white *connected to the outside*, so
+interior white survives. Boundary alpha is feathered by brightness, since edge
+pixels are anti-aliased against the old background and a hard cutoff leaves a
+crunchy rim. Deterministic, exact, and free.
+**Fallback:** `AppShell` checks on disk for the generated file and passes it to
+the rail, so the seal-and-wordmark fallback shows until the logo exists — no
+broken image, and no code change needed when it lands.

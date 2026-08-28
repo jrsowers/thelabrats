@@ -12,7 +12,9 @@ import { LabSeal } from '@/components/ui/primitives'
  *
  * Mobile: collapses to a bottom bar rather than eating 25-30% of the width.
  */
-export function SideNav({ leagueName, season }: { leagueName: string; season: number }) {
+export function SideNav({
+  leagueName, season, logoUrl,
+}: { leagueName: string; season: number; logoUrl: string | null }) {
   const pathname = usePathname()
 
   return (
@@ -22,13 +24,35 @@ export function SideNav({ leagueName, season }: { leagueName: string; season: nu
         aria-label="Primary"
         className="fixed inset-y-0 left-0 z-40 hidden w-56 flex-col border-r border-white/8 bg-rail lg:flex"
       >
-        <div className="flex items-center gap-2.5 px-4 py-5">
-          <div className="shrink-0"><LabSeal size={38} /></div>
-          <div className="min-w-0">
-            <div className="display truncate text-[17px] text-rail-text">{leagueName}</div>
-            <div className="eyebrow mt-0.5 !text-rail-muted">{season} Season</div>
-          </div>
-        </div>
+        {/* Home link. Absolute URL so it always lands on the canonical domain,
+            per James's request, rather than whichever preview host is serving. */}
+        <a
+          href="https://www.labratsfantasy.com"
+          className="block px-4 py-5 transition-opacity hover:opacity-85"
+          aria-label={`${leagueName} — home`}
+        >
+          {logoUrl ? (
+            <>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={logoUrl}
+                alt={leagueName}
+                className="h-auto w-full max-w-[176px]"
+                loading="eager"
+                decoding="async"
+              />
+              <div className="eyebrow mt-2 !text-rail-muted">{season} Season</div>
+            </>
+          ) : (
+            <div className="flex items-center gap-2.5">
+              <div className="shrink-0"><LabSeal size={38} /></div>
+              <div className="min-w-0">
+                <div className="display truncate text-[17px] text-rail-text">{leagueName}</div>
+                <div className="eyebrow mt-0.5 !text-rail-muted">{season} Season</div>
+              </div>
+            </div>
+          )}
+        </a>
 
         <ul className="mt-2 flex-1 space-y-0.5 px-2">
           {NAV_ITEMS.map((item) => {
