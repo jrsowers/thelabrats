@@ -50,8 +50,10 @@
   --series-5: #0891a8;
   --series-6: #c2185b;
 
-  /* Grid paper motif */
-  --grid-line: rgba(10, 14, 21, 0.045);
+  /* Field motif — yard lines, 10-yard lines, and hash marks */
+  --field-line:   rgba(10, 14, 21, 0.055);
+  --field-major:  rgba(10, 14, 21, 0.13);
+  --field-hash:   rgba(10, 14, 21, 0.06);
 }
 
 /* ---- DARK ------------------------------------------------- */
@@ -93,7 +95,9 @@
     --series-5: #35c8e0;
     --series-6: #ff6fa5;
 
-    --grid-line: rgba(233, 239, 247, 0.04);
+    --field-line:   rgba(233, 239, 247, 0.055);
+    --field-major:  rgba(233, 239, 247, 0.14);
+    --field-hash:   rgba(233, 239, 247, 0.055);
   }
 }
 
@@ -169,12 +173,34 @@ body {
 
 /* ---- MOTIFS ----------------------------------------------- */
 
-/* Lab notebook grid. Structure without decoration. */
-.grid-paper {
+/* Football field. Yard lines every 5, heavier lines every 10, and the two
+   rows of one-yard hash marks between them. Structure, not decoration —
+   headers only, never behind data. */
+.field-lines {
   background-image:
-    linear-gradient(to right, var(--grid-line) 1px, transparent 1px),
-    linear-gradient(to bottom, var(--grid-line) 1px, transparent 1px);
-  background-size: 22px 22px;
+    /* upper hash row */
+    repeating-linear-gradient(to right, var(--field-hash) 0 1px, transparent 1px 11.2px),
+    /* lower hash row */
+    repeating-linear-gradient(to right, var(--field-hash) 0 1px, transparent 1px 11.2px),
+    /* 10-yard lines */
+    repeating-linear-gradient(to right, var(--field-major) 0 1.5px, transparent 1.5px 112px),
+    /* 5-yard lines */
+    repeating-linear-gradient(to right, var(--field-line) 0 1px, transparent 1px 56px);
+  background-size:
+    100% 6px,
+    100% 6px,
+    100% 100%,
+    100% 100%;
+  background-position:
+    0 32%,
+    0 68%,
+    0 0,
+    0 0;
+  background-repeat:
+    no-repeat,
+    no-repeat,
+    repeat,
+    repeat;
 }
 
 /* State bar: 3px left edge carrying meaning. Never color alone — always

@@ -40,7 +40,7 @@ function Row({ label, children }: { label: string; children: React.ReactNode }) 
 export default function StyleGuide() {
   return (
     <main className="mx-auto max-w-4xl px-5 py-12 sm:px-8">
-      <header className="grid-paper -mx-5 mb-12 border-b border-border px-5 pb-8 sm:-mx-8 sm:px-8">
+      <header className="field-lines -mx-5 mb-12 border-b border-border px-5 pb-8 sm:-mx-8 sm:px-8">
         <div className="flex items-start justify-between gap-6">
           <div>
             <Eyebrow>Design System · v1</Eyebrow>

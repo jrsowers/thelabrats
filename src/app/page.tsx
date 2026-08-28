@@ -76,7 +76,7 @@ export default async function Page({
   return (
     <AppShell leagueName={overview.leagueName} season={overview.season}>
       {/* ---- Header ---- */}
-      <header className="grid-paper -mx-4 mb-7 border-b border-border px-4 pb-6 sm:-mx-6 sm:px-6">
+      <header className="field-lines -mx-4 mb-7 border-b border-border px-4 pb-6 sm:-mx-6 sm:px-6">
         <div className="flex flex-wrap items-end justify-between gap-x-6 gap-y-3">
           <div>
             <Eyebrow>Week {String(week).padStart(2, '0')} · Live Scoreboard</Eyebrow>

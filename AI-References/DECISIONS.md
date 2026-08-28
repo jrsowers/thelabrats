@@ -132,3 +132,12 @@ for state and always paired with a text label. The monospace "eyebrow" is the
 device doing the most work — it makes football data read as measured data.
 **Living guide:** `/style` route renders from real tokens, so it cannot drift from
 the app. A static-only style guide would.
+
+## 2026-08-28 · Header motif: football field, not graph paper
+**Why:** James liked the graph-paper texture but wanted it football-relevant. The
+lab motif is already carried by the seal, the eyebrows, and the voice — the header
+texture was free to say "football" instead of repeating "science."
+**How:** `.field-lines` — 5-yard lines, heavier 10-yard lines, and two rows of
+one-yard hash marks at the real field's inbound positions.
+**Tuning:** first attempt used 9px hash ticks at 11.2px spacing, which merged into
+two dashed rules. Shortened to 6px and raised 10-yard contrast so the rhythm reads.

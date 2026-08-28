@@ -117,7 +117,18 @@ wobble, and a wobbling scoreboard reads as amateur.
 
 ## Motifs
 
-**Grid paper** — a 22px lab-notebook grid at ~4% opacity behind page headers.
+**Field lines** — a football field rendered as four stacked gradients behind page
+headers: 5-yard lines every 56px, heavier 10-yard lines every 112px, and two rows
+of one-yard hash marks at 32% and 68% height, matching a real field's inbound lines.
+
+At a typical content width the pattern spans roughly one full 100-yard field.
+
+Tuning notes, in case it is revisited: hash ticks are 6px tall against 11.2px
+spacing. An earlier 9px height made them merge into two dashed rules instead of
+reading as discrete ticks — keep the tick shorter than its gap. The 10-yard lines
+carry the rhythm and need meaningfully more contrast than the 5-yard lines, or the
+whole thing flattens into plain vertical stripes.
+
 Structure, not decoration. Headers only; never behind data.
 
 **The state bar** — a 3px left edge carrying meaning: green live, blue playoff line,
