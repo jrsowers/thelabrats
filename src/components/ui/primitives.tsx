@@ -101,6 +101,32 @@ export function Skeleton({ className = '' }: { className?: string }) {
   return <div className={`animate-pulse rounded bg-surface-2 ${className}`} aria-hidden />
 }
 
+/* ---------- Bracket icon ----------
+   Mirrors ESPN's playoff-bracket mark: two seeds on the left joined by a
+   bracket into one on the right. Lucide has no close equivalent, so it is
+   drawn here rather than approximated with a merge or network glyph. */
+export function BracketIcon({ size = 16 }: { size?: number }) {
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={2}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden
+    >
+      <rect x="2" y="4.25" width="6" height="3.5" rx="1" fill="currentColor" stroke="none" />
+      <rect x="2" y="16.25" width="6" height="3.5" rx="1" fill="currentColor" stroke="none" />
+      <rect x="15" y="10.25" width="7" height="3.5" rx="1" fill="currentColor" stroke="none" />
+      <path d="M8 6H11V18H8" />
+      <path d="M11 12H15" />
+    </svg>
+  )
+}
+
 /* ---------- The seal ----------
    Creator Science's circular badge, recast as lab glassware. */
 export function LabSeal({ size = 88 }: { size?: number }) {

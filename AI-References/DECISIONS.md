@@ -186,3 +186,16 @@ current week is badged CURRENT so it is obvious when you have navigated away.
 the whole reason to put a live timer on the page.
 **Cost:** a 1s interval instead of 30s. The timer carries `aria-live="off"` — a
 per-second assertive region would make screen readers unusable.
+
+## 2026-08-28 · Playoff Picture shipped as a real route, not a dead link
+**Why:** James wanted a Playoff Picture shortcut on the scoreboard. Linking to a
+route that does not exist would have reintroduced exactly the 404 problem fixed
+one commit earlier.
+**How:** `/playoffs` is a real page with an honest empty state (§38), not a
+placeholder. Before any game is final there is genuinely nothing to seed, so
+"Nothing to seed yet" is correct behaviour rather than a stub — and it still
+surfaces real information: berths, byes, seeding rule, and when the regular
+season ends.
+**Bracket icon:** drawn by hand in `primitives.tsx` to mirror ESPN's mark (two
+seeds left, joined into one right). Lucide has no close equivalent and
+approximating with a merge or network glyph read as the wrong concept.

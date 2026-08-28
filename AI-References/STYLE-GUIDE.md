@@ -148,6 +148,11 @@ amber champion, red eliminated. Cheap, scannable, works in a dense list.
 flask, a wordmark ring, `THE LAB RATS · FANTASY FOOTBALL · EST 2025`. Appears in the
 rail and on empty states. Draws the two brands into one mark.
 
+**Bracket icon** — a hand-drawn mark mirroring ESPN's playoff bracket: two seeds
+on the left joined into one on the right. Used wherever the playoff picture is
+referenced. Lucide has no close equivalent, and a merge or network glyph reads as
+the wrong concept entirely.
+
 **Member photos** — every matchup row leads with the league member's own face at
 36px, circular. Fallback order: member photo → ESPN team logo (rounded square, so
 the shape itself signals which you are looking at) → mono abbreviation chip.

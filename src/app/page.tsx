@@ -7,7 +7,7 @@ import { AppShell } from '@/components/navigation/app-shell'
 import { MatchupRow } from '@/components/scoreboard/matchup-row'
 import { FieldBackdrop } from '@/components/ui/field-backdrop'
 import { DraftCountdown } from '@/components/ui/draft-countdown'
-import { Eyebrow, EmptyState, LabSeal } from '@/components/ui/primitives'
+import { Eyebrow, EmptyState, LabSeal, BracketIcon } from '@/components/ui/primitives'
 
 export const dynamic = 'force-dynamic'
 
@@ -19,14 +19,6 @@ function fmtDate(iso: string | null, opts: Intl.DateTimeFormatOptions = {}) {
     month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit',
     timeZone: TZ, timeZoneName: 'short', ...opts,
   }).format(new Date(iso))
-}
-
-/** Yahoo's card-header status line, derived from our own matchup states. */
-function weekStatus(statuses: string[]) {
-  if (statuses.length === 0) return null
-  if (statuses.some((s) => s === 'LIVE')) return 'In progress'
-  if (statuses.every((s) => s === 'FINAL')) return 'Final'
-  return 'Not started yet'
 }
 
 export default async function Page({
@@ -59,15 +51,13 @@ export default async function Page({
     Math.max(Number.isFinite(requested) ? requested : overview.currentWeek, 1),
     overview.regularSeasonWeeks,
   )
-  const isCurrentWeek = week === overview.currentWeek
+
 
   const records = await getTeamRecords(overview.seasonId)
   const [matchups, lastSync] = await Promise.all([
     getMatchupsForWeek(week, records),
     getLastSync(),
   ])
-
-  const status = weekStatus(matchups.map((m) => m.status))
 
   return (
     <AppShell leagueName={overview.leagueName} season={overview.season}>
@@ -109,41 +99,46 @@ export default async function Page({
       {/* ---- Scoreboard ---- */}
       <section>
         <div className="overflow-hidden rounded-lg border border-border">
-          {/* Card header — Yahoo's pattern: week identity left, state right. */}
-          <div className="flex items-center justify-between gap-4 border-b border-border bg-surface-2 px-4 py-2.5 sm:px-5">
-            <div className="flex items-baseline gap-2.5">
-              <h2 className="display text-lg">Week {week}</h2>
-              {isCurrentWeek && (
-                <span className="font-mono text-[10px] uppercase tracking-[0.12em] text-brand">
-                  Current
-                </span>
-              )}
-            </div>
-            <div className="flex items-center gap-3">
-              {status && (
-                <span className="hidden font-mono text-[10.5px] uppercase tracking-wider text-muted sm:inline">
-                  {status}
-                </span>
-              )}
-              <nav className="flex items-center gap-1" aria-label="Week selection">
-                <Link
-                  href={`/?week=${Math.max(1, week - 1)}`}
-                  className={`flex items-center gap-1.5 rounded px-2 py-1 font-mono text-[10.5px] uppercase tracking-wider ${week === 1 ? 'pointer-events-none text-dim/40' : 'text-muted hover:bg-surface-3 hover:text-text'}`}
-                >
-                  <span aria-hidden>←</span>
-                  <span className="hidden sm:inline">Prev Week</span>
-                  <span className="sr-only sm:hidden">Previous week</span>
-                </Link>
-                <Link
-                  href={`/?week=${Math.min(overview.regularSeasonWeeks, week + 1)}`}
-                  className={`flex items-center gap-1.5 rounded px-2 py-1 font-mono text-[10.5px] uppercase tracking-wider ${week === overview.regularSeasonWeeks ? 'pointer-events-none text-dim/40' : 'text-muted hover:bg-surface-3 hover:text-text'}`}
-                >
-                  <span className="hidden sm:inline">Next Week</span>
-                  <span className="sr-only sm:hidden">Next week</span>
-                  <span aria-hidden>→</span>
-                </Link>
-              </nav>
-            </div>
+          {/* Card header: week navigation left, playoff shortcut right. */}
+          <div className="flex items-center justify-between gap-4 border-b border-border bg-surface-2 px-3 py-2.5 sm:px-4">
+            <nav className="flex items-center gap-1 sm:gap-2" aria-label="Week selection">
+              <Link
+                href={`/?week=${Math.max(1, week - 1)}`}
+                className={`flex items-center gap-1.5 rounded px-1.5 py-1 font-mono text-[10.5px] uppercase tracking-wider sm:px-2 ${
+                  week === 1
+                    ? 'pointer-events-none text-dim/40'
+                    : 'text-muted hover:bg-surface-3 hover:text-text'
+                }`}
+              >
+                <span aria-hidden>←</span>
+                <span className="hidden sm:inline">Prev</span>
+                <span className="sr-only sm:hidden">Previous week</span>
+              </Link>
+
+              <h2 className="display px-1 text-lg tnum sm:px-2">Week {week}</h2>
+
+              <Link
+                href={`/?week=${Math.min(overview.regularSeasonWeeks, week + 1)}`}
+                className={`flex items-center gap-1.5 rounded px-1.5 py-1 font-mono text-[10.5px] uppercase tracking-wider sm:px-2 ${
+                  week === overview.regularSeasonWeeks
+                    ? 'pointer-events-none text-dim/40'
+                    : 'text-muted hover:bg-surface-3 hover:text-text'
+                }`}
+              >
+                <span className="hidden sm:inline">Next</span>
+                <span className="sr-only sm:hidden">Next week</span>
+                <span aria-hidden>→</span>
+              </Link>
+            </nav>
+
+            <Link
+              href="/playoffs"
+              className="flex items-center gap-1.5 rounded px-2 py-1 text-[12px] font-medium text-brand transition-colors hover:bg-brand-soft"
+            >
+              <BracketIcon size={15} />
+              <span className="hidden sm:inline">Playoff Picture</span>
+              <span className="sm:hidden">Playoffs</span>
+            </Link>
           </div>
 
           {matchups.length === 0 ? (
