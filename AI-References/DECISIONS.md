@@ -274,3 +274,27 @@ LIVE and FINAL matchups.
 **Also correct on the merits:** both Yahoo and ESPN show 0.00 before kickoff. An
 empty score column reads as broken rather than as pregame, and it hides the
 column widths that the layout depends on.
+
+## 2026-08-28 · Standings computed from results, not stored snapshots
+**Why:** Movement needs last week's ranking. Storing snapshots would work, but
+only for weeks we happened to capture — and nothing writes `standings_snapshots`
+yet, so historical movement would have been permanently unavailable.
+**How:** `computeStandings(results, teams, throughWeek)` is pure and re-runnable,
+so "where did this team sit in week 4" is answerable at any time. Movement is
+just `computeStandings(week N-1)` compared against `computeStandings(week N)`.
+`standings_snapshots` remains the right home for expensive derived metrics
+(all-play, expected wins) once those engines exist.
+**Tested:** 14 cases covering ties as half a win, non-final games excluded, the
+points-for tiebreak, streak counting only the current run, and movement netting
+to zero across the table — every climb is someone else's slide.
+
+## 2026-08-28 · Standings sort is record then points-for, and is NOT confirmed
+ESPN reports `playoffSeedingRule: H2H_RECORD` but does not expose the tiebreak
+chain below record. Points-for is ESPN's usual next tiebreaker and is what the
+engine applies, documented in `compute.ts`. Per §29 this stays unverified until
+James confirms it against the league settings, and any playoff seeding derived
+from it should be labelled unofficial until then.
+
+## 2026-08-28 · Columns dropped: Waiver and Moves
+James's call. Waiver priority belongs on the Transaction Log where the moves it
+governs actually live, not in a standings table.

@@ -203,6 +203,71 @@ export async function getPastChampions() {
   })
 }
 
+export interface StandingsTeam {
+  seasonTeamId: number
+  name: string
+  abbrev: string | null
+  manager: string | null
+  photoUrl: string | null
+  logoUrl: string | null
+  isChampion: boolean
+  championYear: number | null
+}
+
+/** Every team in the season, with the identity the standings table renders. */
+export async function getSeasonTeams(
+  seasonId: number,
+  champion: { franchiseId: number; year: number } | null = null,
+): Promise<StandingsTeam[]> {
+  const db = createPublicClient()
+  const { data } = await db
+    .from('season_teams')
+    .select('id, team_name, abbreviation, logo_url, franchises ( id, manager_name, photo_url )')
+    .eq('season_id', seasonId)
+    .order('espn_team_id')
+
+  type Row = {
+    id: number
+    team_name: string
+    abbreviation: string | null
+    logo_url: string | null
+    franchises: { id: number; manager_name: string; photo_url: string | null } | null
+  }
+
+  return (data ?? []).map((raw) => {
+    const t = raw as unknown as Row
+    return {
+      seasonTeamId: t.id,
+      name: t.team_name,
+      abbrev: t.abbreviation,
+      manager: t.franchises?.manager_name ?? null,
+      photoUrl: t.franchises?.photo_url ?? null,
+      logoUrl: t.logo_url,
+      isChampion: Boolean(champion && t.franchises?.id === champion.franchiseId),
+      championYear: champion?.year ?? null,
+    }
+  })
+}
+
+/** All matchups in the season, in the shape the standings engine expects. */
+export async function getSeasonResults(seasonId: number) {
+  const db = createPublicClient()
+  const { data } = await db
+    .from('matchups')
+    .select('matchup_period, home_team_id, away_team_id, home_score, away_score, status')
+    .eq('season_id', seasonId)
+    .order('matchup_period')
+
+  return (data ?? []).map((m) => ({
+    week: m.matchup_period,
+    homeTeamId: m.home_team_id,
+    awayTeamId: m.away_team_id,
+    homeScore: Number(m.home_score),
+    awayScore: Number(m.away_score),
+    status: m.status,
+  }))
+}
+
 export async function getLastSync() {
   const db = createPublicClient()
   const { data } = await db

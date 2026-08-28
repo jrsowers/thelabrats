@@ -66,3 +66,26 @@ export function applyLivePreview(matchups: MatchupRow[], week: number): MatchupR
     return { ...m, status, away, home }
   })
 }
+
+/**
+ * Simulated season results, so the standings table can be seen populated before
+ * a game exists. Same rules as the scoreboard preview: never written, and
+ * deterministic so ranks do not shuffle between renders.
+ */
+export function simulateSeason(
+  matchups: { week: number; homeTeamId: number | null; awayTeamId: number | null; status: string }[],
+  throughWeek: number,
+) {
+  return matchups.map((m) => {
+    if (m.week > throughWeek) {
+      return { ...m, homeScore: 0, awayScore: 0, status: 'SCHEDULED' }
+    }
+    const r = rng((m.homeTeamId ?? 0) * 31 + (m.awayTeamId ?? 0) * 17 + m.week * 1013)
+    return {
+      ...m,
+      homeScore: round1(between(r, 74, 158)),
+      awayScore: round1(between(r, 74, 158)),
+      status: 'FINAL',
+    }
+  })
+}
