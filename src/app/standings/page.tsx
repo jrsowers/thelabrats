@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import { Fragment } from 'react'
 import Link from 'next/link'
 import {
   getLeagueOverview, getSeasonTeams, getSeasonResults, getReigningChampion, getLastSync,
@@ -70,6 +71,9 @@ export default async function StandingsPage({
 
   const hasPlayed = throughWeek > 0
   const playoffLine = overview.playoffTeamCount
+  // No divider if nobody is below the line — a cut with nothing under it is a
+  // line at the bottom of the table.
+  const hasTeamsBelow = rows.length > playoffLine
 
   return (
     <AppShell leagueName={overview.leagueName}>
@@ -138,11 +142,11 @@ export default async function StandingsPage({
                 const eliminated = status === 'ELIMINATED'
 
                 return (
+                  <Fragment key={row.seasonTeamId}>
                   <tr
-                    key={row.seasonTeamId}
                     className={`state-bar border-b border-border bg-surface last:border-0 ${
-                      isCutoff ? '!border-b-2 !border-b-brand/55' : ''
-                    } ${eliminated ? 'opacity-55' : ''}`}
+                      eliminated ? 'opacity-55' : ''
+                    }`}
                     style={{ '--state': inPlayoffs ? 'var(--brand)' : 'transparent' } as React.CSSProperties}
                   >
                     <td className="px-3 py-2.5 sm:px-4">
@@ -217,6 +221,25 @@ export default async function StandingsPage({
                       )}
                     </td>
                   </tr>
+
+                  {/* The cut line, labelled in place — a golf leaderboard's
+                      projected cut rather than a bare rule. Rendered as a real
+                      row so screen readers announce it between the sixth and
+                      seventh team, where it means something. */}
+                  {isCutoff && hasTeamsBelow && (
+                    <tr className="bg-brand/8">
+                      <td colSpan={6} className="px-3 py-0 sm:px-4">
+                        <div className="flex items-center gap-2.5 py-1.5">
+                          <span className="h-[3px] flex-1 rounded-full bg-brand" aria-hidden />
+                          <span className="whitespace-nowrap font-mono text-[9.5px] font-bold uppercase tracking-[0.16em] text-brand">
+                            Projected Playoff Cut
+                          </span>
+                          <span className="h-[3px] flex-1 rounded-full bg-brand" aria-hidden />
+                        </div>
+                      </td>
+                    </tr>
+                  )}
+                  </Fragment>
                 )
               })}
             </tbody>
@@ -239,10 +262,6 @@ export default async function StandingsPage({
           {fmtStandingsUpdate(lastSync?.finished_at ?? null) ?? 'never'}
         </p>
         <dl className="flex flex-wrap items-center gap-x-5 gap-y-1.5 font-mono text-[10.5px] text-dim">
-          <div className="flex items-center gap-1.5">
-            <dt className="inline-block h-[2px] w-5 rounded-full bg-brand" aria-hidden />
-            <dd>Projected Playoff Cut</dd>
-          </div>
           <div className="flex items-center gap-1.5">
             <dt className="text-brand" aria-hidden><LockIcon size={12} /></dt>
             <dd>Clinched Playoff Berth</dd>

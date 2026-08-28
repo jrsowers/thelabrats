@@ -394,3 +394,26 @@ the clinch lock were removed from it along with their legend: neither symbol can
 appear among teams already outside the field, and a legend for symbols that are
 never present is noise. Both remain on the standings table, where the full
 field is listed and both do appear.
+
+## 2026-08-28 · Weekly recaps ship as a page, not email
+James's call after weighing it: the league already lives in a group chat, so a
+link posted there gets read more reliably than an inbox does. That removes the
+Resend dependency, the subscriber list, unsubscribe tokens and CAN-SPAM
+handling entirely — and keeps the web version canonical rather than a fallback
+for when email HTML breaks.
+**Dependency unchanged:** a recap is only as good as the facts beneath it, and
+those come from the Studs & Duds awards engine (§54: analytics produces
+structured facts, the writing layer only phrases them). Build awards first, then
+recaps compose facts that already exist instead of growing a parallel copy.
+
+## 2026-08-28 · The playoff cut is a labelled row, not a border
+Previously a 2px bottom border on the sixth team, which read as a divider
+without saying what it divided. It is now its own table row carrying
+"PROJECTED PLAYOFF CUT" between rules — the projected-cut treatment from a golf
+leaderboard.
+**Rendered as a real `<tr>`,** not a pseudo-element, so a screen reader
+announces it between the sixth and seventh team where it carries meaning.
+**Suppressed when nothing sits below it** — a cut line at the bottom of the
+table divides nothing.
+**Legend entry removed:** the line now names itself, and a legend explaining a
+labelled element is noise.
