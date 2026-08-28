@@ -34,28 +34,43 @@ export function SideNav({ leagueName, season }: { leagueName: string; season: nu
           {NAV_ITEMS.map((item) => {
             const active = pathname === item.href
             const Icon = item.icon
+
+            const body = (
+              <>
+                <Icon size={16} strokeWidth={2} className="shrink-0" />
+                <span className="truncate">{item.label}</span>
+                {!item.ready && (
+                  <span className="ml-auto font-mono text-[9px] uppercase tracking-wider text-rail-muted/70">
+                    Soon
+                  </span>
+                )}
+              </>
+            )
+
+            const base =
+              'group flex items-center gap-2.5 rounded-md px-2.5 py-2 text-[13.5px] font-medium transition-colors'
+
+            // Unbuilt sections are NOT links. As <Link> they were real anchors,
+            // so Next prefetched routes that do not exist (404s in the console)
+            // and a click landed on a 404 page.
+            if (!item.ready) {
+              return (
+                <li key={item.href}>
+                  <span aria-disabled className={`${base} cursor-not-allowed text-rail-muted/60`}>
+                    {body}
+                  </span>
+                </li>
+              )
+            }
+
             return (
               <li key={item.href}>
                 <Link
                   href={item.href}
                   aria-current={active ? 'page' : undefined}
-                  aria-disabled={!item.ready}
-                  className={[
-                    'group flex items-center gap-2.5 rounded-md px-2.5 py-2 text-[13.5px] font-medium transition-colors',
-                    active
-                      ? 'bg-brand text-brand-ink'
-                      : item.ready
-                        ? 'text-rail-text/85 hover:bg-white/6 hover:text-rail-text'
-                        : 'cursor-not-allowed text-rail-muted/60',
-                  ].join(' ')}
+                  className={`${base} ${active ? 'bg-brand text-brand-ink' : 'text-rail-text/85 hover:bg-white/6 hover:text-rail-text'}`}
                 >
-                  <Icon size={16} strokeWidth={2} className="shrink-0" />
-                  <span className="truncate">{item.label}</span>
-                  {!item.ready && (
-                    <span className="ml-auto font-mono text-[9px] uppercase tracking-wider text-rail-muted/70">
-                      Soon
-                    </span>
-                  )}
+                  {body}
                 </Link>
               </li>
             )
@@ -80,19 +95,26 @@ export function SideNav({ leagueName, season }: { leagueName: string; season: nu
           {NAV_ITEMS.map((item) => {
             const active = pathname === item.href
             const Icon = item.icon
+            const base = 'flex flex-col items-center gap-1 py-2.5 text-[10px] font-medium'
+            const body = (
+              <>
+                <Icon size={18} strokeWidth={2} />
+                <span>{item.short}</span>
+              </>
+            )
             return (
               <li key={item.href} className="flex-1">
-                <Link
-                  href={item.href}
-                  aria-current={active ? 'page' : undefined}
-                  className={[
-                    'flex flex-col items-center gap-1 py-2.5 text-[10px] font-medium',
-                    active ? 'text-brand' : item.ready ? 'text-rail-text/70' : 'text-rail-muted/50',
-                  ].join(' ')}
-                >
-                  <Icon size={18} strokeWidth={2} />
-                  <span>{item.short}</span>
-                </Link>
+                {item.ready ? (
+                  <Link
+                    href={item.href}
+                    aria-current={active ? 'page' : undefined}
+                    className={`${base} ${active ? 'text-brand' : 'text-rail-text/70'}`}
+                  >
+                    {body}
+                  </Link>
+                ) : (
+                  <span aria-disabled className={`${base} text-rail-muted/50`}>{body}</span>
+                )}
               </li>
             )
           })}
