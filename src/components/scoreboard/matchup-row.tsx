@@ -35,7 +35,12 @@ function TeamLogo({ side }: { side: MatchupSide }) {
         alt=""
         width={36}
         height={36}
-        loading="lazy"
+        /* Eager, not lazy. All twelve avatars together are ~223KB, and they are
+           the first thing anyone looks at — deferring them made the scoreboard
+           render as a column of empty circles that filled in late. Lazy loading
+           is for long lists of large images, which this is not. */
+        loading="eager"
+        decoding="async"
         className={`size-9 shrink-0 border border-border bg-surface-2 object-cover ${isPhoto ? 'rounded-full' : 'rounded-md'}`}
       />
     )
