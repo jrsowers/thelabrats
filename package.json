@@ -12,9 +12,11 @@
     "fixtures:sanitize": "node scripts/sanitize-fixtures.mjs",
     "fixtures:check": "node scripts/check-fixture-leaks.mjs",
     "typecheck": "tsc --noEmit",
-    "verify:rls": "node scripts/verify-rls.mjs"
+    "verify:rls": "node scripts/verify-rls.mjs",
+    "sync": "tsx scripts/sync.ts"
   },
   "dependencies": {
+    "@supabase/supabase-js": "^2.112.4",
     "next": "16.3.3",
     "react": "19.2.8",
     "react-dom": "19.2.8",
@@ -28,6 +30,7 @@
     "eslint": "^9",
     "eslint-config-next": "16.3.3",
     "tailwindcss": "^4",
+    "tsx": "^4.23.12",
     "typescript": "^5",
     "vitest": "^4.1.11"
   }

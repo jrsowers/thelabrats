@@ -1,26 +1,54 @@
 @import "tailwindcss";
 
+/* Sports-editorial palette. Restrained, high contrast, meaningful color.
+   Light is the base; dark redefines only what changes (SOUL.md). */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --background: #f6f7f9;
+  --surface: #ffffff;
+  --surface-2: #f0f2f5;
+  --border: #dfe3e8;
+  --foreground: #10151c;
+  --muted: #5b6672;
+  --accent: #b91c1c;
+  --accent-fg: #ffffff;
+  --live: #16a34a;
+  --win: #15803d;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --background: #0b0e13;
+    --surface: #141920;
+    --surface-2: #1b212a;
+    --border: #262d38;
+    --foreground: #e9edf2;
+    --muted: #8d97a5;
+    --accent: #ef4444;
+    --accent-fg: #ffffff;
+    --live: #22c55e;
+    --win: #4ade80;
   }
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-border: var(--border);
+  --color-foreground: var(--foreground);
+  --color-muted: var(--muted);
+  --color-accent: var(--accent);
+  --color-accent-fg: var(--accent-fg);
+  --color-live: var(--live);
+  --color-win: var(--win);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
 }
+
+/* Tabular figures everywhere a number is compared to another number. */
+.tnum { font-variant-numeric: tabular-nums; }
