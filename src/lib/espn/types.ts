@@ -89,6 +89,8 @@ export interface TransactionItem {
   toTeamId: number | null
 }
 
+export type TransactionFilter = 'ALL' | 'ADD' | 'DROP' | 'TRADE' | 'WAIVER'
+
 export interface Transaction {
   espnTransactionId: string
   type: TransactionType

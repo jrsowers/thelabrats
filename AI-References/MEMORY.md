@@ -142,12 +142,12 @@ Apex, www, and `thelabrats-gray.vercel.app` all resolve.
 
 | # | Milestone | Status |
 | --- | --- | --- |
-| 1 | Foundation — scaffold ✅, ESPN adapter ✅, migrations ✅, RLS ✅, ingestion ⬜, demo mode ⬜ | 🔨 |
-| 2 | ESPN league import | ⬜ |
-| 3 | Live Scoreboard | ⬜ |
-| 4 | Standings | ⬜ |
-| 5 | Playoff Picture | ⬜ |
-| 6 | Transactions | ⬜ |
+| 1 | Foundation — scaffold, ESPN adapter, migrations, RLS, ingestion, preview mode | ✅ |
+| 2 | ESPN league import | ✅ |
+| 3 | Live Scoreboard | ✅ (live polling still to come) |
+| 4 | Standings — H2H tiebreak, movement, clinching | ✅ |
+| 5 | Playoff Picture — bracket + bubble | ✅ |
+| 6 | Transactions | 🔨 UI done; parser unverified, player names pending |
 | 7 | Studs & Duds | ⬜ |
 | 8 | Record Books | ⬜ |
 

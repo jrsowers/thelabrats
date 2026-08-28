@@ -325,3 +325,32 @@ Yard lines and hash marks are sized in percentages (5%, 10%, 1%) so exactly one
 100-yard field spans the header at any width, and the nine yard numbers at 10%
 intervals land on the 10-yard lines. The previous fixed-pixel spacing tiled a
 partial second field, producing a tenth number and a duplicate 10.
+
+## 2026-08-28 · Playoff bracket is configuration-driven
+Nothing in `buildBracket` knows this league has six teams or two byes — both
+fall out of `playoffTeamCount` (§21.3, "do not hardcode six playoff teams").
+The field is padded to the next power of two and the difference becomes byes for
+the top seeds. Tested against 4, 5, 6 and 8-team fields.
+**Pairing is a FIXED bracket, not reseeded.** ESPN's default for six teams is
+3v6 / 4v5, then #1 plays the 4/5 winner. A reseeding league would give #1 the
+lowest surviving seed instead. Flagged on the page and in the code; confirm
+before the playoffs open.
+**Unknown participants carry a placeholder** ("Winner 3 vs 6") rather than
+rendering blank, so the bracket reads as a bracket before anything is decided.
+
+## 2026-08-28 · Transaction parsing verified only for internal consistency
+This league had ZERO transactions when the real payload was captured, so
+`mTransactions2`'s populated shape has never been observed here. The parser is
+written from documented behaviour and tested against
+`fixtures/hypothesised/mTransactions2-populated.json` — a hand-authored file,
+clearly named and commented as hypothesised, NOT a capture.
+**This is the §60 boundary:** the parser exists and is defensive, but it is not
+verified. Capture a real payload after the first transactions occur and re-run
+the tests before trusting the log.
+**Ingestion is wired anyway** so day-one moves are captured rather than missed.
+It is idempotent, and if the shape is wrong the sync fails cleanly (§31) without
+corrupting existing data.
+**Known gap:** player NAMES are not available from `mTransactions2` — it carries
+ids only. Resolving them needs a player sync from the roster views, which cannot
+be built until rosters exist after the Sept 3 draft. Until then the log reads
+from preview data.

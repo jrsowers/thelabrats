@@ -1,0 +1,42 @@
+{
+  "_comment": "HYPOTHESISED, NOT CAPTURED. This league had zero transactions when the real payload was pulled, so this file encodes the DOCUMENTED shape of mTransactions2 to develop the parser against. It must be replaced with a real capture after the first transactions occur, and the parser re-verified. See AI-References/ESPN-API.md.",
+  "id": 793230160,
+  "seasonId": 2026,
+  "transactions": [
+    {
+      "id": "TXN-0001", "type": "WAIVER", "status": "EXECUTED", "teamId": 3,
+      "proposedDate": 1789000000000, "processDate": 1789200000000,
+      "scoringPeriodId": 2, "bidAmount": 0,
+      "items": [
+        { "playerId": 4241389, "type": "ADD", "fromTeamId": 0, "toTeamId": 3 },
+        { "playerId": 3116385, "type": "DROP", "fromTeamId": 3, "toTeamId": 0 }
+      ]
+    },
+    {
+      "id": "TXN-0002", "type": "FREEAGENT", "status": "EXECUTED", "teamId": 7,
+      "proposedDate": 1789300000000, "processDate": 1789300000000,
+      "scoringPeriodId": 2, "bidAmount": 0,
+      "items": [{ "playerId": 4426515, "type": "ADD", "fromTeamId": 0, "toTeamId": 7 }]
+    },
+    {
+      "id": "TXN-0003", "type": "TRADE_ACCEPT", "status": "EXECUTED", "teamId": 1,
+      "proposedDate": 1789400000000, "processDate": 1789500000000,
+      "scoringPeriodId": 3, "bidAmount": 0,
+      "items": [
+        { "playerId": 3918298, "type": "TRADE", "fromTeamId": 1, "toTeamId": 9 },
+        { "playerId": 4362628, "type": "TRADE", "fromTeamId": 9, "toTeamId": 1 },
+        { "playerId": 4047365, "type": "TRADE", "fromTeamId": 9, "toTeamId": 1 }
+      ]
+    },
+    {
+      "id": "TXN-0004", "type": "ROSTER", "status": "EXECUTED", "teamId": 5,
+      "processDate": 1789600000000, "scoringPeriodId": 3,
+      "items": [{ "playerId": 4241389, "type": "LINEUP", "fromTeamId": 5, "toTeamId": 5 }]
+    },
+    {
+      "id": null, "type": "FREEAGENT", "status": "EXECUTED", "teamId": 11,
+      "processDate": 1789700000000, "scoringPeriodId": 4,
+      "items": [{ "playerId": 4569618, "type": "ADD", "fromTeamId": 0, "toTeamId": 11 }]
+    }
+  ]
+}

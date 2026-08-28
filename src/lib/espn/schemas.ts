@@ -82,6 +82,33 @@ export const matchupSchema = z.object({
   away: matchupSideSchema,
 })
 
+/**
+ * Transactions (`mTransactions2`).
+ *
+ * ⚠️ SHAPE UNVERIFIED. This league had zero transactions at capture time, so
+ * the fields below come from documented behaviour rather than an observed
+ * payload (§60). Capture a real one after the Sept 3 draft and confirm before
+ * trusting the Transaction Log.
+ */
+export const transactionItemSchema = z.object({
+  playerId: maybeNum,
+  type: z.string().nullish(),
+  fromTeamId: maybeNum,
+  toTeamId: maybeNum,
+})
+
+export const transactionSchema = z.object({
+  id: z.union([z.string(), num]).nullish(),
+  type: z.string().nullish(),
+  status: z.string().nullish(),
+  teamId: maybeNum,
+  proposedDate: maybeNum,
+  processDate: maybeNum,
+  scoringPeriodId: maybeNum,
+  bidAmount: maybeNum,
+  items: z.array(transactionItemSchema).nullish(),
+})
+
 /** Top-level league response. Views are additive, so nearly everything is optional. */
 export const leagueResponseSchema = z.object({
   id: num,
@@ -92,7 +119,7 @@ export const leagueResponseSchema = z.object({
   members: z.array(memberSchema).nullish(),
   teams: z.array(teamSchema).nullish(),
   schedule: z.array(matchupSchema).nullish(),
-  transactions: z.array(z.unknown()).nullish(),
+  transactions: z.array(transactionSchema).nullish(),
   draftDetail: z.object({
     drafted: z.boolean().nullish(),
     inProgress: z.boolean().nullish(),

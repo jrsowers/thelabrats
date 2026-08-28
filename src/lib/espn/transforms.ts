@@ -10,6 +10,7 @@ import {
 import type { LeagueResponse } from './schemas'
 import type {
   FantasyTeam, LeagueSettings, LeagueStatus, Manager, Matchup, MatchupStatus,
+  Transaction, TransactionType,
 } from './types'
 
 export function toLeagueStatus(res: LeagueResponse): LeagueStatus {
@@ -155,6 +156,52 @@ export function toMatchups(res: LeagueResponse): Matchup[] {
       isPlayoff: (m.playoffTierType ?? 'NONE') !== 'NONE',
     }
   })
+}
+
+/**
+ * ESPN transaction types -> ours.
+ *
+ * ⚠️ UNVERIFIED against a real payload — see schemas.ts. ROSTER entries are
+ * lineup changes, not acquisitions, and are dropped rather than shown as moves.
+ */
+const TRANSACTION_TYPE: Record<string, TransactionType> = {
+  WAIVER: 'WAIVER',
+  FREEAGENT: 'FREE_AGENT',
+  TRADE_ACCEPT: 'TRADE',
+  TRADE_UPHOLD: 'TRADE',
+  DRAFT: 'DRAFT',
+}
+
+export function toTransactions(res: LeagueResponse): Transaction[] {
+  const raw = res.transactions ?? []
+  return raw
+    .filter((t) => (t.type ?? '') !== 'ROSTER')
+    .map((t, i) => {
+      const items = (t.items ?? [])
+        .filter((it) => it.playerId != null && (it.type ?? '') !== 'LINEUP')
+        .map((it) => ({
+          espnPlayerId: it.playerId as number,
+          action: (it.type === 'DROP' ? 'DROP' : it.type === 'ADD' ? 'ADD' : 'TRADE') as
+            'ADD' | 'DROP' | 'TRADE',
+          fromTeamId: it.fromTeamId ?? null,
+          toTeamId: it.toTeamId ?? null,
+        }))
+
+      return {
+        // ESPN ids are usually strings; fall back to a stable positional key so
+        // a missing id cannot collapse several transactions onto one row.
+        espnTransactionId: String(t.id ?? `unknown-${t.processDate ?? 0}-${i}`),
+        type: TRANSACTION_TYPE[t.type ?? ''] ?? 'OTHER',
+        status: t.status ?? 'UNKNOWN',
+        espnTeamId: t.teamId ?? null,
+        proposedAt: t.proposedDate ? new Date(t.proposedDate).toISOString() : null,
+        processedAt: t.processDate ? new Date(t.processDate).toISOString() : null,
+        scoringPeriod: t.scoringPeriodId ?? null,
+        // Null unless the league actually uses FAAB; this one does not.
+        faabAmount: t.bidAmount && t.bidAmount > 0 ? t.bidAmount : null,
+        items,
+      }
+    })
 }
 
 export function lineupSlotLabel(slotId: number): string {

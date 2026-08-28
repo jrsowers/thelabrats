@@ -8,7 +8,7 @@
 import { EspnClient } from '@/lib/espn/client'
 import { VIEWS } from '@/lib/espn/constants'
 import {
-  toLeagueSettings, toLeagueStatus, toManagers, toTeams, toMatchups,
+  toLeagueSettings, toLeagueStatus, toManagers, toTeams, toMatchups, toTransactions,
 } from '@/lib/espn/transforms'
 import { createServiceClient } from '@/lib/supabase/server'
 
@@ -158,6 +158,38 @@ export async function syncLeague(): Promise<SyncResult> {
       )
       .select('id')
     detail.matchups = written?.length ?? 0
+
+    // ---- transactions ----
+    // Upserted on espn_transaction_id so a move seen by two syncs inserts once
+    // (§15.4). Player NAMES are not available here — they arrive with the roster
+    // sync, which cannot be built until rosters exist after the Sept 3 draft.
+    // Until then rows are stored with their ESPN player ids intact so nothing is
+    // lost, and the log reads from them once names can be resolved.
+    const txnRes = await espn.getViews([VIEWS.TRANSACTIONS])
+    const transactions = toTransactions(txnRes)
+
+    if (transactions.length > 0) {
+      const { data: writtenTxns } = await db
+        .from('transactions')
+        .upsert(
+          transactions.map((t) => ({
+            season_id: seasonRow.id,
+            espn_transaction_id: t.espnTransactionId,
+            transaction_type: t.type,
+            status: t.status,
+            season_team_id: t.espnTeamId ? teamIdByEspnId.get(t.espnTeamId) ?? null : null,
+            proposed_at: t.proposedAt,
+            processed_at: t.processedAt,
+            week: t.scoringPeriod,
+            faab_amount: t.faabAmount,
+          })),
+          { onConflict: 'season_id,espn_transaction_id' },
+        )
+        .select('id, espn_transaction_id')
+      detail.transactions = writtenTxns?.length ?? 0
+    } else {
+      detail.transactions = 0
+    }
 
     // ---- editorial: past champions ----
     // ESPN holds no 2025 season for this league, so this cannot be ingested.

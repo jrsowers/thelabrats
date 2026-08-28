@@ -89,3 +89,115 @@ export function simulateSeason(
     }
   })
 }
+
+/* ============================================================
+   Transaction preview
+   ============================================================ */
+
+export type TxnKind = 'WAIVER' | 'FREE_AGENT' | 'DROP' | 'TRADE'
+
+export interface PreviewTxnItem {
+  playerName: string
+  position: string
+  nflTeam: string
+  action: 'ADD' | 'DROP' | 'TRADE'
+  fromTeamId: number | null
+  toTeamId: number | null
+}
+
+export interface PreviewTxn {
+  id: string
+  kind: TxnKind
+  processedAt: string
+  week: number
+  teamId: number
+  counterpartyTeamId: number | null
+  waiverPriority: number | null
+  items: PreviewTxnItem[]
+}
+
+const PLAYER_POOL: [string, string, string][] = [
+  ['Jaylen Wright', 'RB', 'MIA'], ['Rome Odunze', 'WR', 'CHI'],
+  ['Ladd McConkey', 'WR', 'LAC'], ['Bucky Irving', 'RB', 'TB'],
+  ['Brian Thomas Jr.', 'WR', 'JAX'], ['Trey Benson', 'RB', 'ARI'],
+  ['Ricky Pearsall', 'WR', 'SF'], ['Ben Sinnott', 'TE', 'WSH'],
+  ['Jonathon Brooks', 'RB', 'CAR'], ['Xavier Legette', 'WR', 'CAR'],
+  ['Blake Corum', 'RB', 'LAR'], ['Keon Coleman', 'WR', 'BUF'],
+  ['Ja’Tavion Sanders', 'TE', 'CAR'], ['MarShawn Lloyd', 'RB', 'GB'],
+  ['Malachi Corley', 'WR', 'NYJ'], ['Tyrone Tracy Jr.', 'RB', 'NYG'],
+  ['Jermaine Burton', 'WR', 'CIN'], ['Cade Otton', 'TE', 'TB'],
+  ['Audric Estime', 'RB', 'DEN'], ['Jalen McMillan', 'WR', 'TB'],
+]
+
+/**
+ * Simulated transaction history, so the log can be seen populated and filtered
+ * before the league has made a single move. Same rules as every other preview:
+ * never written, and deterministic so the list does not reshuffle per render.
+ */
+export function simulateTransactions(teamIds: number[], throughWeek: number): PreviewTxn[] {
+  const out: PreviewTxn[] = []
+  if (teamIds.length === 0) return out
+
+  // Fixed base date so the grouping headers are stable across renders.
+  const BASE = Date.UTC(2026, 8, 9, 14, 0, 0) // Sept 9 2026, a Wednesday
+  const DAY = 86_400_000
+
+  let counter = 0
+  for (let week = 1; week <= throughWeek; week++) {
+    const r = rng(week * 7717)
+    const moves = 2 + Math.floor(r() * 4) // 2-5 moves a week
+
+    for (let i = 0; i < moves; i++) {
+      counter++
+      const team = teamIds[Math.floor(r() * teamIds.length)]
+      const roll = r()
+      const at = new Date(BASE + (week - 1) * 7 * DAY + Math.floor(r() * 5) * DAY + Math.floor(r() * 10) * 3_600_000)
+      const pick = (n: number) => PLAYER_POOL[Math.floor(r() * PLAYER_POOL.length + n) % PLAYER_POOL.length]
+
+      if (roll < 0.18) {
+        // Trade: two teams, two or three players.
+        let other = teamIds[Math.floor(r() * teamIds.length)]
+        if (other === team) other = teamIds[(teamIds.indexOf(team) + 1) % teamIds.length]
+        const [aName, aPos, aTeam] = pick(0)
+        const [bName, bPos, bTeam] = pick(3)
+        out.push({
+          id: `p-${counter}`, kind: 'TRADE', processedAt: at.toISOString(), week,
+          teamId: team, counterpartyTeamId: other, waiverPriority: null,
+          items: [
+            { playerName: aName, position: aPos, nflTeam: aTeam, action: 'TRADE', fromTeamId: team, toTeamId: other },
+            { playerName: bName, position: bPos, nflTeam: bTeam, action: 'TRADE', fromTeamId: other, toTeamId: team },
+          ],
+        })
+      } else if (roll < 0.55) {
+        // Waiver claim, usually paired with a corresponding drop.
+        const [aName, aPos, aTeam] = pick(0)
+        const [bName, bPos, bTeam] = pick(5)
+        out.push({
+          id: `p-${counter}`, kind: 'WAIVER', processedAt: at.toISOString(), week,
+          teamId: team, counterpartyTeamId: null,
+          waiverPriority: 1 + Math.floor(r() * teamIds.length),
+          items: [
+            { playerName: aName, position: aPos, nflTeam: aTeam, action: 'ADD', fromTeamId: null, toTeamId: team },
+            { playerName: bName, position: bPos, nflTeam: bTeam, action: 'DROP', fromTeamId: team, toTeamId: null },
+          ],
+        })
+      } else if (roll < 0.82) {
+        const [aName, aPos, aTeam] = pick(0)
+        out.push({
+          id: `p-${counter}`, kind: 'FREE_AGENT', processedAt: at.toISOString(), week,
+          teamId: team, counterpartyTeamId: null, waiverPriority: null,
+          items: [{ playerName: aName, position: aPos, nflTeam: aTeam, action: 'ADD', fromTeamId: null, toTeamId: team }],
+        })
+      } else {
+        const [aName, aPos, aTeam] = pick(2)
+        out.push({
+          id: `p-${counter}`, kind: 'DROP', processedAt: at.toISOString(), week,
+          teamId: team, counterpartyTeamId: null, waiverPriority: null,
+          items: [{ playerName: aName, position: aPos, nflTeam: aTeam, action: 'DROP', fromTeamId: team, toTeamId: null }],
+        })
+      }
+    }
+  }
+
+  return out.sort((a, b) => b.processedAt.localeCompare(a.processedAt))
+}
