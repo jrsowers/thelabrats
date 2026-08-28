@@ -21,7 +21,13 @@ sanitized `fixtures/` + leak checker, `AI-References/`, `.claude/settings.json`
 2 local commits on `main`.
 
 **Verification:** `npm test` (19 ✅) · `npm run typecheck` (✅) ·
-`npm run fixtures:check` (✅ 73 identifiers checked)
+`npm run fixtures:check` (✅) · `npm run verify:rls` (10/10 ✅) · build ✅
+
+**Deployed:** production build Ready on Vercel. 21 env vars set across
+production/preview/development. Preview vars are scoped to the `development`
+branch because CLI 54.6.1 rejects the all-preview-branches form even with
+`--yes` (returns `action_required`/`git_branch_required` while echoing back the
+exact command it just refused).
 
 ---
 
@@ -68,9 +74,19 @@ Full rationale in `DECISIONS.md`.
 - Seed 2025 champion (Chenell Basilio) — blocked on first ingestion creating
   franchises; `champions.franchise_id` has nothing to reference yet.
 
-## Blocked on James
+## Blocked on James — Vercel dashboard (CLI cannot do either)
 
-1. **Go-ahead to push** — first push publishes to a public repo and triggers a
+1. **Attach the domain to the project.** Settings > Domains > add
+   `www.labratsfantasy.com` + apex. DNS already points at Vercel, but the
+   production deployment has NO aliases, so the hostname 404s.
+2. **Disable Deployment Protection.** Settings > Deployment Protection >
+   Vercel Authentication > Disabled. It is on by default and currently serves
+   a Vercel login page instead of the app — which contradicts the
+   no-gating requirement.
+
+## Previously blocked
+
+1. ~~**Go-ahead to push**~~ — first push publishes to a public repo and triggers a
    Vercel deploy
 2. **2025 champion** — who won, and under what ESPN league ID (if any)
 3. **Display names** — real names / first names / team names only (public site)
