@@ -512,3 +512,21 @@ rank. Two large elements do not fight when only one of them is coloured.
 **Section headings take the normal text colour.** Green and red on the headings
 duplicated a distinction the cards' edge bars and metric colours already carry,
 and coloured headings made the page read as an alert rather than a scoreboard.
+
+## 2026-08-28 · Capture cadence is tracked per award
+Each award now declares a `capture` cadence — FINAL_ONLY, WEEKLY_BOXSCORE,
+PREGAME_PROJECTION or CONTINUOUS — alongside the fields it reads. Cadence is
+what drives storage cost, and it is largely independent of which fields an award
+needs.
+**The answer that matters: 19 of 20 awards need at most TWO captures a week.**
+Seven work off final team scores alone. Eight more need one boxscore pull after
+Monday night. Four more need one projections pull before Thursday. Only Choke
+Job — "largest drop from peak in-game win probability" — requires a continuous
+record, because a peak that was never observed cannot be recovered.
+
+## 2026-08-28 · Correction: Heartbreak Kid was mis-tagged
+It was marked as needing LIVE_EVENTS. Its formula — "opposing player whose
+points exceeded the final margin by the most" — reads only the final boxscore
+and the final margin. Corrected to PLAYER_SCORES / WEEKLY_BOXSCORE. The
+over-cautious tag would have made the continuous-capture case look twice as
+strong as it is.

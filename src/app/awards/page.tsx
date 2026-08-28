@@ -5,7 +5,7 @@ import {
 } from '@/lib/league/queries'
 import { simulateSeason } from '@/lib/league/preview'
 import { buildAwardCards } from '@/lib/awards/build'
-import { NEED_LABEL, type AwardSection } from '@/lib/awards/catalog'
+import { NEED_LABEL, CADENCE_LABEL, type AwardSection } from '@/lib/awards/catalog'
 import type { AwardCard } from '@/lib/awards/placeholder'
 import { AppShell } from '@/components/navigation/app-shell'
 import { FieldBackdrop } from '@/components/ui/field-backdrop'
@@ -41,7 +41,10 @@ function Card({
         {card.placeholder && (
           <span
             className="mt-0.5 shrink-0 font-mono text-[8.5px] uppercase tracking-[0.14em] text-warn"
-            title={`Needs: ${card.def.needs.map((n) => NEED_LABEL[n]).join(', ')}`}
+            title={
+              `Needs: ${card.def.needs.map((n) => NEED_LABEL[n]).join(', ')}` +
+              `\nCapture: ${CADENCE_LABEL[card.def.capture]}`
+            }
           >
             Sample
           </span>
