@@ -10,23 +10,10 @@ import { simulateSeason } from '@/lib/league/preview'
 import { AppShell } from '@/components/navigation/app-shell'
 import { FieldBackdrop } from '@/components/ui/field-backdrop'
 import { Eyebrow, TeamAvatar, Tag, EmptyState, LockIcon } from '@/components/ui/primitives'
+import { fmtStandingsUpdate } from '@/lib/format'
 
 export const dynamic = 'force-dynamic'
 export const metadata: Metadata = { title: 'League Standings' }
-
-const TZ = 'America/New_York'
-
-/** ESPN's footer format: "Thu Jan 08 02:45am EST". */
-function fmtStandingsUpdate(iso: string | null) {
-  if (!iso) return null
-  const parts = new Intl.DateTimeFormat('en-US', {
-    weekday: 'short', month: 'short', day: '2-digit',
-    hour: '2-digit', minute: '2-digit', hour12: true,
-    timeZone: TZ, timeZoneName: 'short',
-  }).formatToParts(new Date(iso))
-  const get = (t: string) => parts.find((p) => p.type === t)?.value ?? ''
-  return `${get('weekday')} ${get('month')} ${get('day')} ${get('hour')}:${get('minute')}${get('dayPeriod').toLowerCase()} ${get('timeZoneName')}`
-}
 
 /** Green up, red down. Never colour alone — the arrow and number carry it too. */
 function Movement({ delta }: { delta: number }) {
@@ -91,7 +78,7 @@ export default async function StandingsPage({
         <div className="relative flex flex-wrap items-end justify-between gap-x-6 gap-y-3">
           <div>
             <Eyebrow>League Standings{hasPlayed ? ` · Through Week ${throughWeek}` : ''}</Eyebrow>
-            <h1 className="display mt-1.5 text-[40px] sm:text-[52px]">The Table</h1>
+            <h1 className="display mt-1.5 text-[40px] sm:text-[52px]">The Power Ranking</h1>
           </div>
         </div>
       </header>
@@ -198,7 +185,7 @@ export default async function StandingsPage({
                           {team.manager && (
                             <div className="truncate text-[11px] text-muted">{team.manager}</div>
                           )}
-                          {row.tiebreakNote && (
+                          {row.tiebreakKind === 'HEAD_TO_HEAD' && (
                             <div className="truncate font-mono text-[9.5px] text-dim">
                               {row.tiebreakNote}
                             </div>
@@ -254,7 +241,7 @@ export default async function StandingsPage({
         <dl className="flex flex-wrap items-center gap-x-5 gap-y-1.5 font-mono text-[10.5px] text-dim">
           <div className="flex items-center gap-1.5">
             <dt className="inline-block h-[2px] w-5 rounded-full bg-brand" aria-hidden />
-            <dd>Playoff &ldquo;In Or Out&rdquo; Projection</dd>
+            <dd>Projected Playoff Cut</dd>
           </div>
           <div className="flex items-center gap-1.5">
             <dt className="text-brand" aria-hidden><LockIcon size={12} /></dt>

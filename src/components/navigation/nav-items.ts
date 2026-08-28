@@ -1,5 +1,5 @@
 import type { ComponentType } from 'react'
-import { Radio, Trophy, Award, ArrowLeftRight, BookOpen } from 'lucide-react'
+import { Radio, Trophy, Award, ArrowLeftRight, BookOpen, Newspaper } from 'lucide-react'
 import { BracketIcon } from '@/components/ui/primitives'
 
 /** Lucide icons and our own BracketIcon both satisfy this. */
@@ -23,6 +23,7 @@ export const NAV_ITEMS: NavItem[] = [
   { href: '/standings',    label: 'League Standings', short: 'Table',   icon: Trophy,         ready: true  },
   { href: '/playoffs',     label: 'Playoff Picture',  short: 'Bracket', icon: BracketIcon,    ready: true  },
   { href: '/transactions', label: 'Transaction Log',  short: 'Moves',   icon: ArrowLeftRight, ready: true  },
+  { href: '/recaps',       label: 'Weekly Recaps',    short: 'Recaps',  icon: Newspaper,      ready: false },
   { href: '/awards',       label: 'Studs & Duds',     short: 'Awards',  icon: Award,          ready: false },
   { href: '/records',      label: 'Record Books',     short: 'Records', icon: BookOpen,       ready: false },
 ]

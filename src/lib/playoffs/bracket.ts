@@ -4,10 +4,10 @@
  * Pure and configuration-driven — nothing here knows this league has six teams
  * or two byes. Both fall out of `playoffTeamCount`.
  *
- * ⚠️ PAIRING IS THE STANDARD FIXED BRACKET, NOT RESEEDED. ESPN's default for a
- * six-team field is 3v6 and 4v5 in round one, then #1 plays the 4/5 winner and
- * #2 plays the 3/6 winner. A reseeding league would instead give #1 the lowest
- * surviving seed. Confirm against league settings before the playoffs open (§29).
+ * PAIRING IS A FIXED BRACKET, NOT RESEEDED — CONFIRMED by the commissioner
+ * (2026-08-28). Six-team field: 3v6 and 4v5 in round one, then #1 plays the
+ * 4/5 winner and #2 plays the 3/6 winner. Seeds do not shuffle between rounds,
+ * which is what the code below already does.
  */
 
 export interface Seed {

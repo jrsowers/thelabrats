@@ -1,8 +1,9 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import {
-  getLeagueOverview, getSeasonTeams, getSeasonResults, getReigningChampion,
+  getLeagueOverview, getSeasonTeams, getSeasonResults, getReigningChampion, getLastSync,
 } from '@/lib/league/queries'
+import { fmtStandingsUpdate } from '@/lib/format'
 import {
   computeStandings, computePlayoffStatus, latestCompletedWeek,
 } from '@/lib/standings/compute'
@@ -26,9 +27,10 @@ export default async function PlayoffsPage({
   const isPreview = params.preview === 'live'
 
   const champion = await getReigningChampion()
-  const [teams, rawResults] = await Promise.all([
+  const [teams, rawResults, lastSync] = await Promise.all([
     getSeasonTeams(overview.seasonId, champion),
     getSeasonResults(overview.seasonId),
+    getLastSync(),
   ])
 
   const previewWeek = Math.min(
@@ -61,12 +63,11 @@ export default async function PlayoffsPage({
         <FieldBackdrop />
         <div className="relative flex flex-wrap items-end justify-between gap-x-6 gap-y-3">
           <div>
-            <Eyebrow>
-              Playoff Picture{hasPlayed ? ` · If The Season Ended Today` : ' · Preseason'}
-            </Eyebrow>
-            <h1 className="display mt-1.5 text-[40px] sm:text-[52px]">The Road In</h1>
+            <Eyebrow>Playoff Picture</Eyebrow>
+            <h1 className="display mt-1.5 text-[40px] sm:text-[52px]">
+              Who&rsquo;s In? Who&rsquo;s Out?
+            </h1>
           </div>
-          <Tag tone="warn">Unofficial</Tag>
         </div>
       </header>
 
@@ -108,21 +109,25 @@ export default async function PlayoffsPage({
 
       {/* ---- Bracket ---- */}
       <section className="mb-9">
+        <div className="mb-2.5 border-b border-border pb-1.5">
+          <h2 className="display text-2xl">Current Projection</h2>
+        </div>
         <Bracket rounds={rounds} teams={byId} />
+        <p className="mt-3 font-mono text-[10.5px] text-dim">
+          <span className="font-bold text-muted">Last standings update:</span>{' '}
+          {fmtStandingsUpdate(lastSync?.finished_at ?? null) ?? 'never'}
+        </p>
       </section>
 
       {/* ---- Bubble (§21.4) ---- */}
       <section>
-        <div className="mb-2.5 flex items-baseline justify-between gap-4 border-b border-border pb-1.5">
-          <h2 className="display text-2xl">The Bubble</h2>
-          <span className="font-mono text-[10.5px] uppercase tracking-wider text-dim">
-            Top {overview.playoffTeamCount} qualify
-          </span>
+        <div className="mb-2.5 border-b border-border pb-1.5">
+          <h2 className="display text-2xl">Outside Looking In</h2>
         </div>
 
         <div className="overflow-hidden rounded-lg border border-border">
           <ul className="divide-y divide-border">
-            {[...inField, ...outField].map((row) => {
+            {outField.map((row) => {
               const team = byId.get(row.seasonTeamId)
               if (!team) return null
               const s = status.get(row.seasonTeamId)
@@ -132,10 +137,9 @@ export default async function PlayoffsPage({
               return (
                 <li
                   key={row.seasonTeamId}
-                  className={`state-bar flex items-center gap-3 bg-surface px-4 py-2.5 ${
-                    isCut ? 'border-b-2 !border-b-brand/55' : ''
-                  } ${s === 'ELIMINATED' ? 'opacity-55' : ''}`}
-                  style={{ '--state': isIn ? 'var(--brand)' : 'transparent' } as React.CSSProperties}
+                  className={`flex items-center gap-3 bg-surface px-4 py-2.5 ${
+                    s === 'ELIMINATED' ? 'opacity-55' : ''
+                  }`}
                 >
                   <span className="display w-6 text-[16px] tnum">{row.rank}</span>
                   <TeamAvatar
@@ -149,19 +153,13 @@ export default async function PlayoffsPage({
                   <div className="min-w-0 flex-1">
                     <div className="flex items-center gap-1.5">
                       <span className="display truncate text-[15px]">{team.name}</span>
-                      {s === 'CLINCHED' && (
-                        <span className="shrink-0 text-brand" title="Clinched playoff berth"
-                              aria-label="Clinched playoff berth" role="img">
-                          <LockIcon size={12} />
-                        </span>
-                      )}
                       {s === 'ELIMINATED' && (
                         <span className="shrink-0 font-mono text-[9px] uppercase tracking-wider text-loss">
                           Out
                         </span>
                       )}
                     </div>
-                    {row.tiebreakNote && (
+                    {row.tiebreakKind === 'HEAD_TO_HEAD' && (
                       <div className="truncate font-mono text-[9.5px] text-dim">
                         {row.tiebreakNote}
                       </div>
@@ -179,22 +177,6 @@ export default async function PlayoffsPage({
           </ul>
         </div>
 
-        <div className="mt-3 flex flex-wrap items-center gap-x-5 gap-y-1.5 font-mono text-[10.5px] text-dim">
-          <div className="flex items-center gap-1.5">
-            <span className="inline-block h-[2px] w-5 rounded-full bg-brand" aria-hidden />
-            <span>Playoff &ldquo;In Or Out&rdquo; Projection</span>
-          </div>
-          <div className="flex items-center gap-1.5">
-            <span className="text-brand" aria-hidden><LockIcon size={12} /></span>
-            <span>Clinched Playoff Berth</span>
-          </div>
-        </div>
-
-        <p className="mt-4 max-w-2xl font-mono text-[10px] leading-relaxed text-dim">
-          Seeding uses head-to-head record, then points for. Bracket pairings assume a
-          fixed bracket rather than reseeding — confirm against league settings before
-          the playoffs open.
-        </p>
       </section>
     </AppShell>
   )

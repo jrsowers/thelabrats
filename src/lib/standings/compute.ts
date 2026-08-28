@@ -35,6 +35,11 @@ export interface StandingsRow {
   winPct: number
   /** Why this team sits above the next one, when record alone did not decide it. */
   tiebreakNote: string | null
+  /**
+   * Which rule decided it. The UI hides POINTS_FOR notes, since points for is
+   * already its own column — only head-to-head adds information not on screen.
+   */
+  tiebreakKind: 'HEAD_TO_HEAD' | 'POINTS_FOR' | null
 }
 
 type Result = 'W' | 'L' | 'T'
@@ -68,7 +73,7 @@ function headToHead(
 /**
  * Order a group of teams that are tied on record.
  *
- * Head-to-head first, per league settings. For a two-way tie that is simply
+ * Head-to-head first — CONFIRMED by the commissioner as this league's rule. For a two-way tie that is simply
  * their record against each other. For three or more, each team is scored on a
  * mini round-robin against only the others in the tie — the standard approach,
  * and the reason this cannot be expressed as a simple comparator: a team's
@@ -110,9 +115,13 @@ function breakTie(
   // Explain the result, so the table can justify itself (§21.6).
   for (const row of sorted) {
     const h = h2h.get(row.seasonTeamId)!
-    row.tiebreakNote = h.played > 0
-      ? `Head-to-head ${h.wins}-${h.losses} vs tied teams`
-      : `Points for ${row.pointsFor.toFixed(2)}`
+    if (h.played > 0) {
+      row.tiebreakKind = 'HEAD_TO_HEAD'
+      row.tiebreakNote = `Head-to-head ${h.wins}-${h.losses} vs tied teams`
+    } else {
+      row.tiebreakKind = 'POINTS_FOR'
+      row.tiebreakNote = `Points for ${row.pointsFor.toFixed(2)}`
+    }
   }
   return sorted
 }
@@ -128,7 +137,8 @@ export function computeStandings(
       seasonTeamId: t.seasonTeamId,
       rank: 0, wins: 0, losses: 0, ties: 0,
       pointsFor: 0, pointsAgainst: 0,
-      streak: null, gamesPlayed: 0, winPct: 0, tiebreakNote: null,
+      streak: null, gamesPlayed: 0, winPct: 0,
+      tiebreakNote: null, tiebreakKind: null,
     })
   }
 

@@ -375,3 +375,22 @@ James expected the meta description beside the favicon. Tabs render the
 previews. The title stays short deliberately: Chrome truncates hard once
 several tabs are open, so a full sentence would read as "The Lab Rats — A
 just-for-f…".
+
+## 2026-08-28 · Bracket pairing CONFIRMED: fixed, no reseeding
+James confirmed the league uses a fixed bracket. Seeds do not shuffle between
+rounds, so #1 plays the 4/5 winner and #2 plays the 3/6 winner regardless of who
+survives. This is what `buildBracket` already did; the caveat comments in
+`bracket.ts` and `compute.ts` are now statements of fact rather than assumptions.
+
+## 2026-08-28 · Tiebreak notes are typed, so the UI can hide the redundant one
+Rows carry `tiebreakKind` alongside the note. Points-for notes are suppressed in
+the UI because points for is already its own column — only head-to-head adds
+information that is not otherwise on screen. Typing it beats matching on the
+note's text, which would break the moment the wording changed.
+
+## 2026-08-28 · Outside Looking In shows only teams outside the cut
+The playoff page's lower section lists ranks 7-12 only. The blue cut line and
+the clinch lock were removed from it along with their legend: neither symbol can
+appear among teams already outside the field, and a legend for symbols that are
+never present is noise. Both remain on the standings table, where the full
+field is listed and both do appear.

@@ -13,10 +13,10 @@ const TZ = 'America/New_York'
 
 const FILTERS = [
   { key: 'all',     label: 'All' },
-  { key: 'added',   label: 'Added' },
-  { key: 'dropped', label: 'Dropped' },
+  { key: 'added',   label: 'Players Added' },
+  { key: 'dropped', label: 'Players Dropped' },
   { key: 'trades',  label: 'Trades' },
-  { key: 'waivers', label: 'Waivers' },
+  { key: 'waivers', label: 'Waiver Claims' },
 ] as const
 
 type FilterKey = (typeof FILTERS)[number]['key']
@@ -153,7 +153,7 @@ export default async function TransactionsPage({
         <FieldBackdrop />
         <div className="relative">
           <Eyebrow>Transaction Log</Eyebrow>
-          <h1 className="display mt-1.5 text-[40px] sm:text-[52px]">The Ledger</h1>
+          <h1 className="display mt-1.5 text-[40px] sm:text-[52px]">Who&rsquo;s Makin&rsquo; Moves?</h1>
         </div>
       </header>
 
@@ -282,10 +282,6 @@ export default async function TransactionsPage({
         </div>
       )}
 
-      <p className="mt-6 max-w-2xl font-mono text-[10px] leading-relaxed text-dim">
-        This league uses rolling waiver priority rather than FAAB, so claims show a
-        priority number instead of a bid.
-      </p>
     </AppShell>
   )
 }
