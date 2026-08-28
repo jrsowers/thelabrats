@@ -10,12 +10,18 @@ without re-reading the conversation.
 
 ## Current status
 
-**Phase:** Pre-Milestone 1. ESPN API fully verified. Ready to scaffold once
-Supabase keys land and `gh` is authed as the right account.
+**Phase:** Milestone 1 in progress. ESPN adapter built and tested. Supabase
+linked. Nothing pushed to GitHub yet — awaiting go-ahead on the first push
+(public repo + triggers a Vercel deploy).
 
-**What exists:** `AI-References/`, `.gitignore`, `.env.example`, `.env.local`
-(populated), `CLAUDE.md`, `/fixtures/raw/` (9 live ESPN payloads), the spec.
-No application code yet. Nothing pushed to the repo yet.
+**What exists:** Next.js 16.3.3 / React 19.2.8 scaffold, `src/lib/espn/`
+(client, constants, types, schemas, transforms), 19 passing fixture tests,
+sanitized `fixtures/` + leak checker, `AI-References/`, `.claude/settings.json`
+(Supabase MCP denied), Supabase CLI linked to `fgtsewqcluffmcehqvvx`.
+2 local commits on `main`.
+
+**Verification:** `npm test` (19 ✅) · `npm run typecheck` (✅) ·
+`npm run fixtures:check` (✅ 73 identifiers checked)
 
 ---
 
@@ -59,11 +65,16 @@ Full rationale in `DECISIONS.md`.
 
 ## Blocked on James
 
-1. **Supabase anon + service-role keys** — blocks all DB work
-2. **Repoint Supabase MCP** from `jakuypixhizbyacemoxh` to `fgtsewqcluffmcehqvvx`
-3. **`gh auth login` as `jrsowers`** — `gh` is authed as `merchyntjames`, which
-   cannot push to `jrsowers/thelabrats`
-4. **2025 champion** — who won, and under what ESPN league ID (if any)
+1. **Go-ahead to push** — first push publishes to a public repo and triggers a
+   Vercel deploy
+2. **2025 champion** — who won, and under what ESPN league ID (if any)
+3. **Display names** — real names / first names / team names only (public site)
+
+## Resolved this session
+
+~~Supabase keys~~ → new-format publishable + secret, in `.env.local`
+~~Supabase MCP~~ → hard-denied; CLI linked instead
+~~gh auth~~ → not needed; SSH `git@github.com` already resolves to `jrsowers`
 
 ## Resolved since last session
 
@@ -91,11 +102,11 @@ Full rationale in `DECISIONS.md`.
 | --- | --- |
 | Node | v22.22.1 ✅ |
 | npm | 10.9.4 ✅ |
-| gh CLI | 2.89.0, authed as `merchyntjames` ⚠️ **wrong account — needs `jrsowers`** |
+| gh CLI | authed as `merchyntjames` — **unused**; SSH handles git as `jrsowers` ✅ |
 | Vercel CLI | 54.6.1 ✅ (login state unchecked) |
-| Supabase CLI | ❌ not installed — I'll install |
+| Supabase CLI | 2.116.0 ✅ linked to `fgtsewqcluffmcehqvvx` |
 | git | 2.50.1 ✅ |
-| Supabase MCP | ⚠️ still pointed at `jakuypixhizbyacemoxh`; needs repoint to `fgtsewqcluffmcehqvvx` |
+| Supabase MCP | 🚫 **DENIED** in `.claude/settings.json` — different account |
 | Vercel MCP | ❌ needs OAuth; unavailable in non-interactive session |
 
 ---
@@ -104,7 +115,7 @@ Full rationale in `DECISIONS.md`.
 
 | # | Milestone | Status |
 | --- | --- | --- |
-| 1 | Foundation — scaffold, auth, nav, migrations, demo mode | ⬜ |
+| 1 | Foundation — scaffold ✅, ESPN adapter ✅, migrations ⬜, demo mode ⬜ | 🔨 |
 | 2 | ESPN league import | ⬜ |
 | 3 | Live Scoreboard | ⬜ |
 | 4 | Standings | ⬜ |
