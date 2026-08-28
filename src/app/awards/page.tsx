@@ -59,47 +59,47 @@ function Card({
 
       <div className="flex flex-1 flex-col gap-3 px-4 py-3.5">
         {/* Recipient: a player for player awards, otherwise the team(s). */}
-        {card.playerName ? (
-          <div className="flex items-center gap-2.5">
+        {/* The manager wins the award. Where a player earned it, the player
+            appears beneath as evidence rather than as the recipient. */}
+        <div className="flex items-center gap-2.5">
+          {team && (
+            <TeamAvatar
+              photoUrl={team.photoUrl} logoUrl={team.logoUrl} abbrev={team.abbrev}
+              size={38} champion={team.isChampion} championYear={team.championYear}
+            />
+          )}
+          <div className="min-w-0">
+            <div className="display truncate text-[16px] leading-tight">
+              {team?.name ?? 'TBD'}
+            </div>
+            {team?.manager && (
+              <div className="truncate text-[11.5px] text-muted">{team.manager}</div>
+            )}
+          </div>
+        </div>
+
+        {card.playerName && (
+          <div className="flex items-center gap-2 rounded-md border border-border bg-surface-2/50 px-2.5 py-1.5">
             <PlayerHeadshot
               espnPlayerId={card.espnPlayerId}
               name={card.playerName}
-              size={38}
+              size={26}
             />
             <div className="min-w-0">
-              <div className="display truncate text-[16px] leading-tight">{card.playerName}</div>
-              <div className="flex items-center gap-1.5 text-[11.5px] text-muted">
-                <span className="font-mono uppercase tracking-wider text-dim">{card.playerMeta}</span>
-                {team && (
-                  <>
-                    <span className="text-dim" aria-hidden>·</span>
-                    <span className="truncate">{team.name}</span>
-                  </>
-                )}
+              <div className="truncate text-[13px] font-semibold leading-tight">
+                {card.playerName}
+              </div>
+              <div className="font-mono text-[9.5px] uppercase tracking-wider text-dim">
+                {card.playerMeta}
               </div>
             </div>
           </div>
-        ) : (
-          <div className="flex items-center gap-2.5">
-            {team && (
-              <TeamAvatar
-                photoUrl={team.photoUrl} logoUrl={team.logoUrl} abbrev={team.abbrev}
-                /* Matches PlayerHeadshot above — a manager and a player are
-                   equally the subject of their award, so neither outranks the
-                   other visually. */
-                size={38} champion={team.isChampion} championYear={team.championYear}
-              />
-            )}
-            <div className="min-w-0">
-              <div className="display truncate text-[15px] leading-tight">
-                {team?.name ?? 'TBD'}
-              </div>
-              {opponent ? (
-                <div className="truncate text-[11px] text-muted">vs {opponent.name}</div>
-              ) : team?.manager ? (
-                <div className="truncate text-[11px] text-muted">{team.manager}</div>
-              ) : null}
-            </div>
+        )}
+
+        {!card.playerName && opponent && (
+          <div className="flex items-center gap-2 rounded-md border border-border bg-surface-2/50 px-2.5 py-1.5">
+            <span className="font-mono text-[9.5px] uppercase tracking-wider text-dim">vs</span>
+            <span className="truncate text-[13px] font-semibold">{opponent.name}</span>
           </div>
         )}
 

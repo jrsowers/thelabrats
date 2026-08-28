@@ -28,13 +28,16 @@ export interface AwardMatchup {
 
 /** Maps the engine's internal types onto catalog keys. */
 export const AWARD_TYPE_TO_KEY: Record<string, string> = {
-  MANAGER_OF_THE_WEEK: 'manager_of_the_week',
   BAD_BEAT: 'bad_beat',
   HIGHWAY_ROBBERY: 'highway_robbery',
-  PHOTO_FINISH: 'photo_finish',
   PUBLIC_EXECUTION: 'public_execution',
-  SHOOTOUT: 'shootout',
   DUMPSTER_FIRE: 'dumpster_fire',
+  // MANAGER_OF_THE_WEEK is intentionally unmapped: The Mastermind now measures
+  // lineup optimality, not raw score, so the engine's highest-score result is
+  // no longer the right answer for it.
+  // PHOTO_FINISH and SHOOTOUT are computed but no longer surfaced — the awards
+  // were removed from the Studs list. Left in the engine because the Duds list
+  // is still being revised.
 }
 
 export type AwardType =

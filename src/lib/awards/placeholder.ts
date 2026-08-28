@@ -93,47 +93,6 @@ export function placeholderAward(
         supporting: [{ label: 'Projected', value: f1(proj) }, { label: 'Actual', value: f1(act) }],
       }
     },
-    stud_of_the_week: () => {
-      const pts = between(r, 31, 46)
-      return {
-        value: f1(pts),
-        headline: `${f1(pts)} points — the best single performance in the league.`,
-        supporting: [{ label: 'Position rank', value: 'WR1' }],
-      }
-    },
-    benchwarmer_mvp: () => {
-      const pts = between(r, 22, 34)
-      return {
-        value: f1(pts),
-        headline: `Scored ${f1(pts)} without ever leaving the bench.`,
-        supporting: [{ label: 'Slot', value: 'BE' }],
-      }
-    },
-    waiver_wire_hero: () => {
-      const pts = between(r, 19, 33)
-      return {
-        value: f1(pts),
-        headline: `Added on Wednesday, scored ${f1(pts)} on Sunday.`,
-        supporting: [{ label: 'Added', value: `Week ${week}` }],
-      }
-    },
-    one_man_army: () => {
-      const share = between(r, 32, 44)
-      const total = between(r, 96, 128)
-      return {
-        value: `${share.toFixed(0)}%`,
-        headline: `${share.toFixed(0)}% of the whole roster's output came from one player.`,
-        supporting: [{ label: 'Team total', value: f1(total) }],
-      }
-    },
-    david_slays_goliath: () => {
-      const deficit = between(r, 18, 34)
-      return {
-        value: `-${f1(deficit)}`,
-        headline: `Projected to lose by ${f1(deficit)}. Won anyway.`,
-        supporting: [{ label: 'Result', value: 'Win' }],
-      }
-    },
     bench_boss: () => {
       const left = between(r, 26, 44)
       return {
@@ -176,15 +135,31 @@ export function placeholderAward(
         supporting: [{ label: 'Projected', value: f1(proj) }, { label: 'Actual', value: f1(act) }],
       }
     },
-    // The score-based awards compute for real once games are final; these
-    // headlines only appear before week 1. They must not repeat the card's
-    // description, which now sits directly above them.
+    // Studs are manager awards; headlines name the player or matchup that
+    // earned it. They must not repeat the card's description, which sits
+    // directly above them.
     manager_of_the_week: () => {
-      const pts = between(r, 132, 168)
+      const left = between(r, 0.4, 3.8)
+      return {
+        value: f1(left),
+        headline: `Left just ${f1(left)} points on the bench — the tightest lineup in the league.`,
+        supporting: [{ label: 'Efficiency', value: `${between(r, 96, 99.6).toFixed(1)}%` }],
+      }
+    },
+    prime_specimen: () => {
+      const pts = between(r, 31, 46)
       return {
         value: f1(pts),
-        headline: `${f1(pts)} points — nobody else came within twenty.`,
-        supporting: [{ label: 'Opponent', value: f1(pts - between(r, 22, 40)) }],
+        headline: `Started him. He went for ${f1(pts)}.`,
+        supporting: [{ label: 'Slot', value: 'FLEX' }],
+      }
+    },
+    bench_bum: () => {
+      const pts = between(r, 22, 34)
+      return {
+        value: f1(pts),
+        headline: `Scored ${f1(pts)} without ever leaving the bench.`,
+        supporting: [{ label: 'Slot', value: 'BE' }],
       }
     },
     highway_robbery: () => {
@@ -193,22 +168,6 @@ export function placeholderAward(
         value: f1(pts),
         headline: `Won with ${f1(pts)}. Six teams scored more and lost.`,
         supporting: [{ label: 'Opponent', value: f1(pts - between(r, 1, 6)) }],
-      }
-    },
-    photo_finish: () => {
-      const margin = between(r, 0.2, 1.8)
-      return {
-        value: f1(margin),
-        headline: `Separated by ${f1(margin)} after four days of football.`,
-        supporting: [{ label: 'Final', value: `${f1(between(r, 108, 126))}` }],
-      }
-    },
-    shootout: () => {
-      const total = between(r, 268, 312)
-      return {
-        value: f1(total),
-        headline: `${f1(total)} points between them. Neither defence turned up.`,
-        supporting: [{ label: 'Final', value: `${f1(total / 2 + 8)}` }],
       }
     },
     bad_beat: () => {
@@ -255,10 +214,13 @@ export function placeholderAward(
   return {
     def,
     teamId,
-    opponentId: def.player ? null : opponentId,
-    playerName: def.player ? player?.name ?? null : null,
-    espnPlayerId: def.player ? player?.espnPlayerId ?? null : null,
-    playerMeta: def.player && player ? `${player.position} · ${player.nflTeam}` : null,
+    opponentId: def.evidence === 'MATCHUP' ? opponentId : null,
+    // A player is attached whenever the award is EVIDENCED by one, regardless
+    // of who receives it — Studs are won by managers but earned by players.
+    playerName: def.evidence === 'PLAYER' ? player?.name ?? null : null,
+    espnPlayerId: def.evidence === 'PLAYER' ? player?.espnPlayerId ?? null : null,
+    playerMeta: def.evidence === 'PLAYER' && player
+      ? `${player.position} · ${player.nflTeam}` : null,
     metricValue: built.value,
     headline: built.headline,
     supporting: built.supporting,

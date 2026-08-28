@@ -552,3 +552,20 @@ Adding the one-line definition under each title exposed a duplication: the
 generic placeholder fallback used `def.blurb` as its headline, so seven cards
 printed the same sentence twice. Each score-based award now has its own sample
 headline, and the fallback explicitly never reuses the blurb.
+
+## 2026-08-28 · Studs are manager awards; players are evidence, not recipients
+James reworked the Studs list to six awards, all won by a MANAGER. Where a
+player drives the result, the player renders beneath the manager as supporting
+evidence rather than as the award's subject.
+**New `evidence` field** ('PLAYER' | 'MATCHUP') is distinct from who receives an
+award — it says what is shown as the reason. That separation is what lets a
+manager win an award a player earned.
+**Removed entirely:** The Photo Finish, The Track Meet, The Giant Killer, The
+Lottery Ticket, One-Man Army. The Understudy became The Bench Bum, reframed
+from the player to the manager who benched him.
+**The Mastermind was redefined** from "highest score" to "most optimal lineup",
+so it no longer maps to the engine's highest-score result — it now needs the
+slot-aware optimizer. That drops the computable-today count for Studs from four
+to one (The Cat Burglar).
+PHOTO_FINISH and SHOOTOUT remain in the engine but are unmapped, pending the
+Duds revision.
