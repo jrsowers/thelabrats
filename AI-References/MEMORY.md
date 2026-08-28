@@ -23,11 +23,18 @@ sanitized `fixtures/` + leak checker, `AI-References/`, `.claude/settings.json`
 **Verification:** `npm test` (19 ✅) · `npm run typecheck` (✅) ·
 `npm run fixtures:check` (✅) · `npm run verify:rls` (10/10 ✅) · build ✅
 
-**Deployed:** production build Ready on Vercel. 21 env vars set across
+**Deployed:** LIVE at www.labratsfantasy.com. 21 env vars set across
 production/preview/development. Preview vars are scoped to the `development`
 branch because CLI 54.6.1 rejects the all-preview-branches form even with
 `--yes` (returns `action_required`/`git_branch_required` while echoing back the
 exact command it just refused).
+
+⚠️ **Framework preset gotcha:** the Vercel project was imported while the repo
+was empty, so detection set Framework Preset = "Other". Build logs looked
+perfectly healthy (Next.js built, route `ƒ /` listed) but Vercel served the
+static `public/` dir and ignored `.next` — every route 404'd. Pinned via
+`vercel.json` `{"framework": "nextjs"}`. A green build log is not evidence the
+site works.
 
 ---
 
@@ -74,15 +81,12 @@ Full rationale in `DECISIONS.md`.
 - Seed 2025 champion (Chenell Basilio) — blocked on first ingestion creating
   franchises; `champions.franchise_id` has nothing to reference yet.
 
-## Blocked on James — Vercel dashboard (CLI cannot do either)
+## LIVE
 
-1. **Attach the domain to the project.** Settings > Domains > add
-   `www.labratsfantasy.com` + apex. DNS already points at Vercel, but the
-   production deployment has NO aliases, so the hostname 404s.
-2. **Disable Deployment Protection.** Settings > Deployment Protection >
-   Vercel Authentication > Disabled. It is on by default and currently serves
-   a Vercel login page instead of the app — which contradicts the
-   no-gating requirement.
+**https://www.labratsfantasy.com** — HTTP 200, real league data, ungated.
+Apex, www, and `thelabrats-gray.vercel.app` all resolve.
+
+## Not blocked on anything
 
 ## Previously blocked
 
