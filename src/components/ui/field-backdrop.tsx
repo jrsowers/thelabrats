@@ -10,8 +10,15 @@
 /** 10-yard spacing, matching --field-major in globals.css. */
 const YARD_10 = 112
 
-/** A real field's numbers: up to the 50, then back down. Repeats to fill width. */
-const SEQUENCE = [10, 20, 30, 40, 50, 40, 30, 20, 10]
+/**
+ * Yard numbers as a triangle wave: up to the 50, back down, repeat.
+ *
+ * The endpoint is deliberately NOT repeated. A literal field reads
+ * 10-20-30-40-50-40-30-20-10, but tiling that nine-element run puts two 10s
+ * side by side at every seam. Dropping the trailing 10 makes the wrap land on
+ * 20-10-20 — a continuous zigzag with no duplicate.
+ */
+const SEQUENCE = [10, 20, 30, 40, 50, 40, 30, 20]
 
 export function FieldBackdrop({ count = 18 }: { count?: number }) {
   return (

@@ -102,9 +102,10 @@ export function Skeleton({ className = '' }: { className?: string }) {
 }
 
 /* ---------- Bracket icon ----------
-   Mirrors ESPN's playoff-bracket mark: two seeds on the left joined by a
-   bracket into one on the right. Lucide has no close equivalent, so it is
-   drawn here rather than approximated with a merge or network glyph. */
+   A three-round playoff bracket: four seeds into two, two into one. Drawn
+   rather than borrowed — Lucide has no equivalent, and a merge or network
+   glyph reads as the wrong concept. Used everywhere "playoffs" is meant, so
+   the nav and the scoreboard shortcut are the same mark. */
 export function BracketIcon({
   size = 16,
   className,
@@ -117,16 +118,22 @@ export function BracketIcon({
       viewBox="0 0 24 24"
       fill="none"
       stroke="currentColor"
-      strokeWidth={2}
+      strokeWidth={1.9}
       strokeLinecap="round"
       strokeLinejoin="round"
       aria-hidden
     >
-      <rect x="2" y="4.25" width="6" height="3.5" rx="1" fill="currentColor" stroke="none" />
-      <rect x="2" y="16.25" width="6" height="3.5" rx="1" fill="currentColor" stroke="none" />
-      <rect x="15" y="10.25" width="7" height="3.5" rx="1" fill="currentColor" stroke="none" />
-      <path d="M8 6H11V18H8" />
-      <path d="M11 12H15" />
+      {/* Round 1: four seeds */}
+      <path d="M2 3.5h4M2 9.5h4M2 14.5h4M2 20.5h4" />
+      {/* Round 1 -> 2: pair them */}
+      <path d="M6 3.5v6M6 14.5v6" />
+      {/* Round 2: two semifinals */}
+      <path d="M6 6.5h5M6 17.5h5" />
+      {/* Round 2 -> 3 */}
+      <path d="M11 6.5v11" />
+      {/* Final */}
+      <path d="M11 12h5" />
+      <rect x="16" y="10.4" width="6" height="3.2" rx="1" fill="currentColor" stroke="none" />
     </svg>
   )
 }

@@ -7,7 +7,8 @@ import { AppShell } from '@/components/navigation/app-shell'
 import { MatchupRow } from '@/components/scoreboard/matchup-row'
 import { FieldBackdrop } from '@/components/ui/field-backdrop'
 import { DraftCountdown } from '@/components/ui/draft-countdown'
-import { Eyebrow, EmptyState, LabSeal, BracketIcon } from '@/components/ui/primitives'
+import { Eyebrow, EmptyState, LabSeal, BracketIcon, Tag } from '@/components/ui/primitives'
+import { applyLivePreview } from '@/lib/league/preview'
 
 export const dynamic = 'force-dynamic'
 
@@ -23,7 +24,7 @@ function fmtDate(iso: string | null, opts: Intl.DateTimeFormatOptions = {}) {
 
 export default async function Page({
   searchParams,
-}: { searchParams: Promise<{ week?: string }> }) {
+}: { searchParams: Promise<{ week?: string; preview?: string }> }) {
   const overview = await getLeagueOverview()
 
   if (!overview) {
@@ -54,10 +55,15 @@ export default async function Page({
 
 
   const records = await getTeamRecords(overview.seasonId)
-  const [matchups, lastSync] = await Promise.all([
+  const [realMatchups, lastSync] = await Promise.all([
     getMatchupsForWeek(week, records),
     getLastSync(),
   ])
+
+  // ?preview=live simulates a Sunday in progress (§16). Decorates rows on the
+  // way to the view only — nothing is written, nothing is overwritten.
+  const isPreview = params.preview === 'live'
+  const matchups = isPreview ? applyLivePreview(realMatchups, week) : realMatchups
 
   return (
     <AppShell leagueName={overview.leagueName} season={overview.season}>
@@ -81,8 +87,27 @@ export default async function Page({
         </div>
       </header>
 
+      {/* ---- Preview banner ----
+          Simulated data that looks real is worse than no data, so this is
+          unmissable and links back out. */}
+      {isPreview && (
+        <div className="mb-6 flex flex-wrap items-center gap-x-3 gap-y-2 rounded-lg border border-warn/40 bg-warn-soft px-4 py-3">
+          <Tag tone="warn">Preview</Tag>
+          <p className="text-[13px] text-muted">
+            Simulated scores, so you can see a live Sunday before one happens. Nothing
+            here is real and nothing was saved.
+          </p>
+          <Link
+            href={`/?week=${week}`}
+            className="ml-auto font-mono text-[10.5px] uppercase tracking-wider text-brand hover:underline"
+          >
+            Exit preview →
+          </Link>
+        </div>
+      )}
+
       {/* ---- Draft countdown ---- */}
-      {!overview.draftCompleted && overview.draftScheduledAt && (
+      {!isPreview && !overview.draftCompleted && overview.draftScheduledAt && (
         <section className="mb-8 overflow-hidden rounded-lg border border-brand/30 bg-brand-soft">
           <div className="flex flex-wrap items-center justify-between gap-x-8 gap-y-5 px-5 py-4">
             <div className="min-w-0">
@@ -103,7 +128,7 @@ export default async function Page({
           <div className="flex items-center justify-between gap-4 border-b border-border bg-surface-2 px-3 py-2.5 sm:px-4">
             <nav className="flex items-center gap-1 sm:gap-2" aria-label="Week selection">
               <Link
-                href={`/?week=${Math.max(1, week - 1)}`}
+                href={`/?week=${Math.max(1, week - 1)}${isPreview ? '&preview=live' : ''}`}
                 className={`flex items-center gap-1.5 rounded px-1.5 py-1 font-mono text-[10.5px] uppercase tracking-wider sm:px-2 ${
                   week === 1
                     ? 'pointer-events-none text-dim/40'
@@ -118,7 +143,7 @@ export default async function Page({
               <h2 className="display px-1 text-lg tnum sm:px-2">Week {week}</h2>
 
               <Link
-                href={`/?week=${Math.min(overview.regularSeasonWeeks, week + 1)}`}
+                href={`/?week=${Math.min(overview.regularSeasonWeeks, week + 1)}${isPreview ? '&preview=live' : ''}`}
                 className={`flex items-center gap-1.5 rounded px-1.5 py-1 font-mono text-[10.5px] uppercase tracking-wider sm:px-2 ${
                   week === overview.regularSeasonWeeks
                     ? 'pointer-events-none text-dim/40'

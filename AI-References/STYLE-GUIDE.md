@@ -138,6 +138,9 @@ roughly one full 100-yard field.
   title always wins. Text beats texture.
 - Judge all of this at **1:1 pixel scale**. Downscaled screenshots hid the merged
   hash marks entirely.
+- The number sequence is a triangle wave (`10 20 30 40 50 40 30 20`) with the
+  endpoint deliberately dropped. A literal field run ends and begins on 10, so
+  tiling it put two 10s side by side at every seam.
 
 Structure, not decoration. Headers only; never behind data.
 
@@ -148,10 +151,15 @@ amber champion, red eliminated. Cheap, scannable, works in a dense list.
 flask, a wordmark ring, `THE LAB RATS · FANTASY FOOTBALL · EST 2025`. Appears in the
 rail and on empty states. Draws the two brands into one mark.
 
-**Bracket icon** — a hand-drawn mark mirroring ESPN's playoff bracket: two seeds
-on the left joined into one on the right. Used wherever the playoff picture is
-referenced. Lucide has no close equivalent, and a merge or network glyph reads as
-the wrong concept entirely.
+**Bracket icon** — a hand-drawn three-round bracket: four seeds into two, two
+into one. Used wherever the playoff picture is referenced, in the nav and on the
+scoreboard alike — one concept, one mark. Lucide has no close equivalent, and a
+merge or network glyph reads as the wrong concept entirely.
+
+**The logo** — the landscape lockup sits at the top of the rail and links home.
+The square badge is the favicon (`src/app/icon.png`, `apple-icon.png`). Both were
+cut from white-background masters by `npm run logo:transparent`, which flood-fills
+from the border so the artwork's own white survives.
 
 **Member photos** — every matchup row leads with the league member's own face at
 36px, circular. Fallback order: member photo → ESPN team logo (rounded square, so

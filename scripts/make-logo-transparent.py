@@ -2,7 +2,7 @@
 """
 Turn the league logo's solid white background transparent.
 
-    python3 scripts/make-logo-transparent.py logos/<file>.png
+    python3 scripts/make-logo-transparent.py logos/<file>.png <out-stem> [max-px]
 
 WHY NOT "make every white pixel transparent":
 The logo's own artwork is full of white — the "LAB RATS" lettering, the lab
@@ -19,6 +19,7 @@ background remover here. Those are for photographic subjects, and they tend to
 feather hard vector edges and hallucinate detail around thin shapes like the
 rat's tail and whiskers.
 """
+import os
 import sys
 from collections import deque
 from PIL import Image
@@ -27,7 +28,7 @@ TOLERANCE = 26        # how far from pure white still counts as background
 FEATHER_START = 200   # below this brightness, keep fully opaque
 
 
-def main(src: str) -> None:
+def main(src: str, stem: str, max_px: int) -> None:
     img = Image.open(src).convert("RGBA")
     w, h = img.size
     px = img.load()
@@ -76,23 +77,19 @@ def main(src: str) -> None:
     if bbox:
         img = img.crop(bbox)
 
-    out_full = "public/brand/lab-rats-logo.png"
-    img.save(out_full)
+    out = f"public/brand/{stem}.png"
+    small = img.copy()
+    small.thumbnail((max_px, max_px), Image.LANCZOS)
+    small.save(out)
 
-    # Rail-sized copy at 2x for retina.
-    rail = img.copy()
-    rail.thumbnail((440, 440), Image.LANCZOS)
-    rail.save("public/brand/lab-rats-logo-rail.png")
-
-    print(f"  source      {src}  ({w}x{h})")
-    print(f"  cleared     {cleared:,} background pixels")
-    print(f"  cropped to  {img.size[0]}x{img.size[1]}")
-    print(f"  wrote       {out_full}")
-    print(f"  wrote       public/brand/lab-rats-logo-rail.png ({rail.size[0]}x{rail.size[1]})")
+    print(f"  source   {os.path.basename(src)}  ({w}x{h})")
+    print(f"  cleared  {cleared:,} background pixels")
+    print(f"  trimmed  {img.size[0]}x{img.size[1]}")
+    print(f"  wrote    {out}  ({small.size[0]}x{small.size[1]}, {os.path.getsize(out)/1024:.0f} KB)")
 
 
 if __name__ == "__main__":
-    if len(sys.argv) != 2:
+    if len(sys.argv) < 3:
         print(__doc__)
         sys.exit(1)
-    main(sys.argv[1])
+    main(sys.argv[1], sys.argv[2], int(sys.argv[3]) if len(sys.argv) > 3 else 440)

@@ -219,3 +219,23 @@ crunchy rim. Deterministic, exact, and free.
 **Fallback:** `AppShell` checks on disk for the generated file and passes it to
 the rail, so the seal-and-wordmark fallback shows until the logo exists — no
 broken image, and no code change needed when it lands.
+
+## 2026-08-28 · Logo sources committed; member photo sources not
+**Logos** are brand masters with no personal data, and James is not keeping his
+own copies — 2.3MB is a fine price for not losing them. **Member photos** stay
+gitignored: the repo is public, the optimized 256px versions are already
+published on the site, and full-resolution photographs of twelve real people add
+exposure without adding capability.
+
+## 2026-08-28 · Live preview mode (?preview=live)
+**Why:** James wanted to see the scoreboard populated before any game exists —
+which is exactly what §16 asks demo fixtures to provide.
+**Two rules that make it safe:** it never touches the database (rows are
+decorated on the way to the view), and it is deterministic, seeded from matchup
+id and week, so the page does not reshuffle every render and screenshots are
+reproducible.
+**Always banner it.** Simulated data that looks real is worse than no data. The
+banner is unmissable, the draft countdown hides (preseason furniture), and
+preview persists across week navigation so you can browse in it.
+**Shape:** two games final, three live, one scheduled — a believable mid-Sunday,
+chosen because it exercises every visual state at once.
