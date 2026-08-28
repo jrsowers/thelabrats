@@ -103,3 +103,15 @@ league ID. Nothing to sync.
 **How:** `champions` table keyed to `franchise_id`, seeded by migration. Marked
 editorial (§13) so no sync ever overwrites it. Keyed to franchise, not team, so
 it survives renames.
+
+## 2026-08-28 · Framework preset pinned in vercel.json, not the dashboard
+**Why:** The Vercel project was created by importing the repo while it was
+EMPTY, so detection found nothing and set Framework Preset = "Other". That
+preset runs `npm run build` (so build logs look perfectly healthy, route `ƒ /`
+and all) but then serves the static `public/` directory and ignores `.next`
+entirely — every route 404s with `x-vercel-error: NOT_FOUND`.
+**How:** `vercel.json` with `"framework": "nextjs"`. In-repo and reviewable, so
+it cannot silently drift the way a dashboard setting can, and a future re-import
+gets it right automatically.
+**Lesson:** a green build log is not evidence the site works. Verify the
+deployed URL.
