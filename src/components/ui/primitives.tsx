@@ -255,7 +255,7 @@ export function TeamAvatar({
           title={label}
           aria-label={label}
           role="img"
-          className="crown-badge absolute -right-1 -top-1.5 flex items-center justify-center rounded-full shadow-sm ring-2 ring-surface"
+          className="crown-badge absolute -left-1 -top-1.5 flex items-center justify-center rounded-full shadow-sm ring-2 ring-surface"
           style={{ width: size * 0.5, height: size * 0.5 }}
         >
           {/* Crown, drawn small enough to stay legible at 16px. */}

@@ -39,7 +39,7 @@ export default async function RecordsPage() {
         <FieldBackdrop />
         <div className="relative">
           <Eyebrow>Record Books</Eyebrow>
-          <h1 className="display mt-1.5 text-[40px] sm:text-[52px]">The Permanent Record</h1>
+          <h1 className="display mt-1.5 text-[40px] sm:text-[52px]">There&rsquo;s No Denying It&hellip;</h1>
         </div>
       </header>
 
@@ -50,26 +50,6 @@ export default async function RecordsPage() {
         </div>
 
         <div className="grid gap-4 lg:grid-cols-2">
-          {/* This season, undecided. */}
-          <article
-            className="state-bar flex flex-col justify-center rounded-lg border border-dashed border-border-strong bg-surface-2/40 px-5 py-6"
-            style={{ '--state': 'var(--border-strong)' } as React.CSSProperties}
-          >
-            <Eyebrow>{overview.season} Season</Eyebrow>
-            <div className="mt-3 flex items-center gap-4">
-              <MysteryAvatar size={56} />
-              <div>
-                <div className="display text-[30px] leading-none text-muted">
-                  Who could it be?
-                </div>
-                <p className="mt-1.5 text-[13px] text-dim">
-                  Thirteen weeks, six playoff spots, one trophy. Nobody has scored a
-                  point yet.
-                </p>
-              </div>
-            </div>
-          </article>
-
           {/* Completed seasons. */}
           {completed.map((season) => {
             const c = season.champion!
@@ -80,13 +60,8 @@ export default async function RecordsPage() {
                 className="state-bar overflow-hidden rounded-lg border border-border bg-surface"
                 style={{ '--state': 'var(--gold)' } as React.CSSProperties}
               >
-                <div className="flex items-center justify-between gap-3 border-b border-border px-5 py-2.5">
+                <div className="border-b border-border px-5 py-2.5">
                   <Eyebrow>{season.year} Season</Eyebrow>
-                  {season.platform && (
-                    <span className="font-mono text-[9.5px] uppercase tracking-wider text-dim">
-                      Played on {season.platform}
-                    </span>
-                  )}
                 </div>
 
                 <div className="px-5 py-4">
@@ -113,7 +88,7 @@ export default async function RecordsPage() {
                         <span className="display text-[19px] tnum">
                           {f2(c.titleGame.scoreFor)}
                         </span>
-                        <span className="font-mono text-[11px] text-dim">def.</span>
+                        <span className="font-mono text-[11px] text-dim">vs.</span>
                         <span className="display text-[19px] tnum text-muted">
                           {f2(c.titleGame.scoreAgainst)}
                         </span>
@@ -144,6 +119,25 @@ export default async function RecordsPage() {
               </article>
             )
           })}
+          {/* This season, undecided. */}
+          <article
+            className="state-bar flex flex-col justify-center rounded-lg border border-dashed border-border-strong bg-surface-2/40 px-5 py-6"
+            style={{ '--state': 'var(--border-strong)' } as React.CSSProperties}
+          >
+            <Eyebrow>{overview.season} Season</Eyebrow>
+            <div className="mt-3 flex items-center gap-4">
+              <MysteryAvatar size={56} />
+              <div>
+                <div className="display text-[30px] leading-none text-muted">
+                  Who could it be?
+                </div>
+                <p className="mt-1.5 text-[13px] text-dim">
+                  12 teams. 6 playoff spots. 1 championship trophy.
+                </p>
+              </div>
+            </div>
+          </article>
+
         </div>
       </section>
 
