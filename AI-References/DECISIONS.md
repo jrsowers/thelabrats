@@ -417,3 +417,34 @@ announces it between the sixth and seventh team where it carries meaning.
 table divides nothing.
 **Legend entry removed:** the line now names itself, and a legend explaining a
 labelled element is noise.
+
+## 2026-08-28 · Player pool is NOT blocked by the draft
+`kona_player_info` returns ~1,027 players with names, positions, pro teams and
+eligible slots BEFORE the draft, given an `x-fantasy-filter` header. I had this
+filed as blocked until rosters existed, which was wrong — it blocked the
+transaction log's player names for no reason.
+**Lesson:** "blocked" should be tested, not assumed. This one cost a week of the
+Transaction Log looking less finished than it needed to.
+
+## 2026-08-28 · SUPERFLEX CONFIRMED
+The player pool's `eligibleSlots` settles the long-standing open question:
+slot 7 (OP) accepts QB/RB/WR/TE; slot 23 (FLEX) accepts only RB/WR/TE.
+**This is a superflex league.** The lineup optimizer was blocked on this fact.
+It also changes positional value — a second startable QB outranks a third WR,
+which should inform award weighting when Stud of the Week is built.
+
+## 2026-08-28 · Snapshots ship before the features that consume them
+ESPN exposes only the current state; it has no memory of a past score. Any week
+that passes without snapshot capture is unrecoverable. So `captureSnapshots`
+shipped ahead of comeback/blown-lead/win-probability features that will not
+exist for months — the alternative is those features launching with no history
+to draw on.
+**Thresholds:** 3-point move or 10-minute checkpoint for matchups; once per week,
+only when every game in it is final, for standings. Continuous capture would be
+~600 rows per matchup per Sunday for no added insight (§14.7).
+
+## 2026-08-28 · Biggest remaining gap is live auto-refresh
+The scoreboard is labelled live and the data behind it now refreshes every
+minute during games, but the page does not update without a manual reload. That
+is the largest gap between what the app is and what it appears to promise on a
+Sunday. Needs Supabase Realtime or a 30s refetch (§36) before week 1.

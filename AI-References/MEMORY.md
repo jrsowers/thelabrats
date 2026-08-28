@@ -147,9 +147,9 @@ Apex, www, and `thelabrats-gray.vercel.app` all resolve.
 | 3 | Live Scoreboard | ✅ (live polling still to come) |
 | 4 | Standings — H2H tiebreak, movement, clinching | ✅ |
 | 5 | Playoff Picture — bracket + bubble | ✅ |
-| 6 | Transactions | 🔨 UI done; parser unverified, player names pending |
-| 7 | Studs & Duds | ⬜ |
-| 8 | Record Books | ⬜ |
+| 6 | Transactions | 🔨 UI + filters done; parser unverified until a real move |
+| 7 | Studs & Duds | 🔨 7 of 14 awards; player awards need week 1 |
+| 8 | Record Books | ⬜ accumulates with the season |
 
 ---
 
