@@ -26,7 +26,7 @@ const SECTION_ACCENT: Record<AwardSection, string> = {
 function CardHeader({ card }: { card: AwardCard }) {
   return (
     <div className="border-b border-border px-4 py-3">
-      <h3 className="display text-[21px] leading-[1.05]">{card.def.name}</h3>
+      <h3 className="display text-[26px] leading-[1.02]">{card.def.name}</h3>
       <p className="mt-1 text-[12px] leading-snug text-muted">{card.def.blurb}</p>
     </div>
   )
