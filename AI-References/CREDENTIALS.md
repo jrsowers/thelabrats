@@ -67,6 +67,21 @@ Behind a provider interface (§5) — swapping providers must not touch app code
 
 ---
 
+## Vercel
+
+| Variable | Where it goes | Status |
+| --- | --- | --- |
+| `VERCEL_TOKEN` | `.env.local` only — ⚠️ **account-wide** | ✅ |
+
+Used by the CLI via `--token "$VERCEL_TOKEN"` for env vars, logs, and rollbacks.
+Not needed to ship code — `main` auto-deploys via the Git integration.
+
+⚠️ **Account-wide.** Reaches every project on `jamesrsowers-9743s-projects`
+(currently `thelabrats` and `hiddenhands`), not just this one. Revoke at
+Dashboard > Account Settings > Tokens.
+
+---
+
 ## App-generated
 
 | Variable | Notes | Status |
