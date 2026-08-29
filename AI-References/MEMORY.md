@@ -4,7 +4,7 @@ Running state of the build. **Update this at the end of every working session.**
 A future session should be able to read this file and `SOUL.md` and resume
 without re-reading the conversation.
 
-**Last updated:** 2026-08-28 (session 2)
+**Last updated:** 2026-08-29 (session 3)
 
 ---
 
@@ -20,7 +20,24 @@ sanitized `fixtures/` + leak checker, `AI-References/`, `.claude/settings.json`
 (Supabase MCP denied), Supabase CLI linked to `fgtsewqcluffmcehqvvx`.
 2 local commits on `main`.
 
-**Verification:** `npm test` (19 ✅) · `npm run typecheck` (✅) ·
+**Session 3 — deploy pipeline verified end to end.** Edited homepage copy,
+pushed to `main`, watched the Vercel build go Ready in 20s, and confirmed the
+new string in the *rendered HTML* at www.labratsfantasy.com. `/standings`,
+`/awards`, `/records`, `/playoffs` all 200. The full loop works:
+edit → test → push → auto-deploy → live.
+
+**Tooling note:** neither `vercel` nor `supabase` is installed globally, and
+`npm config prefix` is `/usr/local` (not writable without sudo). Use
+`npx --yes vercel@latest` / `npx --yes supabase@latest` — both work fine.
+`VERCEL_TOKEN` is now in `.env.local`; pass it as `--token "$VERCEL_TOKEN"`.
+
+⚠️ **The repo lives on an iCloud-synced Desktop.** This makes `tsc` badly
+I/O-bound — ~41s wall at 7% CPU, and it has stalled outright at 0% CPU for
+minutes while iCloud syncs. `npm test` is unaffected (~180ms). If a command
+seems hung, suspect iCloud before suspecting the code. Moving the repo to
+`~/dev/thelabrats` would fix it (offered; James declined for now).
+
+**Verification:** `npm test` (115 ✅, 8 files) · `npm run typecheck` (✅) ·
 `npm run fixtures:check` (✅) · `npm run verify:rls` (10/10 ✅) · build ✅
 
 **Deployed:** LIVE at www.labratsfantasy.com. 21 env vars set across
