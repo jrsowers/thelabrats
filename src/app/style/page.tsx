@@ -3,6 +3,7 @@ import {
   Eyebrow, SectionHeader, Tag, LiveBadge, StatTile, Card, EmptyState, Skeleton,
   LabSeal, TeamAvatar, BracketIcon,
 } from '@/components/ui/primitives'
+import { SyncStatus } from '@/components/ui/sync-status'
 
 export const metadata: Metadata = { title: 'Style Guide' }
 
@@ -203,6 +204,23 @@ export default function StyleGuide() {
           </div>
           <p className="mt-2 text-[11px] text-dim">
             State is always carried by a bar <em>and</em> a text label — never color alone.
+          </p>
+        </Row>
+
+        <Row label="Sync status">
+          <div className="grid gap-3 sm:grid-cols-2">
+            <Card>
+              <SyncStatus finishedAt="2026-08-29T14:50:00Z" autoRefresh />
+              <p className="mt-2 text-[11px] text-dim">Live week — the dot earns its place.</p>
+            </Card>
+            <Card>
+              <SyncStatus finishedAt="2026-08-29T14:50:00Z" />
+              <p className="mt-2 text-[11px] text-dim">Nothing can change — no dot, no claim.</p>
+            </Card>
+          </div>
+          <p className="mt-2 text-[11px] text-dim">
+            One block, every page header. The timestamp describes a single league-wide
+            sync, so two pages formatting it differently would imply two different syncs.
           </p>
         </Row>
 

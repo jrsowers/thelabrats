@@ -1,10 +1,14 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
-import { getLeagueOverview, getSeasonTeams, getReigningChampion, type StandingsTeam } from '@/lib/league/queries'
+import {
+  getLeagueOverview, getSeasonTeams, getReigningChampion, getLastSync, hasActiveGames,
+  type StandingsTeam,
+} from '@/lib/league/queries'
 import { simulateTransactions, type PreviewTxn } from '@/lib/league/preview'
 import { AppShell } from '@/components/navigation/app-shell'
 import { FieldBackdrop } from '@/components/ui/field-backdrop'
 import { Eyebrow, TeamAvatar, Tag, EmptyState } from '@/components/ui/primitives'
+import { SyncStatus } from '@/components/ui/sync-status'
 
 export const dynamic = 'force-dynamic'
 export const metadata: Metadata = { title: 'Transaction Log' }
@@ -115,6 +119,10 @@ export default async function TransactionsPage({
 
   const champion = await getReigningChampion()
   const teams = await getSeasonTeams(overview.seasonId, champion)
+  const [lastSync, gamesActive] = await Promise.all([
+    getLastSync(),
+    hasActiveGames(overview.currentWeek),
+  ])
   const byId = new Map(teams.map((t) => [t.seasonTeamId, t]))
 
   const previewWeek = Math.min(Math.max(Number(params.week) || 6, 1), overview.regularSeasonWeeks)
@@ -151,9 +159,12 @@ export default async function TransactionsPage({
     <AppShell leagueName={overview.leagueName}>
       <header className="relative -mx-4 mb-7 overflow-hidden border-b border-border px-4 pb-6 sm:-mx-6 sm:px-6">
         <FieldBackdrop />
-        <div className="relative">
-          <Eyebrow>Transaction Log</Eyebrow>
-          <h1 className="display mt-1.5 text-[40px] sm:text-[52px]">Who&rsquo;s Makin&rsquo; Moves?</h1>
+        <div className="relative flex flex-wrap items-end justify-between gap-x-6 gap-y-3">
+          <div>
+            <Eyebrow>Transaction Log</Eyebrow>
+            <h1 className="display mt-1.5 text-[40px] sm:text-[52px]">Who&rsquo;s Makin&rsquo; Moves?</h1>
+          </div>
+          <SyncStatus finishedAt={lastSync?.finished_at} autoRefresh={!isPreview && gamesActive} />
         </div>
       </header>
 

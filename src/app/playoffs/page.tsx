@@ -2,8 +2,9 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import {
   getLeagueOverview, getSeasonTeams, getSeasonResults, getReigningChampion, getLastSync,
+  hasActiveGames,
 } from '@/lib/league/queries'
-import { fmtStandingsUpdate } from '@/lib/format'
+import { SyncStatus } from '@/components/ui/sync-status'
 import {
   computeStandings, computePlayoffStatus, latestCompletedWeek,
 } from '@/lib/standings/compute'
@@ -27,10 +28,11 @@ export default async function PlayoffsPage({
   const isPreview = params.preview === 'live'
 
   const champion = await getReigningChampion()
-  const [teams, rawResults, lastSync] = await Promise.all([
+  const [teams, rawResults, lastSync, gamesActive] = await Promise.all([
     getSeasonTeams(overview.seasonId, champion),
     getSeasonResults(overview.seasonId),
     getLastSync(),
+    hasActiveGames(overview.currentWeek),
   ])
 
   const previewWeek = Math.min(
@@ -68,6 +70,7 @@ export default async function PlayoffsPage({
               Who&rsquo;s In? Who&rsquo;s Out?
             </h1>
           </div>
+          <SyncStatus finishedAt={lastSync?.finished_at} autoRefresh={!isPreview && gamesActive} />
         </div>
       </header>
 
@@ -172,11 +175,6 @@ export default async function PlayoffsPage({
             })}
           </ul>
         </div>
-
-        <p className="mt-3 font-mono text-[10.5px] text-dim">
-          <span className="font-bold text-muted">Last projection update:</span>{' '}
-          {fmtStandingsUpdate(lastSync?.finished_at ?? null) ?? 'never'}
-        </p>
       </section>
     </AppShell>
   )

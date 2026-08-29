@@ -8,7 +8,7 @@ import { AppShell } from '@/components/navigation/app-shell'
 import { MatchupRow } from '@/components/scoreboard/matchup-row'
 import { FieldBackdrop } from '@/components/ui/field-backdrop'
 import { DraftCountdown } from '@/components/ui/draft-countdown'
-import { LiveRefresh } from '@/components/ui/live-refresh'
+import { SyncStatus } from '@/components/ui/sync-status'
 import { Eyebrow, EmptyState, LabSeal, BracketIcon, Tag } from '@/components/ui/primitives'
 import { applyLivePreview } from '@/lib/league/preview'
 
@@ -89,15 +89,7 @@ export default async function Page({
               {overview.season} season · {overview.teamCount} Contenders · 1 Champion
             </p>
           </div>
-          <div className="flex flex-col items-start gap-1 sm:items-end">
-            {lastSync?.finished_at && (
-              <p className="font-mono text-[10.5px] text-dim tnum">
-                <span className="font-bold text-muted">Last data sync:</span>{' '}
-                {fmtDate(lastSync.finished_at)}
-              </p>
-            )}
-            <LiveRefresh active={shouldAutoRefresh} />
-          </div>
+          <SyncStatus finishedAt={lastSync?.finished_at} autoRefresh={shouldAutoRefresh} />
         </div>
       </header>
 

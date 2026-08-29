@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 import {
   getLeagueOverview, getSeasonTeams, getSeasonResults, getReigningChampion,
-  getPlayerSample, type StandingsTeam,
+  getPlayerSample, getLastSync, hasActiveGames, type StandingsTeam,
 } from '@/lib/league/queries'
 import { simulateSeason } from '@/lib/league/preview'
 import { buildAwardCards } from '@/lib/awards/build'
@@ -14,6 +14,7 @@ import { FieldBackdrop } from '@/components/ui/field-backdrop'
 import { WeekSelect } from '@/components/ui/week-select'
 import { Eyebrow, TeamAvatar, Tag } from '@/components/ui/primitives'
 import { AwardGrid } from '@/components/awards/award-grid'
+import { SyncStatus } from '@/components/ui/sync-status'
 
 export const dynamic = 'force-dynamic'
 export const metadata: Metadata = { title: 'Studs & Duds' }
@@ -123,10 +124,12 @@ export default async function AwardsPage({
   )
 
   const champion = await getReigningChampion()
-  const [teams, rawResults, players] = await Promise.all([
+  const [teams, rawResults, players, lastSync, gamesActive] = await Promise.all([
     getSeasonTeams(overview.seasonId, champion),
     getSeasonResults(overview.seasonId),
     getPlayerSample(150),
+    getLastSync(),
+    hasActiveGames(overview.currentWeek),
   ])
   const byId = new Map(teams.map((t) => [t.seasonTeamId, t]))
 
@@ -174,13 +177,16 @@ export default async function AwardsPage({
               Best &amp; Worst Performers
             </h1>
           </div>
-          <WeekSelect
-            week={week}
-            weeks={overview.regularSeasonWeeks}
-            currentWeek={overview.currentWeek}
-            basePath="/awards"
-            extraParams={isPreview ? { preview: 'live' } : {}}
-          />
+          <div className="flex flex-col items-start gap-2 sm:items-end">
+            <WeekSelect
+              week={week}
+              weeks={overview.regularSeasonWeeks}
+              currentWeek={overview.currentWeek}
+              basePath="/awards"
+              extraParams={isPreview ? { preview: 'live' } : {}}
+            />
+            <SyncStatus finishedAt={lastSync?.finished_at} autoRefresh={!isPreview && gamesActive} />
+          </div>
         </div>
       </header>
 

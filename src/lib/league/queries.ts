@@ -368,6 +368,25 @@ export async function getPlayerSample(limit = 120) {
   }))
 }
 
+/**
+ * Is there anything in this week that can still move the numbers?
+ *
+ * The scoreboard derives this from matchups it already loaded; every other
+ * page would have to load the full matchup graph just to answer it, so this
+ * asks the cheap question directly. Drives the auto-refresh indicator — the
+ * live dot must never claim a page is updating when nothing can change.
+ */
+export async function hasActiveGames(week: number): Promise<boolean> {
+  const db = createPublicClient()
+  const { data } = await db
+    .from('matchups')
+    .select('status')
+    .eq('matchup_period', week)
+    .in('status', ['LIVE', 'SCHEDULED'])
+    .limit(1)
+  return (data?.length ?? 0) > 0
+}
+
 export async function getLastSync() {
   const db = createPublicClient()
   const { data } = await db

@@ -3,6 +3,7 @@ import { Fragment } from 'react'
 import Link from 'next/link'
 import {
   getLeagueOverview, getSeasonTeams, getSeasonResults, getReigningChampion, getLastSync,
+  hasActiveGames,
 } from '@/lib/league/queries'
 import {
   computeStandings, computeMovement, latestCompletedWeek, computePlayoffStatus,
@@ -11,7 +12,7 @@ import { simulateSeason } from '@/lib/league/preview'
 import { AppShell } from '@/components/navigation/app-shell'
 import { FieldBackdrop } from '@/components/ui/field-backdrop'
 import { Eyebrow, TeamAvatar, Tag, EmptyState, LockIcon } from '@/components/ui/primitives'
-import { fmtStandingsUpdate } from '@/lib/format'
+import { SyncStatus } from '@/components/ui/sync-status'
 
 export const dynamic = 'force-dynamic'
 export const metadata: Metadata = { title: 'League Standings' }
@@ -45,10 +46,11 @@ export default async function StandingsPage({
   const isPreview = params.preview === 'live'
 
   const champion = await getReigningChampion()
-  const [teams, rawResults, lastSync] = await Promise.all([
+  const [teams, rawResults, lastSync, gamesActive] = await Promise.all([
     getSeasonTeams(overview.seasonId, champion),
     getSeasonResults(overview.seasonId),
     getLastSync(),
+    hasActiveGames(overview.currentWeek),
   ])
 
   // Preview simulates the season to a given week so every state can be seen:
@@ -84,6 +86,7 @@ export default async function StandingsPage({
             <Eyebrow>League Standings{hasPlayed ? ` · Through Week ${throughWeek}` : ''}</Eyebrow>
             <h1 className="display mt-1.5 text-[40px] sm:text-[52px]">The Power Ranking</h1>
           </div>
+          <SyncStatus finishedAt={lastSync?.finished_at} autoRefresh={!isPreview && gamesActive} />
         </div>
       </header>
 
@@ -256,11 +259,7 @@ export default async function StandingsPage({
         )}
       </div>
 
-      <div className="mt-3 flex flex-wrap items-center justify-between gap-x-6 gap-y-2">
-        <p className="font-mono text-[10.5px] text-dim">
-          <span className="font-bold text-muted">Last standings update:</span>{' '}
-          {fmtStandingsUpdate(lastSync?.finished_at ?? null) ?? 'never'}
-        </p>
+      <div className="mt-3 flex flex-wrap items-center justify-end gap-x-6 gap-y-2">
         <dl className="flex flex-wrap items-center gap-x-5 gap-y-1.5 font-mono text-[10.5px] text-dim">
           <div className="flex items-center gap-1.5">
             <dt className="text-brand" aria-hidden><LockIcon size={12} /></dt>
