@@ -17,15 +17,22 @@ export interface GridItem {
  * reveal behaviour is client-side.
  */
 export function AwardGrid({
+  toolbar,
   sections,
 }: {
+  /** Week selector, rendered opposite the reveal switch. */
+  toolbar?: ReactNode
   sections: { key: string; heading: string; items: GridItem[] }[]
 }) {
   const [revealAll, setRevealAll] = useState(false)
 
   return (
     <>
-      <div className="mb-6 flex justify-end">
+      {/* One control row: week on the left, reveal on the right. Keeping them
+          on the same line makes it obvious they both act on the cards below,
+          which was not clear when the selector sat up in the header. */}
+      <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
+        <div>{toolbar}</div>
         <RevealAllToggle revealAll={revealAll} onChange={setRevealAll} />
       </div>
 

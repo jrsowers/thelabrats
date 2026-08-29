@@ -177,16 +177,7 @@ export default async function AwardsPage({
               Best &amp; Worst Performers
             </h1>
           </div>
-          <div className="flex flex-col items-start gap-2 sm:items-end">
-            <WeekSelect
-              week={week}
-              weeks={overview.regularSeasonWeeks}
-              currentWeek={overview.currentWeek}
-              basePath="/awards"
-              extraParams={isPreview ? { preview: 'live' } : {}}
-            />
-            <SyncStatus finishedAt={lastSync?.finished_at} autoRefresh={!isPreview && gamesActive} />
-          </div>
+          <SyncStatus finishedAt={lastSync?.finished_at} autoRefresh={!isPreview && gamesActive} />
         </div>
       </header>
 
@@ -203,6 +194,15 @@ export default async function AwardsPage({
       )}
 
       <AwardGrid
+        toolbar={
+          <WeekSelect
+            week={week}
+            weeks={overview.regularSeasonWeeks}
+            currentWeek={overview.currentWeek}
+            basePath="/awards"
+            extraParams={isPreview ? { preview: 'live' } : {}}
+          />
+        }
         sections={[
           {
             key: 'STUDS',
