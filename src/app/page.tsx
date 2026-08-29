@@ -86,7 +86,7 @@ export default async function Page({
             <Eyebrow>Live Scoreboard · Week {week}</Eyebrow>
             <h1 className="display mt-1.5 text-[40px] sm:text-[52px]">The Lab Rats</h1>
             <p className="mt-1.5 text-sm text-muted">
-              {overview.season} season · {overview.teamCount} Contenders · 1 Champion
+              {overview.season} season · {overview.teamCount} Contenders · One Champion
             </p>
           </div>
           <div className="flex flex-col items-start gap-1 sm:items-end">
