@@ -5,9 +5,7 @@ import {
 } from '@/lib/league/queries'
 import { simulateSeason } from '@/lib/league/preview'
 import { buildAwardCards } from '@/lib/awards/build'
-import {
-  NEED_LABEL, CADENCE_LABEL, awardsBySection, type AwardSection,
-} from '@/lib/awards/catalog'
+import { awardsBySection, type AwardSection } from '@/lib/awards/catalog'
 import type { AwardCard } from '@/lib/awards/placeholder'
 import { AppShell } from '@/components/navigation/app-shell'
 import { FieldBackdrop } from '@/components/ui/field-backdrop'
@@ -27,22 +25,9 @@ const SECTION_ACCENT: Record<AwardSection, string> = {
 /** Header: always visible, even behind the frost. */
 function CardHeader({ card }: { card: AwardCard }) {
   return (
-    <div className="flex items-start justify-between gap-2 border-b border-border px-4 py-3">
-      <div className="min-w-0">
-        <h3 className="display text-[21px] leading-[1.05]">{card.def.name}</h3>
-        <p className="mt-1 text-[12px] leading-snug text-muted">{card.def.blurb}</p>
-      </div>
-      {card.placeholder && (
-        <span
-          className="mt-0.5 shrink-0 font-mono text-[8.5px] uppercase tracking-[0.14em] text-warn"
-          title={
-            `Needs: ${card.def.needs.map((n) => NEED_LABEL[n]).join(', ')}` +
-            `\nCapture: ${CADENCE_LABEL[card.def.capture]}`
-          }
-        >
-          Sample
-        </span>
-      )}
+    <div className="border-b border-border px-4 py-3">
+      <h3 className="display text-[21px] leading-[1.05]">{card.def.name}</h3>
+      <p className="mt-1 text-[12px] leading-snug text-muted">{card.def.blurb}</p>
     </div>
   )
 }

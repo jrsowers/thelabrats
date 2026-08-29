@@ -54,12 +54,13 @@ export function RevealCard({
           {children}
         </div>
 
-        {/* Prompt, which fades out as the card comes into focus. */}
+        {/* Prompt, centred in the frosted area, fading out as it reveals. */}
         <span
           aria-hidden
-          className="reveal-hint pointer-events-none absolute inset-x-0 bottom-3 flex justify-center font-mono text-[9.5px] uppercase tracking-[0.16em] text-muted"
+          className="reveal-hint pointer-events-none absolute inset-0 flex items-center justify-center font-mono text-[10px] uppercase tracking-[0.16em] text-muted"
         >
-          Reveal
+          <span className="reveal-hint-hover">Hover to reveal</span>
+          <span className="reveal-hint-tap">Tap to reveal</span>
         </span>
       </button>
     </article>

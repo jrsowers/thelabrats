@@ -28,7 +28,9 @@ const CUSTOM_CLASSES = [
   'field-numbers',  // yard numbers
   'reveal-card',    // award reveal container
   'reveal-body',    // blurred award detail
-  'reveal-hint',    // "Reveal" prompt
+  'reveal-hint',       // reveal prompt
+  'reveal-hint-hover', // "Hover to reveal" — pointer devices
+  'reveal-hint-tap',   // "Tap to reveal" — touch devices
 ] as const
 
 const css = readFileSync('src/app/globals.css', 'utf8')

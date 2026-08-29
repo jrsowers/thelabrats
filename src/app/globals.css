@@ -256,6 +256,17 @@ body {
   transition: opacity 200ms ease-out;
 }
 
+/* "Hover" is a lie on a touchscreen, where the card is tapped. Swap the verb
+   for the device rather than telling half the league to do something they
+   cannot. */
+.reveal-hint-hover { display: none; }
+.reveal-hint-tap { display: inline; }
+
+@media (hover: hover) and (pointer: fine) {
+  .reveal-hint-hover { display: inline; }
+  .reveal-hint-tap { display: none; }
+}
+
 .reveal-card:hover .reveal-hint,
 .reveal-card:focus-within .reveal-hint,
 .reveal-card[data-revealed='true'] .reveal-hint {

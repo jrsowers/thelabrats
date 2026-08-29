@@ -628,3 +628,12 @@ cannot diverge between what you see before week 1 and after it.
 each other, and it reads far better than "Jesse Anderson lost to Mr. Anderson".
 `PlayerHeadshot` is now unused on this page but kept: matchup expansion needs it
 once player scoring exists.
+
+## 2026-08-28 · Reveal prompt says the right verb for the device
+The prompt is centred in the frosted area and reads "Hover to reveal" on
+pointer devices, "Tap to reveal" on touch, swapped by
+`@media (hover: hover) and (pointer: fine)`. Telling a phone user to hover is
+an instruction they cannot follow.
+The per-card "Sample" marker was removed at James's request. The page-level
+banner still reports how many awards are showing representative values, so the
+information is not lost — only the repetition.
