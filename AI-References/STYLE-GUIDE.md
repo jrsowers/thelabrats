@@ -248,3 +248,58 @@ Before adding a component:
 3. Does it survive both themes and 320px width?
 4. Does any state it shows rely on color alone? Fix that first.
 5. Add it to `/style` in the same commit, or the guide starts lying.
+
+---
+
+## Responsive contract
+
+Verified by `npm run test:responsive` (Playwright, real Chromium — layout
+overflow cannot be detected without real layout). The living reference is
+`/style` §05.
+
+### Breakpoints tested
+
+| Name | Width | Stands in for | Pointer |
+|---|---|---|---|
+| `mobile-sm` | 320px | iPhone SE (1st gen) — the floor | coarse |
+| `mobile` | 390px | iPhone 14 / 15 | coarse |
+| `tablet` | 768px | iPad portrait | coarse |
+| `laptop` | 1024px | small laptop — the rail appears here | fine |
+| `desktop` | 1440px | full width | fine |
+
+The rail is `lg:` and up. Below that the nav is a bottom bar, because a 224px
+rail eats 70% of a 320px screen.
+
+### What the suite asserts
+
+1. **No horizontal page scroll.** The document never exceeds the viewport.
+2. **No element outside the viewport** — unless an ancestor scrolls
+   horizontally, which is the deliberate wrapped-table pattern.
+3. **Tap targets** at or above 24px (WCAG 2.5.8), 44px under a coarse pointer.
+4. **Content clears the mobile bar.** Measured against the last text-bearing
+   leaf, not the padded container — the container's own padding is the very
+   clearance being verified, so measuring it would be circular.
+
+Routes are discovered by walking `src/app`. Route groups `(…)` are stripped;
+`_private` folders are skipped entirely, since Next.js does not route them.
+A dynamic segment with no sample in `DYNAMIC_SAMPLES` **fails the suite** rather
+than being skipped — a silently dropped route is how a page escapes the net.
+
+### `.tap-target`
+
+Sets only `min-height` / `min-width` (24px, 44px on coarse pointers) so it
+composes with whatever display the element already uses. `min-height` does not
+apply to inline boxes — pair it with `flex` or `inline-flex`.
+
+Applied to: scoreboard week arrows, the playoff-picture link, the recap back
+link, transaction filter tabs, the awards week select and reveal-all toggle,
+and the admin sync button.
+
+### Safe areas
+
+`viewportFit: 'cover'` in `src/app/layout.tsx` is what makes
+`env(safe-area-inset-*)` resolve to real numbers on notched iPhones. Without
+it the inset is always zero and the bottom bar sits under the home indicator.
+The bar pads by the inset; content clears it by `6rem + inset`.
+
+`maximumScale` is deliberately unset. Capping zoom is an accessibility failure.

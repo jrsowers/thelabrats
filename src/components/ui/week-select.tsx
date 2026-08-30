@@ -32,7 +32,7 @@ export function WeekSelect({
             p.set('week', e.target.value)
             router.push(`${basePath}?${p.toString()}`)
           }}
-          className="appearance-none rounded-md border border-border bg-surface py-1.5 pl-3 pr-8 font-mono text-[12.5px] tnum text-text outline-none transition-colors hover:border-border-strong focus:border-brand"
+          className="tap-target appearance-none rounded-md border border-border bg-surface py-1.5 pl-3 pr-8 font-mono text-[12.5px] tnum text-text outline-none transition-colors hover:border-border-strong focus:border-brand"
         >
           {Array.from({ length: weeks }, (_, i) => i + 1).map((w) => (
             <option key={w} value={w}>

@@ -303,3 +303,29 @@ body {
   outline-offset: 2px;
   border-radius: 2px;
 }
+
+/* ---- Hit-area floor -------------------------------------------------------
+   Small controls (week arrows, filter tabs, back links) read well but are
+   miserable to tap. `.tap-target` raises the hit box without touching the type
+   size or the visual weight.
+
+   24px is the WCAG 2.5.8 minimum and applies everywhere; touch pointers get
+   the full 44px Apple and Google both ask for.
+
+   It sets ONLY the minimums, so it composes with whatever display the element
+   already uses. min-height does not apply to inline boxes — pair it with
+   `flex`, `inline-flex` or `inline-block` on inline elements.
+
+   Enforced by tests/responsive/responsive.spec.ts: a new undersized control
+   fails there rather than shipping.                                          */
+.tap-target {
+  min-height: 24px;
+  min-width: 24px;
+}
+
+@media (pointer: coarse) {
+  .tap-target {
+    min-height: 44px;
+    min-width: 44px;
+  }
+}

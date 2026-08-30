@@ -258,6 +258,98 @@ export default function StyleGuide() {
         </div>
       </section>
 
+      <section>
+        <SectionHeader eyebrow="05" title="Responsive" />
+
+        <p className="mb-4 max-w-2xl text-[13px] leading-relaxed text-muted">
+          Every page is verified at five widths by{' '}
+          <code className="font-mono text-[12px] text-text">npm run test:responsive</code>.
+          Routes are discovered from the filesystem, so a new page is covered the
+          moment it exists — there is no list to update.
+        </p>
+
+        <div className="mb-6 overflow-hidden rounded-lg border border-border">
+          <div className="overflow-x-auto">
+            <table className="w-full min-w-[420px] border-collapse text-left">
+              <thead>
+                <tr className="border-b border-border bg-surface-2">
+                  {['Name', 'Width', 'Stands in for', 'Pointer'].map((h) => (
+                    <th key={h} className="eyebrow px-3 py-2 text-dim">{h}</th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {[
+                  ['mobile-sm', '320px', 'iPhone SE (1st gen) — the floor', 'coarse'],
+                  ['mobile', '390px', 'iPhone 14 / 15', 'coarse'],
+                  ['tablet', '768px', 'iPad portrait', 'coarse'],
+                  ['laptop', '1024px', 'small laptop — rail appears here', 'fine'],
+                  ['desktop', '1440px', 'full width', 'fine'],
+                ].map(([name, w, note, ptr]) => (
+                  <tr key={name} className="border-b border-border last:border-0">
+                    <td className="px-3 py-2 font-mono text-[12px]">{name}</td>
+                    <td className="px-3 py-2 font-mono text-[12px] tnum">{w}</td>
+                    <td className="px-3 py-2 text-[13px] text-muted">{note}</td>
+                    <td className="px-3 py-2 font-mono text-[12px] text-muted">{ptr}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div className="grid gap-3 sm:grid-cols-2">
+          <div className="rounded-lg border border-border bg-surface p-4">
+            <div className="display text-[17px]">.tap-target</div>
+            <p className="mt-1.5 text-[13px] leading-relaxed text-muted">
+              Hit-area floor: 24px everywhere (WCAG 2.5.8), 44px on touch. Sets
+              only the minimums, so it composes with whatever display the element
+              already has. min-height does not apply to inline boxes — pair it
+              with <code className="font-mono text-[12px]">flex</code> or{' '}
+              <code className="font-mono text-[12px]">inline-flex</code>.
+            </p>
+            <div className="mt-3 flex items-center gap-2">
+              <a href="#" className="tap-target flex items-center justify-center rounded bg-surface-2 px-1.5 py-1 font-mono text-[10.5px] uppercase tracking-wider text-muted">
+                ← Prev
+              </a>
+              <span className="font-mono text-[10.5px] text-dim">44×44 under a coarse pointer</span>
+            </div>
+          </div>
+
+          <div className="rounded-lg border border-border bg-surface p-4">
+            <div className="display text-[17px]">Wide content scrolls itself</div>
+            <p className="mt-1.5 text-[13px] leading-relaxed text-muted">
+              Tables and the bracket keep a{' '}
+              <code className="font-mono text-[12px]">min-w-[…]</code> and sit in
+              an <code className="font-mono text-[12px]">overflow-x-auto</code>{' '}
+              wrapper. The page never scrolls sideways; the table does. The audit
+              knows the difference and only flags the unwrapped kind.
+            </p>
+          </div>
+
+          <div className="rounded-lg border border-border bg-surface p-4">
+            <div className="display text-[17px]">Safe areas are real estate</div>
+            <p className="mt-1.5 text-[13px] leading-relaxed text-muted">
+              The mobile bar pads by{' '}
+              <code className="font-mono text-[12px]">env(safe-area-inset-bottom)</code>{' '}
+              and the layout sets{' '}
+              <code className="font-mono text-[12px]">viewportFit: &apos;cover&apos;</code>,
+              without which that inset is always zero. Content clears the bar by
+              6rem plus the inset.
+            </p>
+          </div>
+
+          <div className="rounded-lg border border-border bg-surface p-4">
+            <div className="display text-[17px]">Design at 320 first</div>
+            <p className="mt-1.5 text-[13px] leading-relaxed text-muted">
+              The narrowest viewport is the constraint that bites. Anything that
+              survives 320px survives everything above it, and the rail only
+              appears at <code className="font-mono text-[12px]">lg</code>.
+            </p>
+          </div>
+        </div>
+      </section>
+
       <footer className="border-t border-border pt-5 font-mono text-[10.5px] text-dim">
         Full rationale: AI-References/STYLE-GUIDE.md
       </footer>

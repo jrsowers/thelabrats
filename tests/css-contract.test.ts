@@ -31,6 +31,7 @@ const CUSTOM_CLASSES = [
   'reveal-hint',       // reveal prompt
   'reveal-hint-hover', // "Hover to reveal" — pointer devices
   'reveal-hint-tap',   // "Tap to reveal" — touch devices
+  'tap-target',        // 24px/44px hit-area floor
 ] as const
 
 const css = readFileSync('src/app/globals.css', 'utf8')

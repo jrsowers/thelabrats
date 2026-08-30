@@ -17,6 +17,29 @@ is right. Add new components to `/style` in the same commit, or the guide lies.
 
 Tokens: `src/app/globals.css` · Primitives: `src/components/ui/primitives.tsx`
 
+### Responsive is part of building, not a later pass
+
+Design at 320px first — it is the constraint that bites, and everything above it
+follows. Then run:
+
+```bash
+npm run test:responsive
+```
+
+It drives a real browser over **every route at five widths** and fails on
+horizontal overflow, elements outside the viewport, tap targets under the floor
+(24px, 44px on touch), and content hidden behind the mobile bar. Routes come
+from the filesystem, so a new page is covered the moment it exists — there is
+no list to update, and no reason to ever re-audit the whole site by hand.
+
+Patterns that keep it passing:
+
+- Small controls get `tap-target` (see `/style` §05). Pair it with `flex` or
+  `inline-flex` — `min-height` does nothing to an inline box.
+- Wide tables and the bracket keep their `min-w-[…]` and live inside an
+  `overflow-x-auto` wrapper. The page must never scroll sideways; the table may.
+- Anything fixed to the bottom pads by `env(safe-area-inset-bottom)`.
+
 ## Hard rules
 
 - **ESPN is never called from the browser.** Server-side only, behind
@@ -31,6 +54,8 @@ Tokens: `src/app/globals.css` · Primitives: `src/components/ui/primitives.tsx`
 - **Nothing hardcoded to this league's shape.** Team count, playoff spots, and
   season length come from configuration.
 - **Migrations for every schema change.** No manual table edits.
+- **No page ships that fails `npm run test:responsive`.** Phones and tablets
+  are how this league actually reads the app on a Sunday.
 - **ESPN failure degrades, never breaks.** Serve last-known-good data with an
   honest "last updated" timestamp.
 

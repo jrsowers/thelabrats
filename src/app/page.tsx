@@ -135,7 +135,7 @@ export default async function Page({
             <nav className="flex items-center gap-1 sm:gap-2" aria-label="Week selection">
               <Link
                 href={`/?week=${Math.max(1, week - 1)}${isPreview ? '&preview=live' : ''}`}
-                className={`flex items-center gap-1.5 rounded px-1.5 py-1 font-mono text-[10.5px] uppercase tracking-wider sm:px-2 ${
+                className={`tap-target flex items-center justify-center gap-1.5 rounded px-1.5 py-1 font-mono text-[10.5px] uppercase tracking-wider sm:px-2 ${
                   week === 1
                     ? 'pointer-events-none text-dim/40'
                     : 'text-muted hover:bg-surface-3 hover:text-text'
@@ -150,7 +150,7 @@ export default async function Page({
 
               <Link
                 href={`/?week=${Math.min(overview.regularSeasonWeeks, week + 1)}${isPreview ? '&preview=live' : ''}`}
-                className={`flex items-center gap-1.5 rounded px-1.5 py-1 font-mono text-[10.5px] uppercase tracking-wider sm:px-2 ${
+                className={`tap-target flex items-center justify-center gap-1.5 rounded px-1.5 py-1 font-mono text-[10.5px] uppercase tracking-wider sm:px-2 ${
                   week === overview.regularSeasonWeeks
                     ? 'pointer-events-none text-dim/40'
                     : 'text-muted hover:bg-surface-3 hover:text-text'
@@ -164,7 +164,7 @@ export default async function Page({
 
             <Link
               href="/playoffs"
-              className="flex items-center gap-1.5 rounded px-2 py-1 text-[12px] font-medium text-brand transition-colors hover:bg-brand-soft"
+              className="tap-target flex items-center gap-1.5 rounded px-2 py-1 text-[12px] font-medium text-brand transition-colors hover:bg-brand-soft"
             >
               <BracketIcon size={15} />
               <span className="hidden sm:inline">Playoff Picture</span>

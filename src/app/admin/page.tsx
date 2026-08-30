@@ -122,7 +122,7 @@ export default async function AdminPage({
           </div>
           <button
             type="submit"
-            className="rounded-md bg-brand px-4 py-2 text-[13px] font-semibold text-brand-ink transition-colors hover:bg-brand-hover"
+            className="tap-target rounded-md bg-brand px-4 py-2 text-[13px] font-semibold text-brand-ink transition-colors hover:bg-brand-hover"
           >
             Run sync
           </button>

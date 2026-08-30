@@ -637,3 +637,37 @@ an instruction they cannot follow.
 The per-card "Sample" marker was removed at James's request. The page-level
 banner still reports how many awards are showing representative values, so the
 information is not lost — only the repetition.
+
+## 2026-08-29 — Responsiveness is enforced by a suite, not by periodic audits
+
+**Decision.** `npm run test:responsive` drives real Chromium over every route at
+five widths (320 / 390 / 768 / 1024 / 1440) and fails the build on horizontal
+overflow, elements outside the viewport, tap targets under the floor, or content
+hidden behind the mobile bar.
+
+**Why a browser.** Layout overflow cannot be detected without layout. JSDOM has
+no layout engine, so a unit test literally cannot see this class of bug. That is
+why it went unnoticed until it was looked at by eye.
+
+**Why filesystem-driven routes.** A hand-maintained route list is a list someone
+forgets. Walking `src/app` means a new page is covered the moment it exists —
+verified with a canary page that was caught at all five widths with no test edit.
+A dynamic segment with no sample fails the suite rather than being skipped;
+a silently dropped route is exactly how a page escapes the net.
+
+**What the audit found.** No horizontal overflow anywhere — the `min-w` +
+`overflow-x-auto` discipline on tables and the bracket was already correct.
+Eight controls sat under the 44px touch floor. The mobile bar had no
+`env(safe-area-inset-bottom)`, and `viewportFit: 'cover'` was missing, without
+which that inset is always zero.
+
+**What eyes found that the suite could not.** The suite proves nothing is broken,
+not that anything is good. Screenshots showed the scoreboard squeezing its
+three-column broadcast layout into 390px, leaving ~77px per team — every name
+truncated to "TYLER'S T…" and the record wrapping mid-token. The sides now stack
+below `sm`. Keep taking screenshots; the suite is a floor, not a ceiling.
+
+**Accepted.** Standings still scrolls horizontally at 320px — it needs 347px for
+rank + team + W-L-T. Closing that gap means shrinking the manager avatars, which
+James explicitly asked to make larger. The scroll is graceful and contract-
+permitted; the avatars stay.

@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono, Barlow_Condensed } from "next/font/google";
 import "./globals.css";
 
@@ -21,6 +21,22 @@ const barlowCondensed = Barlow_Condensed({
 const TITLE = 'The Lab Rats Fantasy Football League'
 const DESCRIPTION =
   'A just-for-fun fantasy football league brought to you by Creator Science.'
+
+/**
+ * viewportFit: 'cover' is what makes env(safe-area-inset-*) resolve to real
+ * numbers on notched iPhones. Without it the bottom nav sits under the home
+ * indicator. maximumScale is deliberately unset — capping zoom is an
+ * accessibility failure.
+ */
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  viewportFit: 'cover',
+  themeColor: [
+    { media: '(prefers-color-scheme: light)', color: '#f2f5f9' },
+    { media: '(prefers-color-scheme: dark)', color: '#080b11' },
+  ],
+}
 
 export const metadata: Metadata = {
   // Title and description stay separate: a browser tab renders only the title,

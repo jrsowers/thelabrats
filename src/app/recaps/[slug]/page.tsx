@@ -74,7 +74,7 @@ export default async function RecapPage({
       <div className="mx-auto max-w-2xl">
         <Link
           href="/recaps"
-          className="mb-5 inline-block font-mono text-[10.5px] uppercase tracking-wider text-muted hover:text-text"
+          className="tap-target mb-5 inline-flex items-center font-mono text-[10.5px] uppercase tracking-wider text-muted hover:text-text"
         >
           ← All recaps
         </Link>

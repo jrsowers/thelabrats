@@ -16,7 +16,7 @@ export function RevealAllToggle({
       role="switch"
       aria-checked={revealAll}
       onClick={() => onChange(!revealAll)}
-      className="flex items-center gap-2 rounded-md border border-border bg-surface px-2.5 py-1.5 font-mono text-[10.5px] uppercase tracking-wider text-muted transition-colors hover:border-border-strong hover:text-text"
+      className="tap-target flex items-center gap-2 rounded-md border border-border bg-surface px-2.5 py-1.5 font-mono text-[10.5px] uppercase tracking-wider text-muted transition-colors hover:border-border-strong hover:text-text"
     >
       <span
         aria-hidden

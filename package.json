@@ -16,7 +16,9 @@
     "sync": "tsx scripts/sync.ts",
     "seed:photos": "tsx scripts/seed-member-photos.ts",
     "logo:transparent": "python3 scripts/make-logo-transparent.py",
-    "seed:history": "tsx scripts/seed-history.ts"
+    "seed:history": "tsx scripts/seed-history.ts",
+    "test:responsive": "playwright test",
+    "test:responsive:ui": "playwright test --ui"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.112.4",
@@ -27,6 +29,7 @@
     "zod": "^4.4.3"
   },
   "devDependencies": {
+    "@playwright/test": "^1.62.1",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
     "@types/react": "^19",

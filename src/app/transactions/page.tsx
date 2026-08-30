@@ -191,7 +191,7 @@ export default async function TransactionsPage({
               key={f.key}
               href={qs({ filter: f.key })}
               aria-current={active ? 'page' : undefined}
-              className={`-mb-px flex items-center gap-1.5 border-b-2 px-3 py-2 text-[13px] font-medium transition-colors ${
+              className={`tap-target -mb-px flex items-center gap-1.5 border-b-2 px-3 py-2 text-[13px] font-medium transition-colors ${
                 active
                   ? 'border-brand text-text'
                   : 'border-transparent text-muted hover:text-text'

@@ -12,6 +12,10 @@ import { Tag, LiveBadge, TeamAvatar } from '@/components/ui/primitives'
  *  - Team name primary, manager secondary (agreed display convention).
  *  - A live leader is marked, never declared a winner (§19.2).
  *  - State is carried by a bar AND a label, never color alone (§39).
+ *  - Below sm the two sides STACK. Squeezed into three columns at 390px each
+ *    side got ~77px of name, which truncated every team to 'TYLER'S T...'
+ *    and wrapped the record mid-token. Stacked, each side owns the full
+ *    width and the avatar earns its place back.
  */
 function Side({
   side, leading, align = 'left',
@@ -27,8 +31,8 @@ function Side({
   }
 
   return (
-    <div className={`flex min-w-0 items-center gap-3 ${right ? 'flex-row-reverse text-right' : ''}`}>
-      <div className="hidden sm:block">
+    <div className={`flex min-w-0 items-center gap-3 ${right ? 'sm:flex-row-reverse sm:text-right' : ''}`}>
+      <div className="shrink-0">
         <TeamAvatar
           photoUrl={side.photoUrl}
           logoUrl={side.logoUrl}
@@ -40,8 +44,8 @@ function Side({
 
       <div className="min-w-0 flex-1">
         <div className="display truncate text-[17px] leading-tight sm:text-[19px]">{side.name}</div>
-        <div className={`flex items-center gap-1.5 text-[11.5px] text-muted ${right ? 'justify-end' : ''}`}>
-          <span className="font-mono tnum">{side.record}</span>
+        <div className={`flex min-w-0 items-center gap-1.5 text-[11.5px] text-muted ${right ? 'sm:justify-end' : ''}`}>
+          <span className="shrink-0 whitespace-nowrap font-mono tnum">{side.record}</span>
           {side.manager && (
             <>
               <span className="text-dim" aria-hidden>·</span>
@@ -77,12 +81,12 @@ export function MatchupRow({ matchup, index }: { matchup: Matchup; index: number
 
   return (
     <li
-      className="state-bar grid grid-cols-[1fr_auto_1fr] items-center gap-3 bg-surface px-4 py-3.5 transition-colors hover:bg-surface-2/60 sm:gap-6 sm:px-5"
+      className="state-bar flex flex-col gap-2.5 bg-surface px-4 py-3.5 transition-colors hover:bg-surface-2/60 sm:grid sm:grid-cols-[1fr_auto_1fr] sm:items-center sm:gap-6 sm:px-5"
       style={{ '--state': isLive ? 'var(--live)' : isFinal ? 'var(--border-strong)' : 'transparent' } as React.CSSProperties}
     >
       <Side side={away} leading={awayLeads} />
 
-      <div className="flex shrink-0 flex-col items-center gap-1">
+      <div className="flex shrink-0 flex-row items-center justify-center gap-2 sm:flex-col sm:gap-1">
         {isLive ? (
           <LiveBadge />
         ) : isFinal ? (

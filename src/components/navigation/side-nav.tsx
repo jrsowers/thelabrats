@@ -104,7 +104,7 @@ export function SideNav({
       {/* Mobile bottom bar */}
       <nav
         aria-label="Primary"
-        className="fixed inset-x-0 bottom-0 z-40 border-t border-white/8 bg-rail lg:hidden"
+        className="fixed inset-x-0 bottom-0 z-40 border-t border-white/8 bg-rail pb-[env(safe-area-inset-bottom)] lg:hidden"
       >
         <ul className="flex">
           {NAV_ITEMS.map((item) => {

@@ -21,9 +21,12 @@ export function AppShell({
       <SideNav leagueName={leagueName} logoUrl={logoUrl} />
       {/* Rail is 14rem on desktop; bottom bar needs clearance on mobile. */}
       <div className="lg:pl-56">
-        <div className="mx-auto max-w-6xl px-4 pb-24 pt-6 sm:px-6 lg:pb-10 lg:pt-8">
+        <main
+          id="content"
+          className="mx-auto max-w-6xl px-4 pb-[calc(6rem+env(safe-area-inset-bottom))] pt-6 sm:px-6 lg:pb-10 lg:pt-8"
+        >
           {children}
-        </div>
+        </main>
       </div>
     </div>
   )

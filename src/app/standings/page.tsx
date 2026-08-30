@@ -123,15 +123,15 @@ export default async function StandingsPage({
 
       <div className="overflow-hidden rounded-lg border border-border">
         <div className="overflow-x-auto">
-          <table className="w-full min-w-[640px] border-collapse text-left">
+          <table className="w-full border-collapse text-left sm:min-w-[640px]">
             <thead>
               <tr className="border-b border-border bg-surface-2">
                 <th scope="col" className="eyebrow px-3 py-2.5 sm:px-4">Rank</th>
                 <th scope="col" className="eyebrow px-2 py-2.5">Team</th>
                 <th scope="col" className="eyebrow px-2 py-2.5 text-right">W-L-T</th>
-                <th scope="col" className="eyebrow px-2 py-2.5 text-right">PF</th>
-                <th scope="col" className="eyebrow px-2 py-2.5 text-right">PA</th>
-                <th scope="col" className="eyebrow px-3 py-2.5 text-right sm:px-4">Streak</th>
+                <th scope="col" className="eyebrow px-2 py-2.5 text-right hidden sm:table-cell">PF</th>
+                <th scope="col" className="eyebrow px-2 py-2.5 text-right hidden sm:table-cell">PA</th>
+                <th scope="col" className="eyebrow px-3 py-2.5 text-right sm:px-4 hidden sm:table-cell">Streak</th>
               </tr>
             </thead>
             <tbody>
@@ -203,13 +203,13 @@ export default async function StandingsPage({
                     <td className="px-2 py-2.5 text-right font-mono text-[13px] tnum">
                       {row.wins}-{row.losses}-{row.ties}
                     </td>
-                    <td className="px-2 py-2.5 text-right font-mono text-[13px] tnum">
+                    <td className="hidden px-2 py-2.5 text-right font-mono text-[13px] tnum sm:table-cell">
                       {row.pointsFor.toFixed(2)}
                     </td>
-                    <td className="px-2 py-2.5 text-right font-mono text-[13px] text-muted tnum">
+                    <td className="hidden px-2 py-2.5 text-right font-mono text-[13px] text-muted tnum sm:table-cell">
                       {row.pointsAgainst.toFixed(2)}
                     </td>
-                    <td className="px-3 py-2.5 text-right sm:px-4">
+                    <td className="hidden px-3 py-2.5 text-right sm:table-cell sm:px-4">
                       {row.streak ? (
                         <span
                           className={`font-mono text-[13px] font-semibold tnum ${
