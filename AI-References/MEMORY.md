@@ -187,3 +187,25 @@ Discovered Supabase MCP points at an unrelated project. Flagged Resend as an MVP
 dependency (spec had it as Phase 3) and image generation as unnecessary.
 Delivered human setup checklist. Created `AI-References/`, `.gitignore`,
 `.env.example`. Repo creation halted — wrong GitHub account.
+
+## Session 4 — 2026-08-29 (responsive)
+
+Responsiveness is now enforced, not audited. `npm run test:responsive` drives
+real Chromium over every route at five widths. Routes come from walking
+`src/app`, so new pages are covered automatically — do not add a route list.
+
+Fixed: eight sub-44px tap targets (`.tap-target`), missing
+`env(safe-area-inset-bottom)` + `viewportFit: 'cover'`, no `<main>` landmark on
+seven pages, the scoreboard's three-column layout crushed at 390px (now stacks
+below `sm`), and standings hiding W-L-T behind a scroll on phones.
+
+**The suite is a floor, not a ceiling.** It proves nothing is broken; it cannot
+tell you something looks bad. The scoreboard truncation passed every assertion
+and was only caught by looking at a screenshot. Keep screenshotting at 390px.
+
+Known: standings still scrolls at 320px (needs 347px). Accepted — closing it
+means shrinking manager avatars, which James asked to enlarge.
+
+Still open: AI recap prose + award commentary voice (deferred to a joint pass —
+commentary is currently 12 hardcoded templates, identical every week).
+
