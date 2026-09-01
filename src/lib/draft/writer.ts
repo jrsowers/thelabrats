@@ -72,7 +72,9 @@ function buildPrompt(batch: ScheduledRoast[], opts: WriteOptions): string {
       `ASSIGNED THEME: ${s.theme} — ${THEME_ANGLE[s.theme]}\n` +
       `FACTS (the only numbers you may cite):\n` +
       Object.entries(facts).map(([k, v]) => `  ${k}: ${v}`).join('\n') +
-      (news ? `\nVERIFIED NEWS (the only news you may cite):\n` +
+      (news ? `\nVERIFIED NEWS — the only news you may cite, and you may NOT ` +
+        `extrapolate it forward. Report what it says happened; say nothing ` +
+        `about the player's status today unless a note states it:\n` +
         news.notes.map((n) => `  - ${n}`).join('\n') : ''),
     )
   }

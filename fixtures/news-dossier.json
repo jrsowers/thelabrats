@@ -1,0 +1,63 @@
+{
+  "_note": "Verified news for draft-day roasts. The ONLY source the writer may cite for anything not on the fact sheet. Compiled 2026-09-01 from public reporting.",
+  "capturedAt": "2026-09-01",
+  "_tiers": {
+    "1": "Football matters. Injuries, contracts, depth charts, projections. No review needed.",
+    "2": "Off-field conduct. Public figures, fair game per SOUL.md, but James reviews each one before it ships."
+  },
+  "entries": [
+    { "player": "Keenan Allen", "tier": 2, "notes": [
+      "Arrested on drunk-driving charges in downtown Indianapolis in late August 2026, less than 12 hours after making his Colts debut.",
+      "Faces two misdemeanour charges: operating while intoxicated, and operating while intoxicated endangering a person. Court date 16 September.",
+      "First known offence; the NFL has historically issued two- or three-game suspensions for a first DUI."
+    ], "sources": ["espn.com", "profootballrumors.com"] },
+
+    { "player": "Miles Sanders", "tier": 2, "notes": [
+      "Charged with DUI and careless driving after a June 2026 arrest near Pittsburgh; police reported finding him slumped over in a stopped car.",
+      "Was a free agent as of late August 2026."
+    ], "sources": ["upi.com"] },
+
+    { "player": "Deshaun Watson", "tier": 2, "notes": [
+      "Named the Browns' starting quarterback for 2026, a decision widely cited by analysts as a reason to downgrade Cleveland's skill players.",
+      "Remains on one of the largest fully guaranteed contracts in NFL history."
+    ], "sources": ["rotoballer.com"] },
+
+    { "player": "Ricky Pearsall", "tier": 1, "notes": ["Underwent knee surgery and is out for the 2026 season."], "sources": ["yahoo.com"] },
+    { "player": "Jayden Higgins", "tier": 1, "notes": ["Tore his ACL and will miss the entire 2026 season.", "His absence elevates Nico Collins in the Texans receiving corps."], "sources": ["yahoo.com"] },
+    { "player": "Nico Collins", "tier": 1, "notes": ["Expected to lead the Texans receiving corps after Jayden Higgins's season-ending ACL tear."], "sources": ["yahoo.com"] },
+    { "player": "Ashton Jeanty", "tier": 1, "notes": ["Left practice 23 August 2026 with a sprained ankle; Week 1 availability was still unclear in late August."], "sources": ["yahoo.com"] },
+    { "player": "Alvin Kamara", "tier": 1, "notes": ["Sustained an MCL sprain in a joint practice with Dallas on 18 August 2026."], "sources": ["yahoo.com"] },
+    { "player": "Luther Burden III", "tier": 1, "notes": ["Suffered a groin injury on 8 August 2026 in a contested red-zone rep."], "sources": ["si.com"] },
+    { "player": "Puka Nacua", "tier": 1, "notes": ["Psoas soreness lingered longer than the Rams originally expected; the team proceeded cautiously through camp."], "sources": ["yahoo.com"] },
+    { "player": "Sam LaPorta", "tier": 1, "notes": ["Missed camp practice with a hip injury; his head coach was optimistic about Week 1."], "sources": ["yahoo.com"] },
+
+    { "player": "Jahmyr Gibbs", "tier": 1, "notes": [
+      "Signed a record running back contract in the 2026 offseason, surpassing Bijan Robinson's new deal just two days after Robinson set the mark."
+    ], "sources": ["espn.com"] },
+    { "player": "Bijan Robinson", "tier": 1, "notes": [
+      "Signed a historic running back contract during his 2026 training camp hold-in, only for Jahmyr Gibbs to beat the number two days later."
+    ], "sources": ["espn.com"] },
+
+    { "player": "Derrick Henry", "tier": 1, "notes": [
+      "Turned 32 before the 2026 season and has played all 17 games in three consecutive years.",
+      "Totalled 1,745 scrimmage yards and 16 touchdowns in 2025, with 21 rushes of 15+ yards (2nd in the NFL) and 5.4 yards per touch (7th).",
+      "Risk factors cited by analysts: a new play caller, a remade interior offensive line, and a target share that has always been close to nonexistent."
+    ], "sources": ["cbssports.com", "si.com"] },
+
+    { "player": "Christian McCaffrey", "tier": 1, "notes": ["Named by multiple outlets as the single biggest fantasy bust candidate of 2026."], "sources": ["bleacherreport.com"] },
+    { "player": "De'Von Achane", "tier": 1, "notes": ["Flagged as overvalued: low touchdown equity in Miami's offence, behind a poor offensive line, with Malik Willis running the offence.", "Also cited as having the talent to challenge for the RB1 overall spot — genuinely boom or bust."], "sources": ["rotoballer.com"] },
+    { "player": "Quinshon Judkins", "tier": 1, "notes": ["Attached to what analysts called one of the worst offences in football, largely because of Cleveland's quarterback decision."], "sources": ["rotoballer.com"] },
+    { "player": "David Montgomery", "tier": 1, "notes": ["Moved to Houston after being a high-volume touchdown scorer in Detroit; analysts expect a less explosive offence around him."], "sources": ["rotoballer.com"] },
+    { "player": "Rashee Rice", "tier": 1, "notes": ["Averaged nearly 10 targets and 18.5 PPR points per game in 2025, fifth among wide receivers, but remains a polarising pick."], "sources": ["bleacherreport.com"] },
+    { "player": "Jaxson Dart", "tier": 1, "notes": ["Part of a Giants trio with Cam Skattebo and Malik Nabers that played just 18 snaps together in 2025.", "Analysts continued to flag the group as overvalued into 2026."], "sources": ["espn.com"] },
+    { "player": "Malik Nabers", "tier": 1, "notes": ["Played only 18 snaps alongside Jaxson Dart and Cam Skattebo in 2025."], "sources": ["espn.com"] },
+    { "player": "Cam Skattebo", "tier": 1, "notes": ["Played only 18 snaps alongside Jaxson Dart and Malik Nabers in 2025."], "sources": ["espn.com"] },
+
+    { "player": "Jonathon Brooks", "tier": 1, "notes": ["Coming off a second ACL tear in two years.", "Behind Chuba Hubbard, widely considered Carolina's best fantasy back."], "sources": ["fantasypros.com"] },
+    { "player": "Chuba Hubbard", "tier": 1, "notes": ["Widely considered the best fantasy running back in Carolina."], "sources": ["fantasypros.com"] },
+    { "player": "TreVeyon Henderson", "tier": 1, "notes": ["In a New England committee with Rhamondre Stevenson; held a 25.1% touch share to Stevenson's 18.9% last season."], "sources": ["fantasypros.com"] },
+    { "player": "Rhamondre Stevenson", "tier": 1, "notes": ["Started 13 of 14 games last season but was out-touched by TreVeyon Henderson, 25.1% to 18.9%."], "sources": ["fantasypros.com"] },
+    { "player": "D'Andre Swift", "tier": 1, "notes": ["In a Chicago committee with Kyle Monangai; finished RB15 last season, averaging 16.9 touches per game over the first seven weeks to Monangai's 6.9."], "sources": ["fantasypros.com"] },
+    { "player": "Kyle Monangai", "tier": 1, "notes": ["Pushing D'Andre Swift for Chicago's backfield after averaging 6.9 touches per game last season."], "sources": ["fantasypros.com"] }
+  ]
+}
