@@ -1,0 +1,175 @@
+{
+ "_note": "Scrubbed. Real ESPN member GUIDs replaced with deterministic fakes; the team<->manager join is preserved. Manager names are public on the site already.",
+ "teams": [
+  {
+   "id": 1,
+   "name": "James's Scary Team",
+   "abbrev": "JST",
+   "owners": [
+    "{53B4870E-0000-4000-8000-000000000000}"
+   ]
+  },
+  {
+   "id": 2,
+   "name": "4th and Inshes",
+   "abbrev": "4NI",
+   "owners": [
+    "{91F8532A-0000-4000-8000-000000000000}"
+   ]
+  },
+  {
+   "id": 3,
+   "name": "Da Reigning Champ",
+   "abbrev": "CT",
+   "owners": [
+    "{81FCEAF7-0000-4000-8000-000000000000}"
+   ]
+  },
+  {
+   "id": 4,
+   "name": "Jay's Team",
+   "abbrev": "JFT",
+   "owners": [
+    "{3C9FD6F3-0000-4000-8000-000000000000}"
+   ]
+  },
+  {
+   "id": 5,
+   "name": "Substation Superstars",
+   "abbrev": "JSS",
+   "owners": [
+    "{BCB1F98C-0000-4000-8000-000000000000}"
+   ]
+  },
+  {
+   "id": 6,
+   "name": "Doug's Dangerous Team",
+   "abbrev": "DDT",
+   "owners": [
+    "{A1261ECD-0000-4000-8000-000000000000}"
+   ]
+  },
+  {
+   "id": 7,
+   "name": "Tyler's Talented Team",
+   "abbrev": "TTT",
+   "owners": [
+    "{BD11B764-0000-4000-8000-000000000000}"
+   ]
+  },
+  {
+   "id": 8,
+   "name": "Mr. Anderson",
+   "abbrev": "MRA",
+   "owners": [
+    "{343033CD-0000-4000-8000-000000000000}"
+   ]
+  },
+  {
+   "id": 9,
+   "name": "PKM Playmakers",
+   "abbrev": "PKM",
+   "owners": [
+    "{6501808E-0000-4000-8000-000000000000}"
+   ]
+  },
+  {
+   "id": 10,
+   "name": "Waiting to draft...",
+   "abbrev": "BFL",
+   "owners": [
+    "{BCDD0A4E-0000-4000-8000-000000000000}"
+   ]
+  },
+  {
+   "id": 11,
+   "name": "Keshia's Top-Notch Team",
+   "abbrev": "KTT",
+   "owners": [
+    "{AB294AE6-0000-4000-8000-000000000000}"
+   ]
+  },
+  {
+   "id": 12,
+   "name": "Bree's Badass Boys",
+   "abbrev": "BBT",
+   "owners": [
+    "{E800559B-0000-4000-8000-000000000000}"
+   ]
+  }
+ ],
+ "members": [
+  {
+   "id": "{A1261ECD-0000-4000-8000-000000000000}",
+   "firstName": "Doug",
+   "lastName": "Rotman",
+   "displayName": "dougrotman"
+  },
+  {
+   "id": "{53B4870E-0000-4000-8000-000000000000}",
+   "firstName": "James",
+   "lastName": "Sowers",
+   "displayName": "whiskysowers"
+  },
+  {
+   "id": "{BD11B764-0000-4000-8000-000000000000}",
+   "firstName": "Tyler",
+   "lastName": "Lindley",
+   "displayName": "DgetTHEbodyWASH"
+  },
+  {
+   "id": "{91F8532A-0000-4000-8000-000000000000}",
+   "firstName": "Colin",
+   "lastName": "Gray",
+   "displayName": "ESPNFAN7915034246"
+  },
+  {
+   "id": "{6501808E-0000-4000-8000-000000000000}",
+   "firstName": "Mike",
+   "lastName": "Schmitz",
+   "displayName": "ESPNfan5607672199"
+  },
+  {
+   "id": "{81FCEAF7-0000-4000-8000-000000000000}",
+   "firstName": "Chenell",
+   "lastName": "Basilio",
+   "displayName": "ESPNFAN6529114658"
+  },
+  {
+   "id": "{AB294AE6-0000-4000-8000-000000000000}",
+   "firstName": "Keshia",
+   "lastName": "Villas",
+   "displayName": "KeshiaVillas"
+  },
+  {
+   "id": "{BCDD0A4E-0000-4000-8000-000000000000}",
+   "firstName": "Evan",
+   "lastName": "Jordan",
+   "displayName": "espnfan9655532275"
+  },
+  {
+   "id": "{3C9FD6F3-0000-4000-8000-000000000000}",
+   "firstName": "Jay",
+   "lastName": "Clouse",
+   "displayName": "espn73568757"
+  },
+  {
+   "id": "{E800559B-0000-4000-8000-000000000000}",
+   "firstName": "Bree",
+   "lastName": "Noble",
+   "displayName": "ESPNFAN5901676604"
+  },
+  {
+   "id": "{BCB1F98C-0000-4000-8000-000000000000}",
+   "firstName": "Justin",
+   "lastName": "Moore",
+   "displayName": "ESPNFAN1433424364"
+  },
+  {
+   "id": "{343033CD-0000-4000-8000-000000000000}",
+   "firstName": "Jesse",
+   "lastName": "Anderson",
+   "displayName": "espn22809325"
+  }
+ ]
+}

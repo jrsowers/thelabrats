@@ -12,6 +12,7 @@ const APP_DIR = join(process.cwd(), 'src', 'app')
  */
 export const DYNAMIC_SAMPLES: Record<string, string> = {
   '[slug]': 'week-0-the-lab-opens',
+  '[name]': 'jesse',
 }
 
 /** Routes deliberately excluded, each with a reason. */
