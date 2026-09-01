@@ -155,6 +155,12 @@ the feed while twelve people are watching.
 # Thursday morning — refresh the board with current ADP
 npx tsx scripts/snapshot-board.ts
 
+# ~12:55 PM — start the live runner and leave it running
+npx tsx scripts/draft-live.ts
+
+#   --dry     no Claude calls, template text only (rehearsal)
+#   --replay  simulate the whole draft from the fixture
+
 # Regenerate sample content (pre-draft only)
 npx tsx scripts/generate-sample-feed.ts
 npx tsx scripts/generate-sample-recap.ts
@@ -196,6 +202,11 @@ Each of these would have been visible to twelve people in real time.
 5. **A finished draft opened on round 15.** Newest-first is right live and
    wrong afterwards.
 
+6. **The runner resumed from the SAMPLE feed.** Roasts are keyed by overall
+   pick number, so on draft day it would have attached the simulated draft's
+   roast for pick 1 to whoever really went 1.01. It now refuses to resume from
+   anything not marked `sample: false`.
+
 The pattern: **four of the five were only findable by running it.** Reading the
 code would not have caught a single one of the attribution or ordering bugs.
 
@@ -207,5 +218,5 @@ See `MEMORY.md` for the live list. As of writing:
 
 - Voice guide is a functional v1; James wants a tuning pass
 - Superlatives logic not designed yet
-- The live runner is not built — see the to-do list
+- Superlatives are not designed and not built
 - Yahoo 2025 draft export would unlock the reunion-tour theme next season
