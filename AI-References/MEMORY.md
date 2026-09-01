@@ -209,3 +209,27 @@ means shrinking manager avatars, which James asked to enlarge.
 Still open: AI recap prose + award commentary voice (deferred to a joint pass —
 commentary is currently 12 hardcoded templates, identical every week).
 
+## Session 5 — 2026-09-01 (draft day build)
+
+Draft is **Thursday 3 Sept, 1:00 PM EDT**. 180 picks, 15 rounds, 60s per pick.
+
+Built: the roast engine (analyze → themes → schedule → write), the league's own
+VOR board, the news dossier, and all three pages (`/draft`, `/draft/recap`,
+`/draft/recap/[name]`). All noindex. Full rationale in `DRAFT-DAY.md`.
+
+**ESPN mDraftDetail is public, no cookies.** All 180 picks are pre-seeded with
+`playerId: -1` and the snake order, with `drafted`/`inProgress` flags. Picks are
+CUMULATIVE STATE, not an event stream — a poller that dies loses nothing.
+
+**Unverifiable until Thursday:** whether ESPN populates `playerId` live during
+the draft or only at completion. The `inProgress` flag implies live but 2025 was
+on Yahoo so there is no fixture to prove it. Everything is built to work either
+way — live feed if live, recap source if not.
+
+**The lesson from this session:** four of five real bugs were only findable by
+running it. Reading the code would not have caught the misattributed roasts, the
+dropped defences, or the wrong feed ordering. Generate output and look at it.
+
+Open: voice tuning (James wants to do this together), superlatives design, the
+live runner, and the Yahoo 2025 export for the reunion-tour theme.
+

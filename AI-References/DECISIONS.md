@@ -671,3 +671,37 @@ below `sm`. Keep taking screenshots; the suite is a floor, not a ceiling.
 rank + team + W-L-T. Closing that gap means shrinking the manager avatars, which
 James explicitly asked to make larger. The scroll is graceful and contract-
 permitted; the avatars stay.
+
+## 2026-09-01 — Draft-day roast engine
+
+Full rationale in `DRAFT-DAY.md`. The decisions that will be questioned later:
+
+**The board is ours, not ESPN's.** ESPN's generic SUPERFLEX rank assumes ESPN's
+defaults; this league runs 6-point passing TDs and half-PPR. ESPN publishes
+projections already scored by the league's own rules (verified by hand against
+Josh Allen's appliedTotal), so the board is VOR from those. Median disagreement
+with ESPN's generic board is 12 slots — Derrick Henry is ESPN #39 and #9 here.
+
+**Reach = better players still available**, not rank-minus-pick. By round 9
+every player ranked under 100 is gone, so rank-minus-pick calls every late pick
+a massive reach.
+
+**Kickers and defences rank below all skill players** regardless of VOR. Raw VOR
+put the best defence at #57, which is arithmetically true and useless.
+
+**National ADP is the punchline, never the yardstick.** It does not price a
+second starting QB, so it flags every correct superflex QB pick as a reach.
+
+**Everyone gets roasted at least three times.** In a league of friends, being
+ignored stings worse than being roasted. Also capped at eight.
+
+**Structured tool output, not raw JSON.** Opus emits thinking blocks that count
+against max_tokens; raw JSON truncated mid-array and cost whole batches.
+
+**SOUL.md's roast boundary is now two tiers.** The old blanket rule was written
+for managers and wrongly extended to NFL players. Managers: decisions only.
+Players: the choice or the institution, never the people harmed.
+
+**Roast pages are noindex.** The jokes name real players on a site carrying real
+people's names. Shareable by link, invisible to search. Site description also
+dropped "brought to you by Creator Science" at James's request.
