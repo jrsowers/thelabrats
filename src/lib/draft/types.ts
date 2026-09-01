@@ -5,13 +5,18 @@ export interface DraftablePlayer {
   pos: 'QB' | 'RB' | 'WR' | 'TE' | 'K' | 'DST'
   proTeam: string | null
   /**
-   * ESPN's SUPERFLEX board rank. THE reference for this league.
+   * Rank on THIS league's board — value over replacement, from ESPN projections
+   * scored by this league's own rules.
    *
-   * Raw ADP is a standard/PPR number: Josh Allen's ADP is 19.4 but he is
-   * SUPERFLEX rank 1. Measuring reaches against ADP would flag every correct
-   * QB pick in a superflex league as a reach, which is exactly backwards.
+   * Not ESPN's generic SUPERFLEX rank, which assumes ESPN defaults and
+   * disagrees with this league by a median of 12 slots: 6-point passing TDs and
+   * half-PPR are not priced in it. Derrick Henry is ESPN #39 and #9 here.
+   *
+   * Not standard ADP either. Josh Allen's ADP is 19.4 because standard leagues
+   * do not start a second QB; measuring against it flags every correct
+   * superflex QB pick as a reach. ADP survives only as the punchline.
    */
-  superflexRank: number
+  leagueRank: number
   /** Standard ADP. Not the yardstick — the punchline. */
   adp: number
   injuryStatus: string | null
@@ -41,7 +46,7 @@ export interface PickAnalysis {
   roundPick: number
   team: TeamMeta
   player: DraftablePlayer
-  /** superflexRank − pick. Positive = reached for him, negative = value. */
+  /** leagueRank − pick. Positive = reached for him, negative = value. */
   reachSlots: number
   /** adp − pick. The "rest of America" number. */
   adpSlots: number

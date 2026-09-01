@@ -12,19 +12,13 @@
 import { readFileSync, writeFileSync } from 'node:fs'
 
 const skeleton = JSON.parse(readFileSync('fixtures/mDraftDetail.json', 'utf8'))
-const pool = JSON.parse(readFileSync('fixtures/hypothesised/player-board.json', 'utf8'))
+const pool = JSON.parse(readFileSync('fixtures/draft-board.json', 'utf8'))
 
-const POS = { 1: 'QB', 2: 'RB', 3: 'WR', 4: 'TE', 5: 'K', 16: 'DST' }
 
+// The board is already ranked for THIS league (VOR from league-scored
+// projections), so a realistic simulated draft just walks down it.
 const players = pool.players
-  .filter((p) => POS[p.defaultPositionId])
-  .map((p) => ({
-    id: p.id,
-    name: p.fullName,
-    pos: POS[p.defaultPositionId],
-    sfRank: p.superflexRank ?? 9999,
-    adp: p.adp ?? 9999,
-  }))
+  .map((p) => ({ id: p.id, name: p.name, pos: p.pos, sfRank: p.leagueRank, adp: p.adp }))
   .sort((a, b) => a.sfRank - b.sfRank)
 
 // A tiny deterministic PRNG so the fixture never changes between runs.

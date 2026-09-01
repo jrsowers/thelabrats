@@ -4,8 +4,8 @@ import type { DraftablePlayer, RawPick, TeamMeta } from '../src/lib/draft/types'
 
 const P = (
   id: number, name: string, pos: DraftablePlayer['pos'],
-  superflexRank: number, adp: number, injuryStatus: string | null = null,
-): DraftablePlayer => ({ id, name, pos, proTeam: 'XX', superflexRank, adp, injuryStatus })
+  leagueRank: number, adp: number, injuryStatus: string | null = null,
+): DraftablePlayer => ({ id, name, pos, proTeam: 'XX', leagueRank, adp, injuryStatus })
 
 const T = (teamId: number, managerFirst: string): TeamMeta =>
   ({ teamId, teamName: `${managerFirst}'s Team`, manager: `${managerFirst} X`, managerFirst })

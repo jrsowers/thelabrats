@@ -23,13 +23,13 @@ export function factSheet(p: PickAnalysis): Record<string, string | number | boo
     team: p.team.teamName,
     player: p.player.name,
     position: p.player.pos,
-    superflexRank: p.player.superflexRank,
+    leagueRank: p.player.leagueRank,
     nationalADP: p.player.adp,
     slotsEarlierThanRank: p.reachSlots,
     slotsEarlierThanNationalADP: p.adpSlots,
     betterPlayersStillAvailable: p.betterAvailable,
     bestPlayerPassedOver: p.bestAvailable?.name ?? 'none',
-    bestPassedOverRank: p.bestAvailable?.superflexRank ?? 0,
+    bestPassedOverRank: p.bestAvailable?.leagueRank ?? 0,
     othersPassedOver: p.passedOver.map((x) => x.name).join(', ') || 'none',
     rosterSoFar: Object.entries(p.rosterAfter)
       .filter(([, n]) => n > 0).map(([k, n]) => `${n} ${k}`).join(', '),
@@ -48,7 +48,7 @@ RULES
 - Roast the DECISION, never the person. Never comment on anyone's looks, job, family, intelligence, or character.
 - Use ONLY the numbers in the fact sheet. Never invent a stat, ranking, or projection.
 - This is SUPERFLEX: two QBs start. Taking QBs early is correct, not funny. Never mock a QB pick for being early unless betterPlayersStillAvailable is high.
-- nationalADP is standard-league ADP. It is the punchline ("the rest of America"), never the yardstick. The yardstick is superflexRank and betterPlayersStillAvailable.
+- nationalADP is standard-league ADP. It is the punchline ("the rest of America"), never the yardstick. The yardstick is leagueRank and betterPlayersStillAvailable.
 - Be specific. Name the player passed over. A number lands harder than an adjective.
 - Vary your structure. Do not start consecutive roasts the same way.
 - Dry and deadpan beats zany. No emoji. No exclamation marks.`
@@ -96,5 +96,5 @@ export function templateRoast(p: PickAnalysis): string {
   if (p.flags.includes('BEST_AVAILABLE')) {
     return `${m} took the best player on the board. Suspiciously competent.`
   }
-  return `${m} took ${player} at ${p.overallPickNumber}. The superflex board had him ${p.player.superflexRank}.`
+  return `${m} took ${player} at ${p.overallPickNumber}. The superflex board had him ${p.player.leagueRank}.`
 }

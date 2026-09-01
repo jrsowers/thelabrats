@@ -52,7 +52,7 @@ export function analyzeDraft({
 
   // Board of everyone not yet taken, best superflex rank first.
   const takenIds = new Set<number>()
-  const board = [...playersById.values()].sort((a, b) => a.superflexRank - b.superflexRank)
+  const board = [...playersById.values()].sort((a, b) => a.leagueRank - b.leagueRank)
 
   const roster = new Map<number, Record<string, number>>()
   const seenPositions = new Set<string>()
@@ -70,7 +70,7 @@ export function analyzeDraft({
     // Anyone clearly better still sitting there. Ranked better by a real
     // margin, so a one-slot difference is not treated as a blunder.
     const better = remaining.filter(
-      (p) => p.id !== player.id && p.superflexRank < player.superflexRank,
+      (p) => p.id !== player.id && p.leagueRank < player.leagueRank,
     )
     const betterAvailable = better.length
     const passedOver = better.slice(0, 3)
@@ -97,7 +97,7 @@ export function analyzeDraft({
     // Slots EARLIER than the board had him. Taking the 40th-ranked player at
     // pick 1 is a 39-slot reach, so rank comes first: 40 - 1 = +39. Getting the
     // 5th-ranked player at pick 30 is value: 5 - 30 = -25.
-    const reachSlots = player.superflexRank - pick.overallPickNumber
+    const reachSlots = player.leagueRank - pick.overallPickNumber
     const adpSlots = Math.round((player.adp - pick.overallPickNumber) * 10) / 10
 
     const flags: PickFlag[] = []
@@ -110,7 +110,7 @@ export function analyzeDraft({
 
     // Only a burn if the player left behind is genuinely far better.
     if (betterAvailable >= REACH.NOTABLE
-        && passedOver.some((p) => p.superflexRank < player.superflexRank - 15)) {
+        && passedOver.some((p) => p.leagueRank < player.leagueRank - 15)) {
       flags.push('PASSED_ON_STUD')
     }
     if (positionRun >= 3) flags.push('POSITION_RUN')

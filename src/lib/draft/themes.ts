@@ -58,7 +58,11 @@ export function eligibleThemes({ pick, dossierNames, totalRounds }: ThemeInput):
   const pos = pick.player.pos
 
   if (pick.betterAvailable >= 12 && pick.bestAvailable) t.push('COST_TO_VALUE')
-  if ((r[pos] ?? 0) >= 4 || (r.QB === 0 && pick.round >= 6)) t.push('POSITIONAL_IMBALANCE')
+  // Deep positions need a genuinely silly count; thin ones do not. The old
+  // "4 of anything" fired on most teams by round 8 and swamped the schedule,
+  // and its QB clause duplicated SUPERFLEX_MALPRACTICE outright.
+  const imbalanceAt = pos === 'WR' || pos === 'RB' ? 5 : 3
+  if ((r[pos] ?? 0) >= imbalanceAt) t.push('POSITIONAL_IMBALANCE')
   if (dossierNames?.has(pick.player.name)) t.push('NEWS_CYCLE')
 
   // A lonely opinion needs to be lonely on BOTH boards. Every superflex QB
