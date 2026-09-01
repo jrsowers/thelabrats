@@ -19,8 +19,7 @@ const barlowCondensed = Barlow_Condensed({
 });
 
 const TITLE = 'The Lab Rats Fantasy Football League'
-const DESCRIPTION =
-  'A just-for-fun fantasy football league brought to you by Creator Science.'
+const DESCRIPTION = 'A just-for-fun fantasy football league.'
 
 /**
  * viewportFit: 'cover' is what makes env(safe-area-inset-*) resolve to real

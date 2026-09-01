@@ -53,6 +53,10 @@ export interface PickAnalysis {
   bestAvailable: DraftablePlayer | null
   /** Players passed over who ranked meaningfully higher. */
   passedOver: DraftablePlayer[]
+  /** Players this manager already has from the same NFL team. */
+  sameProTeamAlreadyRostered: string[]
+  /** Same NFL team AND same position as one he already owns. */
+  isHandcuff: boolean
   /** This team's positional counts AFTER this pick. */
   rosterAfter: Record<string, number>
   /** Same position taken in the 5 picks before this one. */

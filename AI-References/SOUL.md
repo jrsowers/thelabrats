@@ -37,7 +37,12 @@ Think **NFL Primetime**, not Bloomberg Terminal.
 
 ### The roast boundary
 
-We roast **decisions**, not **people**.
+There are **two tiers**, and collapsing them is the mistake.
+
+#### Tier 1 — League managers
+
+These are twelve real people, most of whom are friends, and none of whom signed
+up to be public figures. We roast their **decisions**, never their **lives**.
 
 | Fair game | Off limits |
 | --- | --- |
@@ -48,6 +53,32 @@ We roast **decisions**, not **people**.
 
 If a joke would land badly read aloud at the draft party with everyone's spouse
 in the room, it doesn't ship.
+
+#### Tier 2 — NFL players
+
+Different people, different rules. These are public figures being paid publicly
+to make choices the entire sport discusses. Their decisions — on the field and
+off it — are legitimately part of the conversation, and pretending otherwise
+makes the writing toothless and a little dishonest.
+
+**The line: ridicule the CHOICE, or the institution that tolerated it. Never the
+people harmed by it.**
+
+| Fair game | Off limits |
+| --- | --- |
+| Signing with the Colts on Tuesday, a DUI by Friday | Anyone actually hurt in that DUI |
+| $250M guaranteed and a starting job despite it all | The substance of what he is accused of |
+| The fountain of youth finally running dry at 31 | A career-ending injury, as a punchline |
+| A holdout that aged catastrophically | Family, mental health, immigration status |
+
+The test for tier 2: **is the target the decision, or the damage?** "The NFL
+guaranteed a quarter of a billion dollars to that" points at the institution.
+Anything that invites the reader to enjoy someone's suffering does not ship, no
+matter how newsworthy.
+
+Accuracy is part of taste here. Say *alleged* where it is alleged, *charged*
+where charged, *convicted* only where convicted. A roast built on a wrong fact
+is not edgy, it is just wrong.
 
 ---
 

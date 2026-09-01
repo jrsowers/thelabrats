@@ -81,6 +81,13 @@ export function analyzeDraft({
     counts[player.pos] = (counts[player.pos] ?? 0) + 1
     roster.set(pick.teamId, counts)
 
+    // Earlier picks by THIS manager, for handcuff and stacking detection.
+    const own = out.filter((a) => a.team.teamId === pick.teamId)
+    const sameProTeam = player.proTeam
+      ? own.filter((a) => a.player.proTeam === player.proTeam).map((a) => a.player)
+      : []
+    const handcuff = sameProTeam.some((p) => p.pos === player.pos)
+
     const recent = out.slice(-RUN_WINDOW)
     const positionRun = recent.filter((a) => a.player.pos === player.pos).length
 
@@ -137,6 +144,8 @@ export function analyzeDraft({
       betterAvailable,
       passedOver,
       rosterAfter: { ...counts },
+      sameProTeamAlreadyRostered: sameProTeam.map((p) => p.name),
+      isHandcuff: handcuff,
       positionRun,
       firstAtPosition,
       notability: notabilityOf({ betterAvailable, reachSlots, flags, round: pick.roundId, totalRounds }),
