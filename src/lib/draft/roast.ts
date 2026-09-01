@@ -16,7 +16,7 @@ export interface RoastContext { pick: PickAnalysis; leagueName: string }
 /** The facts a writer is allowed to use, flattened for a prompt. */
 export function factSheet(p: PickAnalysis): Record<string, string | number | boolean> {
   return {
-    pick: p.overallPickNumber,
+    overallPickNumber: p.overallPickNumber,
     round: p.round,
     roundPick: p.roundPick,
     manager: p.team.managerFirst,
