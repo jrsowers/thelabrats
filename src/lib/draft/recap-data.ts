@@ -7,14 +7,24 @@ import { join } from 'node:path'
  * Currently the sample generated from the hypothesised draft. After the real
  * draft the same file is regenerated and `sample` flips to false.
  */
-export interface RecapFeature {
-  headline: string
-  standfirst: string
+export interface RecapSection {
+  heading: string
   body: string[]
 }
 
+export interface RecapFeature {
+  headline: string
+  standfirst: string
+  /** Themed sections rather than a round-by-round account. */
+  sections: RecapSection[]
+}
+
 export interface TeamRecap {
+  /** First name, as the roasts use it. */
   manager: string
+  /** Full name, for page headings and cards. */
+  managerFull: string
+  managerPhoto: string | null
   slug: string
   teamName: string
   teamId: number

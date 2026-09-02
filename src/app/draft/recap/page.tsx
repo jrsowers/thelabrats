@@ -2,9 +2,9 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import { getLeagueOverview } from '@/lib/league/queries'
 import { AppShell } from '@/components/navigation/app-shell'
-import { FieldBackdrop } from '@/components/ui/field-backdrop'
 import { Eyebrow, EmptyState } from '@/components/ui/primitives'
 import { GradeStamp } from '@/components/draft/grade-stamp'
+import { RecapHero } from '@/components/draft/recap-hero'
 import { getDraftRecap } from '@/lib/draft/recap-data'
 
 export const dynamic = 'force-dynamic'
@@ -19,87 +19,97 @@ export default async function DraftRecapPage() {
 
   const recap = getDraftRecap()
 
-  return (
-    <AppShell leagueName={overview.leagueName}>
-      <header className="relative -mx-4 mb-6 overflow-hidden border-b border-border px-4 pb-5 sm:-mx-6 sm:px-6">
-        <FieldBackdrop />
-        <div className="relative flex flex-wrap items-center gap-x-3 gap-y-1.5">
-          <Eyebrow>Draft Recap</Eyebrow>
-          <Link href="/draft" className="tap-target inline-flex items-center font-mono text-[10.5px] uppercase tracking-wider text-muted hover:text-text">
-            ← Every pick
-          </Link>
-        </div>
-      </header>
-
-      {recap.sample && recap.feature && (
-        <div
-          className="state-bar mb-6 rounded-lg border border-border bg-warn-soft px-4 py-3"
-          style={{ '--state': 'var(--warn)' } as React.CSSProperties}
-        >
-          <Eyebrow>Sample Data</Eyebrow>
-          <p className="mt-1 text-[13.5px] leading-relaxed text-text">
-            Written from a simulated draft so the page could be built early.
-            Every name and verdict here is a placeholder.
-          </p>
-        </div>
-      )}
-
-      {!recap.feature ? (
-        <div className="rounded-lg border border-border bg-surface">
+  if (!recap.feature) {
+    return (
+      <AppShell leagueName={overview.leagueName}>
+        <div className="mx-auto max-w-2xl rounded-lg border border-border bg-surface">
           <EmptyState title="No recap yet." hint="It lands once the draft is done." />
         </div>
-      ) : (
-        <>
-          {/* The feature. Full width, the lead story on the page. */}
-          <article className="mb-10 border-b border-border pb-8">
-            <h1 className="display text-[38px] leading-[1.02] sm:text-[56px]">
-              {recap.feature.headline}
-            </h1>
-            <p className="mt-3 max-w-2xl text-[16px] leading-relaxed text-muted sm:text-[18px]">
-              {recap.feature.standfirst}
-            </p>
-            <div className="mt-6 max-w-2xl">
-              {recap.feature.body.map((para, i) => (
+      </AppShell>
+    )
+  }
+
+  return (
+    <AppShell leagueName={overview.leagueName}>
+      <RecapHero headline={recap.feature.headline} standfirst={recap.feature.standfirst} />
+
+      {/* Single column, centred — same measure as an individual report card,
+          because this is an article and articles are read in one column. */}
+      <div className="mx-auto max-w-2xl">
+        <Link
+          href="/draft"
+          className="tap-target mb-6 inline-flex items-center font-mono text-[10.5px] uppercase tracking-wider text-muted hover:text-text"
+        >
+          ← Every pick
+        </Link>
+
+        <article>
+          {recap.feature.sections.map((section) => (
+            <section key={section.heading} className="mb-8">
+              <h2 className="display mb-2.5 text-[26px] leading-tight sm:text-[32px]">
+                {section.heading}
+              </h2>
+              {section.body.map((para, i) => (
                 <p key={i} className="mb-4 text-[15.5px] leading-[1.7]">{para}</p>
               ))}
-            </div>
-          </article>
+            </section>
+          ))}
+        </article>
 
-          <div className="mb-4 flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
-            <h2 className="display text-[30px] sm:text-[34px]">The Report Cards</h2>
-            <p className="font-mono text-[10.5px] uppercase tracking-wider text-dim">
-              All twelve · all F
-            </p>
-          </div>
+        <section className="mt-10 border-t border-border pt-7">
+          <h2 className="display mb-4 text-[30px] sm:text-[34px]">The Report Cards</h2>
 
-          <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          <ul className="grid gap-4 sm:grid-cols-2">
             {recap.teams.map((t) => (
               <li key={t.slug}>
-                <Link
-                  href={`/draft/recap/${t.slug}`}
-                  className="state-bar group flex h-full flex-col rounded-lg border border-border bg-surface p-4 transition-colors hover:bg-surface-2/60"
+                <div
+                  className="state-bar flex h-full flex-col rounded-lg border border-border bg-surface p-4"
                   style={{ '--state': 'var(--loss)' } as React.CSSProperties}
                 >
-                  <div className="flex items-start justify-between gap-3">
-                    <div className="min-w-0">
-                      <div className="display text-[21px] leading-tight">{t.manager}</div>
+                  {/* Wraps at the narrowest widths: photo + name + label +
+                      stamp is more than 320px can hold on one line. */}
+                  <div className="flex flex-wrap items-start gap-x-3 gap-y-2">
+                    {t.managerPhoto && (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img
+                        src={t.managerPhoto}
+                        alt=""
+                        width={40}
+                        height={40}
+                        loading="lazy"
+                        decoding="async"
+                        className="size-10 shrink-0 rounded-full border border-border object-cover"
+                      />
+                    )}
+                    <div className="min-w-[7rem] flex-1">
+                      <div className="display truncate text-[19px] leading-tight">{t.managerFull}</div>
                       <div className="truncate text-[12px] text-muted">{t.teamName}</div>
                     </div>
-                    <GradeStamp grade={t.grade} size="sm" />
+                    <div className="ml-auto flex shrink-0 items-center gap-2">
+                      <span className="font-mono text-[9.5px] uppercase leading-tight tracking-[0.14em] text-dim">
+                        Draft<br />Grade:
+                      </span>
+                      <GradeStamp grade={t.grade} size="sm" />
+                    </div>
                   </div>
+
                   <div className="mt-3 font-mono text-[10.5px] uppercase tracking-wider text-dim">
                     {t.verdict}
                   </div>
                   <p className="mt-2 flex-1 text-[13.5px] leading-relaxed text-muted">{t.teaser}</p>
-                  <span className="mt-3 font-mono text-[10.5px] uppercase tracking-wider text-brand">
-                    Read the damage →
-                  </span>
-                </Link>
+
+                  <Link
+                    href={`/draft/recap/${t.slug}`}
+                    className="tap-target mt-4 inline-flex items-center justify-center rounded-md bg-brand px-3.5 py-2 text-[12.5px] font-semibold text-brand-ink transition-opacity hover:opacity-90"
+                  >
+                    See the damage
+                  </Link>
+                </div>
               </li>
             ))}
           </ul>
-        </>
-      )}
+        </section>
+      </div>
     </AppShell>
   )
 }
