@@ -113,14 +113,26 @@ cross-checks for IR calls and depth-chart takeovers.
 
 ## 5. Waiver-wire articles (web)
 
-Search first — article URLs change weekly and guessing them 404s:
+Two kinds of source, both verified fetchable (use a browser User-Agent with
+curl; fantasypros.com in particular rejects generic clients):
+
+**Standing pages** (stable URLs, always current — check these first):
+
+- FantasyPros expert-consensus waiver rankings:
+  `https://www.fantasypros.com/nfl/rankings/waiver-wire-overall.php`
+- The Fantasy Footballers waiver hub (updated weekly):
+  `https://www.thefantasyfootballers.com/fantasy-football-waivers/`
+
+**Weekly articles** (URLs change every week — web-search, don't guess):
 
 - Search: `fantasy football waiver wire week {N} pickups {year}`
-- Reliable outlets that serve plain fetches (verified): cbssports.com,
-  nbcsports.com (Rotoworld), sports.yahoo.com, espn.com. fantasypros.com
-  blocks generic fetches — skip it rather than fight it.
+- James's preferred outlets: Fantasy Life (fantasylife.com), The Fantasy
+  Footballers (thefantasyfootballers.com/analysis/...), ESPN. Also good:
+  cbssports.com, nbcsports.com (Rotoworld), sports.yahoo.com.
+- Fantasy Life and the Footballers also publish weekly waiver YouTube videos;
+  transcripts aren't reliably fetchable, so use their articles/pages instead.
 
-Read 2–4 articles. Extract per player: position, suggested FAB %, and the
+Read the standing pages plus 2–4 articles. Extract per player: position, suggested FAB %, and the
 one-line reason. Note the outlet for attribution. Multi-outlet consensus is
 the strongest add signal; a player pushed by one outlet only is watch-list
 material.
