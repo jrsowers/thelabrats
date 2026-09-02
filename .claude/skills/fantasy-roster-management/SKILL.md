@@ -97,10 +97,18 @@ Cross-reference steps 1–4. For each league produce:
 ### 6. Write and deliver the report
 
 Format per `references/report-format.md` — one section per league plus a short
-cross-league lede. Deliver via every channel whose env vars are present
-(Slack webhook, Resend email — curl examples in data-sources). If **no**
-delivery channel is configured, print the full report as the final output so
-it is at least visible in the session log, and flag the missing configuration.
+cross-league lede. Delivery, in order of preference:
+
+1. **Slack DM to James** (user ID `U07GQ4WNLMP`) via the Slack MCP connector
+   when its tools are available — mrkdwn, split into a lede message plus one
+   message per league if long.
+2. `SLACK_WEBHOOK_URL` and/or Resend env vars (curl examples in data-sources).
+3. If no channel works, print the full report as the final output so it is
+   visible in the session log, and flag the missing configuration.
+
+When running as a scheduled cloud routine, also send a 2–3 sentence
+PushNotification summary (top claim per priority league) regardless of which
+channel delivered the full report.
 
 ## Running outside Tuesdays
 

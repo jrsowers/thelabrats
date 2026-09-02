@@ -5,25 +5,38 @@
 
 season: 2026
 
+# Listed in James's priority order — report sections follow this order, and
+# when effort must be rationed (deep trade scans, article cross-checks), the
+# top of the list wins.
+
 leagues:
+  - name: The Vinegar Strokes
+    platform: yahoo
+    league_id: "771961"
+    my_team_id: 3
+    notes: James's highest-priority league, precedence over all others.
+
+  - name: $50 Buy-In League          # Yahoo name "Yahoo Prize H2H-Pts 142236"
+    platform: yahoo
+    league_id: "142236"
+    my_team_id: 1
+    notes: Public money league ($50 buy-in, strangers). Priority 2.
+
+  - name: Immaculate Concepcion      # Yahoo name "Yahoo Prize H2H-Pts 51886"
+    platform: yahoo
+    league_id: "51886"
+    my_team_id: 6
+    notes: Public money league ($20 buy-in). Named after James's team.
+
+  - name: Soft Tissue Issues         # Yahoo name "Yahoo Prize H2H-Pts 104908"
+    platform: yahoo
+    league_id: "104908"
+    my_team_id: 2
+    notes: Public money league ($20 buy-in). Named after James's team.
+
   - name: The Lab Rats
     platform: espn
     league_id: "793230160"
     my_team_id: 1            # James's Scary Team
     private: false           # public league — no cookies needed
-    notes: 12-team, 6 playoff spots
-
-  # --- Add remaining leagues below ---
-  #
-  # ESPN league template:
-  # - name: <league name>
-  #   platform: espn
-  #   league_id: "<from the league URL: leagueId=...>"
-  #   my_team_id: <from the team page URL: teamId=...>
-  #   private: true          # if true, requests need ESPN_S2 / ESPN_SWID env
-  #
-  # Yahoo league template (league/team keys are auto-discovered each run via
-  # the authenticated "my leagues" call, so only the numeric id is needed):
-  # - name: <league name>
-  #   platform: yahoo
-  #   league_id: "<numeric id from the league URL: /f1/<id>>"
+    notes: 12-team, 6 playoff spots. Friends league.
