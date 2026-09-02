@@ -4,7 +4,7 @@ import { join } from 'node:path'
 import type { ScheduledRoast } from './schedule'
 import { THEME_ANGLE } from './themes'
 import { factSheet, templateRoast } from './roast'
-import { validateRoast, checkStyle } from './validate'
+import { validateRoast, checkStyle, checkCraft } from './validate'
 
 /**
  * Turns scheduled picks into roasts.
@@ -18,12 +18,24 @@ import { validateRoast, checkStyle } from './validate'
  */
 
 const MODEL = process.env.AI_MODEL || 'claude-opus-5'
-const VOICE_PATH = join(process.cwd(), 'AI-References', 'ROAST-BIBLE.md')
+/**
+ * Two documents, in order. ROAST-WRITER is the craft spec — joke engines,
+ * construction, rhythm, freshness, the quality test. ROAST-BIBLE is the league
+ * layer on top of it: who may be roasted, what this format actually is, and the
+ * accuracy rules. Craft first, because the local rules refer back to it.
+ */
+const VOICE_PATHS = [
+  join(process.cwd(), 'AI-References', 'ROAST-WRITER.md'),
+  join(process.cwd(), 'AI-References', 'ROAST-BIBLE.md'),
+]
 
 let cachedVoice: string | null = null
 function voiceGuide(): string {
   if (cachedVoice === null) {
-    try { cachedVoice = readFileSync(VOICE_PATH, 'utf8') } catch { cachedVoice = '' }
+    cachedVoice = VOICE_PATHS
+      .map((p) => { try { return readFileSync(p, 'utf8') } catch { return '' } })
+      .filter(Boolean)
+      .join('\n\n---\n\n')
   }
   return cachedVoice
 }
@@ -140,7 +152,7 @@ async function generate(
               type: 'object',
               properties: {
                 id: { type: 'number', description: 'The PICK ID exactly as given.' },
-                roast: { type: 'string', description: '2-3 sentences. Contractions. No emoji.' },
+                roast: { type: 'string', description: '1-3 sentences, 12-45 words. Two sentences is the usual shape. Contractions. No emoji, no exclamation marks, no em dashes.' },
               },
               required: ['id', 'roast'],
             },
@@ -184,20 +196,23 @@ export async function writeRoasts(
     // invented injury, which does.
     const stiff = batch
       .map((s) => ({ s, text: byId.get(s.pick.overallPickNumber) }))
-      .map(({ s, text }) => ({ s, text, style: text ? checkStyle(text) : { ok: true, notes: [] } }))
+      .map(({ s, text }) => {
+        const style = text ? checkStyle(text) : { ok: true, notes: [] }
+        const craft = text ? checkCraft(text) : { ok: true, notes: [] }
+        return { s, text, style: { ok: style.ok && craft.ok, notes: [...style.notes, ...craft.notes] } }
+      })
       .filter((x) => !x.style.ok)
 
     if (stiff.length > 0) {
       const complaint =
-        'REWRITE REQUIRED. These read as written prose, not speech. Fix ONLY the ' +
-        'language; keep the joke:\n' +
+        'REWRITE REQUIRED. Fix ONLY what is listed and keep the joke:\n' +
         stiff.map((x) =>
           `  PICK ID ${x.s.pick.overallPickNumber}: ${x.style.notes.join('; ')}`).join('\n')
       try {
         const retry = await generate(stiff.map((x) => x.s), opts, apiKey, complaint)
         for (const [id, text] of retry) {
           // Keep the rewrite only if it actually fixed the problem.
-          if (text && checkStyle(text).ok) byId.set(id, text)
+          if (text && checkStyle(text).ok && checkCraft(text).ok) byId.set(id, text)
         }
       } catch {
         // A failed rewrite is not worth losing the batch over.

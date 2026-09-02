@@ -133,12 +133,12 @@ export default async function TeamRecapPage(
 
         <section className="mt-8 border-t border-border pt-5">
           <Eyebrow>Don&rsquo;t worry. Everyone else failed too.</Eyebrow>
-          <ul className="mt-3 flex flex-wrap gap-2.5">
+          <ul className="mt-3 grid grid-cols-2 gap-2.5 sm:grid-cols-3">
             {others.map((t) => (
               <li key={t.slug}>
                 <Link
                   href={`/draft/recap/${t.slug}`}
-                  className="tap-target inline-flex items-center gap-2.5 rounded-lg border border-border bg-surface py-2 pl-2 pr-4 text-[14px] font-medium transition-colors hover:bg-surface-2"
+                  className="tap-target flex w-full items-center gap-2.5 rounded-lg border border-border bg-surface p-2 text-[14px] font-medium transition-colors hover:bg-surface-2"
                 >
                   {t.managerPhoto ? (
                     // eslint-disable-next-line @next/next/no-img-element
@@ -154,7 +154,7 @@ export default async function TeamRecapPage(
                   ) : (
                     <span aria-hidden className="size-9 shrink-0 rounded-full bg-surface-2" />
                   )}
-                  {t.manager}
+                  <span className="min-w-0 truncate">{t.manager}</span>
                 </Link>
               </li>
             ))}

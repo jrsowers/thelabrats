@@ -38,8 +38,30 @@ ESPN mDraftDetail  →  analyze  →  schedule  →  write  →  pages
 | `lib/draft/themes.ts` | Which of 12 angles a pick can honestly support |
 | `lib/draft/schedule.ts` | Which picks get roasted, with which theme |
 | `lib/draft/writer.ts` | Claude call. Phrases facts, never derives them |
+| `lib/draft/validate.ts` | The checks. Status invention, style, craft rules |
+| `lib/draft/badges.ts` | Verdict badges, assigned per manager |
 | `lib/draft/dossier.ts` | Verified news — the only non-fact-sheet source |
 | `lib/draft/roast.ts` | Fact sheet + deterministic template fallback |
+
+### The voice
+
+Two documents load into every prompt, in order:
+
+1. **`ROAST-WRITER.md`** — the craft spec. Joke engines, construction, rhythm,
+   diction, freshness, the quality test. Supplied by James, and it is better
+   than what preceded it. It governs HOW to write.
+2. **`ROAST-BIBLE.md`** — the league layer. Who may be roasted, what this format
+   actually is, the player-then-roster-then-numbers hierarchy, accuracy. It
+   covers only what the craft spec cannot know.
+
+Where they overlap, the craft spec wins.
+
+**Rules that can be checked are checked.** An instruction-only rule has slipped
+five separate times on this project: invented injury status, British spelling,
+the grade restated in prose, a gendered collective in a headline, and roasts
+running 58 words against a 45-word cap. `validate.ts` now enforces the
+mechanical ones, and a failure drives one targeted rewrite rather than a
+fallback — a stiff joke is still a joke.
 
 **The LLM computes nothing.** Every number it can cite already exists on
 `PickAnalysis` and is unit-tested. This is the same contract the awards engine
@@ -216,8 +238,9 @@ code would not have caught a single one of the attribution or ordering bugs.
 
 See `MEMORY.md` for the live list. As of writing:
 
-- Voice guide is a functional v1; James wants a tuning pass
-- Superlatives are not designed and not built
-- `/draft` is not linked from anywhere in the UI — URL-only
 - Tier-2 dossier entries are awaiting James's review
+- `ROBBERY` badge is untested: it needs a 20-slot fall and the simulated draft's
+  largest is 13
 - Yahoo 2025 draft export would unlock the reunion-tour theme next season
+
+**Dropped by James, 2026-09-02:** draft superlatives. Enough features.

@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { validateRoast, checkStyle } from '../src/lib/draft/validate'
+import { validateRoast, checkStyle, checkCraft } from '../src/lib/draft/validate'
 
 const injured = { player: 'Luther Burden III', notes: ['Suffered a groin injury on 8 August 2026 in a contested red-zone rep.'] }
 const outForYear = { player: 'Ricky Pearsall', notes: ['Underwent knee surgery and is out for the 2026 season.'] }
@@ -94,5 +94,37 @@ describe('style checker', () => {
     ]) {
       expect(checkStyle(fine).ok, fine).toBe(true)
     }
+  })
+})
+
+describe('craft checks from ROAST-WRITER.md', () => {
+  it('rejects the punctuation the spec bans', () => {
+    expect(checkCraft('Doug took a kicker — in round eleven.').ok).toBe(false)
+    expect(checkCraft('Doug took a kicker; nobody stopped him.').ok).toBe(false)
+    expect(checkCraft('Doug took a kicker in round eleven!').ok).toBe(false)
+  })
+
+  it('rejects the weak-AI-comedy list', () => {
+    for (const bad of [
+      'Bold strategy from Doug in the eleventh.',
+      "He got his guy, and nobody else wanted him.",
+      'Only time will tell whether that works.',
+      'A masterclass in ignoring the quarterback slot.',
+    ]) {
+      expect(checkCraft(bad).ok, bad).toBe(false)
+    }
+  })
+
+  it('caps length at the spec ceiling', () => {
+    const long = Array.from({ length: 50 }, () => 'word').join(' ')
+    const r = checkCraft(long)
+    expect(r.ok).toBe(false)
+    expect(r.notes.join(' ')).toMatch(/45/)
+  })
+
+  it('passes a roast written to spec', () => {
+    const good = "Doug took a kicker in the eleventh. Not the fifteenth, where they live. The eleventh."
+    expect(checkCraft(good).ok).toBe(true)
+    expect(checkStyle(good).ok).toBe(true)
   })
 })

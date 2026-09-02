@@ -7,8 +7,32 @@
 import Anthropic from '@anthropic-ai/sdk'
 import { readFileSync, writeFileSync } from 'node:fs'
 import { getDraftFeed, picksByTeam, slugFor, memberPhotoFor } from '../src/lib/draft/feed-data'
+import { checkStyle, checkCraft } from '../src/lib/draft/validate'
 
 const MODEL = process.env.AI_MODEL || 'claude-opus-5'
+
+/**
+ * The recap talks to the API directly rather than through writeRoasts, so it
+ * skipped every check the live feed runs. Twenty-eight em dashes shipped in one
+ * pass, against a spec that bans them outright. This puts the same rules back
+ * in front of it.
+ *
+ * Length is exempt: a recap paragraph is meant to be longer than a 45-word
+ * roast. Everything else — punctuation, weak-AI phrasing, gendered collectives,
+ * British spelling, throat-clearing — applies exactly as it does to a roast.
+ */
+function proseProblems(text: string): string[] {
+  const craft = checkCraft(text).notes.filter((n) => !n.includes('words'))
+  return [...checkStyle(text).notes, ...craft]
+}
+
+function auditStrings(label: string, strings: string[]): string[] {
+  const out: string[] = []
+  for (const t of strings) {
+    for (const n of proseProblems(t)) out.push(`${label}: ${n} — in "${t.slice(0, 60)}..."`)
+  }
+  return out
+}
 const voice = readFileSync('AI-References/ROAST-BIBLE.md', 'utf8')
 
 const SYSTEM = `${voice}
@@ -106,6 +130,46 @@ ${context}` }],
   const c = (cards.content.find((b) => b.type === 'tool_use') as { input: { cards?: Record<string, unknown>[] } } | undefined)?.input?.cards ?? []
 
   const bySlugManager = new Map(teamSummaries.map((t) => [t.manager, t]))
+  // One repair pass over everything, using the same rules as the live feed.
+  // Re-read from the objects each time: capturing the strings once meant the
+  // post-repair audit re-checked the ORIGINAL text and always reported the same
+  // count, which read as "the repair did nothing" when it had in fact worked.
+  const currentStrings = () => [
+    ...auditStrings('feature', [f?.headline as string, f?.standfirst as string,
+      ...((f?.sections as { heading: string; body: string[] }[]) ?? [])
+        .flatMap((x) => [x.heading, ...x.body])].filter(Boolean)),
+    ...auditStrings('card', c.flatMap((x) => [x.verdict as string, x.teaser as string,
+      ...((x.body as string[]) ?? [])]).filter(Boolean)),
+  ]
+
+  const problems = currentStrings()
+  if (problems.length > 0) {
+    console.log(`  repairing ${problems.length} style problem(s)...`)
+    const repair = await client.messages.create({
+      model: MODEL, max_tokens: 12000, system: SYSTEM,
+      tools: [{
+        name: 'submit_repair', description: 'Return the corrected JSON.',
+        input_schema: { type: 'object', properties: {
+          feature: { type: 'object', description: 'The corrected feature object, same shape.' },
+          cards: { type: 'array', description: 'The corrected cards array, same shape and order.', items: { type: 'object' } },
+        }, required: ['feature', 'cards'] },
+      }],
+      tool_choice: { type: 'tool', name: 'submit_repair' },
+      messages: [{ role: 'user', content:
+        `Fix ONLY the listed problems. Do not rewrite the jokes, change the ` +
+        `structure, or alter anything not listed.\n\n` +
+        `PROBLEMS:\n${problems.slice(0, 40).join('\n')}\n\n` +
+        `FEATURE:\n${JSON.stringify(f)}\n\nCARDS:\n${JSON.stringify(c)}` }],
+    })
+    const fixed = (repair.content.find((b) => b.type === 'tool_use') as
+      { input?: { feature?: Record<string, unknown>; cards?: Record<string, unknown>[] } } | undefined)?.input
+    if (fixed?.feature) Object.assign(f as object, fixed.feature)
+    if (fixed?.cards?.length === c.length) {
+      for (const [i, card] of fixed.cards.entries()) Object.assign(c[i], card)
+    }
+    console.log(`  after repair: ${currentStrings().length} remaining`)
+  }
+
   writeFileSync('fixtures/sample-draft-recap.json', JSON.stringify({
     // Inherit the feed's status rather than hardcoding. The live runner writes
     // `sample: false`, and hardcoding true here would stamp the real recap with

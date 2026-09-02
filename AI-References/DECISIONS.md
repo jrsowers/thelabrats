@@ -705,3 +705,26 @@ Players: the choice or the institution, never the people harmed.
 **Roast pages are noindex.** The jokes name real players on a site carrying real
 people's names. Shareable by link, invisible to search. Site description also
 dropped "brought to you by Creator Science" at James's request.
+
+## 2026-09-02 — Voice spec, and checks over instructions
+
+**Two voice documents, not one.** `ROAST-WRITER.md` is the craft spec James
+supplied; `ROAST-BIBLE.md` was cut back to only what that document cannot know —
+the two-tier roast boundary, the superflex facts, the accuracy rules, and the
+player-then-roster-then-numbers hierarchy. Duplicating craft guidance in both
+would guarantee they drift apart.
+
+**Anything mechanical is a check, not an instruction.** Five separate rules have
+been written down clearly and then broken: invented injury status, British
+spelling, the grade restated in prose, a gendered collective in a headline, and
+the word cap. `validate.ts` enforces punctuation, length, the weak-AI-comedy
+blacklist, gendered collectives, British spelling and status invention. A
+failure drives one targeted rewrite; only invented facts fall back.
+
+**Badges are assigned per manager, not per pick.** Per-pick scoring gave one
+manager eleven badges and another none, and produced no positive badge at all
+across six managers. Ranking a manager's own picks against each other guarantees
+a spread on every page: three bad, three mildly bad, one good, minimum five.
+
+**Superlatives dropped**, James's call. The draft roaster, recap and report
+cards are the feature set.

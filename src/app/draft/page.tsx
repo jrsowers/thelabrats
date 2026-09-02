@@ -5,6 +5,7 @@ import { FieldBackdrop } from '@/components/ui/field-backdrop'
 import { Eyebrow, EmptyState, LiveBadge } from '@/components/ui/primitives'
 import { PickRow, RoundMarker } from '@/components/draft/pick-row'
 import { OnTheClockCard } from '@/components/draft/on-the-clock'
+import { DraftCountdown } from '@/components/ui/draft-countdown'
 import { LiveRefresh } from '@/components/ui/live-refresh'
 import { getDraftFeed, newestFirst } from '@/lib/draft/feed-data'
 
@@ -19,6 +20,13 @@ export const metadata: Metadata = {
   title: 'Draft Feed',
   robots: { index: false, follow: false },
 }
+
+const fmtDraftDate = (iso: string) =>
+  new Intl.DateTimeFormat('en-US', {
+    weekday: 'long', month: 'long', day: 'numeric',
+    hour: 'numeric', minute: '2-digit', timeZoneName: 'short',
+    timeZone: 'America/New_York',
+  }).format(new Date(iso))
 
 export default async function DraftPage() {
   const overview = await getLeagueOverview()
@@ -60,14 +68,28 @@ export default async function DraftPage() {
           turn, and picks are cumulative so a missed tick costs nothing. */}
       <LiveRefresh intervalMs={15_000} active={!feed.complete} />
 
-      {feed.onTheClock && <OnTheClockCard next={feed.onTheClock} />}
+      {/* Once picks exist the clock card takes over; before that the countdown
+          is the more useful thing to look at. */}
+      {feed.picks.length > 0 && feed.onTheClock && <OnTheClockCard next={feed.onTheClock} />}
 
       {feed.picks.length === 0 ? (
-        <div className="rounded-lg border border-border bg-surface">
-          <EmptyState
-            title="The draft has not started."
-            hint="Picks appear here the moment they are made."
-          />
+        <div className="overflow-hidden rounded-lg border border-brand/30 bg-brand-soft">
+          <div className="px-5 py-6 text-center sm:py-8">
+            <div className="display text-[26px] leading-tight sm:text-[32px]">
+              Nothing to judge yet.
+            </div>
+            <p className="mx-auto mt-2 max-w-md text-[14px] leading-relaxed text-muted">
+              Every pick lands here the moment it is made, with commentary
+              nobody asked for. {overview.draftScheduledAt
+                ? `The draft starts ${fmtDraftDate(overview.draftScheduledAt)}.`
+                : 'Check back when the draft starts.'}
+            </p>
+            {overview.draftScheduledAt && (
+              <div className="mt-6 flex justify-center">
+                <DraftCountdown target={overview.draftScheduledAt} />
+              </div>
+            )}
+          </div>
         </div>
       ) : (
         <div className="overflow-hidden rounded-lg border border-border">

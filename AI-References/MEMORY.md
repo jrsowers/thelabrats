@@ -246,3 +246,25 @@ endpoint. Open: voice tuning (together), superlatives design, `/draft` is not
 linked from anywhere in the UI, tier-2 dossier review, and the Yahoo 2025
 export for the reunion-tour theme.
 
+## Session 6 — 2026-09-02 (voice and pages)
+
+The roast voice now loads **two** documents: `ROAST-WRITER.md` (James's craft
+spec — joke engines, rhythm, freshness, the quality test) then `ROAST-BIBLE.md`
+(the league layer — who may be roasted, superflex facts, accuracy). Craft spec
+wins where they overlap.
+
+**The lesson of this session:** an instruction-only rule has now slipped five
+times — invented injury status, British spelling, grades restated in prose, a
+gendered collective in a headline, and 56 of 60 roasts running past the word
+cap. Anything mechanical belongs in `validate.ts`, not in prose. The recap
+generator was bypassing the checks entirely and shipped 28 em dashes against a
+spec that bans them; it now audits and repairs.
+
+Also: `/draft` shows a countdown instead of sample data until picks land, the
+sample draft has been cleared from Postgres, and badges are assigned per manager
+(3 bad, 3 mildly bad, 1 good, minimum five) rather than judged per pick.
+
+**Dropped:** draft superlatives. James called scope, 2026-09-02.
+
+Open: tier-2 dossier review, the ROBBERY badge is untested, Yahoo 2025 export.
+

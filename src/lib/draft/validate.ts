@@ -97,3 +97,47 @@ export function checkStyle(text: string): StyleResult {
 
   return { ok: notes.length === 0, notes }
 }
+
+
+/**
+ * Mechanical rules from ROAST-WRITER.md that can be checked rather than hoped
+ * for: length, punctuation, and the blacklist of phrases it names as weak AI
+ * comedy. Same rationale as everything else in this file — an instruction has
+ * slipped here four separate times.
+ */
+const BANNED_PUNCT: [RegExp, string][] = [
+  [/—/, 'em dash — the spec bans them'],
+  [/;/, 'semicolon — the spec says avoid'],
+  [/!/, 'exclamation mark — the spec bans them'],
+  [/#\w/, 'hashtag'],
+]
+
+const WEAK_AI_COMEDY = [
+  'bold strategy', "let's see if it pays off", 'only time will tell',
+  'he got his guy', 'somebody had to take him', 'this was certainly a choice',
+  'in a shocking turn of events', 'tell me you', 'living rent-free',
+  'the fantasy gods', 'a masterclass in', 'make it make sense',
+  'not a roster. it is a cry for help', 'not a roster, it is a cry for help',
+  'drafted a lifestyle', 'more support group',
+]
+
+export const ROAST_WORDS = { min: 12, max: 45 }
+
+export function checkCraft(text: string): StyleResult {
+  const notes: string[] = []
+
+  for (const [re, why] of BANNED_PUNCT) {
+    if (re.test(text)) { notes.push(why); break }
+  }
+
+  const lower = text.toLowerCase()
+  const weak = WEAK_AI_COMEDY.find((w) => lower.includes(w))
+  if (weak) notes.push(`"${weak}" is on the weak-AI-comedy list`)
+
+  const words = text.trim().split(/\s+/).length
+  if (words > ROAST_WORDS.max) {
+    notes.push(`${words} words — the spec caps a roast at ${ROAST_WORDS.max}. Cut, do not rewrite`)
+  }
+
+  return { ok: notes.length === 0, notes }
+}
