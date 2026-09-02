@@ -67,7 +67,16 @@ function buildPrompt(batch: ScheduledRoast[], opts: WriteOptions): string {
     )
   }
 
-  parts.push(`Write ${batch.length} roast${batch.length === 1 ? '' : 's'}, one per pick below.`)
+  parts.push(
+    `Write ${batch.length} roast${batch.length === 1 ? '' : 's'}, one per pick below.\n\n` +
+    'WHAT THE JOKE IS ABOUT, in order:\n' +
+    '  1. THE PLAYER — read playerStory. Old, unproven, hurt, in trouble, never ' +
+    'actually done it. This is where the joke usually is.\n' +
+    '  2. THE ROSTER — read rosterProblems. One QB in a format that starts two, ' +
+    'three TEs for one slot, a kicker eight rounds early.\n' +
+    '  3. THE NUMBERS — last, and rarely. At most ONE, and only if the number ' +
+    'itself is absurd. NEVER open a roast with a rank, an ADP or a slot count.',
+  )
 
   // Identified by overallPickNumber, never by batch position. The fact sheet
   // also carries a pick number, and an earlier version asked for {"pick": N}

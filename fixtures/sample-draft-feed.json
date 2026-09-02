@@ -1,7 +1,7 @@
 {
  "_note": "SAMPLE. Generated from the hypothesised draft so the pages can be built and reviewed before Thursday. Replaced by live data on draft day.",
  "sample": true,
- "generatedAt": "2026-09-02T19:35:59.062Z",
+ "generatedAt": "2026-09-02T19:46:04.921Z",
  "picks": [
   {
    "overallPickNumber": 1,
@@ -17,7 +17,7 @@
    "position": "RB",
    "proTeam": "DET",
    "leagueRank": 1,
-   "adp": 1.34,
+   "adp": 1.33,
    "reachSlots": 0,
    "betterAvailable": 0,
    "roast": null
@@ -55,11 +55,11 @@
    "position": "QB",
    "proTeam": "BUF",
    "leagueRank": 3,
-   "adp": 19.4,
+   "adp": 19.27,
    "reachSlots": 0,
    "betterAvailable": 0,
    "roast": {
-    "text": "Keshia took the best player on the board with nobody better sitting there, which is the first time all year she's done something we can't argue with. We're logging it as a mistrigger. Josh Allen at three, and the only theory that holds is that her mouse slipped onto the correct name.",
+    "text": "Keshia took the best quarterback alive with the third pick in the draft, which is the correct move and therefore deeply suspicious. Six straight years of Allen finishing first or second, and she found him anyway. We're logging this as a lucky mouse click and moving on.",
     "theme": "BACKHANDED_COMPLIMENT",
     "fallback": false
    }
@@ -78,7 +78,7 @@
    "position": "RB",
    "proTeam": "SF",
    "leagueRank": 4,
-   "adp": 7.67,
+   "adp": 7.69,
    "reachSlots": 0,
    "betterAvailable": 0,
    "roast": null
@@ -96,10 +96,10 @@
    "player": "Puka Nacua",
    "position": "WR",
    "proTeam": "LAR",
-   "leagueRank": 5,
+   "leagueRank": 6,
    "adp": 5.27,
-   "reachSlots": 0,
-   "betterAvailable": 0,
+   "reachSlots": 1,
+   "betterAvailable": 1,
    "roast": null
   },
   {
@@ -115,12 +115,12 @@
    "player": "Jonathan Taylor",
    "position": "RB",
    "proTeam": "IND",
-   "leagueRank": 6,
-   "adp": 6.33,
-   "reachSlots": 0,
+   "leagueRank": 5,
+   "adp": 6.25,
+   "reachSlots": -1,
    "betterAvailable": 0,
    "roast": {
-    "text": "Jay took Jonathan Taylor at six, the exact spot where a guy sitting in a basement in Toledo would've taken him. Nobody was passed over. No board was read. Jay just walked into the room, pointed at the top name, and sat back down like he'd solved something.",
+    "text": "Jay took Jonathan Taylor, a guy who led the league in carries and touchdowns, and did it at the exact spot where everyone in the room expected him to go. No hesitation, no risk, no fingerprints. He drafted like a man reading the instructions out loud.",
     "theme": "FOLLOWING_THE_CROWD",
     "fallback": false
    }
@@ -139,7 +139,7 @@
    "position": "WR",
    "proTeam": "CIN",
    "leagueRank": 7,
-   "adp": 4.32,
+   "adp": 4.3,
    "reachSlots": 0,
    "betterAvailable": 0,
    "roast": null
@@ -158,7 +158,7 @@
    "position": "WR",
    "proTeam": "SEA",
    "leagueRank": 8,
-   "adp": 6.19,
+   "adp": 6.24,
    "reachSlots": 0,
    "betterAvailable": 0,
    "roast": null
@@ -177,7 +177,7 @@
    "position": "RB",
    "proTeam": "BAL",
    "leagueRank": 9,
-   "adp": 16.81,
+   "adp": 16.68,
    "reachSlots": 0,
    "betterAvailable": 0,
    "roast": null
@@ -196,11 +196,11 @@
    "position": "WR",
    "proTeam": "DET",
    "leagueRank": 10,
-   "adp": 8.35,
+   "adp": 8.36,
    "reachSlots": 0,
    "betterAvailable": 0,
    "roast": {
-    "text": "Justin let the receiver run happen around him and then calmly took the best guy left, on time, at value. There's no crime here, which is itself suspicious. Somewhere the Substation Superstars war room is looking at each other trying to figure out who pressed it.",
+    "text": "Justin took the only guy in history with 90 catches in each of his first five seasons, which required him to do nothing but not look away. He's finished third among receivers three years running. Justin picked the name at the top and we're treating that as a clerical accident rather than a plan.",
     "theme": "BACKHANDED_COMPLIMENT",
     "fallback": false
    }
@@ -219,11 +219,11 @@
    "position": "QB",
    "proTeam": "PHI",
    "leagueRank": 17,
-   "adp": 54.31,
+   "adp": 54.61,
    "reachSlots": 6,
    "betterAvailable": 6,
    "roast": {
-    "text": "Mike wanted Jalen Hurts and wanted him now, so he stepped over James Cook III to get there. Nobody in this league was going to take Hurts. Nobody was even thinking about him. Mike bid against an empty chair and somehow came out behind.",
+    "text": "Mike wanted Jalen Hurts and nobody was going to stop him, so he stopped himself. Hurts ran for 421 yards last year after four straight seasons of 600-plus, and his fantasy scoring hit its lowest point as a starter. James Cook III sat right there watching Mike outbid an empty room.",
     "theme": "COST_TO_VALUE",
     "fallback": false
    }
@@ -242,13 +242,13 @@
    "position": "RB",
    "proTeam": "BUF",
    "leagueRank": 11,
-   "adp": 10.41,
+   "adp": 10.27,
    "reachSlots": -1,
    "betterAvailable": 0,
    "roast": {
-    "text": "Evan let James Cook III fall to him and then took him a beat later than the guy in the next league over would have. That's not patience, that's waiting for somebody else to make the decision and finding out nobody would. Courage of a man ordering the second thing on the menu.",
+    "text": "Evan took the best player on the board. Suspiciously competent.",
     "theme": "FOLLOWING_THE_CROWD",
-    "fallback": false
+    "fallback": true
    }
   },
   {
@@ -265,7 +265,7 @@
    "position": "RB",
    "proTeam": "MIA",
    "leagueRank": 12,
-   "adp": 12.13,
+   "adp": 12.15,
    "reachSlots": -1,
    "betterAvailable": 0,
    "roast": null
@@ -284,7 +284,7 @@
    "position": "QB",
    "proTeam": "NE",
    "leagueRank": 13,
-   "adp": 47.37,
+   "adp": 47.34,
    "reachSlots": -1,
    "betterAvailable": 0,
    "roast": null
@@ -303,7 +303,7 @@
    "position": "QB",
    "proTeam": "BAL",
    "leagueRank": 14,
-   "adp": 35.2,
+   "adp": 35.04,
    "reachSlots": -1,
    "betterAvailable": 0,
    "roast": null
@@ -322,7 +322,7 @@
    "position": "QB",
    "proTeam": "CIN",
    "leagueRank": 15,
-   "adp": 54.18,
+   "adp": 53.91,
    "reachSlots": -1,
    "betterAvailable": 0,
    "roast": null
@@ -341,7 +341,7 @@
    "position": "RB",
    "proTeam": "PHI",
    "leagueRank": 16,
-   "adp": 14.1,
+   "adp": 14.04,
    "reachSlots": -1,
    "betterAvailable": 0,
    "roast": null
@@ -359,10 +359,10 @@
    "player": "Justin Jefferson",
    "position": "WR",
    "proTeam": "MIN",
-   "leagueRank": 26,
-   "adp": 12.67,
-   "reachSlots": 8,
-   "betterAvailable": 8,
+   "leagueRank": 27,
+   "adp": 12.71,
+   "reachSlots": 9,
+   "betterAvailable": 9,
    "roast": null
   },
   {
@@ -379,7 +379,7 @@
    "position": "RB",
    "proTeam": "KC",
    "leagueRank": 18,
-   "adp": 25.02,
+   "adp": 25.06,
    "reachSlots": -1,
    "betterAvailable": 0,
    "roast": null
@@ -398,11 +398,11 @@
    "position": "WR",
    "proTeam": "NO",
    "leagueRank": 50,
-   "adp": 29.7,
+   "adp": 29.48,
    "reachSlots": 30,
    "betterAvailable": 30,
    "roast": {
-    "text": "For Chris Olave to work, Bree needs the injury history to end, the targets to spike, Breece Hall to disappoint her personally, and thirty guys she skipped to all have quiet years at the same time. That's not a draft pick, that's a prayer chain. Two receivers in, and the plan is already load-bearing on other people's failures.",
+    "text": "For Chris Olave to pay off here, the career year has to repeat, the health has to hold, and Breece Hall and Ashton Jeanty both have to quietly disappoint from someone else's bench. Bree needs three things to go right and walked past thirty guys who only needed one. That's not a plan, that's a wish with a receiver attached.",
     "theme": "COPIUM",
     "fallback": false
    }
@@ -421,7 +421,7 @@
    "position": "RB",
    "proTeam": "NYJ",
    "leagueRank": 19,
-   "adp": 35.92,
+   "adp": 36,
    "reachSlots": -2,
    "betterAvailable": 0,
    "roast": null
@@ -439,10 +439,10 @@
    "player": "Matthew Stafford",
    "position": "QB",
    "proTeam": "LAR",
-   "leagueRank": 20,
-   "adp": 91.65,
-   "reachSlots": -2,
-   "betterAvailable": 0,
+   "leagueRank": 21,
+   "adp": 92.52,
+   "reachSlots": -1,
+   "betterAvailable": 1,
    "roast": null
   },
   {
@@ -458,10 +458,10 @@
    "player": "Jayden Daniels",
    "position": "QB",
    "proTeam": "WSH",
-   "leagueRank": 21,
-   "adp": 52.8,
-   "reachSlots": -2,
-   "betterAvailable": 0,
+   "leagueRank": 22,
+   "adp": 53.01,
+   "reachSlots": -1,
+   "betterAvailable": 1,
    "roast": null
   },
   {
@@ -477,12 +477,12 @@
    "player": "Travis Etienne Jr.",
    "position": "RB",
    "proTeam": "NO",
-   "leagueRank": 37,
-   "adp": 41.85,
-   "reachSlots": 13,
-   "betterAvailable": 14,
+   "leagueRank": 36,
+   "adp": 41.38,
+   "reachSlots": 12,
+   "betterAvailable": 13,
    "roast": {
-    "text": "Jesse needed a second running back and needed one badly enough to walk past fourteen better names to find one he liked the sound of. Ashton Jeanty was right there, doing nothing, hurting no one. Jesse looked at him and kept scrolling.",
+    "text": "Jesse took Travis Etienne, a fine back who just moved to New Orleans, and paid a price that suggested nobody else was allowed to want him. Ashton Jeanty was sitting there the whole time. Jesse looked at a better player and a longer relationship with his own team and chose neither.",
     "theme": "COST_TO_VALUE",
     "fallback": false
    }
@@ -501,7 +501,7 @@
    "position": "QB",
    "proTeam": "SF",
    "leagueRank": 29,
-   "adp": 109.74,
+   "adp": 110.32,
    "reachSlots": 4,
    "betterAvailable": 6,
    "roast": null
@@ -520,7 +520,7 @@
    "position": "RB",
    "proTeam": "ARI",
    "leagueRank": 23,
-   "adp": 25.96,
+   "adp": 26.14,
    "reachSlots": -3,
    "betterAvailable": 1,
    "roast": null
@@ -538,9 +538,9 @@
    "player": "Ashton Jeanty",
    "position": "RB",
    "proTeam": "LV",
-   "leagueRank": 22,
-   "adp": 21.58,
-   "reachSlots": -5,
+   "leagueRank": 20,
+   "adp": 21.79,
+   "reachSlots": -7,
    "betterAvailable": 0,
    "roast": null
   },
@@ -557,12 +557,12 @@
    "player": "Nico Collins",
    "position": "WR",
    "proTeam": "HOU",
-   "leagueRank": 48,
-   "adp": 25.85,
-   "reachSlots": 20,
-   "betterAvailable": 21,
+   "leagueRank": 49,
+   "adp": 25.77,
+   "reachSlots": 21,
+   "betterAvailable": 22,
    "roast": {
-    "text": "Nico Collins is expected to lead the Texans receivers after Jayden Higgins tore his ACL, and Chenell read that and decided it was worth stepping over CeeDee Lamb. The reigning champ is drafting off the injury report of guys who aren't even on her roster. Twenty-one better players stayed on the board so she could get the guy whose promotion came in a hospital.",
+    "text": "Chenell drafted Nico Collins on the theory that Jayden Higgins's torn ACL makes him the whole Houston passing game, which is a lot of faith in a guy who's never played all seventeen. She stepped over CeeDee Lamb to get there. Defending champ, building around somebody else's injury report.",
     "theme": "NEWS_CYCLE",
     "fallback": false
    }
@@ -580,10 +580,10 @@
    "player": "CeeDee Lamb",
    "position": "WR",
    "proTeam": "DAL",
-   "leagueRank": 24,
-   "adp": 11.76,
-   "reachSlots": -5,
-   "betterAvailable": 0,
+   "leagueRank": 25,
+   "adp": 11.84,
+   "reachSlots": -4,
+   "betterAvailable": 1,
    "roast": null
   },
   {
@@ -599,9 +599,9 @@
    "player": "Chase Brown",
    "position": "RB",
    "proTeam": "CIN",
-   "leagueRank": 27,
-   "adp": 17.39,
-   "reachSlots": -3,
+   "leagueRank": 26,
+   "adp": 17.18,
+   "reachSlots": -4,
    "betterAvailable": 1,
    "roast": null
   },
@@ -619,7 +619,7 @@
    "position": "QB",
    "proTeam": "JAX",
    "leagueRank": 34,
-   "adp": 99,
+   "adp": 100.1,
    "reachSlots": 3,
    "betterAvailable": 6,
    "roast": null
@@ -637,9 +637,9 @@
    "player": "Javonte Williams",
    "position": "RB",
    "proTeam": "DAL",
-   "leagueRank": 25,
-   "adp": 33.31,
-   "reachSlots": -7,
+   "leagueRank": 24,
+   "adp": 33.04,
+   "reachSlots": -8,
    "betterAvailable": 0,
    "roast": null
   },
@@ -657,7 +657,7 @@
    "position": "RB",
    "proTeam": "LAC",
    "leagueRank": 28,
-   "adp": 19.26,
+   "adp": 18.74,
    "reachSlots": -5,
    "betterAvailable": 0,
    "roast": null
@@ -676,7 +676,7 @@
    "position": "QB",
    "proTeam": "DEN",
    "leagueRank": 30,
-   "adp": 100.95,
+   "adp": 102.14,
    "reachSlots": -4,
    "betterAvailable": 0,
    "roast": null
@@ -695,7 +695,7 @@
    "position": "QB",
    "proTeam": "DAL",
    "leagueRank": 31,
-   "adp": 73.11,
+   "adp": 72.42,
    "reachSlots": -4,
    "betterAvailable": 0,
    "roast": null
@@ -714,11 +714,11 @@
    "position": "QB",
    "proTeam": "KC",
    "leagueRank": 32,
-   "adp": 108.1,
+   "adp": 108.45,
    "reachSlots": -4,
    "betterAvailable": 0,
    "roast": {
-    "text": "Evan took Patrick Mahomes because he's Patrick Mahomes, seventy-two picks before some guy in a Denver bar would've bothered. He carries a QUESTIONABLE tag and a name so loud Evan couldn't hear it. Safest pick on the board, made unsafe entirely by Evan.",
+    "text": "Evan followed up the safest running back on the board with the most famous quarterback on it. Mahomes averaged 15 points a game over his last six and tore his ACL in Week 15, and he's still the name your uncle would say first. Evan isn't drafting a roster, he's drafting the guys on the pregame graphic.",
     "theme": "FOLLOWING_THE_CROWD",
     "fallback": false
    }
@@ -737,7 +737,7 @@
    "position": "TE",
    "proTeam": "LV",
    "leagueRank": 33,
-   "adp": 23.98,
+   "adp": 23.97,
    "reachSlots": -4,
    "betterAvailable": 0,
    "roast": null
@@ -756,11 +756,11 @@
    "position": "QB",
    "proTeam": "NYG",
    "leagueRank": 35,
-   "adp": 82.84,
+   "adp": 83.38,
    "reachSlots": -3,
    "betterAvailable": 0,
    "roast": {
-    "text": "That's four quarterbacks for Mike, and Jaxson Dart is the newest one. He's part of a Giants trio that played eighteen snaps together last year, and analysts kept calling the whole group overvalued, so naturally Mike bought in. His roster can't run, can't catch, and can't put eleven guys on the grass at MetLife.",
+    "text": "That's four quarterbacks for Mike, in a league that starts two on a good day. He's now got a bench that could run a full scrimmage and nobody to hand off to. Somewhere in there is a plan to trade one of these guys to a man who already has three.",
     "theme": "POSITIONAL_IMBALANCE",
     "fallback": false
    }
@@ -779,7 +779,7 @@
    "position": "RB",
    "proTeam": "CLE",
    "leagueRank": 45,
-   "adp": 49.69,
+   "adp": 49.29,
    "reachSlots": 6,
    "betterAvailable": 8,
    "roast": null
@@ -797,9 +797,9 @@
    "player": "Trey McBride",
    "position": "TE",
    "proTeam": "ARI",
-   "leagueRank": 36,
-   "adp": 22.5,
-   "reachSlots": -4,
+   "leagueRank": 37,
+   "adp": 22.64,
+   "reachSlots": -3,
    "betterAvailable": 0,
    "roast": null
   },
@@ -816,12 +816,12 @@
    "player": "Tetairoa McMillan",
    "position": "WR",
    "proTeam": "CAR",
-   "leagueRank": 59,
-   "adp": 41.93,
-   "reachSlots": 18,
-   "betterAvailable": 18,
+   "leagueRank": 60,
+   "adp": 42.04,
+   "reachSlots": 19,
+   "betterAvailable": 19,
    "roast": {
-    "text": "For Tetairoa McMillan to be right here, Carolina has to feed a rookie, Drake London has to stall out, Justin Herbert has to be a mirage, and eighteen guys Colin walked past all have to quietly agree to do nothing. Colin didn't draft a receiver, he drafted a set of conditions. Every one of them has to hold or the whole thing folds like a lawn chair.",
+    "text": "Colin took the Offensive Rookie of the Year, which sounds great until you notice the guy finished 16th among receivers and managed exactly one top-10 week all season. For this to work, Carolina has to become a real offense, the leap everybody's promising has to actually happen, and Justin Herbert has to be no use to anyone. Colin's betting on a player whose best trait so far is that people keep saying his name.",
     "theme": "COPIUM",
     "fallback": false
    }
@@ -840,7 +840,7 @@
    "position": "QB",
    "proTeam": "LAC",
    "leagueRank": 38,
-   "adp": 88.19,
+   "adp": 87.05,
    "reachSlots": -4,
    "betterAvailable": 0,
    "roast": null
@@ -859,7 +859,7 @@
    "position": "WR",
    "proTeam": "ATL",
    "leagueRank": 39,
-   "adp": 20.02,
+   "adp": 20.11,
    "reachSlots": -4,
    "betterAvailable": 0,
    "roast": null
@@ -877,10 +877,10 @@
    "player": "Tyler Warren",
    "position": "TE",
    "proTeam": "IND",
-   "leagueRank": 47,
-   "adp": 52.06,
-   "reachSlots": 3,
-   "betterAvailable": 6,
+   "leagueRank": 48,
+   "adp": 52.15,
+   "reachSlots": 4,
+   "betterAvailable": 7,
    "roast": null
   },
   {
@@ -896,9 +896,9 @@
    "player": "Cam Skattebo",
    "position": "RB",
    "proTeam": "NYG",
-   "leagueRank": 49,
-   "adp": 45.27,
-   "reachSlots": 4,
+   "leagueRank": 47,
+   "adp": 45.09,
+   "reachSlots": 2,
    "betterAvailable": 6,
    "roast": null
   },
@@ -916,7 +916,7 @@
    "position": "QB",
    "proTeam": "CHI",
    "leagueRank": 40,
-   "adp": 91.5,
+   "adp": 90.65,
    "reachSlots": -6,
    "betterAvailable": 0,
    "roast": null
@@ -935,7 +935,7 @@
    "position": "RB",
    "proTeam": "LAR",
    "leagueRank": 41,
-   "adp": 36.19,
+   "adp": 35.67,
    "reachSlots": -6,
    "betterAvailable": 0,
    "roast": null
@@ -954,7 +954,7 @@
    "position": "QB",
    "proTeam": "MIN",
    "leagueRank": 42,
-   "adp": 138.75,
+   "adp": 137.88,
    "reachSlots": -6,
    "betterAvailable": 0,
    "roast": null
@@ -973,7 +973,7 @@
    "position": "QB",
    "proTeam": "TB",
    "leagueRank": 53,
-   "adp": 145.97,
+   "adp": 146.03,
    "reachSlots": 4,
    "betterAvailable": 5,
    "roast": null
@@ -992,7 +992,7 @@
    "position": "WR",
    "proTeam": "KC",
    "leagueRank": 43,
-   "adp": 28.66,
+   "adp": 29.1,
    "reachSlots": -7,
    "betterAvailable": 0,
    "roast": null
@@ -1011,11 +1011,11 @@
    "position": "QB",
    "proTeam": "DET",
    "leagueRank": 44,
-   "adp": 136.12,
+   "adp": 136.27,
    "reachSlots": -7,
    "betterAvailable": 0,
    "roast": {
-    "text": "Keshia took Jared Goff with nobody better on the board, which is now twice she's done the right thing and we still can't find the intent. That's four quarterbacks in a league that starts a couple. She's not building a roster anymore, she's running a quarterback pawn shop and occasionally accepting good inventory by mistake.",
+    "text": "Keshia grabbed Jared Goff, a guy with three straight 4,500-yard seasons, at a spot where nobody left on the board was better. That's twice now. Two correct picks is no longer a lucky mouse click, it's a pattern, and we're deeply uncomfortable about it.",
     "theme": "BACKHANDED_COMPLIMENT",
     "fallback": false
    }
@@ -1034,7 +1034,7 @@
    "position": "WR",
    "proTeam": "NE",
    "leagueRank": 46,
-   "adp": 21.51,
+   "adp": 21.18,
    "reachSlots": -6,
    "betterAvailable": 0,
    "roast": null
@@ -1053,7 +1053,7 @@
    "position": "TE",
    "proTeam": "CHI",
    "leagueRank": 51,
-   "adp": 42.71,
+   "adp": 42.54,
    "reachSlots": -2,
    "betterAvailable": 0,
    "roast": null
@@ -1072,7 +1072,7 @@
    "position": "WR",
    "proTeam": "NYG",
    "leagueRank": 52,
-   "adp": 34.65,
+   "adp": 34.78,
    "reachSlots": -2,
    "betterAvailable": 0,
    "roast": null
@@ -1091,11 +1091,11 @@
    "position": "WR",
    "proTeam": "BUF",
    "leagueRank": 84,
-   "adp": 61.77,
+   "adp": 61.27,
    "reachSlots": 29,
    "betterAvailable": 29,
    "roast": {
-    "text": "Jordan Love was sitting right there, doing nothing, bothering no one, and Tyler stepped over him and twenty-eight other guys to get DJ Moore. Three receivers in his last handful of picks, and this one cost him the most to get the least. He didn't shop the board, he grabbed the first name he recognized on the shelf.",
+    "text": "Tyler wanted DJ Moore badly enough to reach past Garrett Wilson for a guy whose target share last year was the smallest since he was a rookie. Moore's in Buffalo now, behind Khalil Shakir, hoping the change of scenery does the work. Tyler paid a premium for a receiver whose whole case is that things can only get better.",
     "theme": "COST_TO_VALUE",
     "fallback": false
    }
@@ -1114,7 +1114,7 @@
    "position": "QB",
    "proTeam": "GB",
    "leagueRank": 54,
-   "adp": 155.52,
+   "adp": 155.37,
    "reachSlots": -2,
    "betterAvailable": 0,
    "roast": null
@@ -1133,7 +1133,7 @@
    "position": "WR",
    "proTeam": "NYJ",
    "leagueRank": 55,
-   "adp": 37.21,
+   "adp": 37.19,
    "reachSlots": -2,
    "betterAvailable": 0,
    "roast": null
@@ -1151,12 +1151,12 @@
    "player": "Harold Fannin Jr.",
    "position": "TE",
    "proTeam": "CLE",
-   "leagueRank": 69,
-   "adp": 71.11,
-   "reachSlots": 11,
-   "betterAvailable": 12,
+   "leagueRank": 70,
+   "adp": 70.84,
+   "reachSlots": 12,
+   "betterAvailable": 13,
    "roast": {
-    "text": "Justin took a tight end eleven spots early with George Pickens and Davante Adams both still available, so the calm stretch is officially over. Two quarterbacks, one running back, one receiver, and now a Browns tight end. That's not a roster, that's a shelf of jerseys arranged by how much he likes the guy's name.",
+    "text": "Justin took Harold Fannin Jr., which puts him one Njoku away from just owning the Cleveland tight end room outright. Fannin was terrific as a 21-year-old rookie and Justin skipped George Pickens to lock him in early. Last pick was the safest name on the board, this one's a sophomore tight end. He's not building a roster, he's collecting whichever guy he read about most recently.",
     "theme": "STACKING",
     "fallback": false
    }
@@ -1174,9 +1174,9 @@
    "player": "D'Andre Swift",
    "position": "RB",
    "proTeam": "CHI",
-   "leagueRank": 60,
-   "adp": 53.61,
-   "reachSlots": 1,
+   "leagueRank": 59,
+   "adp": 52.62,
+   "reachSlots": 0,
    "betterAvailable": 3,
    "roast": null
   },
@@ -1194,7 +1194,7 @@
    "position": "WR",
    "proTeam": "DAL",
    "leagueRank": 56,
-   "adp": 28.49,
+   "adp": 28.36,
    "reachSlots": -4,
    "betterAvailable": 0,
    "roast": null
@@ -1213,7 +1213,7 @@
    "position": "WR",
    "proTeam": "LAR",
    "leagueRank": 57,
-   "adp": 46.29,
+   "adp": 46.24,
    "reachSlots": -4,
    "betterAvailable": 0,
    "roast": null
@@ -1232,7 +1232,7 @@
    "position": "QB",
    "proTeam": "IND",
    "leagueRank": 65,
-   "adp": 159.6,
+   "adp": 159.77,
    "reachSlots": 3,
    "betterAvailable": 5,
    "roast": null
@@ -1250,10 +1250,10 @@
    "player": "David Montgomery",
    "position": "RB",
    "proTeam": "HOU",
-   "leagueRank": 71,
-   "adp": 62.82,
-   "reachSlots": 8,
-   "betterAvailable": 9,
+   "leagueRank": 69,
+   "adp": 62.03,
+   "reachSlots": 6,
+   "betterAvailable": 8,
    "roast": null
   },
   {
@@ -1270,7 +1270,7 @@
    "position": "WR",
    "proTeam": "TB",
    "leagueRank": 61,
-   "adp": 45.24,
+   "adp": 45.04,
    "reachSlots": -3,
    "betterAvailable": 1,
    "roast": null
@@ -1289,12 +1289,12 @@
    "position": "RB",
    "proTeam": "TEN",
    "leagueRank": 90,
-   "adp": 90.74,
+   "adp": 89.29,
    "reachSlots": 25,
    "betterAvailable": 25,
    "roast": {
-    "text": "There isn't a room in this country where Tony Pollard goes at sixty-five, and Colin found the one chair in it and sat down. He passed George Kittle and Zay Flowers to do it. Two picks running now, Colin's drafting from a board only he can see, and the copium tank is getting a refill.",
-    "theme": "AGAINST_THE_GRAIN",
+    "text": "For Tony Pollard to work here, Tennessee's offense has to wake up, the touchdowns have to triple, and Tyjae Spears has to stop existing. Colin needs all three, and he skipped Zay Flowers and George Kittle, who each needed nothing. He's also got one quarterback in a league that starts two, so the copium's getting passed around the whole roster.",
+    "theme": "COPIUM",
     "fallback": false
    }
   },
@@ -1312,7 +1312,7 @@
    "position": "WR",
    "proTeam": "BAL",
    "leagueRank": 58,
-   "adp": 44.23,
+   "adp": 44.32,
    "reachSlots": -8,
    "betterAvailable": 0,
    "roast": null
@@ -1331,7 +1331,7 @@
    "position": "WR",
    "proTeam": "PHI",
    "leagueRank": 62,
-   "adp": 37.13,
+   "adp": 36.96,
    "reachSlots": -5,
    "betterAvailable": 0,
    "roast": null
@@ -1349,13 +1349,13 @@
    "player": "Sam Darnold",
    "position": "QB",
    "proTeam": "SEA",
-   "leagueRank": 79,
-   "adp": 162.28,
-   "reachSlots": 11,
-   "betterAvailable": 13,
+   "leagueRank": 80,
+   "adp": 162.38,
+   "reachSlots": 12,
+   "betterAvailable": 14,
    "roast": {
-    "text": "Bree already had a quarterback, then went and got Sam Darnold while George Kittle sat there being George Kittle. The prayer chain now includes Darnold's whole career reversing itself. Three receivers, two tight ends, and a backup quarterback taken thirteen better players early, because the plan needed one more thing to go wrong for somebody else.",
-    "theme": "COST_TO_VALUE",
+    "text": "Somewhere in Seattle, Sam Darnold finished fifth in the league in passing yards and 27th among quarterbacks in fantasy points per game, and Bree looked at that gap and saw an opportunity. She's still got one starter for two quarterback slots, so this is the fix. Last time she needed three things to go right. Now she needs Darnold to have nine fewer bad weeks than he had.",
+    "theme": "AGAINST_THE_GRAIN",
     "fallback": false
    }
   },
@@ -1373,7 +1373,7 @@
    "position": "TE",
    "proTeam": "SF",
    "leagueRank": 63,
-   "adp": 76.33,
+   "adp": 75.01,
    "reachSlots": -6,
    "betterAvailable": 0,
    "roast": null
@@ -1392,7 +1392,7 @@
    "position": "QB",
    "proTeam": "NO",
    "leagueRank": 64,
-   "adp": 152.75,
+   "adp": 152.53,
    "reachSlots": -6,
    "betterAvailable": 0,
    "roast": null
@@ -1410,10 +1410,10 @@
    "player": "Bucky Irving",
    "position": "RB",
    "proTeam": "TB",
-   "leagueRank": 66,
-   "adp": 57.04,
-   "reachSlots": -5,
-   "betterAvailable": 0,
+   "leagueRank": 67,
+   "adp": 57.1,
+   "reachSlots": -4,
+   "betterAvailable": 1,
    "roast": null
   },
   {
@@ -1429,10 +1429,10 @@
    "player": "Jadarian Price",
    "position": "RB",
    "proTeam": "SEA",
-   "leagueRank": 77,
-   "adp": 68.93,
-   "reachSlots": 5,
-   "betterAvailable": 8,
+   "leagueRank": 75,
+   "adp": 67.96,
+   "reachSlots": 3,
+   "betterAvailable": 6,
    "roast": null
   },
   {
@@ -1448,9 +1448,9 @@
    "player": "Ladd McConkey",
    "position": "WR",
    "proTeam": "LAC",
-   "leagueRank": 75,
-   "adp": 46.43,
-   "reachSlots": 2,
+   "leagueRank": 76,
+   "adp": 46.14,
+   "reachSlots": 3,
    "betterAvailable": 6,
    "roast": null
   },
@@ -1467,12 +1467,12 @@
    "player": "Bhayshul Tuten",
    "position": "RB",
    "proTeam": "JAX",
-   "leagueRank": 67,
-   "adp": 62.77,
-   "reachSlots": -7,
+   "leagueRank": 66,
+   "adp": 61.88,
+   "reachSlots": -8,
    "betterAvailable": 0,
    "roast": {
-    "text": "Doug has five running backs and one receiver. Every Sunday he gets to pick which three backs sit and then stare at the one guy he owns who catches passes. Best player available, sure, but the shape of this team is a bowling ball with an arm glued on.",
+    "text": "Doug now has five running backs, one quarterback, and one receiver, which is a fantasy team the way a bag of flour is a cake. Tuten's the best guy on the board, sure, and he cleared ten touches once in fifteen games last year. Every Sunday Doug gets to start two backs and leave three of them home wondering.",
     "theme": "POSITIONAL_IMBALANCE",
     "fallback": false
    }
@@ -1490,10 +1490,10 @@
    "player": "Kyle Pitts Sr.",
    "position": "TE",
    "proTeam": "ATL",
-   "leagueRank": 72,
-   "adp": 68.18,
-   "reachSlots": -3,
-   "betterAvailable": 2,
+   "leagueRank": 73,
+   "adp": 68.48,
+   "reachSlots": -2,
+   "betterAvailable": 3,
    "roast": null
   },
   {
@@ -1510,12 +1510,12 @@
    "position": "WR",
    "proTeam": "PIT",
    "leagueRank": 97,
-   "adp": 85.5,
+   "adp": 85.34,
    "reachSlots": 21,
    "betterAvailable": 21,
    "roast": {
-    "text": "DK Metcalf works if the questionable tag means nothing, if Sam LaPorta was overrated, if Tee Higgins fades, and if twenty-one guys Chenell skipped all take the year off together. The reigning champ has now built a roster entirely out of medical paperwork and other people's bad luck. She's not reading a cheat sheet, she's reading charts.",
-    "theme": "COPIUM",
+    "text": "Chenell took DK Metcalf, who missed two games and posted a career-low 850 yards, and walked past Sam LaPorta to do it. The defending champ has three backs, three receivers, a tight end and not one quarterback in a format that starts two. She's assembling a beautiful skill-position collection and nobody to throw to any of it.",
+    "theme": "COST_TO_VALUE",
     "fallback": false
    }
   },
@@ -1533,7 +1533,7 @@
    "position": "TE",
    "proTeam": "DET",
    "leagueRank": 68,
-   "adp": 73.23,
+   "adp": 73.7,
    "reachSlots": -9,
    "betterAvailable": 0,
    "roast": null
@@ -1552,7 +1552,7 @@
    "position": "TE",
    "proTeam": "GB",
    "leagueRank": 86,
-   "adp": 91.28,
+   "adp": 91.61,
    "reachSlots": 8,
    "betterAvailable": 10,
    "roast": null
@@ -1571,11 +1571,11 @@
    "position": "WR",
    "proTeam": "DET",
    "leagueRank": 83,
-   "adp": 64.62,
+   "adp": 64.52,
    "reachSlots": 4,
    "betterAvailable": 8,
    "roast": {
-    "text": "Two quarterbacks and five receivers. Tyler has assembled a team that can throw the ball and catch the ball and has absolutely nobody to hand it to. Jameson Williams is the fifth guy running a route for a backfield that doesn't exist, and Rhamondre Stevenson watched the whole thing happen from the board.",
+    "text": "Jameson Williams is a genuinely good pick, and he's also Tyler's fifth receiver. Two receiver slots, one flex, five guys. Tyler's built a wideout depth chart and forgot to attach a football team to the bottom of it.",
     "theme": "POSITIONAL_IMBALANCE",
     "fallback": false
    }
@@ -1593,10 +1593,10 @@
    "player": "Travis Kelce",
    "position": "TE",
    "proTeam": "KC",
-   "leagueRank": 80,
-   "adp": 95.09,
-   "reachSlots": 0,
-   "betterAvailable": 5,
+   "leagueRank": 81,
+   "adp": 95.03,
+   "reachSlots": 1,
+   "betterAvailable": 6,
    "roast": null
   },
   {
@@ -1613,11 +1613,11 @@
    "position": "WR",
    "proTeam": "CHI",
    "leagueRank": 92,
-   "adp": 75.92,
+   "adp": 75.6,
    "reachSlots": 11,
    "betterAvailable": 12,
    "roast": {
-    "text": "James took Luther Burden III eleven spots early like it's the year the guy was a lock, walking past Rome Odunze and Tee Higgins to do it. Burden suffered a groin injury on August 8 in a contested red-zone rep. James saw the tape in his head, not the one from this summer.",
+    "text": "James drafted Luther Burden III on the strength of a rookie year where he barely played, which is the fantasy equivalent of falling in love with a highlight reel. Two career top-20 games. Burden also picked up a groin injury on a contested red-zone rep in August. James walked past Rome Odunze to buy a guy on the promise of what he flashed.",
     "theme": "NOSTALGIA",
     "fallback": false
    }
@@ -1635,15 +1635,11 @@
    "player": "Rome Odunze",
    "position": "WR",
    "proTeam": "CHI",
-   "leagueRank": 70,
-   "adp": 64.99,
-   "reachSlots": -12,
+   "leagueRank": 71,
+   "adp": 65.04,
+   "reachSlots": -11,
    "betterAvailable": 0,
-   "roast": {
-    "text": "Justin took Rome Odunze at eighty-two with nobody better on the board, which is the second time this draft he's accidentally been right. The jersey shelf now has a receiver on it who's actually good, and you can tell it wasn't planned because he took him on time. Whoever's pressing the button in the Substation Superstars war room, keep them away from the tight ends.",
-    "theme": "BACKHANDED_COMPLIMENT",
-    "fallback": false
-   }
+   "roast": null
   },
   {
    "overallPickNumber": 83,
@@ -1658,13 +1654,13 @@
    "player": "Tee Higgins",
    "position": "WR",
    "proTeam": "CIN",
-   "leagueRank": 73,
-   "adp": 50.95,
-   "reachSlots": -10,
-   "betterAvailable": 0,
+   "leagueRank": 74,
+   "adp": 51.04,
+   "reachSlots": -9,
+   "betterAvailable": 1,
    "roast": {
-    "text": "Mike finally took a receiver, and it's the one every guy in his fantasy chat had circled since July. Five quarterbacks and one running back, and the first brave thing he's done all draft is agree with a room full of people who already agreed. He's got a whole depth chart of passers and exactly one guy questionable enough to catch for them.",
-    "theme": "FOLLOWING_THE_CROWD",
+    "text": "Mike finally drafted a receiver, his fifth quarterback ago. For Tee Higgins to pay off, Cincinnati has to keep throwing at a guy who's missed seven games in two years, Ja'Marr Chase has to leave a few scraps near the goal line, and Mike has to find somebody willing to take a quarterback off his hands. That's five arms, one back, one wideout, and a trade offer nobody in this league is answering.",
+    "theme": "COPIUM",
     "fallback": false
    }
   },
@@ -1681,10 +1677,10 @@
    "player": "Jaylen Waddle",
    "position": "WR",
    "proTeam": "DEN",
-   "leagueRank": 87,
-   "adp": 52.45,
-   "reachSlots": 3,
-   "betterAvailable": 6,
+   "leagueRank": 88,
+   "adp": 52.16,
+   "reachSlots": 4,
+   "betterAvailable": 7,
    "roast": null
   },
   {
@@ -1700,12 +1696,12 @@
    "player": "Rhamondre Stevenson",
    "position": "RB",
    "proTeam": "NE",
-   "leagueRank": 74,
-   "adp": 79.97,
-   "reachSlots": -11,
+   "leagueRank": 72,
+   "adp": 79.28,
+   "reachSlots": -13,
    "betterAvailable": 0,
    "roast": {
-    "text": "Evan starts two quarterbacks and owns one, so naturally he went and got a fourth running back. Rhamondre Stevenson started thirteen of fourteen games last year and still got out-touched by his own teammate, which is very much the Evan special: the guy who was almost the guy. He's not building a roster, he's collecting second choices.",
+    "text": "Evan took Rhamondre Stevenson, a guy who started thirteen games and still got out-touched by the rookie behind him, which is the least famous thing Evan has done all draft. He's got one quarterback for two quarterback slots and keeps buying running backs like the second slot will fill itself. The pregame graphic isn't going to hand him another Mahomes.",
     "theme": "SUPERFLEX_MALPRACTICE",
     "fallback": false
    }
@@ -1723,9 +1719,9 @@
    "player": "Terry McLaurin",
    "position": "WR",
    "proTeam": "WSH",
-   "leagueRank": 76,
-   "adp": 61.11,
-   "reachSlots": -10,
+   "leagueRank": 77,
+   "adp": 61.13,
+   "reachSlots": -9,
    "betterAvailable": 0,
    "roast": null
   },
@@ -1742,10 +1738,10 @@
    "player": "Dallas Goedert",
    "position": "TE",
    "proTeam": "PHI",
-   "leagueRank": 78,
-   "adp": 104.06,
-   "reachSlots": -9,
-   "betterAvailable": 0,
+   "leagueRank": 79,
+   "adp": 104.03,
+   "reachSlots": -8,
+   "betterAvailable": 1,
    "roast": null
   },
   {
@@ -1761,12 +1757,12 @@
    "player": "TreVeyon Henderson",
    "position": "RB",
    "proTeam": "NE",
-   "leagueRank": 81,
-   "adp": 78.93,
-   "reachSlots": -7,
+   "leagueRank": 78,
+   "adp": 78.3,
+   "reachSlots": -10,
    "betterAvailable": 0,
    "roast": {
-    "text": "James took TreVeyon Henderson, the back who out-touched Rhamondre Stevenson 25.1 percent to 18.9 in a New England committee, which is the first pick all draft he made off a real number instead of a memory. One quarterback in a league that starts two, and he keeps shopping in the backfield. The scary team is scary in the way a waiting room is scary.",
+    "text": "James took the other half of the New England backfield, a guy who was great in three games and a spectator in fourteen. Henderson did lead that committee on touch share, 25.1% to Stevenson's 18.9%, so James has bought the better slice of a pie nobody's finished baking. Second straight pick built on flashes, and he still hasn't gotten around to a second quarterback.",
     "theme": "NEWS_CYCLE",
     "fallback": false
    }
@@ -1785,11 +1781,11 @@
    "position": "TE",
    "proTeam": "BAL",
    "leagueRank": 82,
-   "adp": 126.1,
+   "adp": 126.46,
    "reachSlots": -7,
    "betterAvailable": 0,
    "roast": {
-    "text": "Colin took Mark Andrews thirty-seven picks before anyone outside his house was going to, and this time the guy he can see on his private board is actually good. Best player available, correct position, no conditions attached, nothing that has to go wrong for four strangers. Somebody unplugged the copium tank and he panicked into being right.",
+    "text": "Colin took Mark Andrews, a tight end who played all seventeen games and remains genuinely good, which after Pollard and the copium roster reads like somebody else logged into his account. Nothing had to go right for this one. He's now got two tight ends for one tight end slot and one quarterback for two, so the competence was clearly a slip.",
     "theme": "BACKHANDED_COMPLIMENT",
     "fallback": false
    }
@@ -1808,7 +1804,7 @@
    "position": "TE",
    "proTeam": "DAL",
    "leagueRank": 93,
-   "adp": 109.49,
+   "adp": 109.96,
    "reachSlots": 3,
    "betterAvailable": 4,
    "roast": null
@@ -1827,7 +1823,7 @@
    "position": "QB",
    "proTeam": "HOU",
    "leagueRank": 85,
-   "adp": 165.28,
+   "adp": 165.34,
    "reachSlots": -6,
    "betterAvailable": 0,
    "roast": null
@@ -1845,14 +1841,14 @@
    "player": "Rico Dowdle",
    "position": "RB",
    "proTeam": "PIT",
-   "leagueRank": 88,
-   "adp": 95.93,
-   "reachSlots": -4,
+   "leagueRank": 87,
+   "adp": 95.3,
+   "reachSlots": -5,
    "betterAvailable": 0,
    "roast": {
-    "text": "Bree starts two quarterbacks, owns one and a Sam Darnold, and used this pick on her second running back. Three tight ends, though. The prayer chain has now expanded to include a rules change nobody has proposed.",
+    "text": "Round 8 and Bree still has 1 quarterback in a superflex league. Bold.",
     "theme": "SUPERFLEX_MALPRACTICE",
-    "fallback": false
+    "fallback": true
    }
   },
   {
@@ -1869,11 +1865,11 @@
    "position": "RB",
    "proTeam": "PIT",
    "leagueRank": 89,
-   "adp": 89.03,
+   "adp": 87.98,
    "reachSlots": -4,
    "betterAvailable": 0,
    "roast": {
-    "text": "Chenell took Jaylen Warren, a Steelers back, to go with the Steelers receiver she already grabbed off the charts. That's five running backs and zero quarterbacks for the reigning champ, and half of Pittsburgh's offense hanging in her closet. She's not drafting a team, she's assembling one road jersey at a time.",
+    "text": "Chenell took Jaylen Warren, who splits the Pittsburgh backfield with Rico Dowdle, a man Bree drafted one pick earlier. So she's now got half of a committee and zero quarterbacks in a league that starts two. The defending champ has four running backs, three receivers, a tight end, and nobody under center to hand any of it the ball.",
     "theme": "STACKING",
     "fallback": false
    }
@@ -1892,7 +1888,7 @@
    "position": "WR",
    "proTeam": "DEN",
    "leagueRank": 91,
-   "adp": 81.37,
+   "adp": 81.34,
    "reachSlots": -3,
    "betterAvailable": 0,
    "roast": null
@@ -1929,10 +1925,10 @@
    "player": "Jonathon Brooks",
    "position": "RB",
    "proTeam": "CAR",
-   "leagueRank": 95,
-   "adp": 105.91,
-   "reachSlots": -1,
-   "betterAvailable": 0,
+   "leagueRank": 101,
+   "adp": 105.27,
+   "reachSlots": 5,
+   "betterAvailable": 5,
    "roast": null
   },
   {
@@ -1949,9 +1945,9 @@
    "position": "WR",
    "proTeam": "TEN",
    "leagueRank": 96,
-   "adp": 76.89,
+   "adp": 77.22,
    "reachSlots": -1,
-   "betterAvailable": 0,
+   "betterAvailable": 1,
    "roast": null
   },
   {
@@ -1967,9 +1963,9 @@
    "player": "J.K. Dobbins",
    "position": "RB",
    "proTeam": "DEN",
-   "leagueRank": 98,
-   "adp": 112.77,
-   "reachSlots": 0,
+   "leagueRank": 95,
+   "adp": 112.35,
+   "reachSlots": -3,
    "betterAvailable": 0,
    "roast": null
   },
@@ -1987,9 +1983,9 @@
    "position": "TE",
    "proTeam": "BUF",
    "leagueRank": 99,
-   "adp": 130.83,
+   "adp": 130.86,
    "reachSlots": 0,
-   "betterAvailable": 0,
+   "betterAvailable": 1,
    "roast": null
   },
   {
@@ -2006,9 +2002,9 @@
    "position": "QB",
    "proTeam": "NYJ",
    "leagueRank": 100,
-   "adp": 170.07,
+   "adp": 170.06,
    "reachSlots": 0,
-   "betterAvailable": 0,
+   "betterAvailable": 1,
    "roast": null
   },
   {
@@ -2024,11 +2020,15 @@
    "player": "Kyle Monangai",
    "position": "RB",
    "proTeam": "CHI",
-   "leagueRank": 101,
-   "adp": 124.18,
-   "reachSlots": 0,
+   "leagueRank": 98,
+   "adp": 124.03,
+   "reachSlots": -3,
    "betterAvailable": 0,
-   "roast": null
+   "roast": {
+    "text": "Kyle Monangai had one enormous game and Bree drafted the guy from that Sunday, not the one averaging 6.9 touches the rest of the year. She's still stacking tight ends she can't start and running backs behind other running backs. First it was three things going right, then it was Darnold's nine bad weeks, now she needs D'Andre Swift to vanish.",
+    "theme": "NOSTALGIA",
+    "fallback": false
+   }
   },
   {
    "overallPickNumber": 102,
@@ -2043,14 +2043,14 @@
    "player": "Marvin Harrison Jr.",
    "position": "WR",
    "proTeam": "ARI",
-   "leagueRank": 105,
-   "adp": 79.57,
-   "reachSlots": 3,
-   "betterAvailable": 3,
+   "leagueRank": 106,
+   "adp": 79.22,
+   "reachSlots": 4,
+   "betterAvailable": 4,
    "roast": {
-    "text": "Round 9 and Jay still has 1 quarterback in a superflex league. Bold.",
+    "text": "Marvin Harrison Jr. has finished 41st and 39th among receivers in his two seasons, and Jay looked at that and saw a fourth overall pick worth owning. He walked past Isaiah Likely to do it. The man who drafted Jonathan Taylor by reading the instructions out loud has discovered the draft-day scratch ticket, and picked the one everybody already scratched.",
     "theme": "COST_TO_VALUE",
-    "fallback": true
+    "fallback": false
    }
   },
   {
@@ -2066,10 +2066,10 @@
    "player": "Chuba Hubbard",
    "position": "RB",
    "proTeam": "CAR",
-   "leagueRank": 110,
-   "adp": 108.69,
-   "reachSlots": 7,
-   "betterAvailable": 7,
+   "leagueRank": 103,
+   "adp": 108.32,
+   "reachSlots": 0,
+   "betterAvailable": 1,
    "roast": null
   },
   {
@@ -2086,7 +2086,7 @@
    "position": "TE",
    "proTeam": "NYG",
    "leagueRank": 102,
-   "adp": 123.01,
+   "adp": 122.76,
    "reachSlots": -2,
    "betterAvailable": 0,
    "roast": null
@@ -2105,12 +2105,12 @@
    "position": "WR",
    "proTeam": "ARI",
    "leagueRank": 131,
-   "adp": 102.24,
+   "adp": 102.42,
    "reachSlots": 26,
    "betterAvailable": 26,
    "roast": {
-    "text": "James now owns Michael Wilson and Marvin Harrison Jr.'s teammate problem, because that's two Cardinals receivers fighting over the same football. He walked past twenty-six better guys to get there, including Christian Watson and T.J. Hockenson. The scary team is now a gift shop at State Farm Stadium.",
-    "theme": "STACKING",
+    "text": "James took Michael Wilson on the basis of eight games with Jacoby Brissett throwing to him while Marvin Harrison was hurt, and Harrison went three picks ago to somebody else. That's three straight picks on guys who flashed once. He's got one quarterback for two starting slots and twenty-six better players sitting there, but the flash reel needed another chapter.",
+    "theme": "SUPERFLEX_MALPRACTICE",
     "fallback": false
    }
   },
@@ -2127,9 +2127,9 @@
    "player": "Christian Watson",
    "position": "WR",
    "proTeam": "GB",
-   "leagueRank": 103,
-   "adp": 90.21,
-   "reachSlots": -3,
+   "leagueRank": 104,
+   "adp": 89.62,
+   "reachSlots": -2,
    "betterAvailable": 0,
    "roast": null
   },
@@ -2146,9 +2146,9 @@
    "player": "Hunter Henry",
    "position": "TE",
    "proTeam": "NE",
-   "leagueRank": 104,
-   "adp": 152.05,
-   "reachSlots": -3,
+   "leagueRank": 105,
+   "adp": 152.58,
+   "reachSlots": -2,
    "betterAvailable": 0,
    "roast": null
   },
@@ -2165,9 +2165,9 @@
    "player": "T.J. Hockenson",
    "position": "TE",
    "proTeam": "MIN",
-   "leagueRank": 106,
-   "adp": 149.56,
-   "reachSlots": -2,
+   "leagueRank": 107,
+   "adp": 150.98,
+   "reachSlots": -1,
    "betterAvailable": 0,
    "roast": null
   },
@@ -2184,10 +2184,10 @@
    "player": "Alec Pierce",
    "position": "WR",
    "proTeam": "IND",
-   "leagueRank": 107,
-   "adp": 108.59,
-   "reachSlots": -2,
-   "betterAvailable": 0,
+   "leagueRank": 109,
+   "adp": 108.98,
+   "reachSlots": 0,
+   "betterAvailable": 1,
    "roast": null
   },
   {
@@ -2203,10 +2203,10 @@
    "player": "Kenyon Sadiq",
    "position": "TE",
    "proTeam": "NYJ",
-   "leagueRank": 112,
-   "adp": 162.37,
-   "reachSlots": 2,
-   "betterAvailable": 3,
+   "leagueRank": 113,
+   "adp": 163.45,
+   "reachSlots": 3,
+   "betterAvailable": 4,
    "roast": null
   },
   {
@@ -2222,10 +2222,10 @@
    "player": "Parker Washington",
    "position": "WR",
    "proTeam": "JAX",
-   "leagueRank": 108,
-   "adp": 90.44,
-   "reachSlots": -3,
-   "betterAvailable": 0,
+   "leagueRank": 110,
+   "adp": 90.18,
+   "reachSlots": -1,
+   "betterAvailable": 1,
    "roast": null
   },
   {
@@ -2241,10 +2241,10 @@
    "player": "Matthew Golden",
    "position": "WR",
    "proTeam": "GB",
-   "leagueRank": 109,
-   "adp": 111.74,
-   "reachSlots": -3,
-   "betterAvailable": 0,
+   "leagueRank": 111,
+   "adp": 112.04,
+   "reachSlots": -1,
+   "betterAvailable": 1,
    "roast": null
   },
   {
@@ -2260,10 +2260,10 @@
    "player": "Malik Willis",
    "position": "QB",
    "proTeam": "MIA",
-   "leagueRank": 117,
-   "adp": 167.57,
-   "reachSlots": 4,
-   "betterAvailable": 5,
+   "leagueRank": 120,
+   "adp": 167.58,
+   "reachSlots": 7,
+   "betterAvailable": 8,
    "roast": null
   },
   {
@@ -2279,10 +2279,10 @@
    "player": "Juwan Johnson",
    "position": "TE",
    "proTeam": "NO",
-   "leagueRank": 114,
-   "adp": 158.58,
-   "reachSlots": 0,
-   "betterAvailable": 2,
+   "leagueRank": 118,
+   "adp": 158.23,
+   "reachSlots": 4,
+   "betterAvailable": 6,
    "roast": null
   },
   {
@@ -2298,13 +2298,13 @@
    "player": "Xavier Worthy",
    "position": "WR",
    "proTeam": "KC",
-   "leagueRank": 125,
-   "adp": 129.82,
-   "reachSlots": 10,
-   "betterAvailable": 11,
+   "leagueRank": 127,
+   "adp": 130.29,
+   "reachSlots": 12,
+   "betterAvailable": 13,
    "roast": {
-    "text": "Fifth receiver for Jay, one quarterback in a format that starts two, and Josh Jacobs still sitting on the board like furniture. He's got eleven better players behind him and a lineup he physically cannot fill out on Sunday. The guy who pointed at the top name in round one has spent nine rounds pointing at the wrong shelf.",
-    "theme": "SUPERFLEX_MALPRACTICE",
+    "text": "Xavier Worthy got hurt on his third snap last year and reached twelve fantasy points once in fourteen games, and Jay walked past Josh Jacobs for the privilege. That's five receivers for two slots and a flex, next to one quarterback in a format that starts two. The guy who used to read the instructions has thrown the manual out and is now just buying Kansas City merchandise.",
+    "theme": "STACKING",
     "fallback": false
    }
   },
@@ -2321,12 +2321,12 @@
    "player": "Aaron Jones Sr.",
    "position": "RB",
    "proTeam": "MIN",
-   "leagueRank": 111,
-   "adp": 115.52,
-   "reachSlots": -5,
+   "leagueRank": 108,
+   "adp": 114.38,
+   "reachSlots": -8,
    "betterAvailable": 0,
    "roast": {
-    "text": "Bree took Aaron Jones with nobody better on the board, on time, no strings, nothing that requires a stranger in another state to get hurt. The prayer chain got no new entries this round, which has to be unsettling for everybody on it. She drafted a healthy running back at his price and looked around like she'd broken a house rule.",
+    "text": "Aaron Jones was the best player left, and Bree took him, which after the wish list and the Darnold math reads like she hit the wrong button on the way to something worse. He was dead last among sixty-five backs in forced missed tackle rate, so even the correct pick came with a hedge attached. Three tight ends, one quarterback, and one accidental piece of competence.",
     "theme": "BACKHANDED_COMPLIMENT",
     "fallback": false
    }
@@ -2344,12 +2344,12 @@
    "player": "Michael Pittman Jr.",
    "position": "WR",
    "proTeam": "PIT",
-   "leagueRank": 113,
-   "adp": 90,
-   "reachSlots": -4,
-   "betterAvailable": 0,
+   "leagueRank": 114,
+   "adp": 89.83,
+   "reachSlots": -3,
+   "betterAvailable": 1,
    "roast": {
-    "text": "Michael Pittman Jr. joins the closet, and the reigning champ now owns a questionable receiver to hedge a roster already built out of questionable receivers. She's not handcuffing a player, she's handcuffing a medical philosophy. One quarterback in a league that starts two, and every other slot is a second opinion.",
+    "text": "Chenell drafted Michael Pittman, who's now in Pittsburgh, where she already owns half that backfield. She stepped over Josh Jacobs to add another Steeler to a team that still has nobody to throw or hand it to. The defending champ is building a very tasteful Pittsburgh gift shop with one quarterback in the back room.",
     "theme": "HANDCUFF",
     "fallback": false
    }
@@ -2367,10 +2367,10 @@
    "player": "Jordan Mason",
    "position": "RB",
    "proTeam": "MIN",
-   "leagueRank": 127,
-   "adp": 139.34,
-   "reachSlots": 9,
-   "betterAvailable": 10,
+   "leagueRank": 125,
+   "adp": 139.24,
+   "reachSlots": 7,
+   "betterAvailable": 9,
    "roast": null
   },
   {
@@ -2387,12 +2387,12 @@
    "position": "WR",
    "proTeam": "WSH",
    "leagueRank": 137,
-   "adp": 104.33,
+   "adp": 102.91,
    "reachSlots": 18,
    "betterAvailable": 18,
    "roast": {
-    "text": "Doug took Stefon Diggs and walked past eighteen guys to do it, including Josh Jacobs, who plays the position Doug apparently collects. The bowling ball has grown a second arm. He'll spend Sunday choosing which four running backs get to watch two receivers work.",
-    "theme": "STACKING",
+    "text": "Doug took Stefon Diggs, a receiver, which for him counts as branching out. Josh Jacobs was sitting right there and Doug already had five running backs, so the one time the stud fell to him he finally didn't want one. The bag of flour now has a receiver in it. Still not a cake.",
+    "theme": "COST_TO_VALUE",
     "fallback": false
    }
   },
@@ -2409,12 +2409,12 @@
    "player": "Josh Jacobs",
    "position": "RB",
    "proTeam": "GB",
-   "leagueRank": 115,
-   "adp": 59.84,
-   "reachSlots": -5,
+   "leagueRank": 112,
+   "adp": 65.97,
+   "reachSlots": -8,
    "betterAvailable": 0,
    "roast": {
-    "text": "Jesse has three quarterbacks, five running backs and two receivers, in that order of enthusiasm. He starts two passers and owns a third one just in case the other two get bored. The lineup he can actually field on Sunday has holes in it you could drive Josh Jacobs through, which is funny, because he just drafted him.",
+    "text": "Jesse took Josh Jacobs, the best guy on the board, and stapled him onto a pile that already had four backs and three quarterbacks. That's five running backs for two slots and a flex, plus a third quarterback to watch them not play. Every position he's overloaded, he's overloaded twice.",
     "theme": "POSITIONAL_IMBALANCE",
     "fallback": false
    }
@@ -2432,10 +2432,10 @@
    "player": "Mike Evans",
    "position": "WR",
    "proTeam": "SF",
-   "leagueRank": 116,
-   "adp": 85.65,
-   "reachSlots": -5,
-   "betterAvailable": 0,
+   "leagueRank": 119,
+   "adp": 84.84,
+   "reachSlots": -2,
+   "betterAvailable": 3,
    "roast": null
   },
   {
@@ -2451,12 +2451,12 @@
    "player": "Rachaad White",
    "position": "RB",
    "proTeam": "WSH",
-   "leagueRank": 129,
-   "adp": 125.82,
-   "reachSlots": 7,
-   "betterAvailable": 9,
+   "leagueRank": 126,
+   "adp": 125.55,
+   "reachSlots": 4,
+   "betterAvailable": 7,
    "roast": {
-    "text": "Seven running backs. Doug has seven running backs and two receivers, and Rachaad White makes it a roster where the depth chart is really just a list. The bowling ball's got arms coming out of everywhere now and still can't fill a flex without benching four guys.",
+    "text": "Doug followed Diggs with Rachaad White, who plays for the same Washington team, so he's now hedging his receiver with a running back and hedging that running back with the six he already owns. That's seven backs for two slots and a flex. He isn't drafting a roster, he's buying up an entire NFL depth chart one confused position at a time.",
     "theme": "STACKING",
     "fallback": false
    }
@@ -2474,10 +2474,10 @@
    "player": "Brenton Strange",
    "position": "TE",
    "proTeam": "JAX",
-   "leagueRank": 119,
-   "adp": 167.53,
-   "reachSlots": -4,
-   "betterAvailable": 1,
+   "leagueRank": 121,
+   "adp": 167.55,
+   "reachSlots": -2,
+   "betterAvailable": 3,
    "roast": null
   },
   {
@@ -2493,12 +2493,12 @@
    "player": "Kenny Gainwell",
    "position": "RB",
    "proTeam": "TB",
-   "leagueRank": 118,
-   "adp": 102.85,
-   "reachSlots": -6,
+   "leagueRank": 115,
+   "adp": 101.57,
+   "reachSlots": -9,
    "betterAvailable": 0,
    "roast": {
-    "text": "Kenny Gainwell makes six running backs and still one quarterback in a format that starts two. The reigning champ has spent eleven rounds building the deepest bench in the league and a Sunday lineup with a hole in the middle of it. She'll be starting a running back at quarterback out of spite.",
+    "text": "Kenny Gainwell was the best player available and Chenell took him, which makes five running backs and still not one additional quarterback. She's had eleven rounds to notice the format starts two. The defending champ has built the deepest handoff-receiving corps in the league and nobody legally able to hand off.",
     "theme": "SUPERFLEX_MALPRACTICE",
     "fallback": false
    }
@@ -2516,12 +2516,12 @@
    "player": "Jacory Croskey-Merritt",
    "position": "RB",
    "proTeam": "WSH",
-   "leagueRank": 120,
-   "adp": 136.06,
-   "reachSlots": -5,
+   "leagueRank": 116,
+   "adp": 136.08,
+   "reachSlots": -9,
    "betterAvailable": 0,
    "roast": {
-    "text": "Third straight back for Bree, and this one she got eleven picks after everybody else was willing to pay. Nobody better was sitting there, nothing has to go wrong for a stranger in Washington, no rule needs rewriting. The prayer chain's been dismissed for the day and half of them don't know what to do with themselves.",
+    "text": "Bree took Croskey-Merritt with nobody better on the board, which is twice in one stretch that she's done the sensible thing. Nothing has to go right here. No missed weeks, no vanishing teammate, no nine-game reversal from a quarterback in Seattle. The streak of wishes ends quietly, and she's still got one quarterback and three tight ends to remember it by.",
     "theme": "BACKHANDED_COMPLIMENT",
     "fallback": false
    }
@@ -2539,12 +2539,12 @@
    "player": "Evan Engram",
    "position": "TE",
    "proTeam": "DEN",
-   "leagueRank": 157,
+   "leagueRank": 158,
    "adp": 170.03,
-   "reachSlots": 31,
-   "betterAvailable": 31,
+   "reachSlots": 32,
+   "betterAvailable": 32,
    "roast": {
-    "text": "Jay took Evan Engram forty-four picks before anyone with a computer would've, which is a long way to travel for a third tight end nobody asked about. Brian Thomas Jr. sat there the whole time. The guy who pointed at the top name in round one has now found a shelf so wrong it isn't even in the store.",
+    "text": "Evan Engram finished fifteenth or worse among tight ends in routes, targets, catches and yards, and Jay wanted him badly enough to do it forty-four picks before anyone in Denver would have. He walked past Blake Corum for a guy who scored once near the goal line all year. First he read the instructions out loud, then he threw the manual out, and now he's writing his own in crayon.",
     "theme": "AGAINST_THE_GRAIN",
     "fallback": false
    }
@@ -2562,10 +2562,10 @@
    "player": "Terrance Ferguson",
    "position": "TE",
    "proTeam": "LAR",
-   "leagueRank": 121,
-   "adp": 168.58,
-   "reachSlots": -6,
-   "betterAvailable": 0,
+   "leagueRank": 122,
+   "adp": 168.7,
+   "reachSlots": -5,
+   "betterAvailable": 1,
    "roast": null
   },
   {
@@ -2581,9 +2581,9 @@
    "player": "Blake Corum",
    "position": "RB",
    "proTeam": "LAR",
-   "leagueRank": 122,
-   "adp": 126.99,
-   "reachSlots": -6,
+   "leagueRank": 117,
+   "adp": 126.33,
+   "reachSlots": -11,
    "betterAvailable": 0,
    "roast": null
   },
@@ -2600,13 +2600,13 @@
    "player": "MarShawn Lloyd",
    "position": "RB",
    "proTeam": "GB",
-   "leagueRank": 152,
-   "adp": 132.8,
-   "reachSlots": 23,
-   "betterAvailable": 24,
+   "leagueRank": 151,
+   "adp": 126.06,
+   "reachSlots": 22,
+   "betterAvailable": 23,
    "roast": {
-    "text": "James took MarShawn Lloyd with Brian Thomas Jr. sitting right there, which is twenty-four better guys walked past for a fourth running back. The scary team's gift shop has closed and reopened as a backfield with no exit. Still one quarterback in a league that starts two, and he keeps buying spare tires for a car with no engine.",
-    "theme": "COST_TO_VALUE",
+    "text": "MarShawn Lloyd has played one game since 2024 and James bought him ten picks after Jesse bought Josh Jacobs, so he's paying full price for the backup on somebody else's team. Aaron Rodgers was there, a quarterback, for the man with one quarterback and two slots. Four picks now built on things that almost happened.",
+    "theme": "STACKING",
     "fallback": false
    }
   },
@@ -2624,11 +2624,11 @@
    "position": "WR",
    "proTeam": "JAX",
    "leagueRank": 123,
-   "adp": 113.62,
+   "adp": 114.02,
    "reachSlots": -7,
    "betterAvailable": 0,
    "roast": {
-    "text": "Justin took Brian Thomas Jr. with nobody better available, on time, at the right spot, for the third time this draft. The jersey shelf is quietly turning into a wide receiver corps and you can tell nobody in that war room meant for it to happen. Two running backs, though. Somebody in there is going to notice eventually.",
+    "text": "Justin took Brian Thomas Jr., who was fantasy's fourth-best receiver with Mac Jones throwing and a middling flex guy with Trevor Lawrence, and Justin already owns half the receiver room in the league. That's five receivers for two slots, two tight ends for one. The guy who kept picking whichever name he read about most recently has now read about everybody.",
     "theme": "HANDCUFF",
     "fallback": false
    }
@@ -2647,7 +2647,7 @@
    "position": "WR",
    "proTeam": "JAX",
    "leagueRank": 124,
-   "adp": 122.58,
+   "adp": 122.8,
    "reachSlots": -7,
    "betterAvailable": 0,
    "roast": null
@@ -2665,9 +2665,9 @@
    "player": "Aaron Rodgers",
    "position": "QB",
    "proTeam": "PIT",
-   "leagueRank": 126,
+   "leagueRank": 128,
    "adp": 169.19,
-   "reachSlots": -6,
+   "reachSlots": -4,
    "betterAvailable": 0,
    "roast": null
   },
@@ -2684,9 +2684,9 @@
    "player": "Pat Freiermuth",
    "position": "TE",
    "proTeam": "PIT",
-   "leagueRank": 128,
-   "adp": 169.58,
-   "reachSlots": -5,
+   "leagueRank": 129,
+   "adp": 169.64,
+   "reachSlots": -4,
    "betterAvailable": 0,
    "roast": null
   },
@@ -2704,7 +2704,7 @@
    "position": "WR",
    "proTeam": "GB",
    "leagueRank": 130,
-   "adp": 138.63,
+   "adp": 139.15,
    "reachSlots": -4,
    "betterAvailable": 0,
    "roast": null
@@ -2723,7 +2723,7 @@
    "position": "TE",
    "proTeam": "HOU",
    "leagueRank": 132,
-   "adp": 168.7,
+   "adp": 168.78,
    "reachSlots": -3,
    "betterAvailable": 0,
    "roast": null
@@ -2742,11 +2742,11 @@
    "position": "WR",
    "proTeam": "MIN",
    "leagueRank": 133,
-   "adp": 120.17,
+   "adp": 120.35,
    "reachSlots": -3,
    "betterAvailable": 0,
    "roast": {
-    "text": "Jordan Addison is the right name at the right time, and he's also James's sixth receiver next to one quarterback in a league that starts two. Four backs, six wideouts, one guy who can throw it to any of them. The scary team has a skill position department and a staffing crisis, and James keeps hiring receptionists.",
+    "text": "Jordan Addison's targets, catches, yards and touchdowns have all gone down two years running, so naturally James saw a guy who flashed once as a rookie and had to have him. That's six receivers for two slots and a flex, sitting next to one quarterback in a format that starts two. The flash reel is now a boxed set nobody can play on Sunday.",
     "theme": "POSITIONAL_IMBALANCE",
     "fallback": false
    }
@@ -2765,11 +2765,11 @@
    "position": "WR",
    "proTeam": "CLE",
    "leagueRank": 163,
-   "adp": 168.51,
+   "adp": 168.72,
    "reachSlots": 26,
    "betterAvailable": 26,
    "roast": {
-    "text": "Colin took Jerry Jeudy twenty-six better players early, and Quentin Johnston sat there the whole time like a chair nobody wanted. The private board is back online and it's printing different names than everyone else's. That brief week where Colin was right about Mark Andrews is over, and the copium tank came back with a bigger hose.",
+    "text": "Jerry Jeudy has finished outside the top 50 receivers four times in six years and dropped 32 passes doing it, and Colin decided round twelve was the moment to plant his flag. Khalil Shakir was there. Cam Ward was there, a quarterback, in a league that starts two. Andrews was the slip, this is Colin back to his actual religion.",
     "theme": "AGAINST_THE_GRAIN",
     "fallback": false
    }
@@ -2788,11 +2788,11 @@
    "position": "WR",
    "proTeam": "TEN",
    "leagueRank": 139,
-   "adp": 114.69,
+   "adp": 113.93,
    "reachSlots": 1,
    "betterAvailable": 4,
    "roast": {
-    "text": "Tyler took Wan'Dale Robinson with Khalil Shakir sitting right there, which is a sixth receiver for a team that owns one running back. He can field a route concept. He can't field a handoff. Somebody in that house needs to tell him the ball starts on the ground.",
+    "text": "Wan'Dale Robinson is a slot guy who catches ninety balls a year and never sees the goal line, which is a fine thing to own and a strange thing to keep buying. Tyler walked past Quentin Johnston to make it six receivers for two slots and a flex, and he's got one running back in the whole building. The wideout depth chart is now three pages long and the backfield is a Post-it.",
     "theme": "COST_TO_VALUE",
     "fallback": false
    }
@@ -2811,11 +2811,11 @@
    "position": "WR",
    "proTeam": "TEN",
    "leagueRank": 165,
-   "adp": 168.31,
+   "adp": 168.26,
    "reachSlots": 26,
    "betterAvailable": 26,
    "roast": {
-    "text": "Jay's sixth receiver, taken twenty-six better players early, with one quarterback still on the roster in a format that starts two. He pointed at the top name in round one and hasn't found the quarterback aisle since. He's not shopping wrong anymore, he's wandering a store that closed.",
+    "text": "Calvin Ridley missed ten games and caught seventeen passes, a career low, and Jay looked at that wreckage and thought: sixth receiver. Cam Ward was sitting right there, a quarterback, for the man who still has one of those and two slots to fill. The crayon manual now has a chapter on why quarterbacks are optional.",
     "theme": "SUPERFLEX_MALPRACTICE",
     "fallback": false
    }
@@ -2834,7 +2834,7 @@
    "position": "WR",
    "proTeam": "LAC",
    "leagueRank": 134,
-   "adp": 130.15,
+   "adp": 130.19,
    "reachSlots": -6,
    "betterAvailable": 0,
    "roast": null
@@ -2853,7 +2853,7 @@
    "position": "QB",
    "proTeam": "TEN",
    "leagueRank": 135,
-   "adp": 169.21,
+   "adp": 169.22,
    "reachSlots": -6,
    "betterAvailable": 0,
    "roast": null
@@ -2872,11 +2872,11 @@
    "position": "WR",
    "proTeam": "BUF",
    "leagueRank": 136,
-   "adp": 140.07,
+   "adp": 140.34,
    "reachSlots": -6,
    "betterAvailable": 0,
    "roast": {
-    "text": "Khalil Shakir, best guy on the board, correct spot, no argument available. That's three times now, and Keshia still has five quarterbacks in a league that starts two. The pawn shop's got a back room full of passers and a front counter with two receivers on it, and she keeps accidentally stocking the wrong one right.",
+    "text": "Keshia paired Khalil Shakir with the Josh Allen she took third overall, which is the first thing all draft she's done that looks like a plan instead of an accident. Nobody better was on the board, again. Three correct picks and a stack, and the rest of the room is starting to suspect she's been reading something.",
     "theme": "STACKING",
     "fallback": false
    }
@@ -2895,11 +2895,11 @@
    "position": "WR",
    "proTeam": "LV",
    "leagueRank": 172,
-   "adp": 171.11,
+   "adp": 171.14,
    "reachSlots": 29,
    "betterAvailable": 29,
    "roast": {
-    "text": "Doug took Jalen Nailor twenty-nine better guys early, and Gunnar Helm watched him go. There isn't a room in Minnesota where that happens at 143. The bowling ball has stopped rolling and started making decisions.",
+    "text": "Jalen Nailor has never cleared 30 catches in a season and now gets to fight Tre Tucker, Jack Bech and Dont'e Thornton for snaps in Las Vegas, and Doug bought him twenty-nine better players early. Gunnar Helm was there, a tight end, for a man who owns zero tight ends and seven running backs. The bag of flour has gone out and bought a fourth-string Raider.",
     "theme": "AGAINST_THE_GRAIN",
     "fallback": false
    }
@@ -2918,7 +2918,7 @@
    "position": "TE",
    "proTeam": "TEN",
    "leagueRank": 138,
-   "adp": 170.77,
+   "adp": 170.79,
    "reachSlots": -6,
    "betterAvailable": 0,
    "roast": null
@@ -2936,10 +2936,10 @@
    "player": "Tyjae Spears",
    "position": "RB",
    "proTeam": "TEN",
-   "leagueRank": 146,
-   "adp": 146.67,
-   "reachSlots": 1,
-   "betterAvailable": 6,
+   "leagueRank": 143,
+   "adp": 146.41,
+   "reachSlots": -2,
+   "betterAvailable": 3,
    "roast": null
   },
   {
@@ -2956,7 +2956,7 @@
    "position": "WR",
    "proTeam": "SF",
    "leagueRank": 140,
-   "adp": 140.91,
+   "adp": 139.87,
    "reachSlots": -6,
    "betterAvailable": 0,
    "roast": null
@@ -2974,9 +2974,9 @@
    "player": "Makai Lemon",
    "position": "WR",
    "proTeam": "PHI",
-   "leagueRank": 144,
-   "adp": 132.61,
-   "reachSlots": -3,
+   "leagueRank": 145,
+   "adp": 132.19,
+   "reachSlots": -2,
    "betterAvailable": 3,
    "roast": null
   },
@@ -2994,7 +2994,7 @@
    "position": "TE",
    "proTeam": "WSH",
    "leagueRank": 141,
-   "adp": 170.18,
+   "adp": 170.2,
    "reachSlots": -7,
    "betterAvailable": 0,
    "roast": null
@@ -3013,7 +3013,7 @@
    "position": "TE",
    "proTeam": "MIA",
    "leagueRank": 142,
-   "adp": 170.47,
+   "adp": 170.48,
    "reachSlots": -7,
    "betterAvailable": 0,
    "roast": null
@@ -3031,9 +3031,9 @@
    "player": "Darren Waller",
    "position": "TE",
    "proTeam": "CAR",
-   "leagueRank": 143,
-   "adp": 170.36,
-   "reachSlots": -7,
+   "leagueRank": 144,
+   "adp": 170.38,
+   "reachSlots": -6,
    "betterAvailable": 0,
    "roast": null
   },
@@ -3051,7 +3051,7 @@
    "position": "WR",
    "proTeam": "SEA",
    "leagueRank": 154,
-   "adp": 160.41,
+   "adp": 160.75,
    "reachSlots": 3,
    "betterAvailable": 7,
    "roast": null
@@ -3069,9 +3069,9 @@
    "player": "AJ Barner",
    "position": "TE",
    "proTeam": "SEA",
-   "leagueRank": 145,
-   "adp": 169.72,
-   "reachSlots": -7,
+   "leagueRank": 146,
+   "adp": 169.76,
+   "reachSlots": -6,
    "betterAvailable": 0,
    "roast": null
   },
@@ -3088,12 +3088,12 @@
    "player": "Oronde Gadsden",
    "position": "TE",
    "proTeam": "LAC",
-   "leagueRank": 175,
-   "adp": 170.19,
-   "reachSlots": 22,
-   "betterAvailable": 22,
+   "leagueRank": 176,
+   "adp": 170.21,
+   "reachSlots": 23,
+   "betterAvailable": 23,
    "roast": {
-    "text": "Oronde Gadsden, with Chris Godwin Jr. sitting right there untouched. That's twenty-two better guys walked past for a second tight end on a roster that still has one quarterback. The gift shop, the backfield, now a tight end room, and James has built every department in the building except the one that opens the doors on Sunday.",
+    "text": "Oronde Gadsden had two enormous weeks in October and averaged 6.2 points the rest of the way, which is exactly the kind of thing James can't say no to. Chris Godwin was sitting right there. Five straight picks now built on a good month, and the man still has one quarterback for two starting slots, because the quarterbacks all had the bad manners to be consistent.",
     "theme": "COST_TO_VALUE",
     "fallback": false
    }
@@ -3112,7 +3112,7 @@
    "position": "WR",
    "proTeam": "TB",
    "leagueRank": 147,
-   "adp": 124.06,
+   "adp": 122.6,
    "reachSlots": -7,
    "betterAvailable": 0,
    "roast": null
@@ -3131,7 +3131,7 @@
    "position": "WR",
    "proTeam": "CLE",
    "leagueRank": 148,
-   "adp": 146.73,
+   "adp": 146.74,
    "reachSlots": -7,
    "betterAvailable": 0,
    "roast": null
@@ -3149,12 +3149,12 @@
    "player": "Deebo Samuel Sr.",
    "position": "WR",
    "proTeam": "SF",
-   "leagueRank": 149,
-   "adp": 141.86,
-   "reachSlots": -7,
-   "betterAvailable": 0,
+   "leagueRank": 150,
+   "adp": 142.68,
+   "reachSlots": -6,
+   "betterAvailable": 1,
    "roast": {
-    "text": "Deebo Samuel is a fine pick, which for Evan means the fifth receiver on a team with three backs and three tight ends. Two quarterbacks, five guys to throw to, three more to throw to, and a running game that's mostly a rumor. He didn't collect a second choice this time, he just collected another one of the thing he already had eight of.",
+    "text": "Deebo Samuel is back in San Francisco after a year of being solid and forgettable, and he's the fifth receiver Evan has stacked up for two slots and a flex. Three tight ends for one tight end spot on top of it. He isn't building a lineup, he's building a group photo of guys you'd recognize.",
     "theme": "POSITIONAL_IMBALANCE",
     "fallback": false
    }
@@ -3173,11 +3173,11 @@
    "position": "DST",
    "proTeam": "DEN",
    "leagueRank": 947,
-   "adp": 99.06,
+   "adp": 99.3,
    "reachSlots": 790,
    "betterAvailable": 790,
    "roast": {
-    "text": "Evan took a defense in round fourteen with Romeo Doubs sitting there and seven hundred and ninety better players behind him. He's been ordering the second thing on the menu all draft and finally just pointed at the wall. Denver's whole defense counts as one player, so he's got that going for him.",
+    "text": "Evan took the Broncos defense in the fourteenth round, which is fine, except he took it 790 players early and it's the second Denver-adjacent name he's grabbed off a screen. RJ Harvey was there. The pregame graphic has stopped listing players and started listing entire units.",
     "theme": "STACKING",
     "fallback": false
    }
@@ -3196,7 +3196,7 @@
    "position": "DST",
    "proTeam": "HOU",
    "leagueRank": 948,
-   "adp": 91.71,
+   "adp": 92.28,
    "reachSlots": 790,
    "betterAvailable": 790,
    "roast": null
@@ -3215,7 +3215,7 @@
    "position": "DST",
    "proTeam": "PIT",
    "leagueRank": 949,
-   "adp": 121.59,
+   "adp": 121.95,
    "reachSlots": 790,
    "betterAvailable": 790,
    "roast": null
@@ -3234,11 +3234,11 @@
    "position": "DST",
    "proTeam": "SEA",
    "leagueRank": 951,
-   "adp": 112.17,
+   "adp": 112.62,
    "reachSlots": 791,
    "betterAvailable": 791,
    "roast": {
-    "text": "James finished it off with the Seahawks defense and one quarterback in a league that starts two. He's got eleven guys who need somebody to throw them the ball and one arm in the building. The scary team's final move was hiring security for a store with nothing in it.",
+    "text": "James used a pick on the Seahawks defense, eleven guys who aren't allowed to throw a forward pass, while his lineup still has one quarterback and two slots that want one. RJ Harvey was there, so was Romeo Doubs, so was the whole rest of the league. He's spent fourteen rounds collecting almosts and finished by drafting a group of men whose entire job is stopping somebody else's quarterback.",
     "theme": "SUPERFLEX_MALPRACTICE",
     "fallback": false
    }
@@ -3257,11 +3257,11 @@
    "position": "DST",
    "proTeam": "LAR",
    "leagueRank": 952,
-   "adp": 104.59,
+   "adp": 103.75,
    "reachSlots": 791,
    "betterAvailable": 791,
    "roast": {
-    "text": "Colin took the Rams defense with Romeo Doubs sitting there and seven hundred and ninety-one better players behind him. The private board has finally scrolled past the part with names on it and landed on a logo. The copium tank is now hooked directly to eleven guys in blue who don't score points on purpose.",
+    "text": "Colin took the Rams defense, which is fine, except he's now got four tight ends and one place to put them, and he skipped RJ Harvey to make it worse. The religion has a new commandment: never own a player who could plausibly start. Andrews was the slip, Jeudy was the relapse, and this is Colin building a chapel out of guys he can't field.",
     "theme": "COST_TO_VALUE",
     "fallback": false
    }
@@ -3280,7 +3280,7 @@
    "position": "DST",
    "proTeam": "BAL",
    "leagueRank": 953,
-   "adp": 133.84,
+   "adp": 133.96,
    "reachSlots": 791,
    "betterAvailable": 791,
    "roast": null
@@ -3299,11 +3299,11 @@
    "position": "DST",
    "proTeam": "DET",
    "leagueRank": 957,
-   "adp": 154.69,
+   "adp": 154.9,
    "reachSlots": 794,
    "betterAvailable": 794,
    "roast": {
-    "text": "Jay took the Lions defense, which is his second unit of guys he can't start at quarterback in a format that starts two. One arm on the roster and a whole city of linebackers behind it. The store closed rounds ago and he's still in the parking lot picking up whatever's left on the pavement.",
+    "text": "Jay drafted eleven guys from Detroit whose job is to stop a quarterback, which is the closest he's come all draft to acknowledging quarterbacks exist. He's still got one for two slots, six receivers for three spots, and a Sunday where somebody has to sit in the OP chair and pretend. The crayon manual now says the second quarterback slot can be filled with vibes.",
     "theme": "SUPERFLEX_MALPRACTICE",
     "fallback": false
    }
@@ -3322,11 +3322,11 @@
    "position": "DST",
    "proTeam": "PHI",
    "leagueRank": 959,
-   "adp": 137.78,
+   "adp": 137.95,
    "reachSlots": 795,
    "betterAvailable": 795,
    "roast": {
-    "text": "Bree took the Eagles defense with Romeo Doubs still sitting there and one quarterback on a roster in a league that starts two. Seven hundred and ninety-five better guys behind her, and she went and hired eleven strangers who all count as one. The prayer chain's back in session, and this time they're praying somebody teaches her the starting lineup rules.",
+    "text": "Bree took the Eagles defense with RJ Harvey sitting there, which is a small crime next to what's happening on her own roster. Four tight ends. One tight end slot. One quarterback and two places that want one. The wishes came back, and this time she needs the league to change its lineup rules.",
     "theme": "COST_TO_VALUE",
     "fallback": false
    }
@@ -3345,7 +3345,7 @@
    "position": "DST",
    "proTeam": "CLE",
    "leagueRank": 961,
-   "adp": 157.88,
+   "adp": 158.07,
    "reachSlots": 796,
    "betterAvailable": 796,
    "roast": null
@@ -3364,7 +3364,7 @@
    "position": "DST",
    "proTeam": "NE",
    "leagueRank": 962,
-   "adp": 153.26,
+   "adp": 153.52,
    "reachSlots": 796,
    "betterAvailable": 796,
    "roast": null
@@ -3383,7 +3383,7 @@
    "position": "DST",
    "proTeam": "KC",
    "leagueRank": 963,
-   "adp": 165.97,
+   "adp": 166.17,
    "reachSlots": 796,
    "betterAvailable": 796,
    "roast": null
@@ -3402,11 +3402,11 @@
    "position": "DST",
    "proTeam": "LAC",
    "leagueRank": 969,
-   "adp": 165.69,
+   "adp": 165.72,
    "reachSlots": 801,
    "betterAvailable": 801,
    "roast": {
-    "text": "Jesse already owns most of a backfield and now he's bought the Chargers defense to go with it. Six running backs, three quarterbacks, and a wall of jerseys arranged by nothing. Romeo Doubs sat there the entire time while Jesse shopped for a team logo.",
+    "text": "Jesse took the Chargers defense, eleven more men from Los Angeles to sit near his six running backs. He walked past RJ Harvey, an actual back, which would have been a seventh, so credit for restraint in the one place he has none. He's not building a roster anymore, he's building a regional fan club with a bench.",
     "theme": "STACKING",
     "fallback": false
    }
@@ -3425,11 +3425,11 @@
    "position": "K",
    "proTeam": "DAL",
    "leagueRank": 950,
-   "adp": 85.69,
+   "adp": 85.72,
    "reachSlots": 781,
    "betterAvailable": 790,
    "roast": {
-    "text": "For Brandon Aubrey to be worth this, Dallas has to stall out in field goal range roughly every drive, none of the seven hundred and ninety guys behind him can matter, and Jesse's third quarterback has to stay comfortable on the bench he was drafted for. He didn't take the first kicker off the board because he needed one. He took him because the scrolling had to stop somewhere.",
+    "text": "For Brandon Aubrey to be worth this, Dallas has to stall inside the thirty every week, the kicker has to out-score half of Jesse's backfield, and Jesse has to not notice he owns six running backs who all want the same two slots. He needs all three. He got the kicker eighty-five picks before anyone in Dallas would have bothered. The regional fan club now has a guy who kicks it.",
     "theme": "COPIUM",
     "fallback": false
    }
@@ -3448,11 +3448,11 @@
    "position": "K",
    "proTeam": "LAC",
    "leagueRank": 954,
-   "adp": 112.54,
+   "adp": 113,
    "reachSlots": 784,
    "betterAvailable": 790,
    "roast": {
-    "text": "Cameron Dicker over Romeo Doubs, which is Doug walking past seven hundred and ninety guys for a man whose job is to arrive after the offense fails. Seven running backs and now a specialist. The bowling ball has hired a placekicker to finish the drives its arms can't.",
+    "text": "Doug took a kicker with a questionable tag on him, which is a new kind of ambition. RJ Harvey was there, a running back, and Doug owns seven of those already, so passing on him might be the only disciplined thing he's done all night. The bag of flour has hired a guy to kick it.",
     "theme": "COST_TO_VALUE",
     "fallback": false
    }
@@ -3471,7 +3471,7 @@
    "position": "K",
    "proTeam": "LAR",
    "leagueRank": 955,
-   "adp": 137.23,
+   "adp": 136.77,
    "reachSlots": 784,
    "betterAvailable": 790,
    "roast": null
@@ -3490,11 +3490,11 @@
    "position": "K",
    "proTeam": "SEA",
    "leagueRank": 956,
-   "adp": 116.07,
+   "adp": 116.02,
    "reachSlots": 784,
    "betterAvailable": 790,
    "roast": {
-    "text": "Jason Myers works if Seattle drives to the twenty-five and stops there all year, if the two tight ends and five backs sort themselves out, and if the reigning champ's one open Sunday slot fills itself in overnight. She built a roster out of medical paperwork and topped it with a guy who kicks. The charts didn't have a page for this, so she made one.",
+    "text": "For Jason Myers to matter, Seattle has to drive and then refuse to score, the defending champ's two tight ends have to fight it out for one slot, and five running backs have to reduce to three. Chenell needs all of that, plus RJ Harvey to have been the wrong answer. The gift shop is fully stocked and now sells a man who kicks field goals for Seattle.",
     "theme": "COPIUM",
     "fallback": false
    }
@@ -3513,11 +3513,11 @@
    "position": "K",
    "proTeam": "HOU",
    "leagueRank": 958,
-   "adp": 125.52,
+   "adp": 125.08,
    "reachSlots": 785,
    "betterAvailable": 790,
    "roast": {
-    "text": "Bree took Ka'imi Fairbairn, which brings her to four tight ends, a kicker, a defense, and one quarterback in a format that starts two. Every slot on that roster is filled except the two that matter most. The prayer chain has been called back in and asked, very politely, whether a kicker can take snaps.",
+    "text": "Bree filled her kicker slot before she filled her second quarterback slot, which tells you exactly where Ka'imi Fairbairn ranks in the plan. One quarterback, two slots that start one each, and four tight ends waiting to be told which of them isn't playing. She spent all draft needing three things to go right and finished by drafting a guy who only needs the offense to fail.",
     "theme": "SUPERFLEX_MALPRACTICE",
     "fallback": false
    }
@@ -3536,11 +3536,11 @@
    "position": "K",
    "proTeam": "SF",
    "leagueRank": 960,
-   "adp": 141.39,
+   "adp": 141.67,
    "reachSlots": 786,
    "betterAvailable": 790,
    "roast": {
-    "text": "Eddy Pineiro, with Romeo Doubs still on the board doing nothing wrong. Jay's got six receivers, three tight ends and one arm to service all of them, and his answer was a guy who kicks. He walked past seven hundred and eighty-six better players in a store that's been dark since round nine.",
+    "text": "Jay walked past RJ Harvey for Eddy Pineiro, a kicker in San Francisco, a place where the ball tends to reach the end zone without him. That's six receivers, three tight ends, one quarterback and now a foot. The crayon manual is finished, and the last page just says: the kicker will sort it out.",
     "theme": "COST_TO_VALUE",
     "fallback": false
    }
@@ -3559,7 +3559,7 @@
    "position": "K",
    "proTeam": "KC",
    "leagueRank": 964,
-   "adp": 143.89,
+   "adp": 144.11,
    "reachSlots": 789,
    "betterAvailable": 790,
    "roast": null
@@ -3578,7 +3578,7 @@
    "position": "K",
    "proTeam": "JAX",
    "leagueRank": 965,
-   "adp": 140.82,
+   "adp": 140.98,
    "reachSlots": 789,
    "betterAvailable": 790,
    "roast": null
@@ -3597,11 +3597,11 @@
    "position": "K",
    "proTeam": "DET",
    "leagueRank": 966,
-   "adp": 157.12,
+   "adp": 157.16,
    "reachSlots": 789,
    "betterAvailable": 790,
    "roast": {
-    "text": "James rounded out the scary team with Jake Bates. Six receivers, four backs, two tight ends, a defense, a kicker, and one quarterback in a league that starts two. Every department in the building is staffed, the lights are on, the sign is lit, and nobody has a key to the front door.",
+    "text": "James closed out fifteen rounds of almosts with Jake Bates, and still hasn't found a second quarterback for the second quarterback slot. RJ Harvey was there. So was the rest of the league. He's built a lineup where the guy who kicks it is more certain to play than the guy who throws it.",
     "theme": "SUPERFLEX_MALPRACTICE",
     "fallback": false
    }
@@ -3620,7 +3620,7 @@
    "position": "K",
    "proTeam": "BAL",
    "leagueRank": 967,
-   "adp": 165.31,
+   "adp": 165.47,
    "reachSlots": 789,
    "betterAvailable": 790,
    "roast": null
@@ -3639,7 +3639,7 @@
    "position": "K",
    "proTeam": "CHI",
    "leagueRank": 968,
-   "adp": 169.02,
+   "adp": 169.08,
    "reachSlots": 789,
    "betterAvailable": 790,
    "roast": null
@@ -3658,7 +3658,7 @@
    "position": "K",
    "proTeam": "GB",
    "leagueRank": 970,
-   "adp": 168.06,
+   "adp": 168.11,
    "reachSlots": 790,
    "betterAvailable": 790,
    "roast": null

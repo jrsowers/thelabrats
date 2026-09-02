@@ -25,7 +25,7 @@ async function main() {
   const playersById = new Map<number, DraftablePlayer>()
   for (const p of board.players) {
     playersById.set(p.id, { id: p.id, name: p.name, pos: p.pos, proTeam: p.proTeam,
-      leagueRank: p.leagueRank, adp: p.adp, injuryStatus: p.injuryStatus ?? null })
+      leagueRank: p.leagueRank, adp: p.adp, injuryStatus: p.injuryStatus ?? null, outlook: p.outlook ?? null })
   }
   const teamsById = buildTeamMeta(teamsRaw.teams, teamsRaw.members)
   const dossier = loadDossier()

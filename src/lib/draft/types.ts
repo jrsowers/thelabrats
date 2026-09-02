@@ -20,6 +20,8 @@ export interface DraftablePlayer {
   /** Standard ADP. Not the yardstick — the punchline. */
   adp: number
   injuryStatus: string | null
+  /** ESPN's analyst blurb. The player's story, which is what a roast is about. */
+  outlook?: string | null
 }
 
 export interface RawPick {

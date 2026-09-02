@@ -41,7 +41,7 @@ function loadBoard(): Map<number, DraftablePlayer> {
   const m = new Map<number, DraftablePlayer>()
   for (const p of board.players) {
     m.set(p.id, { id: p.id, name: p.name, pos: p.pos, proTeam: p.proTeam,
-      leagueRank: p.leagueRank, adp: p.adp, injuryStatus: p.injuryStatus ?? null })
+      leagueRank: p.leagueRank, adp: p.adp, injuryStatus: p.injuryStatus ?? null, outlook: p.outlook ?? null })
   }
   return m
 }

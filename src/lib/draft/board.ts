@@ -24,6 +24,8 @@ export interface ProjectedPlayer {
   projectedPoints: number
   adp: number
   injuryStatus: string | null
+  /** ESPN's analyst blurb — the player's story, not his number. */
+  outlook?: string | null
 }
 
 export interface BoardOptions {

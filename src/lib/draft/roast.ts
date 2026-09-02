@@ -13,30 +13,62 @@ import type { PickAnalysis } from './types'
 
 export interface RoastContext { pick: PickAnalysis; leagueName: string }
 
-/** The facts a writer is allowed to use, flattened for a prompt. */
+/**
+ * The facts a writer may use.
+ *
+ * ORDER MATTERS. The first version led with rank, ADP and slot deltas, and the
+ * roasts came back obsessed with them — "twenty-two better guys walked past"
+ * is a real fact and a bad joke, because almost nobody cares about ADP.
+ *
+ * So the sheet now leads with the two things that ARE funny: who this player
+ * is, and what he does to the roster. The numbers still exist, at the bottom,
+ * available as a punchline rather than a premise.
+ */
 export function factSheet(p: PickAnalysis): Record<string, string | number | boolean> {
+  const r = p.rosterAfter
+  const shape = Object.entries(r).filter(([, n]) => n > 0)
+    .map(([k, n]) => `${n} ${k}`).join(', ')
+
+  const problems: string[] = []
+  if ((r.QB ?? 0) < 2 && p.round >= 5) {
+    problems.push(`only ${r.QB ?? 0} QB in a format that starts TWO`)
+  }
+  if ((r.TE ?? 0) >= 2) problems.push(`${r.TE} TEs and only one TE slot`)
+  if ((r.K ?? 0) >= 1 && p.round <= 12) problems.push('a kicker this early')
+  if ((r.DST ?? 0) >= 1 && p.round <= 11) problems.push('a defense this early')
+  if ((r.WR ?? 0) >= 5) problems.push(`${r.WR} WRs for two starting slots plus a flex`)
+  if ((r.RB ?? 0) >= 5) problems.push(`${r.RB} RBs for two starting slots plus a flex`)
+
   return {
-    overallPickNumber: p.overallPickNumber,
-    round: p.round,
-    roundPick: p.roundPick,
+    // --- who and what happened
     manager: p.team.managerFirst,
     team: p.team.teamName,
     player: p.player.name,
     position: p.player.pos,
-    leagueRank: p.player.leagueRank,
-    nationalADP: p.player.adp,
-    slotsEarlierThanRank: p.reachSlots,
-    slotsEarlierThanNationalADP: p.adpSlots,
-    betterPlayersStillAvailable: p.betterAvailable,
-    bestPlayerPassedOver: p.bestAvailable?.name ?? 'none',
-    bestPassedOverRank: p.bestAvailable?.leagueRank ?? 0,
-    othersPassedOver: p.passedOver.map((x) => x.name).join(', ') || 'none',
-    rosterSoFar: Object.entries(p.rosterAfter)
-      .filter(([, n]) => n > 0).map(([k, n]) => `${n} ${k}`).join(', '),
-    samePositionInLast5: p.positionRun,
-    firstOfPositionInDraft: p.firstAtPosition,
-    autodrafted: p.autodrafted,
+    nflTeam: p.player.proTeam ?? 'unknown',
+    round: p.round,
+
+    // --- THE PLAYER. His story is the first place to look for a joke.
+    playerStory: p.player.outlook ?? 'no analyst blurb available',
     injuryStatus: p.player.injuryStatus ?? 'healthy',
+
+    // --- THE ROSTER. The second place to look.
+    rosterAfterThisPick: shape,
+    rosterProblems: problems.join('; ') || 'none worth mentioning',
+    startingSlots: 'QB, RB, RB, WR, WR, TE, FLEX, OP (any offensive player, usually a 2nd QB), DST, K',
+    benchSpots: 5,
+
+    // --- WHO HE PASSED ON. Names land; ranks do not.
+    bestPlayerPassedOver: p.bestAvailable?.name ?? 'nobody better',
+    othersPassedOver: p.passedOver.map((x) => `${x.name} (${x.pos})`).join(', ') || 'none',
+
+    // --- NUMBERS. Available, but they are the punchline, never the premise.
+    // Use AT MOST ONE, and only if it is genuinely funnier than the player.
+    overallPickNumber: p.overallPickNumber,
+    betterPlayersStillAvailable: p.betterAvailable,
+    nationalADP: p.player.adp >= 9999 ? 'n/a' : p.player.adp,
+
+    autodrafted: p.autodrafted,
     flags: p.flags.join(', '),
   }
 }

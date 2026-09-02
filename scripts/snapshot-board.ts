@@ -59,6 +59,11 @@ async function main() {
       projectedPoints: proj?.appliedTotal ?? 0,
       adp: p.ownership?.averageDraftPosition ?? 9999,
       injuryStatus: p.injuryStatus ?? null,
+      // ESPN's own analyst blurb. This is the richest source of PLAYER
+      // character available — age, injury history, role changes, whether he
+      // has ever actually done it — and the roasts were duller for not having
+      // it. Trimmed because only the first couple of sentences carry the story.
+      outlook: (p.seasonOutlook ?? '').trim().slice(0, 420) || null,
     })
   }
 
@@ -74,6 +79,8 @@ async function main() {
       leagueRank: p.leagueRank, vor: Math.round(p.vor * 10) / 10,
       projectedPoints: Math.round(p.projectedPoints * 10) / 10,
       adp: p.adp, injuryStatus: p.injuryStatus,
+      // Only for players anyone will actually draft; the tail is dead weight.
+      outlook: p.leagueRank <= 400 ? p.outlook : null,
     })),
   }, null, 1) + '\n')
 
