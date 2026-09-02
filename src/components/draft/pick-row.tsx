@@ -9,87 +9,81 @@ const POS_TINT: Record<string, string> = {
 /**
  * One pick in the feed.
  *
- * Every row is the same height whether or not it carries a roast, so the feed
- * scans as a uniform board rather than a ragged list. The roast area is always
- * reserved; on an uncommented pick it simply sits empty.
+ * Three zones: a grey pick-number strip down the left, the player on the left
+ * of the body, and the drafting manager in the top right. The roast, when there
+ * is one, runs full width beneath.
+ *
+ * The 88px floor is a compromise. Rows were briefly made truly uniform by
+ * filling uncommented picks with their board rank and ADP, but that metadata
+ * was cut — so a commented row (~212px on a phone) is now genuinely taller than
+ * an uncommented one. The floor keeps the short rows from looking cramped
+ * without opening the ~120px of dead space that matching the tallest would
+ * require on 120 of 180 picks.
  */
 export function PickRow({ pick }: { pick: FeedPick }) {
   const dst = isTeamDefense(pick)
 
   return (
     <li
-      className="state-bar flex min-h-[132px] flex-col bg-surface px-4 py-3.5 sm:min-h-[124px] sm:px-5"
+      className="state-bar flex min-h-[88px] items-stretch bg-surface"
       style={{ '--state': pick.roast ? POS_TINT[pick.position] ?? 'var(--brand)' : 'transparent' } as React.CSSProperties}
     >
-      <div className="flex items-start gap-3">
-        <PlayerHeadshot
-          espnPlayerId={pick.playerId}
-          name={pick.player}
-          size={44}
-          teamAbbrev={pick.proTeam}
-          isTeamDefense={dst}
-        />
+      {/* Pick number. Stacked rather than on one line so the strip can stay
+          narrow enough to leave the body usable at 320px. */}
+      <div className="flex w-[58px] shrink-0 flex-col justify-center border-r border-border bg-surface-2 px-2 py-3 text-center sm:w-[68px]">
+        <span className="font-mono text-[9px] uppercase tracking-[0.14em] text-dim">Pick</span>
+        <span className="display mt-0.5 text-[15px] leading-none text-muted tabular-nums sm:text-[17px]">
+          {pick.round}.{String(pick.roundPick).padStart(2, '0')}
+        </span>
+      </div>
 
-        <div className="min-w-0 flex-1">
-          <div className="flex flex-wrap items-baseline gap-x-2 gap-y-0.5">
-            <span className="font-mono text-[11px] tabular-nums text-dim">
-              {pick.round}.{String(pick.roundPick).padStart(2, '0')}
-            </span>
-            <span className="display text-[17px] leading-tight sm:text-[19px]">{pick.player}</span>
-            <span className="font-mono text-[10.5px] uppercase tracking-wider text-dim">
-              {pick.position}{pick.proTeam && !dst ? ` · ${pick.proTeam}` : ''}
-            </span>
+      <div className="min-w-0 flex-1 px-3.5 py-3 sm:px-5 sm:py-3.5">
+        <div className="flex items-start justify-between gap-3">
+          {/* Player */}
+          <div className="flex min-w-0 flex-1 items-center gap-2.5">
+            <PlayerHeadshot
+              espnPlayerId={pick.playerId}
+              name={pick.player}
+              size={40}
+              teamAbbrev={pick.proTeam}
+              isTeamDefense={dst}
+            />
+            <div className="min-w-0">
+              <div className="display truncate text-[16px] leading-tight sm:text-[19px]">
+                {pick.player}
+              </div>
+              <div className="mt-0.5 font-mono text-[10px] uppercase tracking-wider text-dim sm:text-[10.5px]">
+                {pick.position}{pick.proTeam && !dst ? ` · ${pick.proTeam}` : ''}
+              </div>
+            </div>
           </div>
 
-          <div className="mt-1.5 flex items-center gap-1.5 text-[12.5px] text-muted">
+          {/*
+            Drafting manager. Capped and truncating rather than hidden below a
+            breakpoint: at 360px, showing the full team name clipped the PLAYER
+            name instead, and the player is the more important half of the row.
+          */}
+          <div className="flex min-w-0 max-w-[42%] shrink items-center gap-1.5 sm:max-w-[45%]">
             {pick.managerPhoto && (
               // eslint-disable-next-line @next/next/no-img-element
               <img
                 src={pick.managerPhoto}
                 alt=""
-                width={20}
-                height={20}
+                width={22}
+                height={22}
                 loading="lazy"
                 decoding="async"
-                className="size-5 shrink-0 rounded-full border border-border object-cover"
+                className="size-[22px] shrink-0 rounded-full border border-border object-cover"
               />
             )}
-            <span className="truncate">
-              <span className="font-medium text-text">{pick.manager}</span>
-              <span className="text-dim"> · {pick.teamName}</span>
+            <span className="truncate text-[12px] text-muted sm:text-[12.5px]">
+              {pick.teamName}
             </span>
           </div>
         </div>
-      </div>
 
-      {/*
-        Reserved on every row, which is what keeps the feed level.
-
-        An uncommented pick shows its draft context rather than empty space.
-        Equalising all 180 rows to the tallest roast would have run the mobile
-        page 1.6x longer and left ~157px blank on each of 120 cards; this fills
-        the same area with the numbers the roasts are judged against anyway.
-      */}
-      <div className="mt-2.5 flex flex-1 items-start">
-        {pick.roast ? (
-          <p className="text-[14px] leading-relaxed text-text">{pick.roast.text}</p>
-        ) : (
-          <dl className="flex flex-wrap gap-x-4 gap-y-1 font-mono text-[11px] text-dim">
-            <div className="flex gap-1.5">
-              <dt className="uppercase tracking-wider">Board</dt>
-              <dd className="tabular-nums text-muted">#{pick.leagueRank}</dd>
-            </div>
-            <div className="flex gap-1.5">
-              <dt className="uppercase tracking-wider">ADP</dt>
-              <dd className="tabular-nums text-muted">
-                {pick.adp >= 9999 ? '—' : pick.adp.toFixed(1)}
-              </dd>
-            </div>
-            <div className="flex gap-1.5">
-              <dt className="uppercase tracking-wider">Left on board</dt>
-              <dd className="tabular-nums text-muted">{pick.betterAvailable}</dd>
-            </div>
-          </dl>
+        {pick.roast && (
+          <p className="mt-2.5 text-[14px] leading-relaxed text-text">{pick.roast.text}</p>
         )}
       </div>
     </li>
