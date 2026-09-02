@@ -239,7 +239,7 @@ way — live feed if live, recap source if not.
 
 **The lesson from this session:** four of five real bugs were only findable by
 running it. Reading the code would not have caught the misattributed roasts, the
-dropped defences, or the wrong feed ordering. Generate output and look at it.
+dropped defenses, or the wrong feed ordering. Generate output and look at it.
 
 Live runner shipped (`scripts/draft-live.ts`), verified against the real ESPN
 endpoint. Open: voice tuning (together), superlatives design, `/draft` is not

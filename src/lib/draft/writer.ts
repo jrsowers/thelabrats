@@ -4,7 +4,7 @@ import { join } from 'node:path'
 import type { ScheduledRoast } from './schedule'
 import { THEME_ANGLE } from './themes'
 import { factSheet, templateRoast } from './roast'
-import { validateRoast } from './validate'
+import { validateRoast, checkStyle } from './validate'
 
 /**
  * Turns scheduled picks into roasts.
@@ -105,6 +105,55 @@ function buildPrompt(batch: ScheduledRoast[], opts: WriteOptions): string {
   return parts.join('\n')
 }
 
+/** One model call. Returns roast text keyed by overall pick number. */
+async function generate(
+  batch: ScheduledRoast[], opts: WriteOptions, apiKey: string, extra?: string,
+): Promise<Map<number, string>> {
+  const client = new Anthropic({ apiKey })
+
+  // Structured output via a forced tool call. Asking for raw JSON in a text
+  // block is fragile: Opus emits thinking blocks whose tokens count against
+  // max_tokens, so a generous-looking budget still truncated the array
+  // mid-string and cost the whole batch. A tool call cannot be malformed.
+  const res = await client.messages.create({
+    model: opts.model ?? MODEL,
+    max_tokens: 1200 + 400 * batch.length,
+    system: `${voiceGuide()}\n\nYou are writing roasts for a live fantasy football draft feed.`,
+    tools: [{
+      name: 'submit_roasts',
+      description: 'Submit one roast per pick.',
+      input_schema: {
+        type: 'object',
+        properties: {
+          roasts: {
+            type: 'array',
+            items: {
+              type: 'object',
+              properties: {
+                id: { type: 'number', description: 'The PICK ID exactly as given.' },
+                roast: { type: 'string', description: '2-3 sentences. Contractions. No emoji.' },
+              },
+              required: ['id', 'roast'],
+            },
+          },
+        },
+        required: ['roasts'],
+      },
+    }],
+    tool_choice: { type: 'tool', name: 'submit_roasts' },
+    messages: [{
+      role: 'user',
+      content: buildPrompt(batch, opts) + (extra ? `\n\n${extra}` : ''),
+    }],
+  })
+
+  const call = res.content.find(
+    (b): b is Anthropic.ToolUseBlock => b.type === 'tool_use' && b.name === 'submit_roasts',
+  )
+  const parsed = (call?.input as { roasts?: { id: number; roast: string }[] })?.roasts ?? []
+  return new Map(parsed.map((p) => [Number(p.id), (p.roast ?? '').trim()]))
+}
+
 export async function writeRoasts(
   batch: ScheduledRoast[], opts: WriteOptions = {},
 ): Promise<WrittenRoast[]> {
@@ -119,55 +168,39 @@ export async function writeRoasts(
   if (!apiKey || batch.length === 0) return fallbackAll()
 
   try {
-    const client = new Anthropic({ apiKey })
+    let byId = await generate(batch, opts, apiKey)
 
-    // Structured output via a forced tool call. Asking for raw JSON in the text
-    // block is fragile: Opus emits thinking blocks whose tokens count against
-    // max_tokens, so a generous-looking budget still truncated the array
-    // mid-string and cost the whole batch. A tool call cannot be malformed.
-    const res = await client.messages.create({
-      model: opts.model ?? MODEL,
-      // Must cover thinking AND the roasts themselves.
-      max_tokens: 1200 + 400 * batch.length,
-      system: `${voiceGuide()}\n\nYou are writing roasts for a live fantasy football draft feed.`,
-      tools: [{
-        name: 'submit_roasts',
-        description: 'Submit one roast per pick.',
-        input_schema: {
-          type: 'object',
-          properties: {
-            roasts: {
-              type: 'array',
-              items: {
-                type: 'object',
-                properties: {
-                  id: { type: 'number', description: 'The PICK ID exactly as given.' },
-                  roast: { type: 'string', description: '2-3 sentences. No emoji.' },
-                },
-                required: ['id', 'roast'],
-              },
-            },
-          },
-          required: ['roasts'],
-        },
-      }],
-      tool_choice: { type: 'tool', name: 'submit_roasts' },
-      messages: [{ role: 'user', content: buildPrompt(batch, opts) }],
-    })
+    // Style problems get ONE rewrite, with the specific complaint attached.
+    // Stiff prose is still a joke, so this never falls back — unlike an
+    // invented injury, which does.
+    const stiff = batch
+      .map((s) => ({ s, text: byId.get(s.pick.overallPickNumber) }))
+      .map(({ s, text }) => ({ s, text, style: text ? checkStyle(text) : { ok: true, notes: [] } }))
+      .filter((x) => !x.style.ok)
 
-    const call = res.content.find(
-      (b): b is Anthropic.ToolUseBlock => b.type === 'tool_use' && b.name === 'submit_roasts',
-    )
-    const parsed = (call?.input as { roasts?: { id: number; roast: string }[] })?.roasts ?? []
+    if (stiff.length > 0) {
+      const complaint =
+        'REWRITE REQUIRED. These read as written prose, not speech. Fix ONLY the ' +
+        'language; keep the joke:\n' +
+        stiff.map((x) =>
+          `  PICK ID ${x.s.pick.overallPickNumber}: ${x.style.notes.join('; ')}`).join('\n')
+      try {
+        const retry = await generate(stiff.map((x) => x.s), opts, apiKey, complaint)
+        for (const [id, text] of retry) {
+          // Keep the rewrite only if it actually fixed the problem.
+          if (text && checkStyle(text).ok) byId.set(id, text)
+        }
+      } catch {
+        // A failed rewrite is not worth losing the batch over.
+      }
+    }
 
-    const byId = new Map(parsed.map((p) => [Number(p.id), p.roast]))
     return batch.map((s) => {
       let roast = byId.get(s.pick.overallPickNumber)?.trim()
 
-      // Reject invented status claims rather than publish them. A written rule
-      // against this already failed twice in sixty roasts; falling back to the
-      // template costs one joke and avoids asserting a real player's medical
-      // status on a public page.
+      // Invented status claims are rejected outright. A written rule against
+      // this already failed twice in sixty roasts; losing one joke beats
+      // asserting a real player's medical status on a public page.
       if (roast) {
         const check = validateRoast(roast, opts.dossier?.get(s.pick.player.name))
         if (!check.ok) {
@@ -175,6 +208,7 @@ export async function writeRoasts(
           roast = undefined
         }
       }
+
       return roast
         ? { overallPickNumber: s.pick.overallPickNumber, text: roast, theme: s.theme, fallback: false }
         : { overallPickNumber: s.pick.overallPickNumber, text: templateRoast(s.pick), theme: s.theme, fallback: true }

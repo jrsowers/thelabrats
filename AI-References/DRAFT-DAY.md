@@ -69,13 +69,13 @@ Henry is ESPN #39 and **#9 here**.
 Ranking by raw projected points would just list quarterbacks. VOR is what makes
 a 300-point QB and a 220-point RB comparable.
 
-### Kickers and defences are buried
+### Kickers and defenses are buried
 
-Raw VOR put the best defence at **#57** and the best kicker at **#69**, because
+Raw VOR put the best defense at **#57** and the best kicker at **#69**, because
 a kicker genuinely projects ~165 points. Arithmetically true, useless as a
 board — those projections are near-random year to year, which is why every
 mainstream board buries them and why taking one early is a running joke.
-Ranked inline, the bot would have called a round-5 defence sound.
+Ranked inline, the bot would have called a round-5 defense sound.
 
 ### "Reach" means players left on the board
 
@@ -184,9 +184,9 @@ Each of these would have been visible to twelve people in real time.
    first tests passed because the expectations were derived from the
    implementation instead of from meaning.
 
-2. **`playerId > 0` dropped every D/ST.** ESPN gives defences negative ids
+2. **`playerId > 0` dropped every D/ST.** ESPN gives defenses negative ids
    (Seahawks are `-16026`) while an unmade pick is exactly `-1`. Twelve picks
-   and the early-defence flag would have vanished silently.
+   and the early-defense flag would have vanished silently.
 
 3. **Every roast landed on the wrong manager.** The fact sheet exposed `pick`
    (overall number) while the prompt asked for `{"pick": N}` meaning batch

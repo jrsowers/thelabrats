@@ -22,7 +22,7 @@ how you draft or manage. That part is advice, not law. Ignore it freely.
 | **Bench** | 5 spots, plus 1 IR |
 | **Draft** | Snake, 15 rounds, 60 seconds per pick |
 | **Scoring** | ⚠️ **0.5 PPR**, ⚠️ **6-point passing TDs**, ⚠️ **−1 interceptions** |
-| **Bonuses** | ⚠️ Big-yardage games, long field goals, dominant defences |
+| **Bonuses** | ⚠️ Big-yardage games, long field goals, dominant defenses |
 | **Waivers** | Traditional rolling priority, ⚠️ **not FAAB**, 2-day claims |
 | **Trades** | ⚠️ **No league voting.** 24-hour review, commissioner processes |
 | **Trade deadline** | Wednesday, 2 December 2026, 12:00 p.m. ET |
@@ -65,7 +65,7 @@ and always to somebody's fury.
 | TE | Tight ends |
 | ⚠️ **OP** | **Any offensive player — including a second QB** |
 | FLEX | RB / WR / TE |
-| D/ST | Team defence |
+| D/ST | Team defense |
 | K | Kicker |
 
 ### Bench and IR
@@ -147,7 +147,7 @@ dropping as you go rather than rostering options.
 | 2-point conversion catch | 2 |
 | ⚠️ 200+ yard receiving game | **+2 bonus** |
 
-### Everything else on offence
+### Everything else on offense
 
 | Event | Points |
 | --- | --- |
@@ -171,7 +171,7 @@ dropping as you go rather than rostering options.
 | Missed FG 50+ | 0 |
 | Missed extra point | −1 |
 
-### Team defence / special teams
+### Team defense / special teams
 
 **Points allowed**
 
@@ -217,10 +217,10 @@ player over the steady one, and they occasionally decide a matchup.
 stalls near midfield has genuine upside. Note the flat 3 points for anything
 under 50, which makes accuracy on short kicks worth less than distance.
 
-**Defences score on two axes here, not one.** Most leagues only count points
-allowed. We also score yards allowed, and the swing is ±5. A defence that gets
+**Defenses score on two axes here, not one.** Most leagues only count points
+allowed. We also score yards allowed, and the swing is ±5. A defense that gets
 shredded for 500 yards but bends-not-breaks to 20 points is worth much less
-here than elsewhere. Favour defences that are genuinely good, not just ones
+here than elsewhere. Favour defenses that are genuinely good, not just ones
 with a favourable schedule.
 
 ---
@@ -407,7 +407,7 @@ skim this one.
 5. **Bonus points** for 400-yard passing, 200-yard rushing and 200-yard
    receiving games.
 6. **Long field goals pay more** — 5 for 50–59, 6 for 60+.
-7. **Defences score on yards allowed as well as points allowed.**
+7. **Defenses score on yards allowed as well as points allowed.**
 8. **Traditional rolling waivers, not FAAB.**
 9. **No trade voting or vetoes**; commissioner processes after a 24-hour review.
 10. **Two-week championship** (weeks 16–17), combined score.

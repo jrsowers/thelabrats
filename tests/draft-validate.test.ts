@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { validateRoast } from '../src/lib/draft/validate'
+import { validateRoast, checkStyle } from '../src/lib/draft/validate'
 
 const injured = { player: 'Luther Burden III', notes: ['Suffered a groin injury on 8 August 2026 in a contested red-zone rep.'] }
 const outForYear = { player: 'Ricky Pearsall', notes: ['Underwent knee surgery and is out for the 2026 season.'] }
@@ -43,6 +43,44 @@ describe('status invention guard', () => {
       'Jay reached twenty-five slots for a kicker.',
     ]) {
       expect(validateRoast(fine, injured).ok, fine).toBe(true)
+    }
+  })
+})
+
+describe('style checker', () => {
+  it('catches the exact lines James flagged', () => {
+    const a = checkStyle('Bree drafted a man who is not allowed to touch the ball with his hands.')
+    expect(a.ok).toBe(false)
+    expect(a.notes[0]).toMatch(/uncontracted/)
+
+    const b = checkStyle('Taken forty-seven picks before the country would have bothered.')
+    expect(b.ok).toBe(false)
+    expect(b.notes[0]).toMatch(/abstraction/)
+  })
+
+  it('passes the spoken versions of the same lines', () => {
+    expect(checkStyle("Bree drafted a guy who isn't allowed to touch the ball with his hands.").ok).toBe(true)
+    expect(checkStyle('Taken forty-seven picks before anyone not in an insane asylum would have bothered.').ok).toBe(true)
+  })
+
+  it('catches throat-clearing', () => {
+    expect(checkStyle('That is four receivers, which means his bye week is arguably a problem.').ok).toBe(false)
+  })
+
+  it('catches British spelling, which leaked in from the style guide itself', () => {
+    const r = checkStyle('Evan took a defence before anyone else had thought about one.')
+    expect(r.ok).toBe(false)
+    expect(r.notes[0]).toMatch(/British/)
+    expect(checkStyle('Evan took a defense before anyone else had thought about one.').ok).toBe(true)
+  })
+
+  it('does not fire on ordinary roast language', () => {
+    for (const fine of [
+      "Mike bid against himself, overpaid, and looked pleased about it.",
+      "Jay took a kicker in the twelfth round. Not the fifteenth. The twelfth.",
+      "The memories are now being kicked from forty-two yards out.",
+    ]) {
+      expect(checkStyle(fine).ok, fine).toBe(true)
     }
   })
 })

@@ -193,7 +193,7 @@ route that does not exist would have reintroduced exactly the 404 problem fixed
 one commit earlier.
 **How:** `/playoffs` is a real page with an honest empty state (§38), not a
 placeholder. Before any game is final there is genuinely nothing to seed, so
-"Nothing to seed yet" is correct behaviour rather than a stub — and it still
+"Nothing to seed yet" is correct behavior rather than a stub — and it still
 surfaces real information: berths, byes, seeding rule, and when the regular
 season ends.
 **Bracket icon:** drawn by hand in `primitives.tsx` to mirror ESPN's mark (two
@@ -248,9 +248,9 @@ than reimplementing it.
 **Source of truth:** the editorial `champions` table, most recent year. Not
 inferred, because seasons predating the app have no ESPN data to infer from.
 **Accessibility:** the crown carries `role="img"` and a label naming the year, so
-it is not a colour-only signal (§39).
+it is not a color-only signal (§39).
 **Amber, per the palette:** `--warn` is already defined as "provisional,
-championships". No new colour was introduced.
+championships". No new color was introduced.
 
 ## 2026-08-28 · Metadata split rather than one long title
 **Why:** James asked for the title and description to be "The Lab Rats – A
@@ -341,7 +341,7 @@ rendering blank, so the bracket reads as a bracket before anything is decided.
 ## 2026-08-28 · Transaction parsing verified only for internal consistency
 This league had ZERO transactions when the real payload was captured, so
 `mTransactions2`'s populated shape has never been observed here. The parser is
-written from documented behaviour and tested against
+written from documented behavior and tested against
 `fixtures/hypothesised/mTransactions2-populated.json` — a hand-authored file,
 clearly named and commented as hypothesised, NOT a capture.
 **This is the §60 boundary:** the parser exists and is defensive, but it is not
@@ -509,7 +509,7 @@ for. The name is now display 21px at the top of the card; the recipient drops to
 **The metric keeps its size** but is set in the section accent, so name and
 number read as different KINDS of information rather than competing for the same
 rank. Two large elements do not fight when only one of them is coloured.
-**Section headings take the normal text colour.** Green and red on the headings
+**Section headings take the normal text color.** Green and red on the headings
 duplicated a distinction the cards' edge bars and metric colours already carry,
 and coloured headings made the page read as an alert rather than a scoreboard.
 
@@ -537,7 +537,7 @@ James: "Manager Of The Week" is boring, "Fantasy Nostradamus" is fun; and
 phrase naming a character or a scene — The Mastermind, The Cat Burglar, The
 Prime Specimen, The Crime Scene, The Lead Balloon — with a plain one-sentence
 definition beneath the title so nobody has to guess what earned it.
-**Ordering** within each section: manager judgement, then matchup outcomes, then
+**Ordering** within each section: manager judgment, then matchup outcomes, then
 individual performances, driven by a `category` field rather than array order.
 
 ## 2026-08-28 · Player headshots come from ESPN's image combiner
@@ -545,7 +545,7 @@ individual performances, driven by a `category` field rather than array order.
 The raw asset is ~240KB; the combiner at display size is ~16KB.
 **A fallback is mandatory, not optional:** a player with no photo returns a
 404 with a 1-byte body, not a placeholder image. Rookies, practice-squad
-call-ups and team defences all miss, so the component swaps in initials onError.
+call-ups and team defenses all miss, so the component swaps in initials onError.
 
 ## 2026-08-28 · Placeholder headlines must not repeat the card description
 Adding the one-line definition under each title exposed a duplication: the
@@ -686,8 +686,8 @@ with ESPN's generic board is 12 slots — Derrick Henry is ESPN #39 and #9 here.
 every player ranked under 100 is gone, so rank-minus-pick calls every late pick
 a massive reach.
 
-**Kickers and defences rank below all skill players** regardless of VOR. Raw VOR
-put the best defence at #57, which is arithmetically true and useless.
+**Kickers and defenses rank below all skill players** regardless of VOR. Raw VOR
+put the best defense at #57, which is arithmetically true and useless.
 
 **National ADP is the punchline, never the yardstick.** It does not price a
 second starting QB, so it flags every correct superflex QB pick as a reach.
