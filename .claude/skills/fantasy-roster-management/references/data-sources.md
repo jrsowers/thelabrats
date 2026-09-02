@@ -60,6 +60,15 @@ Parsing gotchas (verified against a live league):
 
 ## 3. Yahoo Fantasy (official API, OAuth2)
 
+> **Access status (2026-09-02):** Yahoo now gates the Fantasy Sports API
+> behind an application review (sports.yahoo.com/developer/access). James's
+> app ("Fantasy Waiver Wire Bot") has valid OAuth credentials and a minted
+> refresh token, but Fantasy API calls return 401
+> `additional_authorization_required` until Yahoo approves the application.
+> **Try the API first each run** — approval may land at any time. On 401,
+> fall back to §3b for the public leagues and report The Vinegar Strokes
+> (private) as blocked-pending-approval.
+
 Every call needs a fresh access token — run
 `scripts/yahoo-access-token.sh` (uses `YAHOO_CLIENT_ID`, `YAHOO_CLIENT_SECRET`,
 `YAHOO_REFRESH_TOKEN` from env; access tokens last ~1 hour).
@@ -89,6 +98,26 @@ awkward (arrays of single-key objects) — parse defensively.
   agents — check both.
 - Player objects include `status` (Q/O/IR), `bye_weeks`, and
   `percent_owned` sub-resources.
+
+## 3b. Yahoo public-league pages (fallback while API approval is pending)
+
+Yahoo *public* leagues render without login at
+`https://football.fantasysports.yahoo.com/f1/{league_id}` (use a browser
+User-Agent). Verified anonymously readable (2026-09-02): league home with all
+team links, team roster pages, and the players list.
+
+| Page | URL |
+| --- | --- |
+| League home / standings | `/f1/{league_id}` |
+| A team's roster | `/f1/{league_id}/{team_id}` |
+| Player pool (filter/sort via query params in the page UI) | `/f1/{league_id}/players` |
+
+- Pages are ~1 MB of HTML — fetch to a scratch file, then read/grep for the
+  roster and player tables rather than loading whole files into context.
+- This covers the three public prize leagues only. **The Vinegar Strokes is
+  private** — no fallback; it needs the approved API.
+- Availability signal from `/players` is weaker than the API's FA filter —
+  cross-check any claim target by name before recommending it.
 
 ## 4. Sleeper (market signal — public, no auth, no key)
 
