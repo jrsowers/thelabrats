@@ -35,13 +35,20 @@ async function main() {
 
   const written: { overallPickNumber: number; text: string; theme: string; fallback: boolean }[] = []
   const previous: string[] = []
+  // Per-manager history is what lets a bit run and escalate across the draft.
+  const historyByManager = new Map<string, string[]>()
 
   for (let i = 0; i < sched.length; i += BATCH) {
     const batch = sched.slice(i, i + BATCH)
     process.stdout.write(`  batch ${i / BATCH + 1}/${Math.ceil(sched.length / BATCH)}... `)
-    const out = await writeRoasts(batch, { dossier, previous })
+    const out = await writeRoasts(batch, { dossier, previous, historyByManager })
     written.push(...out)
     previous.push(...out.filter((o) => !o.fallback).map((o) => o.text))
+    for (const [i, o] of out.entries()) {
+      if (o.fallback) continue
+      const who = batch[i].pick.team.managerFirst
+      historyByManager.set(who, [...(historyByManager.get(who) ?? []), o.text])
+    }
     console.log(`${out.filter((o) => !o.fallback).length}/${out.length} written`)
   }
 

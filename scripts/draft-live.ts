@@ -119,10 +119,19 @@ async function main() {
 
       if (pending.length > 0) {
         const previous = [...roasts.values()].slice(-8).map((r) => r.text)
+
+        // Rebuild each manager's own history so running bits survive a restart.
+        const historyByManager = new Map<string, string[]>()
+        for (const a of all) {
+          const r = roasts.get(a.overallPickNumber)
+          if (!r || r.fallback) continue
+          const who = a.team.managerFirst
+          historyByManager.set(who, [...(historyByManager.get(who) ?? []), r.text])
+        }
         const written = DRY
           ? pending.map((s) => ({ overallPickNumber: s.pick.overallPickNumber,
               text: `[dry] ${s.theme} — ${s.pick.player.name}`, theme: s.theme, fallback: true }))
-          : await writeRoasts(pending, { dossier, previous })
+          : await writeRoasts(pending, { dossier, previous, historyByManager })
         for (const w of written) {
           roasts.set(w.overallPickNumber, { text: w.text, theme: w.theme, fallback: w.fallback })
         }

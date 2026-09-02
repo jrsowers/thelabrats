@@ -1,7 +1,7 @@
 {
  "_note": "SAMPLE. Generated from the hypothesised draft so the pages can be built and reviewed before Thursday. Replaced by live data on draft day.",
  "sample": true,
- "generatedAt": "2026-09-02T17:59:07.163Z",
+ "generatedAt": "2026-09-02T19:21:18.771Z",
  "picks": [
   {
    "overallPickNumber": 1,
@@ -59,7 +59,7 @@
    "reachSlots": 0,
    "betterAvailable": 0,
    "roast": {
-    "text": "Best player on the board, top quarterback in a superflex league, taken at three. Zero better players available, zero reaches, nothing to work with. Keshia has accidentally done everything right, and we will not be telling her.",
+    "text": "Keshia took the best player on the board with the third pick of the draft, which is the correct outcome arrived at by unclear means. No one else had taken a quarterback yet, so she did not out-think anyone; she simply sat down first at a table that was already set. We are logging it as competence and reserving the right to revise.",
     "theme": "BACKHANDED_COMPLIMENT",
     "fallback": false
    }
@@ -120,7 +120,7 @@
    "reachSlots": 0,
    "betterAvailable": 0,
    "roast": {
-    "text": "Three of the last five picks were running backs, so Jay looked at the board and took the running back. National ADP had Jonathan Taylor at 6.33 and he went sixth. Somewhere a projection model is quietly asking why anyone needed Jay for this.",
+    "text": "Three running backs came off the board and Jay watched all three, thought hard, and then did the fourth-most original thing available. Jonathan Taylor went within a third of a pick of his national average, which means Jay did not draft so much as ratify. Somewhere a consensus board sighed with relief.",
     "theme": "FOLLOWING_THE_CROWD",
     "fallback": false
    }
@@ -200,7 +200,7 @@
    "reachSlots": 0,
    "betterAvailable": 0,
    "roast": {
-    "text": "Amon-Ra St. Brown at ten, one and a half slots later than the rest of America was taking him, with nobody better on the board. No reach, no gap, no crime. The Substation Superstars have committed a competent act, which we are logging as an outlier.",
+    "text": "Justin let the receiver run start without him, waited for two other people to do the thinking, and then took the guy the entire country had already agreed on, roughly a pick and a half after they would have. Correct pick, no fingerprints on it. Substation Superstars are currently one for one on decisions made by process of elimination.",
     "theme": "BACKHANDED_COMPLIMENT",
     "fallback": false
    }
@@ -223,7 +223,7 @@
    "reachSlots": 6,
    "betterAvailable": 6,
    "roast": {
-    "text": "James Cook III was sitting right there at rank 11 and Mike went Jalen Hurts six slots ahead of value. De'Von Achane and Drake Maye also declined to be taken. The rest of the country had Hurts going 54th, which is the sort of thing you learn in January.",
+    "text": "Mike wanted Jalen Hurts and nobody in this room was going to stop him, so he beat a field of zero competitors by six picks. James Cook III was sitting right there and lasted exactly one more selection. Mike bid against himself, overpaid, and looked pleased about it.",
     "theme": "COST_TO_VALUE",
     "fallback": false
    }
@@ -246,7 +246,7 @@
    "reachSlots": -1,
    "betterAvailable": 0,
    "roast": {
-    "text": "James Cook III, the highest-ranked player left, one slot after the board said. Evan waited for the safe answer to fall into his lap and then took it. The team name still says \"Waiting to draft,\" which is somehow the boldest thing about this.",
+    "text": "Evan took James Cook III one pick after he was already the highest-ranked man alive, which required him to do nothing but not stand up. His team name is still \"Waiting to draft...\", which is either an oversight or the most honest self-assessment in the league. This was the pick a coin flip would have made.",
     "theme": "FOLLOWING_THE_CROWD",
     "fallback": false
    }
@@ -402,7 +402,7 @@
    "reachSlots": 30,
    "betterAvailable": 30,
    "roast": {
-    "text": "For Chris Olave at 20 to work, thirty better players have to be wrong, Breece Hall has to disappoint, and rank 50 has to have been a typo. Three things, all load-bearing. Bree needs every one of them.",
+    "text": "For Chris Olave in round two to work, Bree needs a career year, needs thirty better players to quietly underperform, and needs Breece Hall to have never existed. She has two receivers and a plan that requires the rest of the league to cooperate. Nobody has agreed to this.",
     "theme": "COPIUM",
     "fallback": false
    }
@@ -482,7 +482,7 @@
    "reachSlots": 13,
    "betterAvailable": 14,
    "roast": {
-    "text": "Ashton Jeanty was on the board at rank 22 and Jesse took Travis Etienne Jr., ranked 37, thirteen slots early. Jeremiyah Love and CeeDee Lamb also went unbothered. Even standard ADP had Etienne almost eighteen picks later than this.",
+    "text": "Jesse needed a second running back and needed him badly enough to walk past fourteen better options, one of whom was Ashton Jeanty. He now has two running backs and the smug air of a man who thinks he has beaten the market to something. Mr. Anderson is drafting like the board owes him money.",
     "theme": "COST_TO_VALUE",
     "fallback": false
    }
@@ -562,7 +562,7 @@
    "reachSlots": 20,
    "betterAvailable": 21,
    "roast": {
-    "text": "Nico Collins is expected to lead the Texans receiving corps after Jayden Higgins's season-ending ACL tear, which is a real reason to like him and not a reason to take him twenty slots early. CeeDee Lamb, ranked 24, watched the whole thing happen. Da Reigning Champ is defending the title with a depth chart note.",
+    "text": "Chenell read that Nico Collins is expected to lead the Texans receiving corps after Jayden Higgins's season-ending ACL tear and treated it as classified intelligence. She then paid for it by stepping over CeeDee Lamb, who was the twenty-fourth-best player available and is not a secret. Da Reigning Champ is defending the title on scoops everyone else also read.",
     "theme": "NEWS_CYCLE",
     "fallback": false
    }
@@ -718,9 +718,9 @@
    "reachSlots": -4,
    "betterAvailable": 0,
    "roast": {
-    "text": "Patrick Mahomes, four slots after the board said, in the middle of a quarterback run three deep. Nobody better was available and Evan took the name everyone knows. He is listed as questionable, which is the only interesting thing in the sentence.",
+    "text": "3 of the last 5 picks were QBs, and Evan jumped in for Patrick Mahomes.",
     "theme": "FOLLOWING_THE_CROWD",
-    "fallback": false
+    "fallback": true
    }
   },
   {
@@ -760,7 +760,7 @@
    "reachSlots": -3,
    "betterAvailable": 0,
    "roast": {
-    "text": "That is four quarterbacks. Zero receivers, two running backs, four quarterbacks, and superflex only starts two of them. Jaxson Dart is part of a Giants trio with Cam Skattebo and Malik Nabers that played 18 snaps together in 2025, and Mike is building the roster equivalent of that number.",
+    "text": "Mike now has four quarterbacks and nothing else. Not a running back, not a receiver, not a single человек who catches a ball. He took Jaxson Dart, part of a Giants trio that played eighteen snaps together in 2025, to be the fourth man in a room where two of them can start and the other two watch Mike watch them.",
     "theme": "POSITIONAL_IMBALANCE",
     "fallback": false
    }
@@ -821,7 +821,7 @@
    "reachSlots": 18,
    "betterAvailable": 18,
    "roast": {
-    "text": "Eighteen better players have to be mispriced, Justin Herbert at rank 38 has to be a rounding error, and Tetairoa McMillan has to outrun his own rank of 59 by eighteen slots. Colin needs all three to land. Drake London and Caleb Williams sat there and quietly declined to help.",
+    "text": "For Tetairoa McMillan here to work, Colin needs eighteen better players to collectively forget how to play, needs Justin Herbert to have been a rumor, and needs Drake London to file for retirement quietly. He has two backs, two receivers, and a board he is treating as a suggestion. 4th and Inshes is a plan held together by other people failing.",
     "theme": "COPIUM",
     "fallback": false
    }
@@ -1015,7 +1015,7 @@
    "reachSlots": -7,
    "betterAvailable": 0,
    "roast": {
-    "text": "Jared Goff, seven slots after the board said, with literally nobody better left on it. The third quarterback in five picks and somehow the correct one. Keshia now has four quarterbacks and one running back, which suggests the process was not what produced this.",
+    "text": "Keshia has now taken four quarterbacks in a league that starts a small fraction of that, and this is the one where she accidentally landed the best player left on the board. Three of her last five picks have been quarterbacks, so the correct pick arrived purely because she was already standing in that aisle. Competence by saturation: throw enough darts at one wall and one of them is bound to hit the target.",
     "theme": "BACKHANDED_COMPLIMENT",
     "fallback": false
    }
@@ -1095,7 +1095,7 @@
    "reachSlots": 29,
    "betterAvailable": 29,
    "roast": {
-    "text": "DJ Moore at 55 with twenty-nine better players unclaimed, one of them Jordan Love at rank 54. Garrett Wilson and George Pickens were also available for the same price. Twenty-nine slots early is not a lean, it is a fall.",
+    "text": "Jordan Love sat there being the fifty-fourth best player alive while Tyler went shopping twenty-nine spots down the shelf for DJ Moore. That is three receivers in his last five picks, which means Tyler is not drafting a team, he is completing a collection. Somebody should tell him the league does not award points for theme.",
     "theme": "COST_TO_VALUE",
     "fallback": false
    }
@@ -1156,7 +1156,7 @@
    "reachSlots": 11,
    "betterAvailable": 12,
    "roast": {
-    "text": "Harold Fannin Jr. joins a roster that already had a tight end, taken eleven slots before rank 69 said to. George Pickens at 56 was there, so were Davante Adams and Zay Flowers. Justin is stacking positions instead of value, which is a collection, not a roster.",
+    "text": "Justin has now built a roster with two quarterbacks, one running back, one receiver and a tight end, which is not a lineup so much as a sampler platter. He stepped over George Pickens to add Harold Fannin Jr., meaning the process-of-elimination era is officially over and the guessing era has begun. Substation Superstars have moved from having no fingerprints on their picks to having them all over the wrong ones.",
     "theme": "STACKING",
     "fallback": false
    }
@@ -1293,7 +1293,7 @@
    "reachSlots": 25,
    "betterAvailable": 25,
    "roast": {
-    "text": "Twenty-five slots early, and standard ADP had Tony Pollard going twenty-five picks later too, so nobody anywhere was doing this. Zay Flowers at rank 58, DeVonta Smith and George Kittle all stayed on the board. That is a fourth running back on a team with one quarterback.",
+    "text": "Colin took Tony Pollard twenty-five picks before the rest of the country had any intention of doing so, which is less a draft strategy than a solo expedition. Zay Flowers, DeVonta Smith and George Kittle all watched him walk past. He now has three running backs and the settled look of a man who has stopped consulting anything.",
     "theme": "AGAINST_THE_GRAIN",
     "fallback": false
    }
@@ -1354,7 +1354,7 @@
    "reachSlots": 11,
    "betterAvailable": 13,
    "roast": {
-    "text": "George Kittle, rank 63, was the best thing on the board and Bree took Sam Darnold eleven slots ahead of rank 79. Tyler Shough and Bucky Irving were part of the same discount bin. America had Darnold going 162nd, which is a fact best left sitting there.",
+    "text": "Bree wanted a second quarterback and wanted him so badly that George Kittle, the sixty-third best player breathing, was simply furniture. Her plan already required thirty better players to underperform; now it requires Sam Darnold to be one of the reasons why. Three receivers, two tight ends, and a league that still has not agreed to any of this.",
     "theme": "COST_TO_VALUE",
     "fallback": false
    }
@@ -1472,7 +1472,7 @@
    "reachSlots": -7,
    "betterAvailable": 0,
    "roast": {
-    "text": "Best player available, seven slots after the board said, and it is a fifth running back. Count the shape: one quarterback, five running backs, one receiver. Doug is drafting a backfield and hoping the rest of the lineup fills itself in.",
+    "text": "Doug now has five running backs, one receiver and a quarterback, which means every Sunday he will start three of them and explain to the other two that it is nothing personal. Bhayshul Tuten was genuinely the best man left, so the pick is fine; the shape around it is a man building a relay team and entering a football league. Somewhere in Doug's house there is a roster page he has scrolled past sideways.",
     "theme": "POSITIONAL_IMBALANCE",
     "fallback": false
    }
@@ -1514,7 +1514,7 @@
    "reachSlots": 21,
    "betterAvailable": 21,
    "roast": {
-    "text": "For this to work DK Metcalf has to beat his rank of 97 by twenty-one slots, Sam LaPorta at 68 has to have been overrated, and the questionable tag has to mean nothing. Rome Odunze and Tee Higgins were the cheaper versions of the same bet. Chenell needs the whole stack to hold.",
+    "text": "For this to work, Chenell needs Sam LaPorta to disappear, needs twenty-one better players to sit down, and needs DK Metcalf's questionable designation to resolve in her favor. She is now defending a title on secondhand scoops and optimism about a medical report. Da Reigning Champ has moved from reading the news to hoping it changes.",
     "theme": "COPIUM",
     "fallback": false
    }
@@ -1575,7 +1575,7 @@
    "reachSlots": 4,
    "betterAvailable": 8,
    "roast": {
-    "text": "Five receivers. Two quarterbacks, zero running backs, zero tight ends, five receivers. Rome Odunze at rank 70 was right there and Tyler went and got another one of the thing he already has too many of.",
+    "text": "Tyler has two quarterbacks and five receivers. No running backs. Not one. He has assembled a passing offense with nobody to hand the ball to and no way to stop handing it, and the second half of this draft is going to look like a supply run.",
     "theme": "POSITIONAL_IMBALANCE",
     "fallback": false
    }
@@ -1617,7 +1617,7 @@
    "reachSlots": 11,
    "betterAvailable": 12,
    "roast": {
-    "text": "This is a pick for a version of Luther Burden III that has not shown up yet, taken eleven slots before rank 92 and with Rome Odunze at 70 still sitting there. He is listed as questionable and suffered a groin injury on 8 August in a contested red-zone rep. James is buying the highlight reel he imagined.",
+    "text": "James drafted Luther Burden III with the confidence of a man remembering highlights that have not been filmed yet. Burden suffered a groin injury on 8 August in a contested red-zone rep, and James looked at that and reached eleven spots past Rome Odunze anyway. Three receivers now, all of them purchased on a memory.",
     "theme": "NOSTALGIA",
     "fallback": false
    }
@@ -1640,7 +1640,7 @@
    "reachSlots": -12,
    "betterAvailable": 0,
    "roast": {
-    "text": "Odunze at 82, twelve slots after rank 70 said he should have gone, with nothing better left on the board. Justin waited, took value, and balanced a roster that now reads 2 QB, 2 RB, 3 WR, 1 TE. We will file this under things that happened to him rather than things he did.",
+    "text": "Justin took Rome Odunze with nobody better on the board, which after the guessing era arrives as a genuine shock. There was nothing to eliminate, nothing to guess at, and no way to get this wrong, so he didn't. Substation Superstars have finally made a correct pick, and the only explanation available is that the board ran out of chances to trip him.",
     "theme": "BACKHANDED_COMPLIMENT",
     "fallback": false
    }
@@ -1663,7 +1663,7 @@
    "reachSlots": -10,
    "betterAvailable": 0,
    "roast": {
-    "text": "Third receiver off the board in five picks and Mike stepped politely into the queue for the last one. Tee Higgins was the safest name available, listed questionable, and the entire country had him at 51. Nobody has ever been fired for this pick, which is exactly the problem.",
+    "text": "Tee Higgins was the last obvious name on the board and Mike walked up and took him like a man collecting a parcel. Five quarterbacks, one running back, one receiver: he has spent this draft assembling the most eccentric roster in the league and then, at the one moment courage was free, did exactly what everyone would have. The quarterback room is now large enough that Higgins can throw to himself and still be outnumbered.",
     "theme": "FOLLOWING_THE_CROWD",
     "fallback": false
    }
@@ -1705,7 +1705,7 @@
    "reachSlots": -11,
    "betterAvailable": 0,
    "roast": {
-    "text": "Eighth round opens and Evan adds a fourth running back to a team with one quarterback. Rhamondre Stevenson started 13 of 14 games last season and still got out-touched by TreVeyon Henderson, 25.1 percent to 18.9. Two quarterback slots start every week, and Evan is furnishing the other rooms.",
+    "text": "Evan has one quarterback in a format that starts two, and he responded to that by drafting a fourth running back. Rhamondre Stevenson started thirteen of fourteen games last season and was still out-touched by a rookie at 25.1 percent, which is the kind of man you take when the other position has stopped occurring to you. The team name is still \"Waiting to draft...\", and at this point it reads less like an oversight than a warning.",
     "theme": "SUPERFLEX_MALPRACTICE",
     "fallback": false
    }
@@ -1766,7 +1766,7 @@
    "reachSlots": -7,
    "betterAvailable": 0,
    "roast": {
-    "text": "The other half of the New England committee, four picks later. Henderson held a 25.1 percent touch share to Stevenson's 18.9 last season, which is a lead in the way a nose is a lead. James is now the proud owner of one quarterback and a fourth running back.",
+    "text": "James drafted TreVeyon Henderson, who spent last season in a New England committee splitting work with Rhamondre Stevenson, taken three picks earlier by somebody else. So James now owns half of a backfield and Evan owns the other half, which means one of them is right and neither of them knows which. The memories keep getting more expensive.",
     "theme": "NEWS_CYCLE",
     "fallback": false
    }
@@ -1789,7 +1789,7 @@
    "reachSlots": -7,
    "betterAvailable": 0,
    "roast": {
-    "text": "Mark Andrews went 82nd on the board and 89th here, while the rest of America was waiting until pick 126. Colin found 37 slots of value and did it with a straight face. Correct, patient, and completely unlike him, so we will call it weather rather than skill.",
+    "text": "Colin, a man who has spent this draft walking past the board like it owed him money, took Mark Andrews at the exact moment he was the best player alive. No solo expedition, no twenty-five-pick head start, nobody left behind. We are logging this as a navigational error that happened to land on the runway.",
     "theme": "BACKHANDED_COMPLIMENT",
     "fallback": false
    }
@@ -1850,9 +1850,9 @@
    "reachSlots": -4,
    "betterAvailable": 0,
    "roast": {
-    "text": "Three tight ends, three receivers, and now a second running back. What Bree's roster does not have is a second quarterback, in a format that starts two. Rico Dowdle is a fine pick to make while the actual hole in the lineup keeps getting deeper.",
+    "text": "Round 8 and Bree still has 1 quarterback in a superflex league. Bold.",
     "theme": "SUPERFLEX_MALPRACTICE",
-    "fallback": false
+    "fallback": true
    }
   },
   {
@@ -1873,7 +1873,7 @@
    "reachSlots": -4,
    "betterAvailable": 0,
    "roast": {
-    "text": "Chenell already had DK Metcalf and has now added the Steelers' other guy. Jaylen Warren makes it four running backs, three receivers, and still no quarterback at all. Matching jerseys is a look, not a lineup.",
+    "text": "Chenell now has four running backs, three receivers, one tight end and zero quarterbacks in a format that starts two of them. She is defending a title with a roster that cannot legally take a snap. The scoops were real, the news was true, and nobody in the group chat thought to mention the part where somebody has to throw the ball.",
     "theme": "STACKING",
     "fallback": false
    }
@@ -2048,7 +2048,7 @@
    "reachSlots": 3,
    "betterAvailable": 3,
    "roast": {
-    "text": "Isaiah Likely sat at rank 102 and Jay took Marvin Harrison Jr. at 105 instead. Christian Watson and Hunter Henry were also on the board for the same price. A fifth receiver for a team with one quarterback and a single tight end.",
+    "text": "Jay, the man who ratified Jonathan Taylor, has finally deviated from consensus, and he chose to do it by taking Marvin Harrison Jr. three spots after Isaiah Likely was still sitting there. The one time he went off-script it was to pay a national price for a local ranking. Independence looks worse on him than obedience did.",
     "theme": "COST_TO_VALUE",
     "fallback": false
    }
@@ -2109,7 +2109,7 @@
    "reachSlots": 26,
    "betterAvailable": 26,
    "roast": {
-    "text": "Twenty-six better players were available and James went and got Michael Wilson to sit alongside Marvin Harrison Jr. T.J. Hockenson and Christian Watson, rank 103, both stayed put. Two Cardinals receivers is not a plan, it is season-ticket behaviour.",
+    "text": "James took Michael Wilson while T.J. Hockenson and twenty-six better men sat unclaimed, and the only visible logic is that Wilson catches passes in Arizona, where Marvin Harrison Jr. also works, except Harrison belongs to Jay. So James is not even stacking an offense, he is stacking someone else's. The memories are no longer his own.",
     "theme": "STACKING",
     "fallback": false
    }
@@ -2303,7 +2303,7 @@
    "reachSlots": 10,
    "betterAvailable": 11,
    "roast": {
-    "text": "Round ten, and the quarterback count is still one. Xavier Worthy makes six receivers while Josh Jacobs, Michael Pittman Jr. and Aaron Jones Sr. at rank 111 all went unclaimed. At some point the second starting slot is going to want an occupant.",
+    "text": "Jay has one quarterback, in a format that starts two, and has spent his last five picks on receivers he does not need. Josh Jacobs was available and Jay chose a fifth wideout, which means the only way this roster fields a legal lineup is if the commissioner takes pity. The consensus board he used to ratify has stopped taking his calls.",
     "theme": "SUPERFLEX_MALPRACTICE",
     "fallback": false
    }
@@ -2326,7 +2326,7 @@
    "reachSlots": -5,
    "betterAvailable": 0,
    "roast": {
-    "text": "Best player on the board, taken five slots after his rank, with nobody better left behind. Bree got it exactly right, which after three tight ends and one quarterback reads less like a plan and more like a slip of the mouse. We will let her have this one and pretend it was intentional.",
+    "text": "Bree took Aaron Jones Sr. with literally nobody better left on the board, which for a woman whose entire draft has been a petition to the rest of the league is genuinely disorienting. This required no cooperation from anyone. Three tight ends, one quarterback, and one pick that accidentally did not need permission.",
     "theme": "BACKHANDED_COMPLIMENT",
     "fallback": false
    }
@@ -2349,7 +2349,7 @@
    "reachSlots": -4,
    "betterAvailable": 0,
    "roast": {
-    "text": "Pittman makes four receivers for a roster that still has exactly one quarterback, and the rest of America was taking him 90th. Chenell paid 117 for the privilege and got the best name left on the board doing it. Competence this specific, on a team shaped this badly, has to be an accident.",
+    "text": "Michael Pittman Jr. joins a roster of four running backs, four receivers, one tight end and the same lonely quarterback, and Chenell paid twenty-seven picks over his national price to get him there. The scoop era, the medical-optimism era, and now the era of simply refusing to acknowledge that half the lineup is illegal. Da Reigning Champ is not defending a title, she is filing an appeal.",
     "theme": "HANDCUFF",
     "fallback": false
    }
@@ -2391,7 +2391,7 @@
    "reachSlots": 18,
    "betterAvailable": 18,
    "roast": {
-    "text": "Diggs joins Mike Evans' old address in Doug's collection, because two Buccaneers receivers is apparently the vision. Eighteen better players were sitting there, including Josh Jacobs at rank 115, and Doug reached past all of them to complete the set. Six running backs and two receivers is not a lineup, it is a gift shop.",
+    "text": "Doug walked past Josh Jacobs to take Stefon Diggs, which is the first time in this draft he has walked past a running back at all, and he chose the one moment where taking the running back was correct. He now has six backs and two receivers, so Diggs arrives as the second man in a room built for eight. That roster page he keeps scrolling sideways has developed a horizontal scrollbar of its own.",
     "theme": "STACKING",
     "fallback": false
    }
@@ -2414,7 +2414,7 @@
    "reachSlots": -5,
    "betterAvailable": 0,
    "roast": {
-    "text": "Count it: three quarterbacks, five running backs, two receivers, zero tight ends. Jesse has now solved the same problem five times and left two starting spots as a rumour. Jacobs was genuinely the best player left, which somehow makes the shape worse.",
+    "text": "Three quarterbacks, five running backs, two receivers. Jesse has now assembled a roster where the only legal Sunday lineup involves a quarterback lining up at wideout and a running back explaining the situation to the officials. Mr. Anderson stopped drafting a team several rounds ago and started collecting one position at a time, alphabetically.",
     "theme": "POSITIONAL_IMBALANCE",
     "fallback": false
    }
@@ -2456,7 +2456,7 @@
    "reachSlots": 7,
    "betterAvailable": 9,
    "roast": {
-    "text": "That is a seventh running back for a team with two receivers, and Rachaad White arrives to keep Stefon Diggs company in Doug's Tampa Bay wing. Kenny Gainwell at rank 118 was right there, along with nine other better players. The jerseys match beautifully and the starting lineup does not exist.",
+    "text": "That is Doug's seventh running back. He passed on Kenny Gainwell, who would have been an eighth, purely for variety. The relay team has become a marching band, and the two receivers have started asking whether they were traded without being told.",
     "theme": "STACKING",
     "fallback": false
    }
@@ -2498,7 +2498,7 @@
    "reachSlots": -6,
    "betterAvailable": 0,
    "roast": {
-    "text": "Five running backs, four receivers, a tight end, and one quarterback in a format that starts two. Gainwell was the best player available, so this was the correct answer to a question Chenell should have stopped asking six picks ago. The second slot is not going to fill itself in round twelve.",
+    "text": "Chenell has now taken a fifth running back while the quarterback column remains a single, terrified name. She has more backs than a superflex lineup has starting slots for humans, and she still needs a second passer more than she needs a Kenny Gainwell. The group chat has gone quiet, mostly out of respect.",
     "theme": "SUPERFLEX_MALPRACTICE",
     "fallback": false
    }
@@ -2521,7 +2521,7 @@
    "reachSlots": -5,
    "betterAvailable": 0,
    "roast": {
-    "text": "The rest of the country waits until 136 for Croskey-Merritt and Bree took him at 125 with nobody better on the board. Two clean picks in a row now, which for a roster carrying three tight ends and one quarterback is statistically improbable. Somebody check whether she has been replaced.",
+    "text": "Bree took the best player available for the second time tonight, and this one she got eleven picks cheaper than the country would have charged her. Her draft required thirty strangers to underperform; it did not require this, and yet here it is. Two accidents in a row is no longer an accident, it is a condition.",
     "theme": "BACKHANDED_COMPLIMENT",
     "fallback": false
    }
@@ -2544,7 +2544,7 @@
    "reachSlots": 31,
    "betterAvailable": 31,
    "roast": {
-    "text": "Engram was ranked 157th here and 170th nationally, and Jay called his name at 126. Terrance Ferguson at rank 121, Blake Corum and Brian Thomas Jr. all stayed on the board while this happened. Thirty-one better players is not a hunch, it is a decision nobody else in America would have signed.",
+    "text": "Jay took Evan Engram forty-four picks before the rest of America was going to, having previously been unable to draft a man without checking what everyone else thought first. He passed thirty-one better players to do it, including Brian Thomas Jr., and he still has one quarterback in a format that starts two. The consensus board did not stop taking his calls; it changed its number.",
     "theme": "AGAINST_THE_GRAIN",
     "fallback": false
    }
@@ -2605,7 +2605,7 @@
    "reachSlots": 23,
    "betterAvailable": 24,
    "roast": {
-    "text": "Brian Thomas Jr. was sitting at rank 123 and James took MarShawn Lloyd, rank 152, instead. Jakobi Meyers and Aaron Rodgers were also available, and one of those would have addressed the single quarterback on the roster. Twenty-four better players, third running back in five picks, no explanation offered.",
+    "text": "James took MarShawn Lloyd while Brian Thomas Jr., twenty-nine spots better, sat there being an actual first-round talent nobody wanted. That is a fourth running back on a roster with one quarterback, purchased on the same fumes as everything else. The memories have now outrun the film entirely.",
     "theme": "COST_TO_VALUE",
     "fallback": false
    }
@@ -2628,7 +2628,7 @@
    "reachSlots": -7,
    "betterAvailable": 0,
    "roast": {
-    "text": "Justin already has five receivers and has now spent 130 on a sixth, which is a strange way to hedge against your own roster. Brian Thomas Jr. was the best player left, so the value is real even if the need is imaginary. Two running backs, though. Two.",
+    "text": "Justin took Brian Thomas Jr., the best man on the board, one pick after James went out of his way not to. That is two correct picks in a row, which means the guessing era ended and something worse has replaced it: competence with no explanation. Two quarterbacks, two running backs, five receivers, and Substation Superstars now winning arguments they did not know they were in.",
     "theme": "HANDCUFF",
     "fallback": false
    }
@@ -2746,7 +2746,7 @@
    "reachSlots": -3,
    "betterAvailable": 0,
    "roast": {
-    "text": "Six receivers, four running backs, one tight end, one quarterback. Addison was genuinely the best name left, which is the only reason this reads as a pick rather than a symptom. The shape of that roster starts two quarterbacks and owns one.",
+    "text": "Jordan Addison was genuinely the best man left, so James has finally bought something with cash instead of memories. It gives him one quarterback, four running backs, six receivers and a tight end, which is a roster shaped like a man who has never once looked at the left-hand column. The film has caught up; the lineup card never will.",
     "theme": "POSITIONAL_IMBALANCE",
     "fallback": false
    }
@@ -2769,7 +2769,7 @@
    "reachSlots": 26,
    "betterAvailable": 26,
    "roast": {
-    "text": "Jeudy was ranked 163rd here and the country had him at 168, and Colin called it at 137. Twenty-six better players stayed on the board, Quentin Johnston and Cam Ward among them. That is not a market inefficiency, that is Colin bidding against nobody and winning.",
+    "text": "Colin took Jerry Jeudy twenty-six better players early, which puts the solo expedition back in the field after one brief night at base camp. Quentin Johnston, Cam Ward and Khalil Shakir all watched him walk off into the treeline again. He has three tight ends and three receivers, and Mark Andrews now looks like the accident everyone said he was.",
     "theme": "AGAINST_THE_GRAIN",
     "fallback": false
    }
@@ -2792,7 +2792,7 @@
    "reachSlots": 1,
    "betterAvailable": 4,
    "roast": {
-    "text": "Quentin Johnston sat at rank 134 and Tyler went past him for Wan'Dale Robinson, listed questionable. Cam Ward and Khalil Shakir were also there, and the roster has one running back and six receivers. Four better players, and he chose the seventh wideout.",
+    "text": "Quentin Johnston was sitting there and Tyler took Wan'Dale Robinson instead, which is the fourth receiver in his last five picks and the sixth overall. He has one running back. The collection is complete enough to tour, and the supply run never happened.",
     "theme": "COST_TO_VALUE",
     "fallback": false
    }
@@ -2815,7 +2815,7 @@
    "reachSlots": 26,
    "betterAvailable": 26,
    "roast": {
-    "text": "One quarterback. Twelve rounds in, six receivers deep, and Ridley makes seven pass-catchers for a lineup that needs two starting passers. Cam Ward was available at this exact moment, which is the part Jay will want to forget by September.",
+    "text": "That is Jay's sixth receiver, four of them in his last five picks, and he still has exactly one quarterback in a format that starts two. Calvin Ridley cost him twenty-six better players, including a Cam Ward who plays the position Jay has decided not to believe in. He is no longer drafting a team, he is curating the largest collection of men who cannot throw.",
     "theme": "SUPERFLEX_MALPRACTICE",
     "fallback": false
    }
@@ -2876,7 +2876,7 @@
    "reachSlots": -6,
    "betterAvailable": 0,
    "roast": {
-    "text": "Shakir was the best player on the board and Keshia took him a shade after his rank, which is fine. What is not fine is the five quarterbacks stacked behind him. Two receivers, five quarterbacks, and only two of those quarterbacks can play at once.",
+    "text": "Khalil Shakir was the best man on the board, so Keshia has now been correct twice, both times while standing in an aisle she wandered into for other reasons. He is the fourth receiver in her last five picks, which means she has stopped hoarding quarterbacks and started hoarding the men who catch from them. Five quarterbacks and two receivers before tonight; the darts are now hitting a different wall entirely.",
     "theme": "STACKING",
     "fallback": false
    }
@@ -2899,7 +2899,7 @@
    "reachSlots": 29,
    "betterAvailable": 29,
    "roast": {
-    "text": "Nailor at 143 with a league rank of 172 and a national number of 171. Twenty-nine better players stayed put, including Gunnar Helm at 138, which matters when your roster is seven running backs and three receivers with no tight end. Nobody in the country was taking this pick within thirty slots of here.",
+    "text": "Doug reached twenty-nine spots for Jalen Nailor, walking past Gunnar Helm, Chig Okonkwo and De'Zhaun Stribling to do it, which is the first ambitious thing he has done that did not involve a running back. Nobody in America was taking Nailor here; Doug went and got him anyway. The marching band has hired a soloist and given him a piece nobody wrote.",
     "theme": "AGAINST_THE_GRAIN",
     "fallback": false
    }
@@ -3093,7 +3093,7 @@
    "reachSlots": 22,
    "betterAvailable": 22,
    "roast": {
-    "text": "Chris Godwin Jr. was sitting at rank 147 and James took a tight end ranked 175 instead. Deebo Samuel and KC Concepcion were also on the board. Twenty-two better players, and the quarterback column still reads one.",
+    "text": "Chris Godwin Jr. sat there twenty-two spots better while James took Oronde Gadsden, a tight end, on a roster that still has one quarterback. Deebo Samuel Sr. was also available, which means James walked past two men who have actually caught NFL passes to buy a third who might. The memories have stopped being about football and are now purely about James.",
     "theme": "COST_TO_VALUE",
     "fallback": false
    }
@@ -3154,7 +3154,7 @@
    "reachSlots": -7,
    "betterAvailable": 0,
    "roast": {
-    "text": "Deebo makes five receivers to go with three tight ends, three running backs and two quarterbacks. Eight pass-catchers for a lineup that cannot start eight. The pick itself was the best available, which is the cruel part.",
+    "text": "Deebo Samuel Sr. was the best man left, so Evan has again succeeded by remaining seated at the right moment. Two quarterbacks, three running backs, five receivers, three tight ends: a roster that starts nine and owns thirteen, most of them stacked in the two positions with the fewest slots. The team name is still \"Waiting to draft...\", and it is starting to sound like a lifestyle.",
     "theme": "POSITIONAL_IMBALANCE",
     "fallback": false
    }
@@ -3177,7 +3177,7 @@
    "reachSlots": 790,
    "betterAvailable": 790,
    "roast": {
-    "text": "A Denver defense at 157, with Romeo Doubs at rank 150 and RJ Harvey and Zach Charbonnet all still there. This one carried a league rank of 947, so Evan jumped 790 places to get it. First defense off the board and it was not close to necessary.",
+    "text": "Evan took the Broncos defense in round fourteen, having passed on Romeo Doubs, RJ Harvey and Zach Charbonnet, which is the loudest thing he has done all night by a distance of seven hundred and ninety players. This is the first defense off the board, so for one pick Evan was the most decisive man in the league. He waited fourteen rounds to draft, then drafted eleven guys at once.",
     "theme": "STACKING",
     "fallback": false
    }
@@ -3238,7 +3238,7 @@
    "reachSlots": 791,
    "betterAvailable": 791,
    "roast": {
-    "text": "The Seahawks defense goes to a roster that has started one quarterback all draft in a two-quarterback format. Seven hundred and ninety-one better players were available, Romeo Doubs at rank 150 among them. James has now spent round fourteen protecting himself from points he was never going to score.",
+    "text": "James answered the one-quarterback problem by drafting the Seattle defense, which contains no quarterbacks and cannot be started at the position either. Romeo Doubs was there. Seven hundred and ninety-one men were there. James looked at a lineup card missing a passer and chose an entire unit whose job is stopping them.",
     "theme": "SUPERFLEX_MALPRACTICE",
     "fallback": false
    }
@@ -3261,7 +3261,7 @@
    "reachSlots": 791,
    "betterAvailable": 791,
    "roast": {
-    "text": "Four defenses have gone in the last five picks and Colin made sure he was not left out. Romeo Doubs, rank 150, watched him take a unit ranked 952 instead. That is 791 better players declined for the privilege of being fifth in a run nobody needed to join.",
+    "text": "Colin walked past Romeo Doubs, RJ Harvey and Zach Charbonnet to take the Rams defense, which is the solo expedition finally reaching terrain with no players on it at all. Seven hundred and ninety-one better men were standing behind him waving. He did not turn around; he never does.",
     "theme": "COST_TO_VALUE",
     "fallback": false
    }
@@ -3303,7 +3303,7 @@
    "reachSlots": 794,
    "betterAvailable": 794,
    "roast": {
-    "text": "Two starting quarterback slots. Jay has filled one of them, and he has now spent a pick on the Lions defense to make sure the other stays empty a little longer. RJ Harvey and Zach Charbonnet were there; so, presumably, were quarterbacks.",
+    "text": "Jay has one quarterback and now two defenses' worth of men whose entire job description is hitting quarterbacks. The Lions unit arrives to a roster of six receivers and a single passer, so the collection has expanded from men who cannot throw to men who actively prevent throwing. He is curating against his own lineup card at this point.",
     "theme": "SUPERFLEX_MALPRACTICE",
     "fallback": false
    }
@@ -3326,7 +3326,7 @@
    "reachSlots": 795,
    "betterAvailable": 795,
    "roast": {
-    "text": "Romeo Doubs, rank 150, still on the board. Bree took a defense ranked 959 with 795 better players available, which is the kind of number that stops being a mistake and starts being a decision. The Eagles will be fine. The roster is a separate question.",
+    "text": "Bree took the Eagles defense with Romeo Doubs sitting there, and she still has one quarterback in a format that starts two. Her draft has always required thirty strangers to cooperate; it now requires the commissioner to accept eleven Philadelphians under center. The two accidents were the whole run of good luck, and it is over.",
     "theme": "COST_TO_VALUE",
     "fallback": false
    }
@@ -3406,7 +3406,7 @@
    "reachSlots": 801,
    "betterAvailable": 801,
    "roast": {
-    "text": "Jesse already had six running backs and a single tight end, so naturally the gap he identified was Los Angeles. The Chargers defense joins the collection at 801 spots ahead of its rank, with Romeo Doubs left behind. Rosters have positions; this one has a favourite city.",
+    "text": "Jesse now owns three quarterbacks, six running backs and the Chargers defense, which means he has cornered the market on passers and also on the people paid to flatten them. Romeo Doubs was available; Jesse wanted the jerseys. Mr. Anderson has stopped drafting positions alphabetically and started drafting by team gift shop.",
     "theme": "STACKING",
     "fallback": false
    }
@@ -3429,7 +3429,7 @@
    "reachSlots": 781,
    "betterAvailable": 790,
    "roast": {
-    "text": "For this to pay off, Brandon Aubrey has to be the best kicker in football, kickers have to swing weeks, and the 790 players Jesse skipped have to all bust. Three things, and the third one includes Romeo Doubs at rank 150. The rest of the country waited until 85 on average; Jesse could not.",
+    "text": "For Brandon Aubrey here to work, Jesse needs the league to add a second kicker slot, needs three quarterbacks to be a legal formation, and needs Romeo Doubs to have been a clerical illusion. This is the first kicker off the board, taken eighty-three picks ahead of where the country had him. The board did not owe him money after all; he just handed it some.",
     "theme": "COPIUM",
     "fallback": false
    }
@@ -3452,7 +3452,7 @@
    "reachSlots": 784,
    "betterAvailable": 790,
    "roast": {
-    "text": "Cameron Dicker at 170 with a league rank of 954, while Romeo Doubs sat at 150 and RJ Harvey and Zach Charbonnet went untouched. Doug has seven running backs and now a kicker listed questionable. Seven hundred and ninety better players, and he went shopping for field goals.",
+    "text": "Doug took Cameron Dicker with Romeo Doubs still on the board, which means the marching band now has a man whose only job is a single note from forty yards. Seven backs, four receivers, one soloist, and now a placekicker. The horizontal scrollbar has reached the part of the page where nobody catches anything.",
     "theme": "COST_TO_VALUE",
     "fallback": false
    }
@@ -3494,7 +3494,7 @@
    "reachSlots": 784,
    "betterAvailable": 790,
    "roast": {
-    "text": "Jason Myers works out if Seattle scores just enough to reach the red zone and not enough to finish, if 790 better players underdeliver, and if Romeo Doubs at 150 turns out to be nothing. Chenell needs all three, and the third one is the load-bearing wall. Nationally he goes at 116, which is its own indictment.",
+    "text": "For Jason Myers to matter, Chenell needs the Seahawks to stall inside the thirty every week, needs her one quarterback to survive sixteen games unaccompanied, and needs Romeo Doubs to have been someone else's problem. The appeal has now added a kicker as a character witness. The group chat remains silent.",
     "theme": "COPIUM",
     "fallback": false
    }
@@ -3517,7 +3517,7 @@
    "reachSlots": 785,
    "betterAvailable": 790,
    "roast": {
-    "text": "Round fifteen, and the quarterback column on Bree's roster still reads one in a format that starts two. Four tight ends, four receivers, four backs, and now Ka'imi Fairbairn at 785 slots ahead of his rank. The kicker cannot take a snap, but at this stage neither can anyone else on the bench.",
+    "text": "Bree answered a one-quarterback roster by drafting a man who is not allowed to touch the ball with his hands. Four tight ends, one passer, and now Ka'imi Fairbairn, taken forty-seven picks before the country would have bothered. The petition to the rest of the league has quietly become a petition to the rulebook.",
     "theme": "SUPERFLEX_MALPRACTICE",
     "fallback": false
    }
@@ -3540,7 +3540,7 @@
    "reachSlots": 786,
    "betterAvailable": 790,
    "roast": {
-    "text": "Eddy Pineiro carries a league rank of 960 and Romeo Doubs was sitting at 150 the whole time. RJ Harvey and Zach Charbonnet too, both untouched, both better than a kicker taken 786 spots early. Jay now has six receivers, one kicker and a lineup problem he keeps declining to solve.",
+    "text": "Eddy Pineiro joins six receivers, one quarterback and a defense, which means Jay has now spent five straight picks avoiding the only position his lineup legally requires. Romeo Doubs was there, not that Jay wanted another one of those either. The consensus board changed its number, then moved, then stopped forwarding mail.",
     "theme": "COST_TO_VALUE",
     "fallback": false
    }
@@ -3601,7 +3601,7 @@
    "reachSlots": 789,
    "betterAvailable": 790,
    "roast": {
-    "text": "One quarterback, six receivers, and the fifteenth-round answer was Jake Bates. The format has asked for a second starting passer since the first pick of the draft, and James has responded with a defense and a kicker in consecutive rounds. Romeo Doubs, rank 150, is still available and would also not have been a quarterback, but he would at least have been good.",
+    "text": "James has one quarterback, and his solution tonight has been a defense and now a kicker, neither of which may be listed under center. Jake Bates cost him Romeo Doubs, which at this point is a rounding error against the men he has passed for the sake of not having a second passer. The memories are now being kicked from forty-two yards out.",
     "theme": "SUPERFLEX_MALPRACTICE",
     "fallback": false
    }

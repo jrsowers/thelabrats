@@ -83,7 +83,12 @@ export function PickRow({ pick }: { pick: FeedPick }) {
         </div>
 
         {pick.roast && (
-          <p className="mt-2.5 text-[14px] leading-relaxed text-text">{pick.roast.text}</p>
+          <p className="mt-2.5 text-[14px] leading-relaxed text-text">
+            {/* Unnamed on purpose — the prefix gives it identity without
+                inventing a mascot nobody asked for. */}
+            <span className="font-semibold tracking-wide">PEER REVIEW:</span>{' '}
+            {pick.roast.text}
+          </p>
         )}
       </div>
     </li>

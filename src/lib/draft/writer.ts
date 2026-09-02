@@ -4,6 +4,7 @@ import { join } from 'node:path'
 import type { ScheduledRoast } from './schedule'
 import { THEME_ANGLE } from './themes'
 import { factSheet, templateRoast } from './roast'
+import { validateRoast } from './validate'
 
 /**
  * Turns scheduled picks into roasts.
@@ -17,7 +18,7 @@ import { factSheet, templateRoast } from './roast'
  */
 
 const MODEL = process.env.AI_MODEL || 'claude-opus-5'
-const VOICE_PATH = join(process.cwd(), 'AI-References', 'ROAST-VOICE.md')
+const VOICE_PATH = join(process.cwd(), 'AI-References', 'ROAST-BIBLE.md')
 
 let cachedVoice: string | null = null
 function voiceGuide(): string {
@@ -34,6 +35,15 @@ export interface WriteOptions {
   dossier?: Map<string, DossierEntry>
   /** Roasts already published this draft, so the model can avoid repeating itself. */
   previous?: string[]
+  /**
+   * Every earlier roast for a given manager, keyed by first name.
+   *
+   * This is what makes callbacks possible, and callbacks are the difference
+   * between a bot people tolerate and one they quote. Passing only the last few
+   * roasts globally is not enough: a manager's running bit may have started six
+   * picks and four managers ago.
+   */
+  historyByManager?: Map<string, string[]>
   apiKey?: string
   model?: string
 }
@@ -66,12 +76,19 @@ function buildPrompt(batch: ScheduledRoast[], opts: WriteOptions): string {
   for (const s of batch) {
     const facts = factSheet(s.pick)
     const news = opts.dossier?.get(s.pick.player.name)
+    const history = opts.historyByManager?.get(s.pick.team.managerFirst) ?? []
     parts.push(
       `\n--- PICK ID ${s.pick.overallPickNumber} ` +
       `(${s.pick.team.managerFirst} selects ${s.pick.player.name}) ---\n` +
       `ASSIGNED THEME: ${s.theme} — ${THEME_ANGLE[s.theme]}\n` +
       `FACTS (the only numbers you may cite):\n` +
       Object.entries(facts).map(([k, v]) => `  ${k}: ${v}`).join('\n') +
+      (history.length
+        ? `\nEARLIER ROASTS OF ${s.pick.team.managerFirst.toUpperCase()} — if a bit is ` +
+          `already running, ESCALATE it rather than restating it. If nothing is ` +
+          `running and this pick suggests one, start it:\n` +
+          history.slice(-4).map((h) => `  - ${h}`).join('\n')
+        : '') +
       (news ? `\nVERIFIED NEWS — the only news you may cite, and you may NOT ` +
         `extrapolate it forward. Report what it says happened; say nothing ` +
         `about the player's status today unless a note states it:\n` +
@@ -145,7 +162,19 @@ export async function writeRoasts(
 
     const byId = new Map(parsed.map((p) => [Number(p.id), p.roast]))
     return batch.map((s) => {
-      const roast = byId.get(s.pick.overallPickNumber)?.trim()
+      let roast = byId.get(s.pick.overallPickNumber)?.trim()
+
+      // Reject invented status claims rather than publish them. A written rule
+      // against this already failed twice in sixty roasts; falling back to the
+      // template costs one joke and avoids asserting a real player's medical
+      // status on a public page.
+      if (roast) {
+        const check = validateRoast(roast, opts.dossier?.get(s.pick.player.name))
+        if (!check.ok) {
+          console.warn(`[writer] pick ${s.pick.overallPickNumber} rejected: ${check.reason}`)
+          roast = undefined
+        }
+      }
       return roast
         ? { overallPickNumber: s.pick.overallPickNumber, text: roast, theme: s.theme, fallback: false }
         : { overallPickNumber: s.pick.overallPickNumber, text: templateRoast(s.pick), theme: s.theme, fallback: true }
