@@ -1,11 +1,10 @@
 import type { Metadata } from 'next'
-import Link from 'next/link'
 import { getLeagueOverview } from '@/lib/league/queries'
 import { AppShell } from '@/components/navigation/app-shell'
 import { FieldBackdrop } from '@/components/ui/field-backdrop'
-import { Eyebrow, EmptyState, Tag, LiveBadge } from '@/components/ui/primitives'
+import { Eyebrow, EmptyState, LiveBadge } from '@/components/ui/primitives'
 import { PickRow, RoundMarker } from '@/components/draft/pick-row'
-import { getDraftFeed, feedOrder, roasted } from '@/lib/draft/feed-data'
+import { getDraftFeed, feedOrder } from '@/lib/draft/feed-data'
 
 export const dynamic = 'force-dynamic'
 
@@ -25,7 +24,6 @@ export default async function DraftPage() {
 
   const feed = getDraftFeed()
   const picks = feedOrder(feed.picks, feed.complete)
-  const commented = roasted(feed.picks).length
 
   // A round marker goes above the first pick of each round in DISPLAY order,
   // which works whichever direction the feed is running.
@@ -43,45 +41,17 @@ export default async function DraftPage() {
         <div className="relative">
           <div className="flex flex-wrap items-center gap-2.5">
             <Eyebrow>Draft Day</Eyebrow>
-            {feed.complete ? <Tag>Final</Tag> : <LiveBadge label="Live" />}
+            {!feed.complete && <LiveBadge label="Live" />}
           </div>
-          <h1 className="display mt-1.5 text-[40px] leading-none sm:text-[52px]">
-            Every Pick, Judged
+          <h1 className="display mt-1.5 text-[40px] leading-[1.02] sm:text-[52px]">
+            Prepare to be judged. Harshly.
           </h1>
           <p className="mt-2 max-w-xl text-sm text-muted">
-            All {feed.picks.length} picks as they happen. {commented} of them get
-            a comment they did not ask for.
+            We all know you&rsquo;re going to screw this up. Might as well have
+            fun along the way.
           </p>
         </div>
       </header>
-
-      {feed.sample && feed.picks.length > 0 && (
-        <div
-          className="state-bar mb-6 rounded-lg border border-border bg-warn-soft px-4 py-3"
-          style={{ '--state': 'var(--warn)' } as React.CSSProperties}
-        >
-          <Eyebrow>Sample Data</Eyebrow>
-          <p className="mt-1 text-[13.5px] leading-relaxed text-text">
-            This is a simulated draft, used to build the page before the real one.
-            Every name, pick and roast here is a placeholder.
-          </p>
-        </div>
-      )}
-
-      {feed.complete && (
-        <Link
-          href="/draft/recap"
-          className="tap-target mb-6 flex items-center justify-between gap-3 rounded-lg border border-border bg-surface px-4 py-3.5 transition-colors hover:bg-surface-2/60"
-        >
-          <span>
-            <span className="display block text-[19px]">Read the full draft recap</span>
-            <span className="mt-0.5 block text-[12.5px] text-muted">
-              The league-wide story, plus a report card for all 12 teams.
-            </span>
-          </span>
-          <span aria-hidden className="shrink-0 text-brand">→</span>
-        </Link>
-      )}
 
       {feed.picks.length === 0 ? (
         <div className="rounded-lg border border-border bg-surface">

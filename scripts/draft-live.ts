@@ -20,6 +20,7 @@ import { buildTeamMeta } from '../src/lib/draft/teams'
 import { writeRoasts } from '../src/lib/draft/writer'
 import { loadDossier } from '../src/lib/draft/dossier'
 import type { DraftablePlayer, RawPick } from '../src/lib/draft/types'
+import { memberPhotoFor } from '../src/lib/draft/feed-data'
 
 const LEAGUE = process.env.ESPN_LEAGUE_ID ?? '793230160'
 const SEASON = process.env.ESPN_SEASON ?? '2026'
@@ -136,6 +137,8 @@ async function main() {
           return {
             overallPickNumber: p.overallPickNumber, round: p.round, roundPick: p.roundPick,
             teamId: p.team.teamId, teamName: p.team.teamName, manager: p.team.managerFirst,
+            managerFull: p.team.manager, managerPhoto: memberPhotoFor(p.team.manager),
+            playerId: p.player.id,
             player: p.player.name, position: p.player.pos, proTeam: p.player.proTeam,
             leagueRank: p.player.leagueRank, adp: p.player.adp,
             reachSlots: p.reachSlots, betterAvailable: p.betterAvailable, roast: r,

@@ -17,7 +17,13 @@ export interface FeedPick {
   roundPick: number
   teamId: number
   teamName: string
+  /** First name — how the league refers to each other. */
   manager: string
+  /** Full name, used to resolve the member photo. */
+  managerFull: string
+  managerPhoto: string | null
+  /** ESPN id. Negative for a team defence, which has a logo not a headshot. */
+  playerId: number
   player: string
   position: string
   proTeam: string | null
@@ -95,3 +101,13 @@ export function picksByTeam(picks: FeedPick[]): Map<number, FeedPick[]> {
 /** URL slug for a manager: first name, lowercased. Collision-free for this league. */
 export const slugFor = (manager: string): string =>
   manager.trim().toLowerCase().replace(/[^a-z0-9]+/g, '-')
+
+/** Member photos live at /members/first-last.jpg. */
+export const memberPhotoFor = (fullName: string): string | null => {
+  const slug = fullName.trim().toLowerCase().replace(/[^a-z0-9]+/g, '-')
+  return slug ? `/members/${slug}.jpg` : null
+}
+
+/** ESPN gives every team defence a negative player id. */
+export const isTeamDefense = (p: FeedPick): boolean =>
+  p.position === 'DST' || p.playerId < 0

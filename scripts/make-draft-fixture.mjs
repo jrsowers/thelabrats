@@ -28,7 +28,25 @@ const rnd = () => ((seed = (seed * 1664525 + 1013904223) % 4294967296) / 4294967
 const available = [...players]
 const picks = skeleton.draftDetail.picks.map((p) => ({ ...p }))
 
+// Kickers and defences sit around rank 950 on our board, so a pure
+// best-available walk never reaches them in 180 picks — yet every real team
+// MUST draft both, since each is a required starting slot. Rounds 14 and 15
+// are reserved for them, which is roughly what real drafts do and is the only
+// way the early-kicker and first-defence roasts ever get exercised.
+const RESERVED = { 14: 'DST', 15: 'K' }
+
 for (const pick of picks) {
+  const forced = RESERVED[pick.roundId]
+  if (forced) {
+    const idx = available.findIndex((p) => p.pos === forced)
+    if (idx >= 0) {
+      const chosen = available.splice(idx, 1)[0]
+      pick.playerId = chosen.id
+      pick.lineupSlotId = 20
+      continue
+    }
+  }
+
   // Mostly best-available, but reach down the board often enough to be funny.
   const roll = rnd()
   const depth = roll < 0.12 ? Math.floor(rnd() * 28) + 4   // a real reach
