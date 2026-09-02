@@ -88,8 +88,13 @@ ${context}` }],
 
   const bySlugManager = new Map(teamSummaries.map((t) => [t.manager, t]))
   writeFileSync('fixtures/sample-draft-recap.json', JSON.stringify({
-    _note: 'SAMPLE recap content, generated from the hypothesised draft. Replaced after the real draft.',
-    sample: true,
+    // Inherit the feed's status rather than hardcoding. The live runner writes
+    // `sample: false`, and hardcoding true here would stamp the real recap with
+    // the orange SAMPLE banner on draft night.
+    _note: feed.sample
+      ? 'SAMPLE recap content, generated from the hypothesised draft.'
+      : 'Recap of the real draft.',
+    sample: feed.sample,
     generatedAt: new Date().toISOString(),
     feature: f,
     teams: c.map((card) => {

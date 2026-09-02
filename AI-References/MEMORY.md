@@ -241,6 +241,8 @@ way — live feed if live, recap source if not.
 running it. Reading the code would not have caught the misattributed roasts, the
 dropped defences, or the wrong feed ordering. Generate output and look at it.
 
-Open: voice tuning (James wants to do this together), superlatives design, the
-live runner, and the Yahoo 2025 export for the reunion-tour theme.
+Live runner shipped (`scripts/draft-live.ts`), verified against the real ESPN
+endpoint. Open: voice tuning (together), superlatives design, `/draft` is not
+linked from anywhere in the UI, tier-2 dossier review, and the Yahoo 2025
+export for the reunion-tour theme.
 

@@ -217,6 +217,7 @@ code would not have caught a single one of the attribution or ordering bugs.
 See `MEMORY.md` for the live list. As of writing:
 
 - Voice guide is a functional v1; James wants a tuning pass
-- Superlatives logic not designed yet
 - Superlatives are not designed and not built
+- `/draft` is not linked from anywhere in the UI — URL-only
+- Tier-2 dossier entries are awaiting James's review
 - Yahoo 2025 draft export would unlock the reunion-tour theme next season
