@@ -4,11 +4,22 @@ Running state of the build. **Update this at the end of every working session.**
 A future session should be able to read this file and `SOUL.md` and resume
 without re-reading the conversation.
 
-**Last updated:** 2026-08-29 (session 3)
+**Last updated:** 2026-09-02
 
 ---
 
 ## Current status
+
+**2026-09-02 — Fantasy Roster Management skill added.** New agent skill at
+`.claude/skills/fantasy-roster-management/` (outside the app): a weekly
+Tuesday waiver-wire / roster report across *all* of James's leagues (this one
+plus Yahoo leagues), intended to run as a scheduled Claude cloud routine
+against this repo and deliver via Slack webhook / Resend email. Config in the
+skill's `config/leagues.yaml` (Lab Rats pre-filled, others pending); secrets
+go in the cloud environment's env vars, never in git. Verified live:
+Sleeper trending API, ESPN public scoreboard, and `kona_player_info`
+free-agent filtering. Pending: James's other league IDs, Yahoo developer app
++ refresh token, delivery webhook/key, and creating the routine itself.
 
 **Phase:** Milestone 1 in progress. ESPN adapter built and tested. Supabase
 linked. Nothing pushed to GitHub yet — awaiting go-ahead on the first push

@@ -46,7 +46,7 @@ Views are query params and **stack**: `?view=mTeam&view=mRoster&view=mSettings`
 | `mLiveScoring` | Live in-progress scoring | Live polling | ✅ 200 |
 | `mTransactions2` | Transaction log | Transaction Log | ✅ **200 NO AUTH — risk cleared** |
 | `mDraftDetail` | Draft results | Future draft analysis | ✅ 200 — 180 picks |
-| `kona_player_info` | Player pool + projections | Projections, player names | ⬜ |
+| `kona_player_info` | Player pool + projections | Projections, player names | ✅ 200 — `X-Fantasy-Filter` header confirmed working (`filterStatus`, `sortPercOwned`, `limit`), 2026-09-02 |
 
 ### Known parameters
 

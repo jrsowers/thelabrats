@@ -1,0 +1,29 @@
+# League inventory for the fantasy-roster-management skill.
+# No secrets in this file, ever — credentials live in environment variables.
+# Waiver mechanics (FAAB vs priority, budgets, roster rules) are discovered
+# from each league's settings API at run time, not recorded here.
+
+season: 2026
+
+leagues:
+  - name: The Lab Rats
+    platform: espn
+    league_id: "793230160"
+    my_team_id: 1            # James's Scary Team
+    private: false           # public league — no cookies needed
+    notes: 12-team, 6 playoff spots
+
+  # --- Add remaining leagues below ---
+  #
+  # ESPN league template:
+  # - name: <league name>
+  #   platform: espn
+  #   league_id: "<from the league URL: leagueId=...>"
+  #   my_team_id: <from the team page URL: teamId=...>
+  #   private: true          # if true, requests need ESPN_S2 / ESPN_SWID env
+  #
+  # Yahoo league template (league/team keys are auto-discovered each run via
+  # the authenticated "my leagues" call, so only the numeric id is needed):
+  # - name: <league name>
+  #   platform: yahoo
+  #   league_id: "<numeric id from the league URL: /f1/<id>>"
