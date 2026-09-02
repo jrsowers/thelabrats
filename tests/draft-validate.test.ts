@@ -74,6 +74,18 @@ describe('style checker', () => {
     expect(checkStyle('Evan took a defense before anyone else had thought about one.').ok).toBe(true)
   })
 
+  it('catches gendered collectives, which shipped in a headline', () => {
+    for (const bad of [
+      'Twelve men walk into a draft room.',
+      'The guys spent nine rounds ignoring quarterback.',
+      'Every man in this league reached for a tight end.',
+    ]) {
+      expect(checkStyle(bad).ok, bad).toBe(false)
+    }
+    expect(checkStyle('All twelve managers walked into a draft room.').ok).toBe(true)
+    expect(checkStyle('Doug took the guy nobody wanted.').ok).toBe(true)
+  })
+
   it('does not fire on ordinary roast language', () => {
     for (const fine of [
       "Mike bid against himself, overpaid, and looked pleased about it.",

@@ -1,55 +1,64 @@
 import { describe, it, expect } from 'vitest'
-import { badgeFor } from '../src/lib/draft/badges'
+import { assignBadges, MIN_BADGES } from '../src/lib/draft/badges'
 import type { FeedPick } from '../src/lib/draft/feed-data'
 
 const pick = (o: Partial<FeedPick>): FeedPick => ({
-  overallPickNumber: 20, round: 2, roundPick: 8, teamId: 1, teamName: 'T',
+  overallPickNumber: 1, round: 1, roundPick: 1, teamId: 1, teamName: 'T',
   manager: 'M', managerFull: 'M X', managerPhoto: null, playerId: 1,
   player: 'P', position: 'WR', proTeam: 'DET', leagueRank: 20, adp: 20,
   reachSlots: 0, betterAvailable: 0, roast: null, ...o,
 })
 
-describe('pick badges', () => {
-  it('flags an early kicker', () => {
-    expect(badgeFor(pick({ position: 'K', round: 9 }))?.label).toBe('U OK BRO?')
+/** A plausible fifteen-round haul. */
+const roster = (): FeedPick[] =>
+  Array.from({ length: 15 }, (_, i) => pick({
+    overallPickNumber: i * 12 + 1, round: i + 1,
+    betterAvailable: [0, 3, 25, 1, 40, 8, 2, 14, 0, 31, 5, 9, 1, 0, 0][i],
+    reachSlots: [-2, -8, 14, -1, 22, 3, -14, 6, -4, 18, 1, 2, 0, 0, 0][i],
+    position: i === 13 ? 'DST' : i === 14 ? 'K' : 'WR',
+  }))
+
+describe('badge assignment', () => {
+  const badges = assignBadges(roster())
+
+  it('gives every manager at least the floor', () => {
+    expect(badges.size).toBeGreaterThanOrEqual(MIN_BADGES)
   })
 
-  it('leaves a last-round kicker alone', () => {
-    expect(badgeFor(pick({ position: 'K', round: 15 }))).toBeNull()
+  it('leans negative, which is what an F looks like', () => {
+    const tones = [...badges.values()].map((b) => b.tone)
+    const bad = tones.filter((t) => t === 'bad').length
+    const good = tones.filter((t) => t === 'good').length
+    expect(bad).toBeGreaterThanOrEqual(good)
+    expect(good).toBeLessThanOrEqual(2)
   })
 
-  it('escalates reaches by how many better players were there', () => {
-    expect(badgeFor(pick({ betterAvailable: 13 }))?.label).toBe('REACH')
-    expect(badgeFor(pick({ betterAvailable: 25 }))?.label).toBe('U OK BRO?')
-    expect(badgeFor(pick({ betterAvailable: 45 }))?.label).toBe('WTF')
+  it('always finds something nice to say, exactly once or twice', () => {
+    expect([...badges.values()].filter((b) => b.tone === 'good').length).toBeGreaterThanOrEqual(1)
   })
 
-  it('rewards a player who fell', () => {
-    expect(badgeFor(pick({ reachSlots: -12 }))?.label).toBe('STEAL')
-    expect(badgeFor(pick({ reachSlots: -25 }))?.label).toBe('ROBBERY')
+  it('is deterministic — the same roster gives the same badges', () => {
+    const a = assignBadges(roster()), b = assignBadges(roster())
+    expect([...a.entries()]).toEqual([...b.entries()])
   })
 
-  it('stays quiet on an ordinary pick', () => {
-    expect(badgeFor(pick({ betterAvailable: 4, reachSlots: -2, round: 6 }))).toBeNull()
+  it('never badges the same pick twice', () => {
+    expect(new Set(badges.keys()).size).toBe(badges.size)
   })
 
-  it('does not badge merely taking the best player available', () => {
-    // It fired on seven of one manager's fifteen picks and turned the column
-    // into a status readout rather than a verdict.
-    expect(badgeFor(pick({ betterAvailable: 0, reachSlots: -3, round: 3 }))).toBeNull()
+  it('calls out an early kicker specifically', () => {
+    const withK = roster().map((p, i) => i === 5 ? { ...p, position: 'K' as const, round: 6 } : p)
+    const b = assignBadges(withK)
+    const k = withK.find((p) => p.position === 'K' && p.round === 6)!
+    expect(b.get(k.overallPickNumber)?.label).toBe('U OK BRO?')
   })
 
-  it('never contradicts itself: a reach is never also a steal', () => {
-    const b = badgeFor(pick({ betterAvailable: 30, reachSlots: -25 }))
-    expect(b?.tone).toBe('bad')
+  it('handles a short or empty list without throwing', () => {
+    expect(assignBadges([]).size).toBe(0)
+    expect(assignBadges([pick({})]).size).toBeGreaterThan(0)
   })
 
-  it('carries an explanation for every badge', () => {
-    for (const p of [
-      pick({ betterAvailable: 45 }), pick({ reachSlots: -25 }),
-      pick({ position: 'K', round: 9 }), pick({ betterAvailable: 25 }),
-    ]) {
-      expect(badgeFor(p)?.title?.length).toBeGreaterThan(5)
-    }
+  it('explains every badge', () => {
+    for (const b of badges.values()) expect(b.title.length).toBeGreaterThan(5)
   })
 })

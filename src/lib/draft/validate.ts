@@ -66,6 +66,11 @@ export function validateRoast(text: string, news?: DossierEntry): ValidationResu
 const UNCONTRACTED = /\b(is|was|are|were|does|did|do|has|have|had|will|would|could|should|can) not\b/i
 const ABSTRACTION = /\b(the (?:country|consensus|market|industry|field|public|league average))\b/i
 const BRITISH = /\b(defence|offence|practise|realise|recognise|organise|apologise|favourite|colour|honour|behaviour|whilst|judgement)\b/i
+/**
+ * Gendered collectives. Four of the twelve managers are women, and a headline
+ * reading "Twelve Men Walk Into A Draft Room" shipped before anyone caught it.
+ */
+const GENDERED_COLLECTIVE = /\b(twelve|all twelve|the) (men|guys|boys|fellas|gentlemen)\b|\bgentlemen\b|\bevery man in (this|the) league\b/i
 const THROAT_CLEARING = /\b(which means|at this point|it should be noted|in fairness|the fact that|arguably|somewhat|roughly speaking)\b/i
 
 export interface StyleResult { ok: boolean; notes: string[] }
@@ -86,6 +91,9 @@ export function checkStyle(text: string): StyleResult {
   // ten uses of "defence" in one draft, in an American football league.
   const b = BRITISH.exec(text)
   if (b) notes.push(`British spelling "${b[0]}" — this is an American league`)
+
+  const g = GENDERED_COLLECTIVE.exec(text)
+  if (g) notes.push(`gendered collective "${g[0]}" — four of the twelve managers are women`)
 
   return { ok: notes.length === 0, notes }
 }

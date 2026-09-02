@@ -7,7 +7,7 @@ import { Eyebrow } from '@/components/ui/primitives'
 import { GradeStamp } from '@/components/draft/grade-stamp'
 import { getDraftRecap, teamRecapBySlug } from '@/lib/draft/recap-data'
 import { getDraftFeed, picksByTeam } from '@/lib/draft/feed-data'
-import { badgeFor } from '@/lib/draft/badges'
+import { assignBadges } from '@/lib/draft/badges'
 
 export const dynamic = 'force-dynamic'
 
@@ -35,6 +35,7 @@ export default async function TeamRecapPage(
   const all = getDraftRecap()
   const others = all.teams.filter((t) => t.slug !== recap.slug)
   const picks = picksByTeam((await getDraftFeed()).picks).get(recap.teamId) ?? []
+  const badges = assignBadges(picks)
 
   return (
     <AppShell leagueName={overview.leagueName}>
@@ -98,7 +99,7 @@ export default async function TeamRecapPage(
             <div className="overflow-hidden rounded-lg border border-border">
               <ul className="divide-y divide-border">
                 {picks.map((p) => {
-                  const badge = badgeFor(p)
+                  const badge = badges.get(p.overallPickNumber)
                   return (
                     <li key={p.overallPickNumber} className="flex items-baseline gap-3 bg-surface px-3.5 py-2.5">
                       <span className="w-11 shrink-0 font-mono text-[11px] tabular-nums text-dim">
@@ -116,7 +117,7 @@ export default async function TeamRecapPage(
                           className={`shrink-0 rounded px-1.5 py-0.5 font-mono text-[9px] font-bold uppercase tracking-wider ${
                             badge.tone === 'good' ? 'bg-live-soft text-live'
                             : badge.tone === 'bad' ? 'bg-loss-soft text-loss'
-                            : 'bg-surface-2 text-muted'
+                            : 'bg-warn-soft text-warn'
                           }`}
                         >
                           {badge.label}
@@ -132,26 +133,26 @@ export default async function TeamRecapPage(
 
         <section className="mt-8 border-t border-border pt-5">
           <Eyebrow>Don&rsquo;t worry. Everyone else failed too.</Eyebrow>
-          <ul className="mt-3 flex flex-wrap gap-2">
+          <ul className="mt-3 flex flex-wrap gap-2.5">
             {others.map((t) => (
               <li key={t.slug}>
                 <Link
                   href={`/draft/recap/${t.slug}`}
-                  className="tap-target inline-flex items-center gap-2 rounded-md border border-border bg-surface py-1 pl-1 pr-2.5 text-[12.5px] transition-colors hover:bg-surface-2"
+                  className="tap-target inline-flex items-center gap-2.5 rounded-lg border border-border bg-surface py-2 pl-2 pr-4 text-[14px] font-medium transition-colors hover:bg-surface-2"
                 >
                   {t.managerPhoto ? (
                     // eslint-disable-next-line @next/next/no-img-element
                     <img
                       src={t.managerPhoto}
                       alt=""
-                      width={24}
-                      height={24}
+                      width={36}
+                      height={36}
                       loading="lazy"
                       decoding="async"
-                      className="size-6 shrink-0 rounded-full border border-border object-cover"
+                      className="size-9 shrink-0 rounded-full border border-border object-cover"
                     />
                   ) : (
-                    <span aria-hidden className="size-6 shrink-0 rounded-full bg-surface-2" />
+                    <span aria-hidden className="size-9 shrink-0 rounded-full bg-surface-2" />
                   )}
                   {t.manager}
                 </Link>

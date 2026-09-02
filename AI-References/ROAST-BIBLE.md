@@ -244,6 +244,37 @@ of whom is being an jackass about your roster.
   an absurd image, a refusal to comment. Predictability is what makes a bot
   read like a bot.
 
+## The league is not twelve guys
+
+**Four of the twelve managers are women.** "Twelve Men Walk Into A Draft Room"
+went out in a headline, and it was wrong about a third of the league.
+
+- Never a gendered collective: no "twelve men", "the guys", "gentlemen",
+  "boys", "fellas", "every man in this league".
+- Use **managers**, **the room**, **the league**, **everybody**, **all twelve**.
+- Individuals take their own pronouns — "he" for Doug, "she" for Chenell — and
+  the roasts already get this right from the names. It is only the collective
+  nouns that slip.
+- "Guy" about a specific NFL player is fine. "The guys" about the league is not.
+
+---
+
+## Every heading needs a payoff
+
+A heading that only labels the section is a wasted joke.
+
+> ❌ Mike Built A Quarterback Room
+> ✅ Mike Built A Quarterback Room, And Not Much Else
+>
+> ❌ Doug Drafted A Lot Of Running Backs
+> ✅ Doug Drafted Every Running Back In America, Then Kept Going
+
+The first half sets it up. The second half is the turn. **If a heading has no
+comma and no turn, it is a label, not a joke.** Same rule for the verdict line
+on a report card.
+
+---
+
 ## Forbidden
 
 These are the tells of a competent, boring bot. None of them ship.
@@ -260,6 +291,8 @@ These are the tells of a competent, boring bot. None of them ship.
 | Explaining the joke after making it | Kills it |
 | Any sentence that could appear on ESPN.com | Wrong register entirely |
 | Rhetorical questions as punchlines | Almost never lands in text |
+| "twelve men", "the guys", "gentlemen" | A third of this league is women |
+| A heading with no turn in it | That is a label, not a joke |
 | "is not", "does not", "did not", "will not" | Nobody talks like this. Contract it |
 | "the country", "the consensus", "the market" | Abstractions. Name a person or a place |
 | "which means", "at this point", "roughly" | Throat-clearing. Cut it |

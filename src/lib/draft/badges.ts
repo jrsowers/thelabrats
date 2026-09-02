@@ -3,54 +3,101 @@ import type { FeedPick } from './feed-data'
 /**
  * Verdict badges for a manager's pick list.
  *
- * Computed, not written. A model asked to label picks would happily call the
- * same pick a STEAL on one page and a WTF on another; these come straight off
- * the analysis, so the label always matches the numbers underneath it.
+ * Assigned PER MANAGER, not per pick. Judging each pick on its own left one
+ * manager with eleven badges and another with none, and produced no positives
+ * at all across six managers — the thresholds happened to miss. Ranking a
+ * manager's own picks against each other guarantees a readable, consistent
+ * spread on every page.
  *
- * Deliberately sparse. If every pick carries a badge, none of them mean
- * anything — most picks are unremarkable and get nothing.
+ * The mix is deliberately unkind: roughly three bad, three mildly bad, one
+ * good. Everybody here scored an F, and the evidence column should look like
+ * the reason rather than argue with it.
  */
-export type BadgeTone = 'good' | 'bad' | 'neutral'
+export type BadgeTone = 'bad' | 'meh' | 'good'
 
 export interface Badge { label: string; tone: BadgeTone; title: string }
 
-export function badgeFor(pick: FeedPick, totalRounds = 15): Badge | null {
-  const { position, round, betterAvailable, reachSlots } = pick
+export const BADGE_TARGET = { bad: 3, meh: 3, good: 1 } as const
+/** Nobody's evidence should look empty. */
+export const MIN_BADGES = 5
 
-  // Kickers and defenses have their own scale of wrong.
-  const lateRoundStart = totalRounds - 1
-  if (position === 'K' && round < lateRoundStart - 1) {
-    return { label: 'U OK BRO?', tone: 'bad', title: `A kicker in round ${round}.` }
-  }
-  if (position === 'DST' && round < lateRoundStart - 1) {
-    return { label: 'WHY', tone: 'bad', title: `A defense in round ${round}.` }
+/** Four of each, chosen by what the pick actually did. */
+const BAD = ['WTF?', 'U OK BRO?', 'NO. NO. NO.', 'WHY, THOUGH'] as const
+const MEH = ['MEH', 'OK, I GUESS', 'SURE, FINE', 'BOLD OF YOU'] as const
+const GOOD = ['CHA-CHING', 'SWISH', 'STEAL', 'MONEY PICK'] as const
+
+/**
+ * How bad a pick was, on one scale, so a manager's picks can be ranked against
+ * each other. Higher is worse.
+ */
+function regret(p: FeedPick, totalRounds: number): number {
+  let n = p.betterAvailable
+  // A kicker or defense with real players left is its own category of wrong.
+  if (p.position === 'K' && p.round < totalRounds - 2) n += 45
+  if (p.position === 'DST' && p.round < totalRounds - 2) n += 35
+  // Value pulls the other way.
+  if (p.reachSlots < 0) n += p.reachSlots
+  return n
+}
+
+/** Deterministic pick from a list, so a page never changes between loads. */
+const choose = <T,>(list: readonly T[], seed: number): T => list[seed % list.length]
+
+export function assignBadges(
+  picks: FeedPick[], totalRounds = 15,
+): Map<number, Badge> {
+  const out = new Map<number, Badge>()
+  if (picks.length === 0) return out
+
+  const ranked = [...picks].sort((a, b) => regret(b, totalRounds) - regret(a, totalRounds))
+
+  const worst = ranked.slice(0, BADGE_TARGET.bad)
+  const middle = ranked.slice(BADGE_TARGET.bad, BADGE_TARGET.bad + BADGE_TARGET.meh)
+  const best = ranked.slice(-BADGE_TARGET.good)
+
+  for (const p of worst) {
+    const label =
+      p.position === 'K' && p.round < totalRounds - 2 ? 'U OK BRO?'
+      : p.position === 'DST' && p.round < totalRounds - 2 ? 'WHY, THOUGH'
+      : p.betterAvailable >= 30 ? 'WTF?'
+      : choose(BAD, p.overallPickNumber)
+    out.set(p.overallPickNumber, {
+      label, tone: 'bad',
+      title: `${p.betterAvailable} better players were still on the board.`,
+    })
   }
 
-  // Reaches: how many better players were sitting there.
-  if (betterAvailable >= 40) {
-    return { label: 'WTF', tone: 'bad', title: `${betterAvailable} better players were still available.` }
-  }
-  if (betterAvailable >= 22) {
-    return { label: 'U OK BRO?', tone: 'bad', title: `${betterAvailable} better players were still available.` }
-  }
-  if (betterAvailable >= 12) {
-    return { label: 'REACH', tone: 'bad', title: `${betterAvailable} better players were still available.` }
+  for (const p of middle) {
+    if (out.has(p.overallPickNumber)) continue
+    out.set(p.overallPickNumber, {
+      label: choose(MEH, p.overallPickNumber), tone: 'meh',
+      title: `${p.betterAvailable} better players were still on the board.`,
+    })
   }
 
-  // Value: he lasted past where the board had him. Calibrated to a 12-team
-  // league, where a 10-slot fall is most of a round and 20 is nearly two.
-  // The first thresholds were -15 and -30, which never fired once across six
-  // managers — the good badges simply did not exist.
-  if (reachSlots <= -20) {
-    return { label: 'ROBBERY', tone: 'good', title: `Fell ${Math.abs(reachSlots)} slots past his rank.` }
-  }
-  if (reachSlots <= -10) {
-    return { label: 'STEAL', tone: 'good', title: `Fell ${Math.abs(reachSlots)} slots past his rank.` }
+  for (const p of best) {
+    if (out.has(p.overallPickNumber)) continue
+    // Only a genuinely huge fall earns ROBBERY; everything else rotates
+    // through the pool. A `<= -5 ? STEAL` rule here meant CHA-CHING, SWISH and
+    // MONEY PICK never once appeared across all twelve managers.
+    const label = p.reachSlots <= -12 ? 'ROBBERY' : choose(GOOD, p.overallPickNumber)
+    out.set(p.overallPickNumber, {
+      label, tone: 'good',
+      title: p.reachSlots < 0
+        ? `Fell ${Math.abs(p.reachSlots)} slots past his rank.`
+        : 'The best player on the board at the time.',
+    })
   }
 
-  // No "best available" badge. It fired on seven of Chenell's fifteen picks,
-  // which made the badges look like a status column instead of a verdict, and
-  // it is analysis rather than a joke. Badges should be rare enough to read.
+  // Top up to the floor from whatever is left, worst first.
+  for (const p of ranked) {
+    if (out.size >= MIN_BADGES) break
+    if (out.has(p.overallPickNumber)) continue
+    out.set(p.overallPickNumber, {
+      label: choose(MEH, p.overallPickNumber), tone: 'meh',
+      title: `${p.betterAvailable} better players were still on the board.`,
+    })
+  }
 
-  return null
+  return out
 }
