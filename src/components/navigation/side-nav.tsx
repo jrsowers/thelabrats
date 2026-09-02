@@ -106,7 +106,15 @@ export function SideNav({
         aria-label="Primary"
         className="fixed inset-x-0 bottom-0 z-40 border-t border-white/8 bg-rail pb-[env(safe-area-inset-bottom)] lg:hidden"
       >
-        <ul className="flex">
+        {/*
+          Two rows on phones, one from sm up.
+
+          Eight items across 320px gives each 40px, under the 44px touch floor —
+          caught by the responsive suite the moment Draft Room was added. A
+          horizontal scroller would have hidden nav items instead, which is
+          worse than spending the vertical space.
+        */}
+        <ul className="grid grid-cols-4 sm:grid-cols-8">
           {NAV_ITEMS.map((item) => {
             const active = pathname === item.href
             const Icon = item.icon
@@ -118,7 +126,7 @@ export function SideNav({
               </>
             )
             return (
-              <li key={item.href} className="flex-1">
+              <li key={item.href}>
                 {item.ready ? (
                   <Link
                     href={item.href}
