@@ -13,19 +13,20 @@
  * lost by going down for a few minutes. Roasts already written are kept, so a
  * restart does not re-bill or re-word them.
  */
-import { readFileSync, writeFileSync, existsSync } from 'node:fs'
+import { readFileSync } from 'node:fs'
 import { analyzeDraft } from '../src/lib/draft/analyze'
 import { scheduleRoasts } from '../src/lib/draft/schedule'
 import { buildTeamMeta } from '../src/lib/draft/teams'
 import { writeRoasts } from '../src/lib/draft/writer'
 import { loadDossier } from '../src/lib/draft/dossier'
+import { createServiceClient } from '../src/lib/supabase/server'
 import type { DraftablePlayer, RawPick } from '../src/lib/draft/types'
-import { memberPhotoFor } from '../src/lib/draft/feed-data'
+import { publishDraft, type PublishRow } from '../src/lib/draft/publish'
 
 const LEAGUE = process.env.ESPN_LEAGUE_ID ?? '793230160'
 const SEASON = process.env.ESPN_SEASON ?? '2026'
 const BASE = `https://lm-api-reads.fantasy.espn.com/apis/v3/games/ffl/seasons/${SEASON}/segments/0/leagues/${LEAGUE}`
-const OUT = 'fixtures/sample-draft-feed.json'
+const SEASON_NUM = Number(SEASON)
 const POLL_MS = 15_000
 const DRY = process.argv.includes('--dry')
 const REPLAY = process.argv.includes('--replay')
@@ -46,26 +47,30 @@ function loadBoard(): Map<number, DraftablePlayer> {
 }
 
 /**
- * Keeps roasts already written, so a restart neither re-bills nor re-words.
- *
- * REFUSES to resume from a sample feed. Roasts are keyed by overall pick
- * number, and the sample was generated from a simulated draft — resuming from
- * it would attach the sample's roast for pick 1 to whoever really goes 1.01.
- * Only a genuine live capture is resumable.
+ * Roasts already written, read back from Postgres so a restart neither re-bills
+ * nor re-words them. Sample rows are ignored: they are keyed by pick number, so
+ * resuming from them would attach a simulated draft's joke to whoever really
+ * went 1.01.
  */
-function loadExistingRoasts(): Map<number, StoredRoast> {
-  if (!existsSync(OUT)) return new Map()
-  try {
-    const raw = JSON.parse(readFileSync(OUT, 'utf8')) as {
-      sample?: boolean
-      picks?: { overallPickNumber: number; roast: StoredRoast | null }[]
-    }
-    if (raw.sample !== false) {
-      console.log(`[${stamp()}] existing feed is sample data — starting clean`)
-      return new Map()
-    }
-    return new Map((raw.picks ?? []).filter((p) => p.roast).map((p) => [p.overallPickNumber, p.roast!]))
-  } catch { return new Map() }
+async function loadExistingRoasts(): Promise<Map<number, StoredRoast>> {
+  const supabase = createServiceClient()
+  const { data, error } = await supabase
+    .from('draft_picks')
+    .select('overall_pick, roast_text, roast_theme, roast_fallback, is_sample')
+    .eq('season', SEASON_NUM)
+  if (error || !data) return new Map()
+
+  const out = new Map<number, StoredRoast>()
+  for (const r of data as unknown as {
+    overall_pick: number; roast_text: string | null
+    roast_theme: string | null; roast_fallback: boolean; is_sample: boolean
+  }[]) {
+    if (r.is_sample || !r.roast_text) continue
+    out.set(r.overall_pick, {
+      text: r.roast_text, theme: r.roast_theme ?? '', fallback: r.roast_fallback,
+    })
+  }
+  return out
 }
 
 async function fetchDraft(): Promise<{ picks: RawPick[]; drafted: boolean; inProgress: boolean }> {
@@ -87,7 +92,7 @@ async function main() {
   const teamsById = buildTeamMeta(teamsRaw.teams, teamsRaw.members)
   const dossier = loadDossier()
   const dossierNames = new Set(dossier.keys())
-  const roasts = loadExistingRoasts()
+  const roasts = await loadExistingRoasts()
   if (roasts.size) console.log(`[${stamp()}] resuming with ${roasts.size} roasts already written`)
 
   let lastCount = -1
@@ -126,25 +131,34 @@ async function main() {
         console.log(`[${stamp()}] ${made.length}/180 picks · nothing new to roast`)
       }
 
-      writeFileSync(OUT, JSON.stringify({
-        _note: state.drafted
-          ? 'Live capture of the real draft.'
-          : 'Live capture, draft in progress.',
-        sample: false,
-        generatedAt: new Date().toISOString(),
-        picks: all.map((p) => {
-          const r = roasts.get(p.overallPickNumber) ?? null
+      // Every slot, used or not — an unmade pick is a null player, not a
+      // missing row, which is what lets the page say who is on the clock.
+      const byPick = new Map(all.map((a) => [a.overallPickNumber, a]))
+      const rows: PublishRow[] = state.picks
+        .sort((a, b) => a.overallPickNumber - b.overallPickNumber)
+        .map((p) => {
+          const analysis = byPick.get(p.overallPickNumber) ?? null
+          const team = teamsById.get(p.teamId)
+          if (!team) return null
           return {
-            overallPickNumber: p.overallPickNumber, round: p.round, roundPick: p.roundPick,
-            teamId: p.team.teamId, teamName: p.team.teamName, manager: p.team.managerFirst,
-            managerFull: p.team.manager, managerPhoto: memberPhotoFor(p.team.manager),
-            playerId: p.player.id,
-            player: p.player.name, position: p.player.pos, proTeam: p.player.proTeam,
-            leagueRank: p.player.leagueRank, adp: p.player.adp,
-            reachSlots: p.reachSlots, betterAvailable: p.betterAvailable, roast: r,
+            overallPickNumber: p.overallPickNumber,
+            round: p.roundId,
+            roundPick: p.roundPickNumber,
+            team,
+            analysis,
+            roast: roasts.get(p.overallPickNumber) ?? null,
           }
-        }),
-      }, null, 1) + '\n')
+        })
+        .filter((r): r is PublishRow => r !== null)
+
+      try {
+        const n = await publishDraft(rows, { season: SEASON_NUM, sample: false })
+        console.log(`[${stamp()}] published ${n} rows`)
+      } catch (err) {
+        // A publish failure must not end the run; the next poll retries with
+        // everything, because picks are cumulative.
+        console.error(`[${stamp()}] publish failed: ${(err as Error).message}`)
+      }
     }
 
     if (state.drafted && made.length >= 180) {

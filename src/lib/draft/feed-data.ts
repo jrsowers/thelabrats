@@ -1,5 +1,4 @@
-import { readFileSync } from 'node:fs'
-import { join } from 'node:path'
+import { createPublicClient, isSupabaseConfigured } from '@/lib/supabase/server'
 
 /**
  * Reads the draft feed for the pages.
@@ -34,6 +33,16 @@ export interface FeedPick {
   roast: FeedRoast | null
 }
 
+/** Whose turn it is, derived from the first slot with nobody in it. */
+export interface OnTheClock {
+  overallPickNumber: number
+  round: number
+  roundPick: number
+  teamName: string
+  manager: string
+  managerPhoto: string | null
+}
+
 export interface DraftFeed {
   sample: boolean
   generatedAt: string | null
@@ -41,27 +50,96 @@ export interface DraftFeed {
   /** True once every pick has been made. */
   complete: boolean
   totalRounds: number
+  onTheClock: OnTheClock | null
 }
 
-const SAMPLE_PATH = join(process.cwd(), 'fixtures', 'sample-draft-feed.json')
+const EMPTY: DraftFeed = {
+  sample: false, generatedAt: null, picks: [],
+  complete: false, totalRounds: 0, onTheClock: null,
+}
 
-export function getDraftFeed(): DraftFeed {
-  try {
-    const raw = JSON.parse(readFileSync(SAMPLE_PATH, 'utf8')) as {
-      sample?: boolean; generatedAt?: string; picks?: FeedPick[]
-    }
-    const picks = raw.picks ?? []
-    const totalRounds = picks.reduce((m, p) => Math.max(m, p.round), 0)
-    return {
-      sample: raw.sample ?? true,
-      generatedAt: raw.generatedAt ?? null,
-      picks,
-      complete: picks.length > 0,
-      totalRounds,
-    }
-  } catch {
-    // No feed yet is a normal pre-draft state, not an error.
-    return { sample: true, generatedAt: null, picks: [], complete: false, totalRounds: 0 }
+const SEASON = Number(process.env.ESPN_SEASON ?? 2026)
+
+type Row = {
+  overall_pick: number; round: number; round_pick: number
+  espn_team_id: number; team_name: string; manager: string
+  manager_full: string | null; manager_photo: string | null
+  espn_player_id: number | null; player_name: string | null
+  position: string | null; pro_team: string | null
+  league_rank: number | null; adp: number | string | null
+  reach_slots: number | null; better_available: number | null
+  roast_text: string | null; roast_theme: string | null; roast_fallback: boolean
+  is_sample: boolean
+}
+
+/**
+ * The feed, from Postgres.
+ *
+ * It used to be read from a fixture on disk, which worked locally and did
+ * nothing at all in production: on Vercel that file is frozen into the build,
+ * so picks written by the runner during the draft never reached a viewer.
+ * Confirmed by editing the local file and watching production not move.
+ *
+ * Rows exist for every draft slot, including ones not yet used, so an unmade
+ * pick is `player_name === null` rather than a missing row. That is what lets
+ * the page name who is on the clock.
+ */
+export async function getDraftFeed(): Promise<DraftFeed> {
+  if (!isSupabaseConfigured()) return EMPTY
+
+  const supabase = createPublicClient()
+  const { data, error } = await supabase
+    .from('draft_picks')
+    .select('*')
+    .eq('season', SEASON)
+    .order('overall_pick', { ascending: true })
+
+  if (error || !data || data.length === 0) return EMPTY
+
+  const rows = data as unknown as Row[]
+  const picks: FeedPick[] = rows
+    .filter((r) => r.player_name !== null)
+    .map((r) => ({
+      overallPickNumber: r.overall_pick,
+      round: r.round,
+      roundPick: r.round_pick,
+      teamId: r.espn_team_id,
+      teamName: r.team_name,
+      manager: r.manager,
+      managerFull: r.manager_full ?? r.manager,
+      managerPhoto: r.manager_photo,
+      playerId: r.espn_player_id ?? 0,
+      player: r.player_name as string,
+      position: r.position ?? '',
+      proTeam: r.pro_team,
+      leagueRank: r.league_rank ?? 0,
+      adp: typeof r.adp === 'string' ? Number(r.adp) : (r.adp ?? 9999),
+      reachSlots: r.reach_slots ?? 0,
+      betterAvailable: r.better_available ?? 0,
+      roast: r.roast_text
+        ? { text: r.roast_text, theme: r.roast_theme ?? '', fallback: r.roast_fallback }
+        : null,
+    }))
+
+  // The first slot nobody has used yet. Null once every pick is in.
+  const next = rows.find((r) => r.player_name === null)
+
+  return {
+    sample: rows.some((r) => r.is_sample),
+    generatedAt: null,
+    picks,
+    complete: next === undefined,
+    totalRounds: rows.reduce((m, r) => Math.max(m, r.round), 0),
+    onTheClock: next
+      ? {
+          overallPickNumber: next.overall_pick,
+          round: next.round,
+          roundPick: next.round_pick,
+          teamName: next.team_name,
+          manager: next.manager,
+          managerPhoto: next.manager_photo,
+        }
+      : null,
   }
 }
 
@@ -72,16 +150,6 @@ export const newestFirst = (picks: FeedPick[]): FeedPick[] =>
 /** Picks in draft order — how a finished draft reads. */
 export const draftOrder = (picks: FeedPick[]): FeedPick[] =>
   [...picks].sort((a, b) => a.overallPickNumber - b.overallPickNumber)
-
-/**
- * Ordering depends on what the page is for.
- *
- * Live, you want the newest pick at the top. Finished, you want to read it as a
- * story from 1.01 — newest-first opens a completed draft on round 15, which is
- * kickers, defences and no jokes at all.
- */
-export const feedOrder = (picks: FeedPick[], complete: boolean): FeedPick[] =>
-  complete ? draftOrder(picks) : newestFirst(picks)
 
 /** Only the picks that got a comment. */
 export const roasted = (picks: FeedPick[]): FeedPick[] =>

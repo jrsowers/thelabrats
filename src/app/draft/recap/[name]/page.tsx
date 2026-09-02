@@ -33,7 +33,7 @@ export default async function TeamRecapPage(
 
   const all = getDraftRecap()
   const others = all.teams.filter((t) => t.slug !== recap.slug)
-  const picks = picksByTeam(getDraftFeed().picks).get(recap.teamId) ?? []
+  const picks = picksByTeam((await getDraftFeed()).picks).get(recap.teamId) ?? []
 
   return (
     <AppShell leagueName={overview.leagueName}>

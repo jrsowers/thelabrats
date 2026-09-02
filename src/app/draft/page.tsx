@@ -4,7 +4,9 @@ import { AppShell } from '@/components/navigation/app-shell'
 import { FieldBackdrop } from '@/components/ui/field-backdrop'
 import { Eyebrow, EmptyState, LiveBadge } from '@/components/ui/primitives'
 import { PickRow, RoundMarker } from '@/components/draft/pick-row'
-import { getDraftFeed, feedOrder } from '@/lib/draft/feed-data'
+import { OnTheClockCard } from '@/components/draft/on-the-clock'
+import { LiveRefresh } from '@/components/ui/live-refresh'
+import { getDraftFeed, newestFirst } from '@/lib/draft/feed-data'
 
 export const dynamic = 'force-dynamic'
 
@@ -22,8 +24,8 @@ export default async function DraftPage() {
   const overview = await getLeagueOverview()
   if (!overview) return null
 
-  const feed = getDraftFeed()
-  const picks = feedOrder(feed.picks, feed.complete)
+  const feed = await getDraftFeed()
+  const picks = newestFirst(feed.picks)
 
   // A round marker goes above the first pick of each round in DISPLAY order,
   // which works whichever direction the feed is running.
@@ -52,6 +54,13 @@ export default async function DraftPage() {
           </p>
         </div>
       </header>
+
+      {/* Poll while the draft is running; stop once it is done. 15s against a
+          60s pick clock means a pick is on screen within a quarter of its own
+          turn, and picks are cumulative so a missed tick costs nothing. */}
+      <LiveRefresh intervalMs={15_000} active={!feed.complete} />
+
+      {feed.onTheClock && <OnTheClockCard next={feed.onTheClock} />}
 
       {feed.picks.length === 0 ? (
         <div className="rounded-lg border border-border bg-surface">

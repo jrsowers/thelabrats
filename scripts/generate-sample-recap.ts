@@ -23,7 +23,7 @@ the analysis is genuine and rigorous, the grade is immovable. Never explain the
 joke, never award a different grade, never hedge toward a real grade.`
 
 async function main() {
-  const feed = getDraftFeed()
+  const feed = await getDraftFeed()
   const byTeam = picksByTeam(feed.picks)
   const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY })
 

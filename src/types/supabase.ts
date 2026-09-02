@@ -157,6 +157,81 @@ export type Database = {
           },
         ]
       }
+      draft_picks: {
+        Row: {
+          adp: number | null
+          better_available: number | null
+          espn_player_id: number | null
+          espn_team_id: number
+          is_sample: boolean
+          league_rank: number | null
+          manager: string
+          manager_full: string | null
+          manager_photo: string | null
+          overall_pick: number
+          player_name: string | null
+          position: string | null
+          pro_team: string | null
+          reach_slots: number | null
+          roast_fallback: boolean
+          roast_text: string | null
+          roast_theme: string | null
+          round: number
+          round_pick: number
+          season: number
+          team_name: string
+          updated_at: string
+        }
+        Insert: {
+          adp?: number | null
+          better_available?: number | null
+          espn_player_id?: number | null
+          espn_team_id: number
+          is_sample?: boolean
+          league_rank?: number | null
+          manager: string
+          manager_full?: string | null
+          manager_photo?: string | null
+          overall_pick: number
+          player_name?: string | null
+          position?: string | null
+          pro_team?: string | null
+          reach_slots?: number | null
+          roast_fallback?: boolean
+          roast_text?: string | null
+          roast_theme?: string | null
+          round: number
+          round_pick: number
+          season: number
+          team_name: string
+          updated_at?: string
+        }
+        Update: {
+          adp?: number | null
+          better_available?: number | null
+          espn_player_id?: number | null
+          espn_team_id?: number
+          is_sample?: boolean
+          league_rank?: number | null
+          manager?: string
+          manager_full?: string | null
+          manager_photo?: string | null
+          overall_pick?: number
+          player_name?: string | null
+          position?: string | null
+          pro_team?: string | null
+          reach_slots?: number | null
+          roast_fallback?: boolean
+          roast_text?: string | null
+          roast_theme?: string | null
+          round?: number
+          round_pick?: number
+          season?: number
+          team_name?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       fantasy_score_events: {
         Row: {
           captured_at: string
@@ -1174,12 +1249,12 @@ export type Tables<
   DefaultSchemaTableNameOrOptions extends
     | keyof (DefaultSchema["Tables"] & DefaultSchema["Views"])
     | { schema: keyof DatabaseWithoutInternals },
-  TableName extends DefaultSchemaTableNameOrOptions extends {
+  TableName extends (DefaultSchemaTableNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals
   }
     ? keyof (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
         DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Views"])
-    : never = never,
+    : never) = never,
 > = DefaultSchemaTableNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals
 }
@@ -1203,11 +1278,11 @@ export type TablesInsert<
   DefaultSchemaTableNameOrOptions extends
     | keyof DefaultSchema["Tables"]
     | { schema: keyof DatabaseWithoutInternals },
-  TableName extends DefaultSchemaTableNameOrOptions extends {
+  TableName extends (DefaultSchemaTableNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals
   }
     ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
-    : never = never,
+    : never) = never,
 > = DefaultSchemaTableNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals
 }
@@ -1228,11 +1303,11 @@ export type TablesUpdate<
   DefaultSchemaTableNameOrOptions extends
     | keyof DefaultSchema["Tables"]
     | { schema: keyof DatabaseWithoutInternals },
-  TableName extends DefaultSchemaTableNameOrOptions extends {
+  TableName extends (DefaultSchemaTableNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals
   }
     ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
-    : never = never,
+    : never) = never,
 > = DefaultSchemaTableNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals
 }
@@ -1253,11 +1328,11 @@ export type Enums<
   DefaultSchemaEnumNameOrOptions extends
     | keyof DefaultSchema["Enums"]
     | { schema: keyof DatabaseWithoutInternals },
-  EnumName extends DefaultSchemaEnumNameOrOptions extends {
+  EnumName extends (DefaultSchemaEnumNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals
   }
     ? keyof DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"]
-    : never = never,
+    : never) = never,
 > = DefaultSchemaEnumNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals
 }
@@ -1270,11 +1345,11 @@ export type CompositeTypes<
   PublicCompositeTypeNameOrOptions extends
     | keyof DefaultSchema["CompositeTypes"]
     | { schema: keyof DatabaseWithoutInternals },
-  CompositeTypeName extends PublicCompositeTypeNameOrOptions extends {
+  CompositeTypeName extends (PublicCompositeTypeNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals
   }
     ? keyof DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"]
-    : never = never,
+    : never) = never,
 > = PublicCompositeTypeNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals
 }
