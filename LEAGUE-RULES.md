@@ -23,7 +23,7 @@ how you draft or manage. That part is advice, not law. Ignore it freely.
 | **Draft** | Snake, 15 rounds, 60 seconds per pick |
 | **Scoring** | ⚠️ **0.5 PPR**, ⚠️ **6-point passing TDs**, ⚠️ **−1 interceptions** |
 | **Bonuses** | ⚠️ Big-yardage games, long field goals, dominant defences |
-| **Waivers** | Traditional rolling priority, ⚠️ **not FAAB**, 48-hour claims |
+| **Waivers** | Traditional rolling priority, ⚠️ **not FAAB**, 2-day claims |
 | **Trades** | ⚠️ **No league voting.** 24-hour review, commissioner processes |
 | **Trade deadline** | Wednesday, 2 December 2026, 12:00 p.m. ET |
 | **Regular season** | Weeks 1–13 |
@@ -232,9 +232,17 @@ with a favourable schedule.
 - ⚠️ **Traditional rolling waiver priority. This is not a FAAB/budget league.**
 - Everyone starts with a waiver priority based on draft order; **claim a player
   and you drop to the bottom of the list.**
-- Dropped players sit on waivers for **48 hours** before becoming free agents.
-- Claims process **six days a week** — Monday, Wednesday, Thursday, Friday,
-  Saturday and Sunday — at approximately **11:00 a.m.**
+- Dropped players sit on waivers for **2 days (48 hours)** before clearing.
+- Claims process **overnight, six days a week** — Monday, Wednesday, Thursday,
+  Friday, Saturday and Sunday. **There is no Tuesday run.**
+- ESPN starts processing around **3:00 a.m. ET** and works through every league
+  on the platform, so results sometimes do not land until **6:00 a.m. ET or
+  later**. Check your roster in the morning, not at midnight.
+- ⚠️ **Wednesday morning is the big one.** A player dropped over the weekend
+  clears his 48 hours on Tuesday, and Tuesday is not a processing day — so the
+  whole weekend's worth of waiver claims settles Wednesday.
+- ⚠️ **The moment a batch finishes, everyone left unclaimed becomes a free
+  agent** — first come, first served, no priority involved.
 - **No limit** on the number of adds, drops or claims, in a week or a season.
 - ESPN's **undroppable player list is on**, so you cannot drop a genuine star to
   clear a bench spot.
@@ -271,10 +279,19 @@ Because priority only moves when you **successfully claim**, sitting patiently
 is a real strategy. Free agents are unclaimed after 48 hours and cost nothing
 but a roster spot.
 
-**Six waiver runs a week means you are rarely stuck.** If you miss Wednesday,
-Thursday is right there. It also means the pool moves fast, so bye-week
-patching is very doable — another reason not to hoard depth on your five
-bench spots.
+**Six runs a week means you are rarely stuck.** If you miss Wednesday,
+Thursday is right there. The pool moves fast, so bye-week patching is very
+doable — another reason not to hoard depth on five bench spots.
+
+**Two different games are being played, and it is worth knowing which one you
+are in.** Before a batch processes, waiver *priority* decides who gets the
+player, and being awake makes no difference. The instant that batch finishes,
+everyone unclaimed flips to free agency and it becomes **first come, first
+served** — priority is irrelevant and speed is everything.
+
+So: if you genuinely want a player, claim him and spend the priority. If you
+are only mildly interested, wait for the batch to clear and grab him for free —
+accepting that somebody quicker may beat you to it.
 
 **Trades are meant to happen here.** No voting means no politics and no
 hostage-taking, and the 24-hour window exists so people can see what happened,
@@ -404,6 +421,7 @@ skim this one.
 ---
 
 *Compiled directly from the league's ESPN settings on 1 September 2026 and
-checked line by line against the settings page. If something here does not match
+checked line by line against the settings page. Waiver processing times reflect
+how the ESPN platform behaves rather than a league setting. If something here does not match
 what you see in ESPN, ESPN is right and this is wrong — say so in the group chat
 before the draft rather than after.*
