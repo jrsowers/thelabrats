@@ -35,6 +35,13 @@ export default async function DraftPage() {
   const feed = await getDraftFeed()
   const picks = newestFirst(feed.picks)
 
+  // The start time has passed but no picks have arrived. Derived from the clock
+  // rather than stored, so it needs no schema change and self-corrects.
+  const underway =
+    feed.picks.length === 0 &&
+    overview.draftScheduledAt != null &&
+    Date.now() >= new Date(overview.draftScheduledAt).getTime()
+
   // A round marker goes above the first pick of each round in DISPLAY order,
   // which works whichever direction the feed is running.
   const rows: React.ReactNode[] = []
@@ -75,19 +82,47 @@ export default async function DraftPage() {
       {feed.picks.length === 0 ? (
         <div className="overflow-hidden rounded-lg border border-brand/30 bg-brand-soft">
           <div className="px-5 py-6 text-center sm:py-8">
-            <div className="display text-[26px] leading-tight sm:text-[32px]">
-              Nothing to judge yet.
-            </div>
-            <p className="mx-auto mt-2 max-w-md text-[14px] leading-relaxed text-muted">
-              Every pick lands here the moment it is made, with commentary
-              nobody asked for. {overview.draftScheduledAt
-                ? `The draft starts ${fmtDraftDate(overview.draftScheduledAt)}.`
-                : 'Check back when the draft starts.'}
-            </p>
-            {overview.draftScheduledAt && (
-              <div className="mt-6 flex justify-center">
-                <DraftCountdown target={overview.draftScheduledAt} />
-              </div>
+            {underway ? (
+              <>
+                {/*
+                  ESPN's read API does not publish picks while a draft is
+                  running — confirmed on the day, across draftDetail, rosters,
+                  transactions and player ownership. Showing an expired
+                  countdown here read as broken, so the page says what is
+                  actually true and what will happen.
+                */}
+                <div className="display text-[26px] leading-tight sm:text-[32px]">
+                  The draft is underway.
+                </div>
+                <p className="mx-auto mt-2 max-w-md text-[14px] leading-relaxed text-muted">
+                  ESPN keeps picks to itself until the draft wraps, so nothing
+                  shows here yet. Every pick, and every comment nobody asked
+                  for, lands the moment it finishes.
+                </p>
+                <div className="mt-5 inline-flex items-center gap-2 rounded-md bg-surface px-3 py-2">
+                  <span className="live-dot shrink-0" aria-hidden />
+                  <span className="font-mono text-[10.5px] uppercase tracking-wider text-muted">
+                    Watching for results
+                  </span>
+                </div>
+              </>
+            ) : (
+              <>
+                <div className="display text-[26px] leading-tight sm:text-[32px]">
+                  Nothing to judge yet.
+                </div>
+                <p className="mx-auto mt-2 max-w-md text-[14px] leading-relaxed text-muted">
+                  Every pick lands here the moment it is made, with commentary
+                  nobody asked for. {overview.draftScheduledAt
+                    ? `The draft starts ${fmtDraftDate(overview.draftScheduledAt)}.`
+                    : 'Check back when the draft starts.'}
+                </p>
+                {overview.draftScheduledAt && (
+                  <div className="mt-6 flex justify-center">
+                    <DraftCountdown target={overview.draftScheduledAt} />
+                  </div>
+                )}
+              </>
             )}
           </div>
         </div>
