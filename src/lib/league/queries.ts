@@ -397,3 +397,97 @@ export async function getLastSync() {
     .maybeSingle()
   return data
 }
+
+/**
+ * The transaction log.
+ *
+ * Returns the same shape the preview generator produces, so the page renders
+ * real and simulated moves through identical code.
+ *
+ * DRAFT transactions are excluded. All 180 picks are transactions as far as
+ * ESPN is concerned, and including them would bury every waiver claim and trade
+ * under the draft forever — the picks have their own page.
+ */
+export interface LogTxnItem {
+  playerName: string
+  position: string
+  nflTeam: string
+  action: 'ADD' | 'DROP' | 'TRADE'
+  fromTeamId: number | null
+  toTeamId: number | null
+}
+
+export interface LogTxn {
+  id: string
+  kind: 'WAIVER' | 'FREE_AGENT' | 'TRADE' | 'DROP'
+  processedAt: string
+  week: number
+  teamId: number
+  counterpartyTeamId: number | null
+  waiverPriority: number | null
+  items: LogTxnItem[]
+}
+
+export async function getTransactionLog(seasonId: number, limit = 200): Promise<LogTxn[]> {
+  if (!isSupabaseConfigured()) return []
+  const supabase = createPublicClient()
+
+  const { data, error } = await supabase
+    .from('transactions')
+    .select(`
+      id, espn_transaction_id, transaction_type, processed_at, proposed_at, week,
+      season_team_id, faab_amount,
+      transaction_items ( action, from_team_id, to_team_id,
+        players ( full_name, position, nfl_team ) )
+    `)
+    .eq('season_id', seasonId)
+    .neq('transaction_type', 'DRAFT')
+    .order('processed_at', { ascending: false })
+    .limit(limit)
+
+  if (error || !data) return []
+
+  type Row = {
+    id: number; espn_transaction_id: string; transaction_type: string
+    processed_at: string | null; proposed_at: string | null; week: number | null
+    season_team_id: number | null
+    transaction_items: {
+      action: string; from_team_id: number | null; to_team_id: number | null
+      players: { full_name: string | null; position: string | null; nfl_team: string | null } | null
+    }[] | null
+  }
+
+  return (data as unknown as Row[])
+    .filter((r) => r.season_team_id != null && (r.transaction_items?.length ?? 0) > 0)
+    .map((r) => {
+      const items: LogTxnItem[] = (r.transaction_items ?? []).map((it) => ({
+        playerName: it.players?.full_name ?? 'Unknown player',
+        position: it.players?.position ?? '',
+        nflTeam: it.players?.nfl_team ?? '',
+        action: (it.action as LogTxnItem['action']) ?? 'ADD',
+        fromTeamId: it.from_team_id,
+        toTeamId: it.to_team_id,
+      }))
+
+      const counterparty = items
+        .map((i) => (i.fromTeamId === r.season_team_id ? i.toTeamId : i.fromTeamId))
+        .find((t) => t != null && t !== r.season_team_id) ?? null
+
+      const kind: LogTxn['kind'] =
+        r.transaction_type === 'TRADE' ? 'TRADE'
+        : r.transaction_type === 'WAIVER' ? 'WAIVER'
+        : items.every((i) => i.action === 'DROP') ? 'DROP'
+        : 'FREE_AGENT'
+
+      return {
+        id: r.espn_transaction_id,
+        kind,
+        processedAt: r.processed_at ?? r.proposed_at ?? new Date(0).toISOString(),
+        week: r.week ?? 0,
+        teamId: r.season_team_id as number,
+        counterpartyTeamId: counterparty,
+        waiverPriority: null,
+        items,
+      }
+    })
+}

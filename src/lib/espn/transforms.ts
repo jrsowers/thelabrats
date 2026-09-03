@@ -161,8 +161,14 @@ export function toMatchups(res: LeagueResponse): Matchup[] {
 /**
  * ESPN transaction types -> ours.
  *
- * ⚠️ UNVERIFIED against a real payload — see schemas.ts. ROSTER entries are
- * lineup changes, not acquisitions, and are dropped rather than shown as moves.
+ * ✅ Verified against a live payload on 2026-09-03, right after the draft:
+ * 185 transactions, 180 DRAFT and 5 ROSTER, all status EXECUTED. ROSTER
+ * entries are lineup changes rather than acquisitions and are dropped.
+ *
+ * Two things the real payload corrected. Items carry `type: "DRAFT"`, which the
+ * old mapping fell through to 'TRADE'; a draft pick is an acquisition, so it is
+ * an ADD. And there is no `processDate` field at all — only `proposedDate` —
+ * so processedAt was always null.
  */
 const TRANSACTION_TYPE: Record<string, TransactionType> = {
   WAIVER: 'WAIVER',
@@ -181,8 +187,9 @@ export function toTransactions(res: LeagueResponse): Transaction[] {
         .filter((it) => it.playerId != null && (it.type ?? '') !== 'LINEUP')
         .map((it) => ({
           espnPlayerId: it.playerId as number,
-          action: (it.type === 'DROP' ? 'DROP' : it.type === 'ADD' ? 'ADD' : 'TRADE') as
-            'ADD' | 'DROP' | 'TRADE',
+          action: (it.type === 'DROP' ? 'DROP'
+            : it.type === 'ADD' || it.type === 'DRAFT' ? 'ADD'
+            : 'TRADE') as 'ADD' | 'DROP' | 'TRADE',
           fromTeamId: it.fromTeamId ?? null,
           toTeamId: it.toTeamId ?? null,
         }))
@@ -195,7 +202,11 @@ export function toTransactions(res: LeagueResponse): Transaction[] {
         status: t.status ?? 'UNKNOWN',
         espnTeamId: t.teamId ?? null,
         proposedAt: t.proposedDate ? new Date(t.proposedDate).toISOString() : null,
-        processedAt: t.processDate ? new Date(t.processDate).toISOString() : null,
+        // ESPN sends proposedDate and no processDate; everything here is
+        // EXECUTED, so the proposal time is the moment it happened.
+        processedAt: t.processDate
+          ? new Date(t.processDate).toISOString()
+          : t.proposedDate ? new Date(t.proposedDate).toISOString() : null,
         scoringPeriod: t.scoringPeriodId ?? null,
         // Null unless the league actually uses FAAB; this one does not.
         faabAmount: t.bidAmount && t.bidAmount > 0 ? t.bidAmount : null,

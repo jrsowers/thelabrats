@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import {
   getLeagueOverview, getSeasonTeams, getReigningChampion, getLastSync, hasActiveGames,
+  getTransactionLog,
   type StandingsTeam,
 } from '@/lib/league/queries'
 import { simulateTransactions, type PreviewTxn } from '@/lib/league/preview'
@@ -127,12 +128,12 @@ export default async function TransactionsPage({
 
   const previewWeek = Math.min(Math.max(Number(params.week) || 6, 1), overview.regularSeasonWeeks)
 
-  // Real transactions require ESPN data that does not exist until the season
-  // opens. Preview simulates a history so the log and its filters can be seen
-  // working; nothing here is written (§16).
+  // Real moves when there are any; the simulator only under ?preview=live.
+  // The page renders both through the same code because getTransactionLog
+  // returns the shape the preview generator produces.
   const all: PreviewTxn[] = isPreview
     ? simulateTransactions(teams.map((t) => t.seasonTeamId), previewWeek)
-    : []
+    : (await getTransactionLog(overview.seasonId)) as unknown as PreviewTxn[]
 
   const visible = all.filter((t) => matches(t, filter))
 

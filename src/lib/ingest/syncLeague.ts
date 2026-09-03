@@ -19,6 +19,31 @@ export interface SyncResult {
   error?: string
 }
 
+/**
+ * espn_player_id -> our players.id, paged past PostgREST's default row cap.
+ *
+ * A single unpaged select silently returns only the first page, which would
+ * drop most transaction items on the floor without erroring.
+ */
+async function loadPlayerIdMap(
+  db: ReturnType<typeof createServiceClient>,
+): Promise<Map<number, number>> {
+  const out = new Map<number, number>()
+  const PAGE = 1000
+  for (let from = 0; ; from += PAGE) {
+    const { data, error } = await db
+      .from('players')
+      .select('id, espn_player_id')
+      .range(from, from + PAGE - 1)
+    if (error || !data || data.length === 0) break
+    for (const r of data) {
+      if (r.espn_player_id != null) out.set(r.espn_player_id as number, r.id as number)
+    }
+    if (data.length < PAGE) break
+  }
+  return out
+}
+
 export async function syncLeague(syncType = 'league-metadata'): Promise<SyncResult> {
   const db = createServiceClient()
   const season = Number(process.env.ESPN_SEASON)
@@ -187,6 +212,41 @@ export async function syncLeague(syncType = 'league-metadata'): Promise<SyncResu
         )
         .select('id, espn_transaction_id')
       detail.transactions = writtenTxns?.length ?? 0
+
+      // Items were computed and then thrown away — transaction_items had zero
+      // rows while transactions had 180, so the log could never render anything.
+      const txnIdByEspnId = new Map(
+        (writtenTxns ?? []).map((r) => [r.espn_transaction_id as string, r.id as number]),
+      )
+      const playerIdByEspnId = await loadPlayerIdMap(db)
+
+      const items = transactions.flatMap((t) => {
+        const txnId = txnIdByEspnId.get(t.espnTransactionId)
+        if (!txnId) return []
+        return t.items.flatMap((it) => {
+          const playerId = playerIdByEspnId.get(it.espnPlayerId)
+          // A player we have never synced cannot be referenced; skip rather
+          // than fail the whole batch on a foreign key.
+          if (!playerId) return []
+          return [{
+            transaction_id: txnId,
+            player_id: playerId,
+            action: it.action,
+            from_team_id: it.fromTeamId ? teamIdByEspnId.get(it.fromTeamId) ?? null : null,
+            to_team_id: it.toTeamId ? teamIdByEspnId.get(it.toTeamId) ?? null : null,
+          }]
+        })
+      })
+
+      if (items.length > 0) {
+        // Replace rather than upsert: there is no natural key on an item, and a
+        // second sync would otherwise duplicate every one of them.
+        await db.from('transaction_items')
+          .delete()
+          .in('transaction_id', [...txnIdByEspnId.values()])
+        await db.from('transaction_items').insert(items)
+      }
+      detail.transactionItems = items.length
     } else {
       detail.transactions = 0
     }
