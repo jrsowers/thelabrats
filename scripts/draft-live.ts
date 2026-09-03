@@ -123,7 +123,7 @@ async function main() {
       const pending = scheduled.filter((s) => !roasts.has(s.pick.overallPickNumber))
 
       if (pending.length > 0) {
-        const previous = [...roasts.values()].slice(-8).map((r) => r.text)
+        const previous: string[] = [...roasts.values()].slice(-8).map((r) => r.text)
 
         // Rebuild each manager's own history so running bits survive a restart.
         const historyByManager = new Map<string, string[]>()
@@ -133,10 +133,31 @@ async function main() {
           const who = a.team.managerFirst
           historyByManager.set(who, [...(historyByManager.get(who) ?? []), r.text])
         }
-        const written = DRY
-          ? pending.map((s) => ({ overallPickNumber: s.pick.overallPickNumber,
-              text: `[dry] ${s.theme} — ${s.pick.player.name}`, theme: s.theme, fallback: true }))
-          : await writeRoasts(pending, { dossier, previous, historyByManager })
+        // Chunked. Live, `pending` is one or two picks and this is a single
+        // call. Catching up on a finished draft it is sixty, and sixty in one
+        // request exceeds the SDK's non-streaming ten-minute ceiling — which is
+        // exactly what happened on draft day, dumping all sixty to templates.
+        const CHUNK = 10
+        const written: Awaited<ReturnType<typeof writeRoasts>> = []
+        for (let i = 0; i < pending.length; i += CHUNK) {
+          const slice = pending.slice(i, i + CHUNK)
+          if (pending.length > CHUNK) {
+            console.log(`[${stamp()}]   batch ${i / CHUNK + 1}/${Math.ceil(pending.length / CHUNK)}`)
+          }
+          const out = DRY
+            ? slice.map((s) => ({ overallPickNumber: s.pick.overallPickNumber,
+                text: `[dry] ${s.theme} ${s.pick.player.name}`, theme: s.theme, fallback: true }))
+            : await writeRoasts(slice, { dossier, previous, historyByManager })
+          written.push(...out)
+          // Feed each batch's output forward so callbacks and freshness work
+          // across the whole catch-up, not just within one batch.
+          for (const [j, o] of out.entries()) {
+            if (o.fallback) continue
+            previous.push(o.text)
+            const who = slice[j].pick.team.managerFirst
+            historyByManager.set(who, [...(historyByManager.get(who) ?? []), o.text])
+          }
+        }
         for (const w of written) {
           roasts.set(w.overallPickNumber, { text: w.text, theme: w.theme, fallback: w.fallback })
         }

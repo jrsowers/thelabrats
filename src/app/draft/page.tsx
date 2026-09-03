@@ -6,6 +6,8 @@ import { Eyebrow, EmptyState, LiveBadge } from '@/components/ui/primitives'
 import { PickRow, RoundMarker } from '@/components/draft/pick-row'
 import { OnTheClockCard } from '@/components/draft/on-the-clock'
 import { DraftCountdown } from '@/components/ui/draft-countdown'
+import { RecapTeaser } from '@/components/draft/recap-teaser'
+import { getDraftRecap } from '@/lib/draft/recap-data'
 import { LiveRefresh } from '@/components/ui/live-refresh'
 import { getDraftFeed, newestFirst } from '@/lib/draft/feed-data'
 
@@ -33,6 +35,8 @@ export default async function DraftPage() {
   if (!overview) return null
 
   const feed = await getDraftFeed()
+  // Only once the recap actually exists — no teaser for an unwritten article.
+  const recap = getDraftRecap()
   const picks = newestFirst(feed.picks)
 
   // The start time has passed but no picks have arrived. Derived from the clock
@@ -74,6 +78,13 @@ export default async function DraftPage() {
           60s pick clock means a pick is on screen within a quarter of its own
           turn, and picks are cumulative so a missed tick costs nothing. */}
       <LiveRefresh intervalMs={15_000} active={!feed.complete} />
+
+      {feed.complete && recap.feature && (
+        <RecapTeaser
+          headline={recap.feature.headline}
+          standfirst={recap.feature.standfirst}
+        />
+      )}
 
       {/* Once picks exist the clock card takes over; before that the countdown
           is the more useful thing to look at. */}
