@@ -7,9 +7,10 @@ import { PickRow, RoundMarker } from '@/components/draft/pick-row'
 import { OnTheClockCard } from '@/components/draft/on-the-clock'
 import { DraftCountdown } from '@/components/ui/draft-countdown'
 import { RecapTeaser } from '@/components/draft/recap-teaser'
+import { ManagerFilter, type ManagerOption } from '@/components/draft/manager-filter'
 import { getDraftRecap } from '@/lib/draft/recap-data'
 import { LiveRefresh } from '@/components/ui/live-refresh'
-import { getDraftFeed, newestFirst } from '@/lib/draft/feed-data'
+import { getDraftFeed, newestFirst, slugFor } from '@/lib/draft/feed-data'
 
 export const dynamic = 'force-dynamic'
 
@@ -30,14 +31,38 @@ const fmtDraftDate = (iso: string) =>
     timeZone: 'America/New_York',
   }).format(new Date(iso))
 
-export default async function DraftPage() {
+export default async function DraftPage(
+  { searchParams }: { searchParams: Promise<{ manager?: string }> },
+) {
+  const { manager: managerParam } = await searchParams
   const overview = await getLeagueOverview()
   if (!overview) return null
 
   const feed = await getDraftFeed()
   // Only once the recap actually exists — no teaser for an unwritten article.
   const recap = getDraftRecap()
-  const picks = newestFirst(feed.picks)
+  // Managers who actually got roasted, for the filter. Built from the feed so
+  // it needs no separate source and cannot drift out of sync with it.
+  const managers: ManagerOption[] = [...
+    feed.picks.filter((p) => p.roast).reduce((m, p) => {
+      const slug = slugFor(p.manager)
+      const prev = m.get(slug)
+      m.set(slug, { slug, label: `${p.managerFull} · ${p.teamName}`, roasts: (prev?.roasts ?? 0) + 1 })
+      return m
+    }, new Map<string, ManagerOption>()).values()
+  ].sort((a, b) => a.label.localeCompare(b.label))
+
+  const selected = managerParam && managers.some((m) => m.slug === managerParam)
+    ? managerParam
+    : null
+
+  // Filtering shows only that manager's ROASTED picks — the point is "how did
+  // it come after me", not a roster listing.
+  const visible = selected
+    ? feed.picks.filter((p) => p.roast && slugFor(p.manager) === selected)
+    : feed.picks
+
+  const picks = newestFirst(visible)
 
   // The start time has passed but no picks have arrived. Derived from the clock
   // rather than stored, so it needs no schema change and self-corrects.
@@ -86,11 +111,19 @@ export default async function DraftPage() {
         />
       )}
 
+      {feed.complete && managers.length > 0 && (
+        <ManagerFilter
+          managers={managers}
+          selected={selected}
+          totalRoasts={feed.picks.filter((p) => p.roast).length}
+        />
+      )}
+
       {/* Once picks exist the clock card takes over; before that the countdown
           is the more useful thing to look at. */}
       {feed.picks.length > 0 && feed.onTheClock && <OnTheClockCard next={feed.onTheClock} />}
 
-      {feed.picks.length === 0 ? (
+      {picks.length === 0 && feed.picks.length === 0 ? (
         <div className="overflow-hidden rounded-lg border border-brand/30 bg-brand-soft">
           <div className="px-5 py-6 text-center sm:py-8">
             {underway ? (

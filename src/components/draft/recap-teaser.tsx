@@ -38,8 +38,8 @@ export function RecapTeaser({
         <p className="mx-auto mt-2.5 max-w-xl text-[14px] leading-relaxed text-white/80 sm:text-[15.5px]">
           {standfirst}
         </p>
-        <span className="tap-target mt-5 inline-flex items-center justify-center rounded-md bg-brand px-5 py-2.5 text-[13.5px] font-semibold text-brand-ink transition-opacity group-hover:opacity-90">
-          Click to see the damage
+        <span className="tap-target mt-5 inline-flex items-center justify-center rounded-md bg-brand px-5 py-2.5 text-[13px] font-bold uppercase tracking-wider text-brand-ink transition-opacity group-hover:opacity-90">
+          CLICK TO SEE THE DAMAGE
         </span>
       </div>
     </Link>
