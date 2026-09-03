@@ -12,6 +12,11 @@ type IconComponent = ComponentType<{
 export interface NavItem {
   href: string
   label: string
+  /**
+   * Abbreviated label, kept from the mobile bottom bar. Nothing reads it now
+   * that mobile uses a panel with room for the full label, but it is left in
+   * place rather than deleted — a compact nav may want it again.
+   */
   short: string
   icon: IconComponent
   ready: boolean

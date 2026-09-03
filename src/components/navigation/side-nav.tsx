@@ -2,6 +2,8 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
+import { useEffect, useState } from 'react'
+import { Menu, X } from 'lucide-react'
 import { NAV_ITEMS } from './nav-items'
 import { LabSeal } from '@/components/ui/primitives'
 
@@ -10,7 +12,7 @@ import { LabSeal } from '@/components/ui/primitives'
  * The rail stays dark in both themes — it reads as chrome, not content,
  * and keeps the eye on the scores.
  *
- * Mobile: collapses to a bottom bar rather than eating 25-30% of the width.
+ * Mobile: a fixed top bar with a hamburger opening a slide-in panel.
  */
 export function SideNav({
   leagueName, logoUrl,
@@ -101,28 +103,116 @@ export function SideNav({
 
       </nav>
 
-      {/* Mobile bottom bar */}
-      <nav
-        aria-label="Primary"
-        className="fixed inset-x-0 bottom-0 z-40 border-t border-white/8 bg-rail pb-[env(safe-area-inset-bottom)] lg:hidden"
-      >
-        {/*
-          Two rows on phones, one from sm up.
+      {/* Mobile: a fixed top bar with a hamburger, and a slide-in panel. */}
+      <MobileNav leagueName={leagueName} logoUrl={logoUrl} pathname={pathname} />
+    </>
+  )
+}
 
-          Eight items across 320px gives each 40px, under the 44px touch floor —
-          caught by the responsive suite the moment Draft Room was added. A
-          horizontal scroller would have hidden nav items instead, which is
-          worse than spending the vertical space.
-        */}
-        <ul className="grid grid-cols-4 sm:grid-cols-8">
+/**
+ * Mobile navigation.
+ *
+ * Replaces the bottom bar, which had run out of room. Eight destinations across
+ * 320px left each 40px, under the 44px touch floor, and the fix at the time was
+ * a second row eating ~9.5rem of every page. A panel holds any number of items
+ * at a comfortable size and gives the bottom of the screen back.
+ *
+ * It also fixes something the bottom bar never had: the league's name and mark
+ * were invisible on mobile, since the logo only ever lived in the desktop rail.
+ */
+function MobileNav({
+  leagueName, logoUrl, pathname,
+}: { leagueName: string; logoUrl: string | null; pathname: string }) {
+  const [open, setOpen] = useState(false)
+
+  // Close on route change, or the panel stays open over the page just opened.
+  useEffect(() => { setOpen(false) }, [pathname])
+
+  // Escape closes it, and the page behind must not scroll while it is open.
+  useEffect(() => {
+    if (!open) return
+    const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') setOpen(false) }
+    document.addEventListener('keydown', onKey)
+    const prev = document.body.style.overflow
+    document.body.style.overflow = 'hidden'
+    return () => {
+      document.removeEventListener('keydown', onKey)
+      document.body.style.overflow = prev
+    }
+  }, [open])
+
+  return (
+    <>
+      <header className="fixed inset-x-0 top-0 z-40 flex items-center justify-between gap-3 border-b border-white/8 bg-rail px-3 pt-[env(safe-area-inset-top)] lg:hidden">
+        <a
+          href="https://www.labratsfantasy.com"
+          className="flex min-w-0 items-center py-2"
+          aria-label={`${leagueName} — home`}
+        >
+          {logoUrl ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img src={logoUrl} alt={leagueName} className="h-8 w-auto max-w-[150px]" loading="eager" decoding="async" />
+          ) : (
+            <span className="display truncate text-[15px] text-rail-text">{leagueName}</span>
+          )}
+        </a>
+
+        <button
+          type="button"
+          onClick={() => setOpen((v) => !v)}
+          aria-expanded={open}
+          aria-controls="mobile-nav-panel"
+          aria-label={open ? 'Close menu' : 'Open menu'}
+          className="tap-target -mr-1 flex items-center justify-center rounded-md px-2 text-rail-text transition-colors hover:bg-white/8"
+        >
+          {open ? <X size={22} strokeWidth={2} /> : <Menu size={22} strokeWidth={2} />}
+        </button>
+      </header>
+
+      {/* Scrim. Tapping anywhere off the panel closes it. */}
+      {open && (
+        <button
+          type="button"
+          aria-hidden
+          tabIndex={-1}
+          onClick={() => setOpen(false)}
+          className="fixed inset-0 z-40 bg-black/50 lg:hidden"
+        />
+      )}
+
+      <nav
+        id="mobile-nav-panel"
+        aria-label="Primary"
+        hidden={!open}
+        className="fixed inset-y-0 right-0 z-50 w-[78%] max-w-xs overflow-y-auto border-l border-white/8 bg-rail pb-[env(safe-area-inset-bottom)] pt-[env(safe-area-inset-top)] lg:hidden"
+      >
+        <div className="flex items-center justify-between px-4 py-3">
+          <span className="eyebrow !text-rail-muted">Menu</span>
+          <button
+            type="button"
+            onClick={() => setOpen(false)}
+            aria-label="Close menu"
+            className="tap-target flex items-center justify-center rounded-md px-2 text-rail-text hover:bg-white/8"
+          >
+            <X size={20} strokeWidth={2} />
+          </button>
+        </div>
+
+        <ul className="px-2 pb-6">
           {NAV_ITEMS.map((item) => {
             const active = pathname === item.href
             const Icon = item.icon
-            const base = 'flex flex-col items-center gap-1 py-2.5 text-[10px] font-medium'
+            const base =
+              'tap-target flex w-full items-center gap-3 rounded-md px-3 py-3 text-[15px] font-medium'
             const body = (
               <>
-                <Icon size={18} strokeWidth={2} />
-                <span>{item.short}</span>
+                <Icon size={18} strokeWidth={2} className="shrink-0" />
+                <span className="truncate">{item.label}</span>
+                {!item.ready && (
+                  <span className="ml-auto font-mono text-[9px] uppercase tracking-wider text-rail-muted/70">
+                    Soon
+                  </span>
+                )}
               </>
             )
             return (
@@ -131,12 +221,14 @@ export function SideNav({
                   <Link
                     href={item.href}
                     aria-current={active ? 'page' : undefined}
-                    className={`${base} ${active ? 'text-brand' : 'text-rail-text/70'}`}
+                    className={`${base} ${active ? 'bg-brand text-brand-ink' : 'text-rail-text/85 hover:bg-white/6'}`}
                   >
                     {body}
                   </Link>
                 ) : (
-                  <span aria-disabled className={`${base} text-rail-muted/50`}>{body}</span>
+                  <span aria-disabled className={`${base} cursor-not-allowed text-rail-muted/60`}>
+                    {body}
+                  </span>
                 )}
               </li>
             )

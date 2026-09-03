@@ -23,7 +23,7 @@ export function AppShell({
       <div className="lg:pl-56">
         <main
           id="content"
-          className="mx-auto max-w-6xl px-4 pb-[calc(9.5rem+env(safe-area-inset-bottom))] pt-6 sm:px-6 sm:pb-[calc(6rem+env(safe-area-inset-bottom))] lg:pb-10 lg:pt-8"
+          className="mx-auto max-w-6xl px-4 pb-16 pt-[calc(3.5rem+env(safe-area-inset-top)+1.5rem)] sm:px-6 lg:pb-10 lg:pt-8"
         >
           {children}
         </main>
