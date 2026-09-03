@@ -96,6 +96,11 @@ async function main() {
   if (roasts.size) console.log(`[${stamp()}] resuming with ${roasts.size} roasts already written`)
 
   let lastCount = -1
+  // A heartbeat every few minutes. Without it the log is silent whenever the
+  // pick count has not moved, which over a three-hour wait makes a live runner
+  // indistinguishable from a dead one.
+  let lastBeat = 0
+  const BEAT_MS = 5 * 60_000
 
   for (;;) {
     let state
@@ -168,6 +173,12 @@ async function main() {
         // everything, because picks are cumulative.
         console.error(`[${stamp()}] publish failed: ${(err as Error).message}`)
       }
+    }
+
+    if (Date.now() - lastBeat > BEAT_MS) {
+      lastBeat = Date.now()
+      console.log(`[${stamp()}] alive · ${made.length}/180 picks · ` +
+        `drafted=${state.drafted} inProgress=${state.inProgress} · ${roasts.size} roasts written`)
     }
 
     if (state.drafted && made.length >= 180) {
