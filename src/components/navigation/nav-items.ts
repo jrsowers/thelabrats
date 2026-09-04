@@ -24,17 +24,19 @@ export interface NavItem {
 
 /**
  * Order set by James, 2026-08-28. Draft Room added and promoted to the top
- * on 2026-09-02, ahead of the draft.
+ * on 2026-09-02, ahead of the draft. Demoted on 2026-09-04 now that the draft
+ * is over: relabelled "Draft Recap" and moved down beside Record Books, where
+ * the other look-backs live. Same route, same icon — only its billing changed.
  *
  * /admin, /awards and /recaps are deliberately absent — reachable by URL only.
  */
 export const NAV_ITEMS: NavItem[] = [
-  { href: '/draft',        label: 'Draft Room',       short: 'Draft',   icon: ListOrdered,    ready: true  },
   { href: '/',             label: 'Live Scoreboard',  short: 'Scores',  icon: Radio,          ready: true  },
   { href: '/standings',    label: 'League Standings', short: 'Table',   icon: Trophy,         ready: true  },
   { href: '/playoffs',     label: 'Playoff Picture',  short: 'Bracket', icon: BracketIcon,    ready: true  },
   { href: '/transactions', label: 'Transaction Log',  short: 'Moves',   icon: ArrowLeftRight, ready: true  },
   { href: '/recaps',       label: 'Weekly Recaps',    short: 'Recaps',  icon: Newspaper,      ready: false },
   { href: '/awards',       label: 'Studs & Duds',     short: 'Awards',  icon: Award,          ready: false },
+  { href: '/draft',        label: 'Draft Recap',      short: 'Draft',   icon: ListOrdered,    ready: true  },
   { href: '/records',      label: 'Record Books',     short: 'Records', icon: BookOpen,       ready: true  },
 ]
