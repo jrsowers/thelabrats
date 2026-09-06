@@ -728,3 +728,58 @@ a spread on every page: three bad, three mildly bad, one good, minimum five.
 
 **Superlatives dropped**, James's call. The draft roaster, recap and report
 cards are the feature set.
+
+## 2026-09-06 — Mirror ESPN where ESPN is the answer
+
+**The standings and playoff pages were never hardcoded.** James read them as
+sample data, and at 0-0 across twelve teams that is a fair reading — but both
+compute from ingested matchups and always have. The real gap was the opposite
+problem: ESPN publishes things we were discarding.
+
+**ESPN's seeds order the standings; our arithmetic is the cross-check.** ESPN
+owns the tiebreaker rulebook, and spec §20.5 already demands the two match. So
+where ESPN has published seeds, they decide. Two guards: preseason ESPN fills
+`playoffSeed` with reverse draft order, and a partial or duplicated seed set is
+ignored outright rather than used to half-reorder the table.
+
+**We still compute the record ourselves.** It is deterministic, unit-tested, and
+the only source of streak, movement and tiebreak notes. When ours and ESPN's
+disagree the page names the teams instead of quietly picking a side — both sides
+derive from the same games, so a disagreement means one of us is wrong.
+
+**Playoff odds are mirrored, never modelled.** ESPN runs a Monte Carlo
+simulation over the remaining schedule. Building our own would put a guess on a
+page where everything else is arithmetic over games that happened. The odds get
+their own section labelled as ESPN's projection, and nothing depends on them.
+
+**`UNKNOWN` is not `false`.** ESPN's `playoffClinchType` reads `UNKNOWN` until it
+decides. Rendering that as "not clinched" would be inventing a fact; the code
+falls back to our own inference instead.
+
+**The championship is two weeks.** ESPN reports
+`playoffMatchupPeriodLengthByRound` as `{1:1, 2:1, 3:2}`. The bracket assumed one
+week per round and printed the final on week 16 when it ends in 17. The map is
+read now; nothing is hardcoded to three rounds.
+
+## 2026-09-06 — Injured reserve is a transaction, not a drop
+
+ESPN has no IR transaction type. An IR move is a `ROSTER` row whose item carries
+an ordinary `ADD` or `DROP` action, distinguishable only by `fromLineupSlotId` /
+`toLineupSlotId` crossing slot 21. The log was reading those at face value and
+printing "Dropped" for a player still on the roster.
+
+IR moves are now `IR_PLACE` / `IR_ACTIVATE`, read "To IR" and "From IR", carry
+their own filter, and stay out of Players Added / Players Dropped. All other
+`ROSTER` rows are still ignored — they are ordinary lineup shuffles.
+
+**Every transaction kind gets its own colour**, added at James's request: trade
+blue, free agent green, waiver amber, drop red, IR violet. IR needed a new
+`--violet` token rather than reusing warn's amber — an injury designation
+sitting in the same colour as a waiver claim was the exact confusion worth
+avoiding. Per §39 the badge always names the kind; colour never carries it alone.
+
+**A swallowed error hid a real trade for two days.** The transaction upsert
+destructured only `data` and ignored `error`, so a failing write reported
+SUCCESS on every sync. Every ingest write now throws on error and verifies the
+row count it wrote. This is the second time a silent failure has cost a day —
+the first was an empty migration file that `db push` recorded as applied.

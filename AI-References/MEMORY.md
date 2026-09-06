@@ -4,11 +4,18 @@ Running state of the build. **Update this at the end of every working session.**
 A future session should be able to read this file and `SOUL.md` and resume
 without re-reading the conversation.
 
-**Last updated:** 2026-09-02
+**Last updated:** 2026-09-06
 
 ---
 
 ## Current status
+
+**2026-09-06 — season live, week 1 not yet played.** The draft is done, the
+recap and report cards are published, the transaction log is running against
+real moves, and ESPN's own standings and playoff forecast are mirrored into
+Postgres. Standings read 0-0 across the board because no NFL game has gone
+final yet — that is correct, not a bug, and it is the reason the tables look
+like sample data. See Session 7.
 
 **2026-09-02 — Fantasy Roster Management skill added.** New agent skill at
 `.claude/skills/fantasy-roster-management/` (outside the app): a weekly
@@ -81,9 +88,12 @@ site works.
 | Seeding rule | `H2H_RECORD` ✅ |
 | Divisions | None (one nominal division) ✅ |
 | FAAB | ❌ **Not used** — traditional waivers, 48h ✅ |
-| Roster | QB/RB×2/WR×2/TE/OP/FLEX/DST/K + 5 bench + 1 IR ✅ |
+| Roster | QB/RB×2/WR×2/TE/OP/FLEX/DST/K + 5 bench + **2 IR** ✅ |
+| OP slot | **Superflex** ✅ confirmed by the draft |
+| Playoff rounds | QF 14 · SF 15 · **Championship 16–17 (two weeks)** ✅ |
+| Playoff reseed | ❌ None — fixed bracket ✅ |
 | Timezone | `America/New_York` ✅ confirmed |
-| Draft | **Thu Sept 3, 2026, 1:00 PM** — SNAKE, not yet held ✅ |
+| Draft | **Thu Sept 3, 2026, 1:00 PM** — SNAKE, **held** ✅ |
 | Auth | ❌ **None** — fully public, ungated |
 
 Full detail in `LEAGUE-CONFIG.md`.
@@ -147,7 +157,7 @@ Apex, www, and `thelabrats-gray.vercel.app` all resolve.
 - **Display names:** real names on a public site, first names only, or team names
   only? Real people, open internet.
 - **`/admin` protection** mechanism, given no user accounts.
-- Slot 7 "OP" — superflex or not? Blocks the lineup optimizer. Verify post-draft.
+- Profanity: `ROAST-WRITER.md` permits it; never explicitly confirmed by James.
 
 ---
 
@@ -174,8 +184,8 @@ Apex, www, and `thelabrats-gray.vercel.app` all resolve.
 | 2 | ESPN league import | ✅ |
 | 3 | Live Scoreboard | ✅ (live polling still to come) |
 | 4 | Standings — H2H tiebreak, movement, clinching | ✅ |
-| 5 | Playoff Picture — bracket + bubble | ✅ |
-| 6 | Transactions | 🔨 UI + filters done; parser unverified until a real move |
+| 5 | Playoff Picture — bracket + bubble + ESPN's odds | ✅ |
+| 6 | Transactions | ✅ Verified against real adds, drops, a trade and IR moves |
 | 7 | Studs & Duds | 🔨 7 of 14 awards; player awards need week 1 |
 | 8 | Record Books | ✅ Champions Corner + Firsts and Worsts (records accumulate) |
 
@@ -268,3 +278,52 @@ sample draft has been cleared from Postgres, and badges are assigned per manager
 
 Open: tier-2 dossier review, the ROBBERY badge is untested, Yahoo 2025 export.
 
+
+## Session 7 — 2026-09-06 (transaction colours, ESPN standings)
+
+**Neither `/standings` nor `/playoffs` was ever hardcoded.** James read them as
+sample data; at 0-0 across twelve teams that is a fair reading. Both compute
+from ingested matchups and always have. What *was* wrong is that we discarded
+everything ESPN publishes about its own standings.
+
+`mTeam` carries the official record, `playoffSeed`, `eliminated` and the final
+ranks. `mStandings` — and **only** `mStandings` — carries `playoffClinchType`
+and a Monte Carlo forecast: playoff odds, projected finish, most likely final
+record. Both ride free on the request the sync already makes, both work
+anonymously. They now land in `espn_team_standings` and drive the seeding, the
+clinch calls, and a new odds section on `/playoffs`.
+
+**The trap to remember:** before week 1, ESPN fills `playoffSeed` with reverse
+draft order — a real integer that is not a standing. `reconcileWithEspn()`
+ignores it until a game is final, and ignores any partial or duplicated seed
+set. Likewise `playoffClinchType: "UNKNOWN"` means undecided, not "not
+clinched", and `0` in `eliminationMatchupPeriod` / `rankCalculatedFinal` means
+"has not happened".
+
+**Fixed a factual error on the bracket.** The championship is two weeks (16–17),
+which ESPN reports in `playoffMatchupPeriodLengthByRound`. Every round was
+labelled one week.
+
+**Injured reserve was printing as a drop.** ESPN has no IR transaction type — an
+IR move is a `ROSTER` row with an ordinary ADD/DROP item action, visible only in
+the lineup slot crossing 21. Now `IR_PLACE` / `IR_ACTIVATE`, with their own
+filter, kept out of Players Added and Players Dropped. All six transaction kinds
+now carry their own colour; IR got a new `--violet` token so an injury never
+reads as a waiver claim.
+
+**A swallowed error hid a real trade for two days.** The transaction upsert
+destructured only `data`, so a failing write reported SUCCESS on every sync.
+That is now the second silent failure to cost a day (the first: an empty
+migration file that `db push` recorded as applied). Every ingest write throws on
+error and checks its row count.
+
+**Fixtures re-captured post-draft**, which moved two facts the old assertions
+pinned: IR is two slots now, and the draft is done.
+
+**Verification:** `npm test` (209 ✅, 15 files) · `npx tsc --noEmit` ✅ ·
+`npm run test:responsive` (62 ✅) · build ✅ · deployed.
+
+Open: tier-2 dossier review (Keenan Allen, Miles Sanders, Deshaun Watson), the
+ROBBERY badge is untested, the Yahoo 2025 export, and `fixtures/league-teams.json`
+still leaks real names — it predates `fixtures/raw/` and the sanitizer never
+regenerates it.

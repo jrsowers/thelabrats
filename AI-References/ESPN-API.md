@@ -201,13 +201,84 @@ Believed transaction `type` values:
 | `WAIVER` | `WAIVER` |
 | `FREEAGENT` | `FREE_AGENT` |
 | `TRADE_ACCEPT` | `TRADE` |
-| `ROSTER` | lineup move — likely ignore |
+| `ROSTER` | lineup move — **ignore, EXCEPT injured reserve** (see below) |
 | `DRAFT` | `DRAFT` |
 
 - FAAB bid appears as **`bidAmount`**.
 - ESPN returns trades as **separate per-player rows**. Spec §23.4 requires them
   recombined into one two-sided transaction. Group by ESPN transaction id.
 - Dedupe on `espn_transaction_id` via upsert. Never insert blind (§15.4).
+
+### Injured reserve hides inside `ROSTER` — verified 2026-09-06
+
+There is no IR transaction type. An IR move arrives as a `ROSTER` row whose
+item carries an ordinary `ADD` or `DROP` action. The only signal is the slot:
+
+```text
+toLineupSlotId   === 21   ->  placed on IR
+fromLineupSlotId === 21   ->  activated from IR
+```
+
+Taken at face value the item reads as a drop, which is a lie — the player never
+leaves the roster. We synthesize `IR_PLACE` / `IR_ACTIVATE` from the slots and
+keep every other `ROSTER` row filtered out.
+
+⚠️ `transactionCounter.moveToIR` / `moveToActive` on `mTeam` are running totals,
+not events. Useful as a cross-check, useless as a source.
+
+---
+
+## Standings and the playoff forecast — verified 2026-09-06
+
+The fields are split across **two views**, and requesting one gives you half the
+picture with no error to tell you so. Both ride free on a single request, and
+both work **anonymously** — no cookies.
+
+| Field | `mTeam` | `mStandings` |
+| --- | --- | --- |
+| `record.overall` (W-L-T, PF, PA, streak, gamesBack) | ✅ | ✗ |
+| `playoffSeed` | ✅ | ✗ |
+| `eliminated`, `eliminationMatchupPeriod` | ✅ | ✗ |
+| `rankCalculatedFinal`, `rankFinal` | ✅ | ✗ |
+| `currentProjectedRank` | ✅ | ✗ |
+| `waiverRank` | ✅ | ✗ |
+| `playoffClinchType` | ✗ | ✅ |
+| `currentSimulationResults` | ✗ | ✅ |
+
+`currentSimulationResults` is ESPN's Monte Carlo forecast:
+
+```json
+{
+  "playoffPct": 0.5745,
+  "divisionWinPct": 0.11175,
+  "rank": 2,
+  "playoffClinchType": "UNKNOWN",
+  "modeRecord": { "wins": 7, "losses": 6, "ties": 0, ... }
+}
+```
+
+`modeRecord` is the most likely final record — the same shape as a `record`
+split, with the points fields left at zero.
+
+### Traps
+
+- **`playoffSeed` is reverse draft order before week 1.** Captured 2026-09-06
+  at 0-0: team 12 held seed 1 and team 1 held seed 12. It is a real integer that
+  is not a standing. Never trust it until a game is final.
+- **`0` means "has not happened", not zero.** `eliminationMatchupPeriod`,
+  `rankCalculatedFinal` and `rankFinal` all read `0` preseason. Store null.
+- **`streakType` is the string `"NONE"`**, not null, when there is no streak.
+- **`playoffClinchType` is `"UNKNOWN"`** until ESPN decides. That is not the
+  same as "not clinched" and must not be rendered as one.
+
+### Playoff round lengths
+
+`settings.scheduleSettings.playoffMatchupPeriodLengthByRound` — verified
+2026-09-06 as `{"1": 1, "2": 1, "3": 2}`. **The championship is two weeks**
+(16–17), which `matchupPeriods["16"] == [16, 17]` confirms independently.
+
+`playoffMatchupPeriodLength` (the flat one) reads `0` and is useless.
+`playoffReseed` is `false` — the bracket is fixed, confirming the commissioner.
 
 ---
 
@@ -237,10 +308,15 @@ fixture for each into `/fixtures/`.
 - [x] `mTransactions2` — **works without cookies**
 - [x] Prior seasons — none exist under this league ID
 
-**Blocked until after the Sept 3 draft / Week 1 games:**
-- [ ] Slot 7 (OP) eligibility — **superflex or not?** Blocks lineup optimizer
+**Done 2026-09-06 (post-draft, pre-week-1):**
+- [x] Slot 7 (OP) eligibility — **superflex, confirmed by the draft**
+- [x] Transaction payload shape — real adds, drops, a trade and three IR moves
+- [x] `playoffMatchupPeriodLength` — the flat field is useless; the per-round
+      map says the championship is two weeks
+- [x] Slots 20 / 21 / 23 against populated rosters. **IR is now 2 slots**, not
+      1 — the commissioner widened it before week 1
+- [x] `mTeam` + `mStandings` standings and forecast fields
+
+**Still blocked until Week 1 games:**
 - [ ] `statSourceId` 0 vs 1 behavior against a real scored week
-- [ ] Confirm slots 20 / 21 / 23 against populated rosters
 - [ ] Pro team ID map against real player rows
-- [ ] Transaction payload shape once real transactions exist
-- [ ] `playoffMatchupPeriodLength` once season opens (reads 0 pre-draft)

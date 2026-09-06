@@ -1022,6 +1022,51 @@ Use this for administration and debugging.
 
 ---
 
+## 14.19 espn_team_standings
+
+*Added 2026-09-06.*
+
+```text
+season_team_id (PK)
+season_id
+wins / losses / ties
+points_for / points_against
+streak_type / streak_length / games_back
+playoff_seed
+playoff_clinch
+eliminated / elimination_week
+final_rank
+playoff_odds
+projected_rank
+projected_wins / projected_losses
+waiver_rank
+synced_at
+```
+
+ESPN's own view of the standings, mirrored one row per team and replaced on
+every sync. Current state only — `standings_snapshots` already holds history.
+
+This does **not** replace our computed standings. We keep computing the record
+from `matchups` because that is deterministic, testable, and the only source
+for movement, streaks and tiebreak notes. This table exists because ESPN
+publishes three things we should not reproduce:
+
+1. **The official seed** (`playoff_seed`) — ESPN owns the tiebreaker rulebook.
+2. **The official clinch and elimination calls** (`playoff_clinch`,
+   `eliminated`) — `UNKNOWN` means ESPN has not decided, not "not clinched".
+3. **A Monte Carlo playoff forecast** (`playoff_odds`, `projected_rank`,
+   `projected_wins/losses`) — inventing our own would be presenting a guess as
+   a fact.
+
+Populated from two views on one request. `mTeam` carries the record, seed,
+elimination and final rank; `mStandings` carries the clinch type and the
+simulation. Neither view alone is enough.
+
+⚠️ Before week 1, ESPN fills `playoff_seed` with reverse draft order. It is a
+real number that is not a standing. See §20.6.
+
+---
+
 # 15. Data Synchronization Strategy
 
 The application should have several different synchronization modes.
@@ -1468,6 +1513,37 @@ Movement should compare to the previous finalized week.
 - Official standings match ESPN.
 - Tied teams are ordered according to configured league rules.
 - Playoff line displays correctly.
+
+---
+
+# 20.6 Reconciliation with ESPN
+
+*Added 2026-09-06.*
+
+"Official standings match ESPN" (§20.5) is an acceptance criterion, not a hope.
+It is now enforced rather than assumed.
+
+The table is computed from `matchups` as before. Then `reconcileWithEspn()`
+compares it against `espn_team_standings` (§14.19) and does two things:
+
+**Seeding follows ESPN.** ESPN owns the tiebreaker rulebook, so where it has
+published seeds, those decide the order and rank. Two guards stop that from
+going wrong:
+
+- Before any game is final, ESPN's `playoffSeed` is reverse draft order.
+  Ignored.
+- A partial or duplicated seed set is ignored outright. Half-reordering a table
+  is worse than not reordering it.
+
+Where ESPN's seeds are not usable, our own H2H tiebreakers stand and the page
+says which rule ordered it.
+
+**Record disagreements are surfaced, not resolved.** Both sides derive W-L-T
+from the same games, so a disagreement means one of us is wrong. The page names
+the teams involved rather than quietly picking a side.
+
+Clinch and elimination follow the same principle: ESPN's call where ESPN has
+made one, our inference otherwise.
 - Points For and Points Against reconcile with ESPN.
 - Previous-week movement is accurate.
 
@@ -1644,6 +1720,33 @@ the engine should always produce deterministic standings.
 Write extensive unit tests.
 
 This is one of the highest-risk logic areas in the application.
+
+---
+
+# 21.9 ESPN's Forecast
+
+*Added 2026-09-06.*
+
+ESPN runs its own Monte Carlo simulation over the remaining schedule and
+publishes the result per team in `mStandings.currentSimulationResults`:
+playoff probability, projected final rank, and the most likely final record.
+
+**Mirror it; do not model it.** Every other number on this page is arithmetic
+over games that actually happened. A projection is not, and building our own
+would mean presenting a guess with the same authority as a result. The odds get
+their own section, labelled as ESPN's projection, and nothing else on the page
+depends on them.
+
+This is the same rule as §6 in a different costume: ESPN is the system of
+record, and where ESPN has already answered a question, we quote it.
+
+## Rounds are not all one week
+
+ESPN publishes the span of each playoff round in
+`scheduleSettings.playoffMatchupPeriodLengthByRound`. This league's
+championship runs **two** weeks (16–17). The bracket must read that map rather
+than assume one week per round — assuming put the final on the wrong week. As
+with everything else in §21.3, nothing is hardcoded to this league's shape.
 
 ---
 
@@ -1962,12 +2065,25 @@ Display:
 - add/drop combinations
 - trades
 - FAAB amounts where applicable
+- injured-reserve moves *(added 2026-09-06)*
 
 Optional later:
 
 - trade veto events
 - commissioner actions
 - draft picks
+
+## Injured reserve
+
+ESPN files an IR move as a `ROSTER` transaction whose items carry an ordinary
+`ADD` or `DROP` action; the move is only visible in `fromLineupSlotId` /
+`toLineupSlotId` crossing slot 21. Taken at face value it reads as a drop,
+which is false — the player never leaves the roster.
+
+IR moves are therefore their own transaction types, `IR_PLACE` and
+`IR_ACTIVATE`; they read "To IR" and "From IR"; and they are excluded from the
+Players Added and Players Dropped filters, where nobody is looking for them.
+All other `ROSTER` rows are still ignored — they are ordinary lineup shuffles.
 
 ---
 
@@ -1977,9 +2093,11 @@ Provide:
 
 ```text
 All
-Waivers
-Free Agents
+Players Added
+Players Dropped
 Trades
+Waiver Claims
+Injured Reserve
 ```
 
 Additional filters:
@@ -1989,6 +2107,11 @@ Week
 Team
 Player
 ```
+
+Every transaction kind carries its own colour — trade blue, free agent green,
+waiver amber, drop red, IR violet — on both the badge and the card's left edge,
+so the shape of a day's activity is legible before a word is read. Colour never
+carries the meaning alone: the badge always names the kind (§39).
 
 ---
 
