@@ -407,8 +407,13 @@ export async function getLastSync() {
  * DRAFT transactions are excluded. All 180 picks are transactions as far as
  * ESPN is concerned, and including them would bury every waiver claim and trade
  * under the draft forever — the picks have their own page.
+ *
+ * Only EXECUTED moves appear. ESPN also sends cancelled waiver claims and
+ * pending trade proposals, and both were rendering as though they had happened.
  */
 export interface LogTxnItem {
+  /** ESPN id, for the headshot. Negative for a team defense. */
+  espnPlayerId: number | null
   playerName: string
   position: string
   nflTeam: string
@@ -438,10 +443,13 @@ export async function getTransactionLog(seasonId: number, limit = 200): Promise<
       id, espn_transaction_id, transaction_type, processed_at, proposed_at, week,
       season_team_id, faab_amount,
       transaction_items ( action, from_team_id, to_team_id,
-        players ( full_name, position, nfl_team ) )
+        players ( espn_player_id, full_name, position, nfl_team ) )
     `)
     .eq('season_id', seasonId)
     .neq('transaction_type', 'DRAFT')
+    // A log records what HAPPENED. A cancelled waiver and a pending trade
+    // proposal both showed here as though they had gone through.
+    .eq('status', 'EXECUTED')
     .order('processed_at', { ascending: false })
     .limit(limit)
 
@@ -453,7 +461,7 @@ export async function getTransactionLog(seasonId: number, limit = 200): Promise<
     season_team_id: number | null
     transaction_items: {
       action: string; from_team_id: number | null; to_team_id: number | null
-      players: { full_name: string | null; position: string | null; nfl_team: string | null } | null
+      players: { espn_player_id: number | null; full_name: string | null; position: string | null; nfl_team: string | null } | null
     }[] | null
   }
 
@@ -461,6 +469,7 @@ export async function getTransactionLog(seasonId: number, limit = 200): Promise<
     .filter((r) => r.season_team_id != null && (r.transaction_items?.length ?? 0) > 0)
     .map((r) => {
       const items: LogTxnItem[] = (r.transaction_items ?? []).map((it) => ({
+        espnPlayerId: it.players?.espn_player_id ?? null,
         playerName: it.players?.full_name ?? 'Unknown player',
         position: it.players?.position ?? '',
         nflTeam: it.players?.nfl_team ?? '',

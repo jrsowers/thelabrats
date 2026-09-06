@@ -97,6 +97,8 @@ export function simulateSeason(
 export type TxnKind = 'WAIVER' | 'FREE_AGENT' | 'DROP' | 'TRADE'
 
 export interface PreviewTxnItem {
+  /** Null in preview — simulated players have no ESPN id and fall back to initials. */
+  espnPlayerId: number | null
   playerName: string
   position: string
   nflTeam: string
@@ -164,8 +166,10 @@ export function simulateTransactions(teamIds: number[], throughWeek: number): Pr
           id: `p-${counter}`, kind: 'TRADE', processedAt: at.toISOString(), week,
           teamId: team, counterpartyTeamId: other, waiverPriority: null,
           items: [
-            { playerName: aName, position: aPos, nflTeam: aTeam, action: 'TRADE', fromTeamId: team, toTeamId: other },
-            { playerName: bName, position: bPos, nflTeam: bTeam, action: 'TRADE', fromTeamId: other, toTeamId: team },
+            { espnPlayerId: null,
+              playerName: aName, position: aPos, nflTeam: aTeam, action: 'TRADE', fromTeamId: team, toTeamId: other },
+            { espnPlayerId: null,
+              playerName: bName, position: bPos, nflTeam: bTeam, action: 'TRADE', fromTeamId: other, toTeamId: team },
           ],
         })
       } else if (roll < 0.55) {
@@ -177,8 +181,10 @@ export function simulateTransactions(teamIds: number[], throughWeek: number): Pr
           teamId: team, counterpartyTeamId: null,
           waiverPriority: 1 + Math.floor(r() * teamIds.length),
           items: [
-            { playerName: aName, position: aPos, nflTeam: aTeam, action: 'ADD', fromTeamId: null, toTeamId: team },
-            { playerName: bName, position: bPos, nflTeam: bTeam, action: 'DROP', fromTeamId: team, toTeamId: null },
+            { espnPlayerId: null,
+              playerName: aName, position: aPos, nflTeam: aTeam, action: 'ADD', fromTeamId: null, toTeamId: team },
+            { espnPlayerId: null,
+              playerName: bName, position: bPos, nflTeam: bTeam, action: 'DROP', fromTeamId: team, toTeamId: null },
           ],
         })
       } else if (roll < 0.82) {
@@ -186,14 +192,16 @@ export function simulateTransactions(teamIds: number[], throughWeek: number): Pr
         out.push({
           id: `p-${counter}`, kind: 'FREE_AGENT', processedAt: at.toISOString(), week,
           teamId: team, counterpartyTeamId: null, waiverPriority: null,
-          items: [{ playerName: aName, position: aPos, nflTeam: aTeam, action: 'ADD', fromTeamId: null, toTeamId: team }],
+          items: [{ espnPlayerId: null,
+              playerName: aName, position: aPos, nflTeam: aTeam, action: 'ADD', fromTeamId: null, toTeamId: team }],
         })
       } else {
         const [aName, aPos, aTeam] = pick(2)
         out.push({
           id: `p-${counter}`, kind: 'DROP', processedAt: at.toISOString(), week,
           teamId: team, counterpartyTeamId: null, waiverPriority: null,
-          items: [{ playerName: aName, position: aPos, nflTeam: aTeam, action: 'DROP', fromTeamId: team, toTeamId: null }],
+          items: [{ espnPlayerId: null,
+              playerName: aName, position: aPos, nflTeam: aTeam, action: 'DROP', fromTeamId: team, toTeamId: null }],
         })
       }
     }

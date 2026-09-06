@@ -10,6 +10,7 @@ import { AppShell } from '@/components/navigation/app-shell'
 import { FieldBackdrop } from '@/components/ui/field-backdrop'
 import { Eyebrow, TeamAvatar, Tag, EmptyState } from '@/components/ui/primitives'
 import { SyncStatus } from '@/components/ui/sync-status'
+import { PlayerHeadshot } from '@/components/ui/player-headshot'
 
 export const dynamic = 'force-dynamic'
 export const metadata: Metadata = { title: 'Transaction Log' }
@@ -60,19 +61,37 @@ const KIND_LABEL: Record<PreviewTxn['kind'], string> = {
 }
 
 function PlayerLine({
-  name, position, nflTeam, action,
-}: { name: string; position: string; nflTeam: string; action: 'ADD' | 'DROP' | 'TRADE' }) {
+  espnPlayerId, name, position, nflTeam, action,
+}: {
+  espnPlayerId: number | null
+  name: string; position: string; nflTeam: string
+  action: 'ADD' | 'DROP' | 'TRADE'
+}) {
   const tone =
     action === 'ADD' ? 'text-live' : action === 'DROP' ? 'text-loss' : 'text-brand'
+  // The sign carries the meaning at a glance; the word confirms it. Using a
+  // real minus rather than a hyphen so it optically matches the plus.
+  const sign = action === 'ADD' ? '+' : action === 'DROP' ? '\u2212' : '\u21c4'
   const verb = action === 'ADD' ? 'Added' : action === 'DROP' ? 'Dropped' : 'Traded'
+
   return (
-    <div className="flex items-baseline gap-2">
-      <span className={`w-[52px] shrink-0 font-mono text-[9.5px] font-semibold uppercase tracking-wider ${tone}`}>
+    <div className="flex items-center gap-2.5">
+      <PlayerHeadshot
+        espnPlayerId={espnPlayerId}
+        name={name}
+        size={32}
+        teamAbbrev={nflTeam}
+        isTeamDefense={position === 'D/ST' || position === 'DST'}
+      />
+      <span className={`flex w-[68px] shrink-0 items-baseline gap-1 font-mono text-[9.5px] font-semibold uppercase tracking-wider ${tone}`}>
+        <span aria-hidden className="text-[12px] leading-none">{sign}</span>
         {verb}
       </span>
-      <span className="display text-[14.5px]">{name}</span>
-      <span className="font-mono text-[10px] uppercase tracking-wider text-dim">
-        {position} · {nflTeam}
+      <span className="min-w-0">
+        <span className="display text-[14.5px]">{name}</span>
+        <span className="ml-1.5 font-mono text-[10px] uppercase tracking-wider text-dim">
+          {position} · {nflTeam}
+        </span>
       </span>
     </div>
   )
@@ -92,10 +111,19 @@ function TradeBody({ txn, teams }: { txn: PreviewTxn; teams: Map<number, Standin
             <Eyebrow className="mb-1.5">{team?.name ?? 'Team'} receives</Eyebrow>
             <ul className="space-y-1">
               {received.map((i, idx) => (
-                <li key={idx} className="flex items-baseline gap-2">
-                  <span className="display text-[14px]">{i.playerName}</span>
-                  <span className="font-mono text-[10px] uppercase tracking-wider text-dim">
-                    {i.position} · {i.nflTeam}
+                <li key={idx} className="flex items-center gap-2">
+                  <PlayerHeadshot
+                    espnPlayerId={i.espnPlayerId}
+                    name={i.playerName}
+                    size={28}
+                    teamAbbrev={i.nflTeam}
+                    isTeamDefense={i.position === 'D/ST' || i.position === 'DST'}
+                  />
+                  <span className="min-w-0">
+                    <span className="display text-[14px]">{i.playerName}</span>
+                    <span className="ml-1.5 font-mono text-[10px] uppercase tracking-wider text-dim">
+                      {i.position} · {i.nflTeam}
+                    </span>
                   </span>
                 </li>
               ))}
@@ -276,6 +304,7 @@ export default async function TransactionsPage({
                             {txn.items.map((i, idx) => (
                               <PlayerLine
                                 key={idx}
+                                espnPlayerId={i.espnPlayerId}
                                 name={i.playerName}
                                 position={i.position}
                                 nflTeam={i.nflTeam}

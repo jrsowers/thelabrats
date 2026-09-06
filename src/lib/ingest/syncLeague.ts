@@ -194,7 +194,7 @@ export async function syncLeague(syncType = 'league-metadata'): Promise<SyncResu
     const transactions = toTransactions(txnRes)
 
     if (transactions.length > 0) {
-      const { data: writtenTxns } = await db
+      const { data: writtenTxns, error: txnError } = await db
         .from('transactions')
         .upsert(
           transactions.map((t) => ({
@@ -211,7 +211,20 @@ export async function syncLeague(syncType = 'league-metadata'): Promise<SyncResu
           { onConflict: 'season_id,espn_transaction_id' },
         )
         .select('id, espn_transaction_id')
+
+      // Surface it. This upsert previously destructured only `data`, so a
+      // failed write was indistinguishable from a successful one: a trade sat
+      // missing from the log for two days while every sync reported SUCCESS.
+      if (txnError) throw new Error(`transactions upsert failed: ${txnError.message}`)
       detail.transactions = writtenTxns?.length ?? 0
+
+      // A silent partial is just as bad. If the database took fewer rows than
+      // we sent, say so rather than moving on.
+      if ((writtenTxns?.length ?? 0) !== transactions.length) {
+        throw new Error(
+          `transactions upsert wrote ${writtenTxns?.length ?? 0} of ${transactions.length}`,
+        )
+      }
 
       // Items were computed and then thrown away — transaction_items had zero
       // rows while transactions had 180, so the log could never render anything.
@@ -244,7 +257,8 @@ export async function syncLeague(syncType = 'league-metadata'): Promise<SyncResu
         await db.from('transaction_items')
           .delete()
           .in('transaction_id', [...txnIdByEspnId.values()])
-        await db.from('transaction_items').insert(items)
+        const { error: itemError } = await db.from('transaction_items').insert(items)
+        if (itemError) throw new Error(`transaction_items insert failed: ${itemError.message}`)
       }
       detail.transactionItems = items.length
     } else {
