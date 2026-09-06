@@ -94,7 +94,8 @@ export function simulateSeason(
    Transaction preview
    ============================================================ */
 
-export type TxnKind = 'WAIVER' | 'FREE_AGENT' | 'DROP' | 'TRADE'
+export type TxnKind =
+  | 'WAIVER' | 'FREE_AGENT' | 'DROP' | 'TRADE' | 'IR_PLACE' | 'IR_ACTIVATE'
 
 export interface PreviewTxnItem {
   /** Null in preview — simulated players have no ESPN id and fall back to initials. */

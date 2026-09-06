@@ -93,6 +93,10 @@ export const matchupSchema = z.object({
 export const transactionItemSchema = z.object({
   playerId: maybeNum,
   type: z.string().nullish(),
+  // Lineup slots. 21 is IR, which is how an IR move is told apart from an
+  // ordinary start/sit inside a ROSTER transaction.
+  fromLineupSlotId: maybeNum,
+  toLineupSlotId: maybeNum,
   fromTeamId: maybeNum,
   toTeamId: maybeNum,
 })

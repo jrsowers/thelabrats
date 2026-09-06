@@ -139,6 +139,7 @@ export default function StyleGuide() {
             <Tag tone="win">Won</Tag>
             <Tag tone="loss">Lost</Tag>
             <Tag tone="warn">Provisional</Tag>
+            <Tag tone="violet">Injured Reserve</Tag>
           </div>
         </Row>
 

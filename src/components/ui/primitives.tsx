@@ -25,7 +25,7 @@ export function SectionHeader({
 }
 
 /* ---------- Tag: category / status pill ---------- */
-type Tone = 'neutral' | 'brand' | 'live' | 'win' | 'loss' | 'warn'
+type Tone = 'neutral' | 'brand' | 'live' | 'win' | 'loss' | 'warn' | 'violet'
 
 const TONE: Record<Tone, string> = {
   neutral: 'bg-surface-2 text-muted border-border',
@@ -34,6 +34,9 @@ const TONE: Record<Tone, string> = {
   win: 'bg-live-soft text-win border-live/30',
   loss: 'bg-loss-soft text-loss border-loss/30',
   warn: 'bg-warn-soft text-warn border-warn/30',
+  // Injured reserve. Distinct from warn's amber so an IR move does not read
+  // as a waiver claim at a glance.
+  violet: 'bg-violet-soft text-violet border-violet/30',
 }
 
 export function Tag({

@@ -81,6 +81,8 @@ export interface PlayerWeekScore {
 }
 
 export type TransactionType = 'WAIVER' | 'FREE_AGENT' | 'DROP' | 'TRADE' | 'DRAFT' | 'OTHER'
+  | 'IR_PLACE'
+  | 'IR_ACTIVATE'
 
 export interface TransactionItem {
   espnPlayerId: number

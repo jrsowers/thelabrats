@@ -41,6 +41,10 @@
   --loss-soft:     #fde5e5;
   --warn:          #a86500;
   --warn-soft:     #fdf0d5;
+  /* Roster-status moves — injured reserve. Its own hue so an IR designation
+     never reads as a waiver claim (amber) or a drop (red). */
+  --violet:        #6d3bd4;
+  --violet-soft:   #efe8fd;
 
   /* Data series — sequential, accessible on light ground */
   --series-1: #1d4fd8;
@@ -95,6 +99,8 @@
     --loss-soft:     #2c1214;
     --warn:          #ffb833;
     --warn-soft:     #2b1f08;
+    --violet:        #b79bff;
+    --violet-soft:   #221838;
 
     --series-1: #4d7dff;
     --series-2: #1fd882;
@@ -145,6 +151,8 @@
   --color-warn: var(--warn);
   --color-gold: var(--gold);
   --color-warn-soft: var(--warn-soft);
+  --color-violet: var(--violet);
+  --color-violet-soft: var(--violet-soft);
 
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);

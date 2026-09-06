@@ -178,16 +178,42 @@ const TRANSACTION_TYPE: Record<string, TransactionType> = {
   DRAFT: 'DRAFT',
 }
 
+/** ESPN lineup slot for injured reserve. */
+const IR_SLOT = 21
+
+/**
+ * ROSTER transactions are lineup changes, and almost all of them are start/sit
+ * decisions that would flood a transaction log every week. The exception is IR:
+ * moving a player onto or off injured reserve is a real roster event.
+ *
+ * Returns null for an ordinary shuffle, so the caller can drop it.
+ */
+function irKind(t: { items?: { fromLineupSlotId?: number | null; toLineupSlotId?: number | null }[] | null }):
+  'IR_PLACE' | 'IR_ACTIVATE' | null {
+  for (const it of t.items ?? []) {
+    if (it.toLineupSlotId === IR_SLOT) return 'IR_PLACE'
+    if (it.fromLineupSlotId === IR_SLOT) return 'IR_ACTIVATE'
+  }
+  return null
+}
+
 export function toTransactions(res: LeagueResponse): Transaction[] {
   const raw = res.transactions ?? []
   return raw
-    .filter((t) => (t.type ?? '') !== 'ROSTER')
+    // Keep ROSTER rows only when they touch injured reserve.
+    .filter((t) => (t.type ?? '') !== 'ROSTER' || irKind(t) !== null)
     .map((t, i) => {
+      const ir = (t.type ?? '') === 'ROSTER' ? irKind(t) : null
+
       const items = (t.items ?? [])
-        .filter((it) => it.playerId != null && (it.type ?? '') !== 'LINEUP')
+        // LINEUP items are normally noise, but on an IR move they are the whole
+        // event — the player being placed or activated.
+        .filter((it) => it.playerId != null && ((it.type ?? '') !== 'LINEUP' || ir !== null))
         .map((it) => ({
           espnPlayerId: it.playerId as number,
-          action: (it.type === 'DROP' ? 'DROP'
+          action: (ir === 'IR_PLACE' ? 'DROP'
+            : ir === 'IR_ACTIVATE' ? 'ADD'
+            : it.type === 'DROP' ? 'DROP'
             : it.type === 'ADD' || it.type === 'DRAFT' ? 'ADD'
             : 'TRADE') as 'ADD' | 'DROP' | 'TRADE',
           fromTeamId: it.fromTeamId ?? null,
@@ -198,7 +224,7 @@ export function toTransactions(res: LeagueResponse): Transaction[] {
         // ESPN ids are usually strings; fall back to a stable positional key so
         // a missing id cannot collapse several transactions onto one row.
         espnTransactionId: String(t.id ?? `unknown-${t.processDate ?? 0}-${i}`),
-        type: TRANSACTION_TYPE[t.type ?? ''] ?? 'OTHER',
+        type: ir ?? TRANSACTION_TYPE[t.type ?? ''] ?? 'OTHER',
         status: t.status ?? 'UNKNOWN',
         espnTeamId: t.teamId ?? null,
         proposedAt: t.proposedDate ? new Date(t.proposedDate).toISOString() : null,

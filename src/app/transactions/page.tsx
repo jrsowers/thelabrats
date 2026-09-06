@@ -23,9 +23,12 @@ const FILTERS = [
   { key: 'dropped', label: 'Players Dropped' },
   { key: 'trades',  label: 'Trades' },
   { key: 'waivers', label: 'Waiver Claims' },
+  { key: 'ir',      label: 'Injured Reserve' },
 ] as const
 
 type FilterKey = (typeof FILTERS)[number]['key']
+
+const isIr = (txn: PreviewTxn) => txn.kind === 'IR_PLACE' || txn.kind === 'IR_ACTIVATE'
 
 /** A transaction matches a filter if any of its items do — an add/drop pair
  *  shows under both Added and Dropped, which is what a manager expects. */
@@ -34,8 +37,11 @@ function matches(txn: PreviewTxn, filter: FilterKey): boolean {
     case 'all': return true
     case 'trades': return txn.kind === 'TRADE'
     case 'waivers': return txn.kind === 'WAIVER'
-    case 'added': return txn.items.some((i) => i.action === 'ADD')
-    case 'dropped': return txn.items.some((i) => i.action === 'DROP')
+    case 'ir': return txn.kind === 'IR_PLACE' || txn.kind === 'IR_ACTIVATE'
+    // An IR move is a lineup change, not an acquisition — it would otherwise
+    // show up under Added and Dropped, where nobody is looking for it.
+    case 'added': return !isIr(txn) && txn.items.some((i) => i.action === 'ADD')
+    case 'dropped': return !isIr(txn) && txn.items.some((i) => i.action === 'DROP')
   }
 }
 
@@ -58,24 +64,61 @@ const KIND_LABEL: Record<PreviewTxn['kind'], string> = {
   FREE_AGENT: 'Free Agent',
   DROP: 'Drop',
   TRADE: 'Trade',
+  IR_PLACE: 'Moved to IR',
+  IR_ACTIVATE: 'Activated from IR',
+}
+
+/** Every kind gets its own colour, so the shape of a day's moves is legible
+ *  before a single word is read. The label always sits inside the pill —
+ *  colour never carries the meaning alone (§39). */
+const KIND_TONE: Record<PreviewTxn['kind'], 'brand' | 'live' | 'warn' | 'loss' | 'violet'> = {
+  TRADE: 'brand',
+  FREE_AGENT: 'live',
+  WAIVER: 'warn',
+  DROP: 'loss',
+  IR_PLACE: 'violet',
+  IR_ACTIVATE: 'violet',
+}
+
+const KIND_STATE: Record<PreviewTxn['kind'], string> = {
+  TRADE: 'var(--brand)',
+  FREE_AGENT: 'var(--live)',
+  WAIVER: 'var(--warn)',
+  DROP: 'var(--loss)',
+  IR_PLACE: 'var(--violet)',
+  IR_ACTIVATE: 'var(--violet)',
 }
 
 function PlayerLine({
-  espnPlayerId, name, position, nflTeam, action,
+  espnPlayerId, name, position, nflTeam, action, kind,
 }: {
   espnPlayerId: number | null
   name: string; position: string; nflTeam: string
   action: 'ADD' | 'DROP' | 'TRADE'
+  kind: PreviewTxn['kind']
 }) {
-  const tone =
-    action === 'ADD' ? 'text-live' : action === 'DROP' ? 'text-loss' : 'text-brand'
+  // IR moves reuse the ADD/DROP item actions ESPN gives them, but "Dropped"
+  // would be a lie — the player is still on the roster.
+  const ir = kind === 'IR_PLACE' || kind === 'IR_ACTIVATE'
+
+  const tone = ir
+    ? 'text-violet'
+    : action === 'ADD' ? 'text-live' : action === 'DROP' ? 'text-loss' : 'text-brand'
   // The sign carries the meaning at a glance; the word confirms it. Using a
   // real minus rather than a hyphen so it optically matches the plus.
-  const sign = action === 'ADD' ? '+' : action === 'DROP' ? '\u2212' : '\u21c4'
-  const verb = action === 'ADD' ? 'Added' : action === 'DROP' ? 'Dropped' : 'Traded'
+  const sign = ir
+    ? (kind === 'IR_PLACE' ? '\u2193' : '\u2191')
+    : action === 'ADD' ? '+' : action === 'DROP' ? '\u2212' : '\u21c4'
+  const verb = ir
+    ? (kind === 'IR_PLACE' ? 'To IR' : 'From IR')
+    : action === 'ADD' ? 'Added' : action === 'DROP' ? 'Dropped' : 'Traded'
 
   return (
     <div className="flex items-center gap-2.5">
+      <span className={`flex w-[68px] shrink-0 items-baseline gap-1 font-mono text-[9.5px] font-semibold uppercase tracking-wider ${tone}`}>
+        <span aria-hidden className="text-[12px] leading-none">{sign}</span>
+        {verb}
+      </span>
       <PlayerHeadshot
         espnPlayerId={espnPlayerId}
         name={name}
@@ -83,10 +126,6 @@ function PlayerLine({
         teamAbbrev={nflTeam}
         isTeamDefense={position === 'D/ST' || position === 'DST'}
       />
-      <span className={`flex w-[68px] shrink-0 items-baseline gap-1 font-mono text-[9.5px] font-semibold uppercase tracking-wider ${tone}`}>
-        <span aria-hidden className="text-[12px] leading-none">{sign}</span>
-        {verb}
-      </span>
       <span className="min-w-0">
         <span className="display text-[14.5px]">{name}</span>
         <span className="ml-1.5 font-mono text-[10px] uppercase tracking-wider text-dim">
@@ -264,12 +303,7 @@ export default async function TransactionsPage({
                     <li
                       key={txn.id}
                       className="state-bar rounded-lg border border-border bg-surface px-4 py-3"
-                      style={{
-                        '--state':
-                          txn.kind === 'TRADE' ? 'var(--brand)'
-                          : txn.kind === 'DROP' ? 'var(--loss)'
-                          : 'var(--live)',
-                      } as React.CSSProperties}
+                      style={{ '--state': KIND_STATE[txn.kind] } as React.CSSProperties}
                     >
                       <div className="flex flex-wrap items-center gap-x-3 gap-y-1.5">
                         {team && (
@@ -283,9 +317,7 @@ export default async function TransactionsPage({
                           />
                         )}
                         <span className="display text-[15px]">{team?.name ?? 'Team'}</span>
-                        <Tag tone={isTrade ? 'brand' : txn.kind === 'DROP' ? 'loss' : 'neutral'}>
-                          {KIND_LABEL[txn.kind]}
-                        </Tag>
+                        <Tag tone={KIND_TONE[txn.kind]}>{KIND_LABEL[txn.kind]}</Tag>
                         {txn.waiverPriority != null && (
                           <span className="font-mono text-[10px] uppercase tracking-wider text-dim">
                             Waiver #{txn.waiverPriority}
@@ -309,6 +341,7 @@ export default async function TransactionsPage({
                                 position={i.position}
                                 nflTeam={i.nflTeam}
                                 action={i.action}
+                                kind={txn.kind}
                               />
                             ))}
                           </div>

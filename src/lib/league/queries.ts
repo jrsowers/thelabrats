@@ -424,7 +424,7 @@ export interface LogTxnItem {
 
 export interface LogTxn {
   id: string
-  kind: 'WAIVER' | 'FREE_AGENT' | 'TRADE' | 'DROP'
+  kind: 'WAIVER' | 'FREE_AGENT' | 'TRADE' | 'DROP' | 'IR_PLACE' | 'IR_ACTIVATE'
   processedAt: string
   week: number
   teamId: number
@@ -485,6 +485,11 @@ export async function getTransactionLog(seasonId: number, limit = 200): Promise<
       const kind: LogTxn['kind'] =
         r.transaction_type === 'TRADE' ? 'TRADE'
         : r.transaction_type === 'WAIVER' ? 'WAIVER'
+        // IR moves arrive as ESPN ROSTER rows and carry their own type; they
+        // are lineup changes, not acquisitions, so they never fold into
+        // FREE_AGENT.
+        : r.transaction_type === 'IR_PLACE' ? 'IR_PLACE'
+        : r.transaction_type === 'IR_ACTIVATE' ? 'IR_ACTIVATE'
         : items.every((i) => i.action === 'DROP') ? 'DROP'
         : 'FREE_AGENT'
 
