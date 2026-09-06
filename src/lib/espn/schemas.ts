@@ -17,6 +17,19 @@ export const memberSchema = z.object({
   displayName: z.string().nullish(),
 })
 
+/** One side of ESPN's `record` object. Also the shape of `modeRecord`. */
+const recordSplitSchema = z.object({
+  wins: maybeNum,
+  losses: maybeNum,
+  ties: maybeNum,
+  pointsFor: maybeNum,
+  pointsAgainst: maybeNum,
+  streakType: z.string().nullish(),
+  streakLength: maybeNum,
+  gamesBack: maybeNum,
+  percentage: maybeNum,
+})
+
 export const teamSchema = z.object({
   id: num,
   name: z.string().nullish(),
@@ -27,6 +40,33 @@ export const teamSchema = z.object({
   divisionId: maybeNum,
   owners: z.array(z.string()).nullish(),
   primaryOwner: z.string().nullish(),
+
+  // ---- ESPN's own standings (view=mTeam) ----
+  record: z.object({
+    overall: recordSplitSchema.nullish(),
+    home: recordSplitSchema.nullish(),
+    away: recordSplitSchema.nullish(),
+    division: recordSplitSchema.nullish(),
+  }).nullish(),
+  playoffSeed: maybeNum,
+  eliminated: z.boolean().nullish(),
+  eliminationMatchupPeriod: maybeNum,
+  rankCalculatedFinal: maybeNum,
+  rankFinal: maybeNum,
+  currentProjectedRank: maybeNum,
+  waiverRank: maybeNum,
+
+  // ---- ESPN's forecast (view=mStandings) ----
+  // These arrive on the same `teams` array but ONLY when mStandings is among
+  // the requested views. mTeam alone returns neither.
+  playoffClinchType: z.string().nullish(),
+  currentSimulationResults: z.object({
+    playoffPct: maybeNum,
+    divisionWinPct: maybeNum,
+    rank: maybeNum,
+    playoffClinchType: z.string().nullish(),
+    modeRecord: recordSplitSchema.nullish(),
+  }).nullish(),
 })
 
 export const settingsSchema = z.object({
@@ -36,6 +76,10 @@ export const settingsSchema = z.object({
     matchupPeriodCount: maybeNum,
     playoffTeamCount: maybeNum,
     playoffSeedingRule: z.string().nullish(),
+    playoffReseed: z.boolean().nullish(),
+    // Round number -> how many NFL weeks that round spans. This league's
+    // championship is two weeks, so the final is NOT one week after the semi.
+    playoffMatchupPeriodLengthByRound: z.record(z.string(), num).nullish(),
     divisions: z.array(z.object({ id: num, name: z.string().nullish() })).nullish(),
   }).nullish(),
   rosterSettings: z.object({

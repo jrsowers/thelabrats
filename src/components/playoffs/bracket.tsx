@@ -55,7 +55,11 @@ export function Bracket({
         {rounds.map((round) => (
           <section key={round.round} className="flex flex-col">
             <header className="mb-2.5 border-b border-border pb-1.5">
-              <Eyebrow>Week {round.week}</Eyebrow>
+              <Eyebrow>
+                {round.weekEnd > round.week
+                  ? `Weeks ${round.week}\u2013${round.weekEnd}`
+                  : `Week ${round.week}`}
+              </Eyebrow>
               <h3 className="display mt-0.5 text-[15px]">{round.name}</h3>
             </header>
 

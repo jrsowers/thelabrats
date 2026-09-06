@@ -5,9 +5,14 @@
  * or two byes. Both fall out of `playoffTeamCount`.
  *
  * PAIRING IS A FIXED BRACKET, NOT RESEEDED — CONFIRMED by the commissioner
- * (2026-08-28). Six-team field: 3v6 and 4v5 in round one, then #1 plays the
- * 4/5 winner and #2 plays the 3/6 winner. Seeds do not shuffle between rounds,
- * which is what the code below already does.
+ * (2026-08-28) and by ESPN's own `playoffReseed: false` (2026-09-06). Six-team
+ * field: 3v6 and 4v5 in round one, then #1 plays the 4/5 winner and #2 plays
+ * the 3/6 winner. Seeds do not shuffle between rounds, which is what the code
+ * below already does.
+ *
+ * ROUNDS ARE NOT ALL ONE WEEK. ESPN publishes the span per round in
+ * `playoffMatchupPeriodLengthByRound`; this league's championship runs two
+ * weeks (16-17). Assuming one week each put the final on the wrong week.
  */
 
 export interface Seed {
@@ -27,6 +32,8 @@ export interface BracketGame {
   id: string
   round: number
   week: number
+  /** Last week of a multi-week round. Equal to `week` for a one-week round. */
+  weekEnd: number
   label: string
   home: BracketSlot
   away: BracketSlot
@@ -36,6 +43,7 @@ export interface BracketRound {
   round: number
   name: string
   week: number
+  weekEnd: number
   games: BracketGame[]
   /** Seeds resting this round. */
   byes: Seed[]
@@ -63,9 +71,22 @@ export function buildBracket(
   seeds: Seed[],
   playoffTeamCount: number,
   startWeek: number,
+  /** Round -> weeks it spans, from ESPN. Missing rounds default to one week. */
+  roundLengths: Record<number | string, number> = {},
 ): BracketRound[] {
   const field = seeds.slice(0, playoffTeamCount)
   if (field.length === 0) return []
+
+  const lengthOf = (round: number) => {
+    const n = Number(roundLengths[round] ?? roundLengths[String(round)] ?? 1)
+    return Number.isFinite(n) && n > 0 ? n : 1
+  }
+  /** First week of a round, after every earlier round has had its weeks. */
+  const weekOf = (round: number) => {
+    let w = startWeek
+    for (let r = 1; r < round; r++) w += lengthOf(r)
+    return w
+  }
 
   const bracketSize = 2 ** Math.ceil(Math.log2(Math.max(2, playoffTeamCount)))
   const byeCount = bracketSize - playoffTeamCount
@@ -84,7 +105,8 @@ export function buildBracket(
     firstRoundGames.push({
       id: `r1-g${i + 1}`,
       round: 1,
-      week: startWeek,
+      week: weekOf(1),
+      weekEnd: weekOf(1) + lengthOf(1) - 1,
       label: `${high.seed} vs ${low.seed}`,
       home: slot(high),
       away: slot(low),
@@ -94,7 +116,8 @@ export function buildBracket(
   rounds.push({
     round: 1,
     name: roundName(1, totalRounds),
-    week: startWeek,
+    week: weekOf(1),
+    weekEnd: weekOf(1) + lengthOf(1) - 1,
     games: firstRoundGames,
     byes,
   })
@@ -121,7 +144,8 @@ export function buildBracket(
       games.push({
         id: `r${round}-g${i + 1}`,
         round,
-        week: startWeek + round - 1,
+        week: weekOf(round),
+        weekEnd: weekOf(round) + lengthOf(round) - 1,
         label: home.seed && away.seed ? `${home.seed} vs ${away.seed}` : 'TBD',
         home,
         away,
@@ -131,7 +155,8 @@ export function buildBracket(
     const r: BracketRound = {
       round,
       name: roundName(round, totalRounds),
-      week: startWeek + round - 1,
+      week: weekOf(round),
+      weekEnd: weekOf(round) + lengthOf(round) - 1,
       games,
       byes: [],
     }

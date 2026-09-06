@@ -232,6 +232,93 @@ export type Database = {
         }
         Relationships: []
       }
+      espn_team_standings: {
+        Row: {
+          eliminated: boolean
+          elimination_week: number | null
+          final_rank: number | null
+          games_back: number | null
+          losses: number
+          playoff_clinch: string | null
+          playoff_odds: number | null
+          playoff_seed: number | null
+          points_against: number
+          points_for: number
+          projected_losses: number | null
+          projected_rank: number | null
+          projected_wins: number | null
+          season_id: number
+          season_team_id: number
+          streak_length: number
+          streak_type: string | null
+          synced_at: string
+          ties: number
+          waiver_rank: number | null
+          wins: number
+        }
+        Insert: {
+          eliminated?: boolean
+          elimination_week?: number | null
+          final_rank?: number | null
+          games_back?: number | null
+          losses?: number
+          playoff_clinch?: string | null
+          playoff_odds?: number | null
+          playoff_seed?: number | null
+          points_against?: number
+          points_for?: number
+          projected_losses?: number | null
+          projected_rank?: number | null
+          projected_wins?: number | null
+          season_id: number
+          season_team_id: number
+          streak_length?: number
+          streak_type?: string | null
+          synced_at?: string
+          ties?: number
+          waiver_rank?: number | null
+          wins?: number
+        }
+        Update: {
+          eliminated?: boolean
+          elimination_week?: number | null
+          final_rank?: number | null
+          games_back?: number | null
+          losses?: number
+          playoff_clinch?: string | null
+          playoff_odds?: number | null
+          playoff_seed?: number | null
+          points_against?: number
+          points_for?: number
+          projected_losses?: number | null
+          projected_rank?: number | null
+          projected_wins?: number | null
+          season_id?: number
+          season_team_id?: number
+          streak_length?: number
+          streak_type?: string | null
+          synced_at?: string
+          ties?: number
+          waiver_rank?: number | null
+          wins?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "espn_team_standings_season_id_fkey"
+            columns: ["season_id"]
+            isOneToOne: false
+            referencedRelation: "seasons"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "espn_team_standings_season_team_id_fkey"
+            columns: ["season_team_id"]
+            isOneToOne: true
+            referencedRelation: "season_teams"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       fantasy_score_events: {
         Row: {
           captured_at: string
@@ -929,6 +1016,7 @@ export type Database = {
           latest_scoring_period: number
           league_id: number
           lineup_slot_counts: Json
+          playoff_round_lengths: Json
           playoff_team_count: number
           regular_season_weeks: number
           seeding_rule: string | null
@@ -951,6 +1039,7 @@ export type Database = {
           latest_scoring_period?: number
           league_id: number
           lineup_slot_counts?: Json
+          playoff_round_lengths?: Json
           playoff_team_count: number
           regular_season_weeks: number
           seeding_rule?: string | null
@@ -973,6 +1062,7 @@ export type Database = {
           latest_scoring_period?: number
           league_id?: number
           lineup_slot_counts?: Json
+          playoff_round_lengths?: Json
           playoff_team_count?: number
           regular_season_weeks?: number
           seeding_rule?: string | null

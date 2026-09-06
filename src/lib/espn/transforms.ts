@@ -10,7 +10,7 @@ import {
 import type { LeagueResponse, PlayerPoolResponse } from './schemas'
 import type {
   FantasyTeam, LeagueSettings, LeagueStatus, Manager, Matchup, MatchupStatus,
-  Transaction, TransactionType, PoolPlayer,
+  Transaction, TransactionType, PoolPlayer, EspnTeamStanding,
 } from './types'
 
 export function toLeagueStatus(res: LeagueResponse): LeagueStatus {
@@ -47,6 +47,11 @@ export function toLeagueSettings(res: LeagueResponse, season: number): LeagueSet
   // boolean is what decides — not a non-zero budget.
   const usesFaab = acq.isUsingAcquisitionBudget === true
 
+  const playoffRoundLengths: Record<number, number> = {}
+  for (const [round, weeks] of Object.entries(sched.playoffMatchupPeriodLengthByRound ?? {})) {
+    if (weeks > 0) playoffRoundLengths[Number(round)] = weeks
+  }
+
   return {
     espnLeagueId: res.id,
     season,
@@ -62,6 +67,8 @@ export function toLeagueSettings(res: LeagueResponse, season: number): LeagueSet
     faabBudget: usesFaab ? (acq.acquisitionBudget ?? null) : null,
     acquisitionType: acq.acquisitionType ?? 'UNKNOWN',
     lineupSlotCounts,
+    playoffRoundLengths,
+    playoffReseed: sched.playoffReseed === true,
     draft: {
       type: draft.type ?? 'UNKNOWN',
       scheduledAt: draft.date ? new Date(draft.date).toISOString() : null,
@@ -94,6 +101,48 @@ export function toTeams(res: LeagueResponse): FantasyTeam[] {
       logoUrl: t.logo ?? null,
       divisionId: t.divisionId ?? null,
       ownerIds: owners,
+    }
+  })
+}
+
+/**
+ * ESPN's own standings row per team.
+ *
+ * Requires BOTH `mTeam` (record, seed, elimination) and `mStandings` (the
+ * simulation and clinch type) — verified 2026-09-06. Requesting only one
+ * silently yields half the fields, so the caller must pass both views.
+ *
+ * `playoffSeed` is filled preseason with reverse draft order, which is
+ * meaningless at 0-0. It is stored as ESPN reports it; deciding when to trust
+ * it belongs to the reader, not the parser.
+ */
+export function toEspnStandings(res: LeagueResponse): EspnTeamStanding[] {
+  return (res.teams ?? []).map((t) => {
+    const o = t.record?.overall ?? {}
+    const sim = t.currentSimulationResults ?? {}
+    const mode = sim.modeRecord ?? {}
+    return {
+      espnTeamId: t.id,
+      wins: o.wins ?? 0,
+      losses: o.losses ?? 0,
+      ties: o.ties ?? 0,
+      pointsFor: o.pointsFor ?? 0,
+      pointsAgainst: o.pointsAgainst ?? 0,
+      // ESPN uses the string 'NONE' for no streak. Null is the honest form.
+      streakType: o.streakType && o.streakType !== 'NONE' ? o.streakType : null,
+      streakLength: o.streakLength ?? 0,
+      gamesBack: o.gamesBack ?? null,
+      playoffSeed: t.playoffSeed ?? null,
+      playoffClinch: t.playoffClinchType ?? sim.playoffClinchType ?? null,
+      eliminated: t.eliminated === true,
+      // 0 means "not eliminated", not "eliminated in week zero".
+      eliminationWeek: t.eliminationMatchupPeriod ? t.eliminationMatchupPeriod : null,
+      finalRank: t.rankCalculatedFinal ? t.rankCalculatedFinal : null,
+      playoffOdds: sim.playoffPct ?? null,
+      projectedRank: t.currentProjectedRank ?? sim.rank ?? null,
+      projectedWins: mode.wins ?? null,
+      projectedLosses: mode.losses ?? null,
+      waiverRank: t.waiverRank ?? null,
     }
   })
 }

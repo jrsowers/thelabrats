@@ -8,7 +8,7 @@
 import { EspnClient } from '@/lib/espn/client'
 import { VIEWS } from '@/lib/espn/constants'
 import {
-  toLeagueSettings, toLeagueStatus, toManagers, toTeams, toMatchups, toTransactions,
+  toLeagueSettings, toLeagueStatus, toManagers, toTeams, toMatchups, toTransactions, toEspnStandings,
 } from '@/lib/espn/transforms'
 import { createServiceClient } from '@/lib/supabase/server'
 
@@ -64,7 +64,10 @@ export async function syncLeague(syncType = 'league-metadata'): Promise<SyncResu
     })
 
     // One request, several views — cheaper for us and politer to ESPN.
-    const meta = await espn.getViews([VIEWS.SETTINGS, VIEWS.TEAM, VIEWS.STATUS])
+    // mStandings rides along free on the same request. It is the ONLY view
+    // carrying ESPN's playoff simulation and clinch type; mTeam alone has the
+    // record and seed but neither of those.
+    const meta = await espn.getViews([VIEWS.SETTINGS, VIEWS.TEAM, VIEWS.STATUS, VIEWS.STANDINGS])
     const settings = toLeagueSettings(meta, season)
     const status = toLeagueStatus(meta)
 
@@ -102,6 +105,7 @@ export async function syncLeague(syncType = 'league-metadata'): Promise<SyncResu
           draft_completed: settings.draft.completed,
           current_matchup_period: status.currentMatchupPeriod,
           latest_scoring_period: status.latestScoringPeriod,
+          playoff_round_lengths: settings.playoffRoundLengths,
         },
         { onConflict: 'league_id,year' },
       )
@@ -149,6 +153,45 @@ export async function syncLeague(syncType = 'league-metadata'): Promise<SyncResu
     detail.season_teams = seasonTeams?.length ?? 0
 
     const teamIdByEspnId = new Map((seasonTeams ?? []).map((t) => [t.espn_team_id, t.id]))
+
+    // ---- ESPN's own standings + playoff forecast ----
+    // Mirrored, never trusted blindly: the pages still compute the record from
+    // `matchups` and reconcile against this.
+    const espnStandings = toEspnStandings(meta)
+      .filter((r) => teamIdByEspnId.has(r.espnTeamId))
+    if (espnStandings.length > 0) {
+      const { data: writtenStandings, error: standingsError } = await db
+        .from('espn_team_standings')
+        .upsert(
+          espnStandings.map((r) => ({
+            season_team_id: teamIdByEspnId.get(r.espnTeamId)!,
+            season_id: seasonRow.id,
+            wins: r.wins,
+            losses: r.losses,
+            ties: r.ties,
+            points_for: r.pointsFor,
+            points_against: r.pointsAgainst,
+            streak_type: r.streakType,
+            streak_length: r.streakLength,
+            games_back: r.gamesBack,
+            playoff_seed: r.playoffSeed,
+            playoff_clinch: r.playoffClinch,
+            eliminated: r.eliminated,
+            elimination_week: r.eliminationWeek,
+            final_rank: r.finalRank,
+            playoff_odds: r.playoffOdds,
+            projected_rank: r.projectedRank,
+            projected_wins: r.projectedWins,
+            projected_losses: r.projectedLosses,
+            waiver_rank: r.waiverRank,
+            synced_at: new Date().toISOString(),
+          })),
+          { onConflict: 'season_team_id' },
+        )
+        .select('season_team_id')
+      if (standingsError) throw new Error(`espn_team_standings upsert failed: ${standingsError.message}`)
+      detail.espn_team_standings = writtenStandings?.length ?? 0
+    }
 
     // ---- matchups ----
     // mMatchupScore is the ONLY view with a complete matchup shape. See

@@ -21,6 +21,10 @@ export interface LeagueSettings {
   acquisitionType: string
   /** lineupSlotId -> count. Drives the lineup optimizer. */
   lineupSlotCounts: Record<number, number>
+  /** Round number -> weeks that round spans. `{}` means one week per round. */
+  playoffRoundLengths: Record<number, number>
+  /** ESPN's `playoffReseed`. False means a fixed bracket. */
+  playoffReseed: boolean
   draft: {
     type: string
     scheduledAt: string | null
@@ -46,6 +50,38 @@ export interface FantasyTeam {
   divisionId: number | null
   /** Member GUIDs. Usually one; co-managed teams have several. */
   ownerIds: string[]
+}
+
+/**
+ * ESPN's own standings row and playoff forecast for one team.
+ *
+ * We still compute the record ourselves from `matchups` — this is what ESPN
+ * says, kept so the site can mirror the official seed and surface a forecast
+ * we have no honest way to reproduce.
+ */
+export interface EspnTeamStanding {
+  espnTeamId: number
+  wins: number
+  losses: number
+  ties: number
+  pointsFor: number
+  pointsAgainst: number
+  streakType: string | null
+  streakLength: number
+  gamesBack: number | null
+  /** Official seed. Preseason ESPN fills this with reverse draft order. */
+  playoffSeed: number | null
+  /** 'UNKNOWN' until ESPN decides — never treat it as "not clinched". */
+  playoffClinch: string | null
+  eliminated: boolean
+  eliminationWeek: number | null
+  finalRank: number | null
+  /** Monte Carlo playoff probability, 0-1. Null when ESPN has not run one. */
+  playoffOdds: number | null
+  projectedRank: number | null
+  projectedWins: number | null
+  projectedLosses: number | null
+  waiverRank: number | null
 }
 
 export type MatchupStatus = 'SCHEDULED' | 'LIVE' | 'FINAL'

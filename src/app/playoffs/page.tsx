@@ -2,11 +2,11 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import {
   getLeagueOverview, getSeasonTeams, getSeasonResults, getReigningChampion, getLastSync,
-  hasActiveGames,
+  hasActiveGames, getEspnStandings,
 } from '@/lib/league/queries'
 import { SyncStatus } from '@/components/ui/sync-status'
 import {
-  computeStandings, computePlayoffStatus, latestCompletedWeek,
+  computeStandings, computePlayoffStatus, latestCompletedWeek, reconcileWithEspn,
 } from '@/lib/standings/compute'
 import { buildBracket } from '@/lib/playoffs/bracket'
 import { simulateSeason } from '@/lib/league/preview'
@@ -28,11 +28,12 @@ export default async function PlayoffsPage({
   const isPreview = params.preview === 'live'
 
   const champion = await getReigningChampion()
-  const [teams, rawResults, lastSync, gamesActive] = await Promise.all([
+  const [teams, rawResults, lastSync, gamesActive, espnStandings] = await Promise.all([
     getSeasonTeams(overview.seasonId, champion),
     getSeasonResults(overview.seasonId),
     getLastSync(),
     hasActiveGames(overview.currentWeek),
+    getEspnStandings(overview.seasonId),
   ])
 
   const previewWeek = Math.min(
@@ -43,17 +44,43 @@ export default async function PlayoffsPage({
 
   const throughWeek = latestCompletedWeek(results)
   const metas = teams.map((t) => ({ seasonTeamId: t.seasonTeamId, name: t.name }))
-  const rows = computeStandings(results, metas, throughWeek || 1)
+  const computed = computeStandings(results, metas, throughWeek || 1)
+
+  // Under preview the season is invented, so ESPN's real seeds and odds must
+  // not be laid over it.
+  const espn = isPreview ? [] : espnStandings
+  const { rows } = reconcileWithEspn(computed, espn, throughWeek)
+  const espnById = new Map(espn.map((e) => [e.seasonTeamId, e]))
+
   const status = computePlayoffStatus(
     rows, overview.regularSeasonWeeks, throughWeek, overview.playoffTeamCount,
   )
+
+  /** ESPN's call where it has made one; ours as the fallback. */
+  const isEliminated = (seasonTeamId: number) => {
+    const e = espnById.get(seasonTeamId)
+    return e ? e.eliminated : status.get(seasonTeamId) === 'ELIMINATED'
+  }
+
+  // ESPN runs a Monte Carlo forecast we have no honest way to reproduce, so
+  // the odds are mirrored rather than invented. Sorted longest-shot last.
+  const forecast = rows
+    .map((r) => ({ row: r, espn: espnById.get(r.seasonTeamId) }))
+    .filter((x): x is { row: typeof x.row; espn: NonNullable<typeof x.espn> } =>
+      x.espn != null && x.espn.playoffOdds != null)
+    .sort((a, b) => (b.espn.playoffOdds ?? 0) - (a.espn.playoffOdds ?? 0))
 
   const byId = new Map(teams.map((t) => [t.seasonTeamId, t]))
   const seeds = rows
     .slice(0, overview.playoffTeamCount)
     .map((r) => ({ seed: r.rank, seasonTeamId: r.seasonTeamId }))
 
-  const rounds = buildBracket(seeds, overview.playoffTeamCount, overview.regularSeasonWeeks + 1)
+  const rounds = buildBracket(
+    seeds,
+    overview.playoffTeamCount,
+    overview.regularSeasonWeeks + 1,
+    overview.playoffRoundLengths,
+  )
   const hasPlayed = throughWeek > 0
 
   const inField = rows.slice(0, overview.playoffTeamCount)
@@ -118,6 +145,90 @@ export default async function PlayoffsPage({
         <Bracket rounds={rounds} teams={byId} />
       </section>
 
+      {/* ---- ESPN's forecast ----
+           Mirrored, not modelled. ESPN runs a Monte Carlo simulation over the
+           remaining schedule; reproducing it would mean inventing a projection
+           and calling it a fact. Everything else on this page is arithmetic on
+           games that actually happened, so the source is labelled. */}
+      {forecast.length > 0 && (
+        <section className="mb-9">
+          <div className="mb-6 flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1 border-b border-border pb-1.5">
+            <h2 className="display text-2xl">The Odds</h2>
+            <p className="font-mono text-[10.5px] uppercase tracking-wider text-dim">
+              ESPN projection
+            </p>
+          </div>
+
+          <div className="overflow-hidden rounded-lg border border-border">
+            <div className="overflow-x-auto">
+              <table className="w-full border-collapse text-left sm:min-w-[560px]">
+                <thead>
+                  <tr className="border-b border-border bg-surface-2">
+                    <th scope="col" className="eyebrow px-3 py-2.5 sm:px-4">Team</th>
+                    <th scope="col" className="eyebrow px-2 py-2.5 text-right">Playoff Odds</th>
+                    <th scope="col" className="eyebrow px-2 py-2.5 text-right hidden sm:table-cell">
+                      Proj. Finish
+                    </th>
+                    <th scope="col" className="eyebrow px-3 py-2.5 text-right sm:px-4 hidden sm:table-cell">
+                      Proj. Record
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {forecast.map(({ row, espn }) => {
+                    const team = byId.get(row.seasonTeamId)
+                    if (!team) return null
+                    const pct = Math.round((espn.playoffOdds ?? 0) * 100)
+                    return (
+                      <tr key={row.seasonTeamId} className="border-b border-border bg-surface last:border-0">
+                        <td className="px-3 py-2.5 sm:px-4">
+                          <div className="flex items-center gap-2.5">
+                            <TeamAvatar
+                              photoUrl={team.photoUrl}
+                              logoUrl={team.logoUrl}
+                              abbrev={team.abbrev}
+                              size={26}
+                              champion={team.isChampion}
+                              championYear={team.championYear}
+                            />
+                            <span className="display truncate text-[15px]">{team.name}</span>
+                          </div>
+                        </td>
+                        <td className="px-2 py-2.5">
+                          {/* The bar is decoration; the number is the fact. */}
+                          <div className="flex items-center justify-end gap-2">
+                            <span
+                              className="hidden h-1.5 w-24 overflow-hidden rounded-full bg-surface-2 sm:block"
+                              aria-hidden
+                            >
+                              <span
+                                className="block h-full rounded-full bg-brand"
+                                style={{ width: `${pct}%` }}
+                              />
+                            </span>
+                            <span className="w-10 text-right font-mono text-[13px] font-semibold tnum">
+                              {pct}%
+                            </span>
+                          </div>
+                        </td>
+                        <td className="hidden px-2 py-2.5 text-right font-mono text-[13px] text-muted tnum sm:table-cell">
+                          {espn.projectedRank ?? '\u2014'}
+                        </td>
+                        <td className="hidden px-3 py-2.5 text-right font-mono text-[13px] text-muted tnum sm:px-4 sm:table-cell">
+                          {espn.projectedWins != null && espn.projectedLosses != null
+                            ? `${espn.projectedWins}-${espn.projectedLosses}`
+                            : '\u2014'}
+                        </td>
+                      </tr>
+                    )
+                  })}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+      )}
+
       {/* ---- Bubble (§21.4) ---- */}
       <section>
         <div className="mb-6 border-b border-border pb-1.5">
@@ -129,15 +240,13 @@ export default async function PlayoffsPage({
             {outField.map((row) => {
               const team = byId.get(row.seasonTeamId)
               if (!team) return null
-              const s = status.get(row.seasonTeamId)
-              const isIn = row.rank <= overview.playoffTeamCount
-              const isCut = row.rank === overview.playoffTeamCount
+              const out = isEliminated(row.seasonTeamId)
 
               return (
                 <li
                   key={row.seasonTeamId}
                   className={`flex items-center gap-3 bg-surface px-4 py-2.5 ${
-                    s === 'ELIMINATED' ? 'opacity-55' : ''
+                    out ? 'opacity-55' : ''
                   }`}
                 >
                   <span className="display w-6 text-[16px] tnum">{row.rank}</span>
@@ -152,7 +261,7 @@ export default async function PlayoffsPage({
                   <div className="min-w-0 flex-1">
                     <div className="flex items-center gap-1.5">
                       <span className="display truncate text-[15px]">{team.name}</span>
-                      {s === 'ELIMINATED' && (
+                      {out && (
                         <span className="shrink-0 font-mono text-[9px] uppercase tracking-wider text-loss">
                           Out
                         </span>

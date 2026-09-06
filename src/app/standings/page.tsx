@@ -3,10 +3,11 @@ import { Fragment } from 'react'
 import Link from 'next/link'
 import {
   getLeagueOverview, getSeasonTeams, getSeasonResults, getReigningChampion, getLastSync,
-  hasActiveGames,
+  hasActiveGames, getEspnStandings,
 } from '@/lib/league/queries'
 import {
   computeStandings, computeMovement, latestCompletedWeek, computePlayoffStatus,
+  reconcileWithEspn,
 } from '@/lib/standings/compute'
 import { simulateSeason } from '@/lib/league/preview'
 import { AppShell } from '@/components/navigation/app-shell'
@@ -46,11 +47,12 @@ export default async function StandingsPage({
   const isPreview = params.preview === 'live'
 
   const champion = await getReigningChampion()
-  const [teams, rawResults, lastSync, gamesActive] = await Promise.all([
+  const [teams, rawResults, lastSync, gamesActive, espnStandings] = await Promise.all([
     getSeasonTeams(overview.seasonId, champion),
     getSeasonResults(overview.seasonId),
     getLastSync(),
     hasActiveGames(overview.currentWeek),
+    getEspnStandings(overview.seasonId),
   ])
 
   // Preview simulates the season to a given week so every state can be seen:
@@ -64,7 +66,15 @@ export default async function StandingsPage({
 
   const throughWeek = latestCompletedWeek(results)
   const metas = teams.map((t) => ({ seasonTeamId: t.seasonTeamId, name: t.name }))
-  const rows = computeStandings(results, metas, throughWeek || 1)
+  const computed = computeStandings(results, metas, throughWeek || 1)
+
+  // ESPN owns the tiebreaker rulebook, so its seeds decide the order once they
+  // mean anything. Under preview the table is invented, so ESPN's real seeds
+  // must not be applied to it.
+  const espn = isPreview ? [] : espnStandings
+  const { rows, usedEspnSeeds, recordMismatches } = reconcileWithEspn(computed, espn, throughWeek)
+  const espnById = new Map(espn.map((e) => [e.seasonTeamId, e]))
+
   const movement = computeMovement(results, metas, throughWeek)
   const playoffStatus = computePlayoffStatus(
     rows, overview.regularSeasonWeeks, throughWeek, overview.playoffTeamCount,
@@ -121,6 +131,21 @@ export default async function StandingsPage({
         </div>
       )}
 
+      {/* A disagreement means one of us has the record wrong. Saying so beats
+          silently picking a side (CLAUDE.md: data correctness first). */}
+      {recordMismatches.length > 0 && (
+        <div className="mb-4 flex flex-wrap items-center gap-x-3 gap-y-2 rounded-lg border border-warn/40 bg-warn-soft px-4 py-3">
+          <Tag tone="warn">Check</Tag>
+          <p className="text-[13px] text-muted">
+            Our record and ESPN&rsquo;s disagree for{' '}
+            {recordMismatches
+              .map((id) => byId.get(id)?.name ?? 'a team')
+              .join(', ')}
+            . ESPN is the system of record — the seeding below follows it.
+          </p>
+        </div>
+      )}
+
       <div className="overflow-hidden rounded-lg border border-border">
         <div className="overflow-x-auto">
           <table className="w-full border-collapse text-left sm:min-w-[640px]">
@@ -139,10 +164,17 @@ export default async function StandingsPage({
                 const team = byId.get(row.seasonTeamId)
                 if (!team) return null
                 const delta = movement.get(row.seasonTeamId) ?? 0
-                const status = playoffStatus.get(row.seasonTeamId)
+                const e = espnById.get(row.seasonTeamId)
+                // ESPN's call beats ours where ESPN has made one. 'UNKNOWN' is
+                // ESPN saying it has not decided — not "not clinched".
+                const clinched = e?.playoffClinch
+                  ? e.playoffClinch.startsWith('CLINCHED')
+                  : playoffStatus.get(row.seasonTeamId) === 'CLINCHED'
+                const eliminated = e
+                  ? e.eliminated
+                  : playoffStatus.get(row.seasonTeamId) === 'ELIMINATED'
                 const inPlayoffs = row.rank <= playoffLine
                 const isCutoff = row.rank === playoffLine
-                const eliminated = status === 'ELIMINATED'
 
                 return (
                   <Fragment key={row.seasonTeamId}>
@@ -173,7 +205,7 @@ export default async function StandingsPage({
                             <span className="display truncate text-[15.5px] leading-tight">
                               {team.name}
                             </span>
-                            {status === 'CLINCHED' && (
+                            {clinched && (
                               <span
                                 className="shrink-0 text-brand"
                                 title="Clinched playoff berth"
@@ -259,7 +291,12 @@ export default async function StandingsPage({
         )}
       </div>
 
-      <div className="mt-3 flex flex-wrap items-center justify-end gap-x-6 gap-y-2">
+      <div className="mt-3 flex flex-wrap items-center justify-between gap-x-6 gap-y-2">
+        <p className="font-mono text-[10.5px] text-dim">
+          {usedEspnSeeds
+            ? 'Seeded by ESPN. Records computed from final scores.'
+            : 'Seeded by record, then head-to-head, then points for.'}
+        </p>
         <dl className="flex flex-wrap items-center gap-x-5 gap-y-1.5 font-mono text-[10.5px] text-dim">
           <div className="flex items-center gap-1.5">
             <dt className="text-brand" aria-hidden><LockIcon size={12} /></dt>

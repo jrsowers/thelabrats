@@ -82,3 +82,38 @@ describe('buildBracket — other configurations', () => {
     expect(buildBracket([], 6, 14)).toEqual([])
   })
 })
+
+describe('buildBracket — rounds that span more than one week', () => {
+  // This league's real shape: ESPN reports playoffMatchupPeriodLengthByRound
+  // as { 1: 1, 2: 1, 3: 2 } — the championship runs weeks 16 and 17.
+  const rounds = buildBracket(seeds(6), 6, 14, { 1: 1, 2: 1, 3: 2 })
+
+  it('starts each round after the previous one has had all its weeks', () => {
+    expect(rounds.map((r) => r.week)).toEqual([14, 15, 16])
+  })
+
+  it('reports the last week of a multi-week round', () => {
+    expect(rounds.map((r) => r.weekEnd)).toEqual([14, 15, 17])
+  })
+
+  it('pushes later rounds back when an early round is long', () => {
+    const long = buildBracket(seeds(6), 6, 14, { 1: 2 })
+    expect(long.map((r) => r.week)).toEqual([14, 16, 17])
+    expect(long[0].weekEnd).toBe(15)
+  })
+
+  it('carries the span onto the games, not just the round', () => {
+    const final = rounds[2].games[0]
+    expect([final.week, final.weekEnd]).toEqual([16, 17])
+  })
+
+  it('treats a missing, zero or absent round length as one week', () => {
+    expect(buildBracket(seeds(6), 6, 14, {}).map((r) => r.week)).toEqual([14, 15, 16])
+    expect(buildBracket(seeds(6), 6, 14, { 1: 0 }).map((r) => r.week)).toEqual([14, 15, 16])
+  })
+
+  it('accepts the string keys ESPN actually sends in JSON', () => {
+    const fromJson = buildBracket(seeds(6), 6, 14, { '1': 1, '2': 1, '3': 2 })
+    expect(fromJson.map((r) => r.weekEnd)).toEqual([14, 15, 17])
+  })
+})

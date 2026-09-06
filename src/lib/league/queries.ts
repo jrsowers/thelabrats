@@ -22,6 +22,8 @@ export interface LeagueOverview {
   usesFaab: boolean
   lineupSlotCounts: Record<string, number>
   teamCount: number
+  /** Round -> weeks it spans. Empty means one week per round. */
+  playoffRoundLengths: Record<string, number>
 }
 
 export async function getLeagueOverview(): Promise<LeagueOverview | null> {
@@ -34,7 +36,7 @@ export async function getLeagueOverview(): Promise<LeagueOverview | null> {
 
   const { data: season } = await db
     .from('seasons')
-    .select('id, year, regular_season_weeks, playoff_team_count, seeding_rule, draft_scheduled_at, draft_type, draft_completed, uses_faab, lineup_slot_counts, current_matchup_period')
+    .select('id, year, regular_season_weeks, playoff_team_count, seeding_rule, draft_scheduled_at, draft_type, draft_completed, uses_faab, lineup_slot_counts, current_matchup_period, playoff_round_lengths')
     .eq('league_id', league.id)
     .order('year', { ascending: false })
     .limit(1)
@@ -59,6 +61,7 @@ export async function getLeagueOverview(): Promise<LeagueOverview | null> {
     usesFaab: season.uses_faab,
     lineupSlotCounts: (season.lineup_slot_counts ?? {}) as Record<string, number>,
     teamCount: count ?? 0,
+    playoffRoundLengths: (season.playoff_round_lengths ?? {}) as Record<string, number>,
   }
 }
 
@@ -504,4 +507,68 @@ export async function getTransactionLog(seasonId: number, limit = 200): Promise<
         items,
       }
     })
+}
+
+/* ============================================================
+   ESPN's own standings and playoff forecast
+   ============================================================ */
+
+export interface EspnStandingRow {
+  seasonTeamId: number
+  wins: number
+  losses: number
+  ties: number
+  pointsFor: number
+  pointsAgainst: number
+  streakType: string | null
+  streakLength: number
+  playoffSeed: number | null
+  playoffClinch: string | null
+  eliminated: boolean
+  eliminationWeek: number | null
+  /** 0-1. Null when ESPN has not published a simulation. */
+  playoffOdds: number | null
+  projectedRank: number | null
+  projectedWins: number | null
+  projectedLosses: number | null
+}
+
+/**
+ * What ESPN says the standings are. Mirrored each sync; see the migration for
+ * why we keep it alongside our own computation rather than instead of it.
+ *
+ * Returns an empty array when the table is empty or unreachable — every caller
+ * falls back to the computed table, so ESPN going quiet degrades the page
+ * instead of breaking it (CLAUDE.md).
+ */
+export async function getEspnStandings(seasonId: number): Promise<EspnStandingRow[]> {
+  if (!isSupabaseConfigured()) return []
+  const supabase = createPublicClient()
+  const { data, error } = await supabase
+    .from('espn_team_standings')
+    .select(`season_team_id, wins, losses, ties, points_for, points_against,
+             streak_type, streak_length, playoff_seed, playoff_clinch, eliminated,
+             elimination_week, playoff_odds, projected_rank, projected_wins, projected_losses`)
+    .eq('season_id', seasonId)
+
+  if (error || !data) return []
+
+  return data.map((r) => ({
+    seasonTeamId: r.season_team_id,
+    wins: r.wins,
+    losses: r.losses,
+    ties: r.ties,
+    pointsFor: Number(r.points_for),
+    pointsAgainst: Number(r.points_against),
+    streakType: r.streak_type,
+    streakLength: r.streak_length,
+    playoffSeed: r.playoff_seed,
+    playoffClinch: r.playoff_clinch,
+    eliminated: r.eliminated,
+    eliminationWeek: r.elimination_week,
+    playoffOdds: r.playoff_odds == null ? null : Number(r.playoff_odds),
+    projectedRank: r.projected_rank,
+    projectedWins: r.projected_wins,
+    projectedLosses: r.projected_losses,
+  }))
 }

@@ -5,7 +5,8 @@
 import { describe, it, expect } from 'vitest'
 import {
   computeStandings, computeMovement, latestCompletedWeek, computePlayoffStatus,
-  type StandingsInput, type TeamMeta,
+  reconcileWithEspn,
+  type StandingsInput, type TeamMeta, type EspnSeedInput,
 } from '@/lib/standings/compute'
 
 const teams: TeamMeta[] = [1, 2, 3, 4].map((id) => ({ seasonTeamId: id, name: `Team ${id}` }))
@@ -230,5 +231,71 @@ describe('latestCompletedWeek', () => {
   })
   it('ignores live games in progress', () => {
     expect(latestCompletedWeek([game(1, 1, 2, 120, 100), game(2, 1, 3, 50, 40, 'LIVE')])).toBe(1)
+  })
+})
+
+describe('reconcileWithEspn', () => {
+  const rows = computeStandings(
+    [game(1, 1, 2, 120, 100), game(1, 3, 4, 90, 130)],
+    teams, 1,
+  )
+  const espn = (
+    overrides: Partial<Record<number, Partial<EspnSeedInput>>> = {},
+  ): EspnSeedInput[] =>
+    rows.map((r, i) => ({
+      seasonTeamId: r.seasonTeamId,
+      // Deliberately the reverse of our order, so a test that claims ESPN won
+      // cannot pass by coincidence.
+      playoffSeed: rows.length - i,
+      wins: r.wins,
+      losses: r.losses,
+      ties: r.ties,
+      ...overrides[r.seasonTeamId],
+    }))
+
+  it('reorders and reranks to ESPN once games have been played', () => {
+    const out = reconcileWithEspn(rows, espn(), 1)
+    expect(out.usedEspnSeeds).toBe(true)
+    expect(out.rows.map((r) => r.rank)).toEqual([1, 2, 3, 4])
+    expect(out.rows.map((r) => r.seasonTeamId)).toEqual(
+      [...rows].reverse().map((r) => r.seasonTeamId),
+    )
+  })
+
+  it('ignores ESPN seeds before a game is final', () => {
+    // Preseason ESPN fills playoffSeed with reverse draft order. Using it would
+    // put the last drafting team on top of an all-zero table.
+    const out = reconcileWithEspn(rows, espn(), 0)
+    expect(out.usedEspnSeeds).toBe(false)
+    expect(out.rows).toEqual(rows)
+  })
+
+  it('ignores a partial seed set rather than half-reordering', () => {
+    const out = reconcileWithEspn(rows, espn({ 1: { playoffSeed: null } }), 1)
+    expect(out.usedEspnSeeds).toBe(false)
+    expect(out.rows).toEqual(rows)
+  })
+
+  it('ignores duplicated seeds', () => {
+    const out = reconcileWithEspn(rows, espn({ 1: { playoffSeed: 2 } }), 1)
+    expect(out.usedEspnSeeds).toBe(false)
+  })
+
+  it('falls back to our order when ESPN has nothing to say', () => {
+    const out = reconcileWithEspn(rows, [], 1)
+    expect(out.usedEspnSeeds).toBe(false)
+    expect(out.rows).toEqual(rows)
+    expect(out.recordMismatches).toEqual([])
+  })
+
+  it('reports a record ESPN disagrees with', () => {
+    const out = reconcileWithEspn(rows, espn({ 2: { wins: 9 } }), 1)
+    expect(out.recordMismatches).toEqual([2])
+  })
+
+  it('reports a mismatch without letting it block the reseed', () => {
+    const out = reconcileWithEspn(rows, espn({ 2: { losses: 7 } }), 1)
+    expect(out.recordMismatches).toEqual([2])
+    expect(out.usedEspnSeeds).toBe(true)
   })
 })

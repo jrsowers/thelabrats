@@ -10,7 +10,7 @@ import { describe, it, expect } from 'vitest'
 import { readFileSync } from 'node:fs'
 import { leagueResponseSchema } from '@/lib/espn/schemas'
 import {
-  toLeagueSettings, toLeagueStatus, toManagers, toTeams, toMatchups,
+  toLeagueSettings, toLeagueStatus, toManagers, toTeams, toMatchups, toEspnStandings,
   isStarterSlot, lineupSlotLabel, proTeamAbbrev,
 } from '@/lib/espn/transforms'
 import { LINEUP_SLOT } from '@/lib/espn/constants'
@@ -90,17 +90,26 @@ describe('toLeagueSettings', () => {
   })
 
   it('captures the lineup slots the optimizer depends on', () => {
-    expect(s.lineupSlotCounts).toEqual({ 0: 1, 2: 2, 4: 2, 6: 1, 7: 1, 16: 1, 17: 1, 20: 5, 21: 1, 23: 1 })
+    // IR went from one slot to two when the commissioner widened it before
+    // week 1. The fixture is a live capture, so it moves when the league does.
+    expect(s.lineupSlotCounts).toEqual({ 0: 1, 2: 2, 4: 2, 6: 1, 7: 1, 16: 1, 17: 1, 20: 5, 21: 2, 23: 1 })
     const starters = Object.entries(s.lineupSlotCounts)
       .filter(([slot]) => isStarterSlot(Number(slot)))
       .reduce((n, [, c]) => n + c, 0)
     expect(starters).toBe(10)
   })
 
-  it('reads the draft as scheduled but not yet held', () => {
+  it('reads the snake draft as held on its scheduled date', () => {
     expect(s.draft.type).toBe('SNAKE')
-    expect(s.draft.completed).toBe(false)
+    expect(s.draft.completed).toBe(true)
     expect(s.draft.scheduledAt).toMatch(/^2026-09-03T/)
+  })
+
+  it('reads the playoff round lengths rather than assuming one week each', () => {
+    // The championship spans two weeks in this league. Defaulting to one put
+    // the final on week 16 when it actually ends in week 17.
+    expect(s.playoffRoundLengths).toEqual({ 1: 1, 2: 1, 3: 2 })
+    expect(s.playoffReseed).toBe(false)
   })
 })
 
@@ -179,5 +188,47 @@ describe('id maps', () => {
   it('degrades gracefully on unknown pro team ids', () => {
     expect(proTeamAbbrev(33)).toBe('BAL')
     expect(proTeamAbbrev(31)).toBe('UNK') // 31/32 are gaps, not teams
+  })
+})
+
+describe('toEspnStandings', () => {
+  // Requires BOTH mTeam and mStandings — the fixture is captured with both.
+  const rows = toEspnStandings(league)
+
+  it('returns one row per team', () => {
+    expect(rows).toHaveLength(12)
+    expect(new Set(rows.map((r) => r.espnTeamId)).size).toBe(12)
+  })
+
+  it('reads the overall record, not the home or away split', () => {
+    const t = league.teams![0]
+    const r = rows[0]
+    expect(r.wins).toBe(t.record!.overall!.wins)
+    expect(r.pointsFor).toBe(t.record!.overall!.pointsFor)
+  })
+
+  it("carries ESPN's seed through untouched, garbage preseason value and all", () => {
+    // Preseason ESPN fills playoffSeed with reverse draft order. Deciding
+    // whether to trust it belongs to the reader, not the parser.
+    expect(rows.every((r) => typeof r.playoffSeed === 'number')).toBe(true)
+    expect(new Set(rows.map((r) => r.playoffSeed)).size).toBe(12)
+  })
+
+  it("reads the simulation that only mStandings carries", () => {
+    expect(rows.every((r) => r.playoffOdds !== null)).toBe(true)
+    expect(rows.every((r) => r.playoffOdds! >= 0 && r.playoffOdds! <= 1)).toBe(true)
+    expect(rows.every((r) => r.projectedWins !== null && r.projectedLosses !== null)).toBe(true)
+  })
+
+  it("turns ESPN's 'NONE' streak into no streak", () => {
+    expect(rows.every((r) => r.streakType === null)).toBe(true)
+  })
+
+  it('treats a zero elimination week and final rank as absent', () => {
+    // ESPN writes 0, not null, for "has not happened". Storing the 0 would
+    // read as "eliminated in week zero, finished first".
+    expect(rows.every((r) => r.eliminationWeek === null)).toBe(true)
+    expect(rows.every((r) => r.finalRank === null)).toBe(true)
+    expect(rows.every((r) => r.eliminated === false)).toBe(true)
   })
 })

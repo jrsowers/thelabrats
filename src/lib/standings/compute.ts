@@ -290,3 +290,70 @@ export function computeMovement(
 export function latestCompletedWeek(matchups: StandingsInput[]): number {
   return matchups.reduce((max, m) => (m.status === 'FINAL' && m.week > max ? m.week : max), 0)
 }
+
+/* ============================================================
+   Reconciliation with ESPN (§18, CLAUDE.md: ESPN is the system of record)
+   ============================================================ */
+
+export interface EspnSeedInput {
+  seasonTeamId: number
+  playoffSeed: number | null
+  wins: number
+  losses: number
+  ties: number
+}
+
+export interface Reconciliation {
+  /** Rows in the order the site should show them. */
+  rows: StandingsRow[]
+  /** True when ESPN's seeds decided the order rather than our arithmetic. */
+  usedEspnSeeds: boolean
+  /** Teams whose ESPN record differs from the one we computed. */
+  recordMismatches: number[]
+}
+
+/**
+ * Reconcile our computed table against ESPN's.
+ *
+ * ESPN owns the tiebreaker rulebook, so once its seeds mean something they
+ * decide the order and ours becomes the cross-check. Two guards keep that from
+ * going wrong:
+ *
+ *   * Before any game is final, ESPN fills `playoffSeed` with reverse draft
+ *     order — a real number that is not a standing. Ignored.
+ *   * A partial or duplicated seed set is ignored outright rather than used to
+ *     half-reorder the table.
+ *
+ * The record comparison is separate on purpose. Both sides derive W-L-T from
+ * the same games, so a disagreement means one of us is wrong, and the site
+ * should say so rather than quietly pick a winner.
+ */
+export function reconcileWithEspn(
+  rows: StandingsRow[],
+  espn: EspnSeedInput[],
+  throughWeek: number,
+): Reconciliation {
+  const byTeam = new Map(espn.map((e) => [e.seasonTeamId, e]))
+
+  const recordMismatches = rows
+    .filter((r) => {
+      const e = byTeam.get(r.seasonTeamId)
+      if (!e) return false
+      return e.wins !== r.wins || e.losses !== r.losses || e.ties !== r.ties
+    })
+    .map((r) => r.seasonTeamId)
+
+  const seeds = rows.map((r) => byTeam.get(r.seasonTeamId)?.playoffSeed ?? null)
+  const complete =
+    throughWeek > 0 &&
+    seeds.every((s): s is number => typeof s === 'number' && s > 0) &&
+    new Set(seeds).size === rows.length
+
+  if (!complete) return { rows, usedEspnSeeds: false, recordMismatches }
+
+  const ordered = [...rows]
+    .sort((a, b) => byTeam.get(a.seasonTeamId)!.playoffSeed! - byTeam.get(b.seasonTeamId)!.playoffSeed!)
+    .map((r) => ({ ...r, rank: byTeam.get(r.seasonTeamId)!.playoffSeed! }))
+
+  return { rows: ordered, usedEspnSeeds: true, recordMismatches }
+}
