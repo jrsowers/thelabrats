@@ -1,11 +1,11 @@
 import type { Metadata } from 'next'
 import {
   getLeagueOverview, getSeasonTeams, getSeasonResults, getReigningChampion,
-  getPlayerSample, getLastSync, hasActiveGames, type StandingsTeam,
+  getPlayerSample, getPlayerWeekScores, getLastSync, hasActiveGames, type StandingsTeam,
 } from '@/lib/league/queries'
 import { simulateSeason } from '@/lib/league/preview'
 import { buildAwardCards } from '@/lib/awards/build'
-import { awardsBySection, type AwardSection } from '@/lib/awards/catalog'
+import { awardsBySection, isComputable, type AwardSection } from '@/lib/awards/catalog'
 import type { AwardCard } from '@/lib/awards/placeholder'
 import { AppShell } from '@/components/navigation/app-shell'
 import { FieldBackdrop } from '@/components/ui/field-backdrop'
@@ -109,10 +109,11 @@ export default async function AwardsPage({
   )
 
   const champion = await getReigningChampion()
-  const [teams, rawResults, players, lastSync, gamesActive] = await Promise.all([
+  const [teams, rawResults, players, weekScores, lastSync, gamesActive] = await Promise.all([
     getSeasonTeams(overview.seasonId, champion),
     getSeasonResults(overview.seasonId),
     getPlayerSample(150),
+    getPlayerWeekScores(overview.seasonId, week),
     getLastSync(),
     hasActiveGames(overview.currentWeek),
   ])
@@ -128,14 +129,27 @@ export default async function AwardsPage({
     homeScore: m.homeScore,
     awayScore: m.awayScore,
     status: m.status,
+    // Real projections belong to the real season. Laying them over a simulated
+    // one would judge an invented result against a genuine forecast.
+    homeProjected: isPreview ? null : rawResults[i]?.homeProjected ?? null,
+    awayProjected: isPreview ? null : rawResults[i]?.awayProjected ?? null,
   }))
 
-  const cards = buildAwardCards(awardMatchups, week, {
-    teams: teams.map((t) => ({
-      seasonTeamId: t.seasonTeamId, name: t.name, manager: t.manager,
-    })),
-    players,
-  })
+  // The simulator invents a season; laying real player lines over it would
+  // credit a manager for a performance that did not happen in it.
+  const awardPlayers = isPreview ? [] : weekScores
+
+  const cards = buildAwardCards(
+    awardMatchups,
+    week,
+    {
+      teams: teams.map((t) => ({
+        seasonTeamId: t.seasonTeamId, name: t.name, manager: t.manager,
+      })),
+      players,
+    },
+    awardPlayers,
+  )
 
   // Catalog order: manager judgement, then matchups, then players.
   const order = new Map(
@@ -149,7 +163,15 @@ export default async function AwardsPage({
 
   const studs = inOrder('STUDS')
   const duds = inOrder('DUDS')
-  const sampleCount = cards.filter((c) => c.placeholder).length
+
+  // Two different reasons a card is still a sample, and saying "needs player
+  // scoring" for both stopped being true the moment player scoring landed.
+  //   waiting — the engine computes this one, but the week is not over.
+  //   pending — the data it needs is not collected yet at all.
+  const placeholders = cards.filter((c) => c.placeholder)
+  const waiting = placeholders.filter((c) => isComputable(c.def))
+  const pending = placeholders.filter((c) => !isComputable(c.def))
+  const weekIsFinal = results.some((m) => m.week === week && m.status === 'FINAL')
 
   return (
     <AppShell leagueName={overview.leagueName}>
@@ -166,14 +188,28 @@ export default async function AwardsPage({
         </div>
       </header>
 
-      {sampleCount > 0 && (
+      {placeholders.length > 0 && (
         <div className="mb-7 flex flex-wrap items-center gap-x-3 gap-y-2 rounded-lg border border-warn/40 bg-warn-soft px-4 py-3">
           <Tag tone="warn">Sample data</Tag>
           <p className="text-[13px] text-muted">
-            {sampleCount} of {cards.length} awards show representative values. They need
-            player-level scoring, which starts with week 1 — each is marked
-            <span className="mx-1 font-mono text-[10px] uppercase tracking-wider text-warn">Sample</span>
-            until then.
+            {placeholders.length} of {cards.length} awards show representative values, each
+            marked
+            <span className="ml-1 mr-0.5 font-mono text-[10px] uppercase tracking-wider text-warn">Sample</span>
+            {'. '}
+            {waiting.length > 0 && !weekIsFinal && (
+              <>
+                {pending.length > 0 ? `${waiting.length} are ` : 'They are '}
+                waiting on the week to finish — a lowest winning score means nothing
+                while games are still being played.{' '}
+              </>
+            )}
+            {pending.length > 0 && (
+              <>
+                {waiting.length > 0 && !weekIsFinal ? `The other ${pending.length} need ` : 'They need '}
+                the lineup optimizer and a transaction-to-scoring join, neither of which
+                is built yet.
+              </>
+            )}
           </p>
         </div>
       )}

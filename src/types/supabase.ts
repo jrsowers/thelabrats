@@ -535,6 +535,7 @@ export type Database = {
           last_synced_at: string | null
           margin: number | null
           matchup_period: number
+          score_changed_at: string | null
           season_id: number
           status: string
           week: number
@@ -553,6 +554,7 @@ export type Database = {
           last_synced_at?: string | null
           margin?: number | null
           matchup_period: number
+          score_changed_at?: string | null
           season_id: number
           status?: string
           week: number
@@ -571,6 +573,7 @@ export type Database = {
           last_synced_at?: string | null
           margin?: number | null
           matchup_period?: number
+          score_changed_at?: string | null
           season_id?: number
           status?: string
           week?: number

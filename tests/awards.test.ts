@@ -8,7 +8,8 @@
  */
 import { describe, it, expect } from 'vitest'
 import {
-  computeWeeklyAwards, computeAwardLeaderboard, type AwardMatchup,
+  computeWeeklyAwards, computeAwardLeaderboard,
+  type AwardMatchup, type AwardPlayer,
 } from '@/lib/awards/compute'
 import { AWARDS, awardsBySection, isComputable } from '@/lib/awards/catalog'
 
@@ -26,6 +27,9 @@ const week1: AwardMatchup[] = [
   g(3, 1, 5, 6, 120.0, 130.0),  // t5 loses with a strong score
   g(4, 1, 7, 8, 70.0, 68.0),    // t7 wins ugly
 ]
+
+const byKeyWith = (m: AwardMatchup[], players: AwardPlayer[], w = 1) =>
+  new Map(computeWeeklyAwards(m, w, players).map((a) => [a.key as string, a]))
 
 const byKey = (m: AwardMatchup[], w = 1) =>
   new Map(computeWeeklyAwards(m, w).map((a) => [a.key, a]))
@@ -127,7 +131,19 @@ describe('catalog', () => {
   })
 
   it('every computable award is actually produced by the engine', () => {
-    const produced = new Set(computeWeeklyAwards(week1, 1).map((a) => a.key))
+    // Fed a week with everything `isComputable` claims we collect: final
+    // scores, ESPN projections and player lines. Anything the catalog marks
+    // computable but the engine does not emit ships as a silent placeholder.
+    const withProjections = week1.map((m, i) =>
+      // One genuine upset, so the Giant Killer / Choke Artist pair qualifies.
+      i === 2 ? { ...m, homeProjected: 132.5, awayProjected: 110 }
+      : { ...m, homeProjected: m.homeScore, awayProjected: m.awayScore },
+    )
+    const players: AwardPlayer[] = [{
+      seasonTeamId: 1, espnPlayerId: 1, name: 'Star', position: 'WR', nflTeam: 'PHI',
+      isStarter: true, actualPoints: 30, projectedPoints: 12,
+    }]
+    const produced = new Set(computeWeeklyAwards(withProjections, 1, players).map((a) => a.key))
     for (const def of AWARDS.filter(isComputable)) {
       expect(produced.has(def.key as never), `${def.name} is marked computable`).toBe(true)
     }
@@ -138,5 +154,102 @@ describe('catalog', () => {
     for (const a of computeWeeklyAwards(week1, 1)) {
       expect(known.has(a.key), `engine emits ${a.key}`).toBe(true)
     }
+  })
+})
+
+describe('player-driven awards', () => {
+  const p = (
+    seasonTeamId: number, name: string, isStarter: boolean,
+    actualPoints: number | null, projectedPoints: number | null,
+  ): AwardPlayer => ({
+    seasonTeamId, espnPlayerId: name.length * 100 + seasonTeamId, name,
+    position: 'WR', nflTeam: 'PHI', isStarter, actualPoints, projectedPoints,
+  })
+
+  const roster: AwardPlayer[] = [
+    p(1, 'Loud Starter', true, 31.4, 14.0),   // best actual AND biggest beat
+    p(2, 'Quiet Starter', true, 9.0, 18.0),
+    p(3, 'Bench Monster', false, 44.0, 12.0), // outscores everyone, from the bench
+    p(4, 'Not Kicked Off', true, null, 26.0), // no result yet
+  ]
+
+  it('gives The Prime Specimen to the manager who STARTED the best player', () => {
+    const a = byKeyWith(week1, roster).get('prime_specimen')!
+    expect(a.teamId).toBe(1)
+    expect(a.metricValue).toBe('31.4')
+    expect(a.player?.name).toBe('Loud Starter')
+  })
+
+  it('does not hand it to a bench player who outscored the field', () => {
+    // Leaving a 44-point week on the bench is a Bench Bum story. The award is
+    // for the manager's decision, and that was the opposite decision.
+    const a = byKeyWith(week1, roster).get('prime_specimen')!
+    expect(a.player?.name).not.toBe('Bench Monster')
+  })
+
+  it('ignores a starter whose game has not kicked off', () => {
+    // actualPoints null must not read as zero — otherwise this player is the
+    // week's biggest projection miss without having played a snap.
+    const a = byKeyWith(week1, roster).get('nostradamus')!
+    expect(a.player?.name).toBe('Loud Starter')
+    expect(a.metricValue).toBe('17.4')
+  })
+
+  it('omits Nostradamus when every starter missed his projection', () => {
+    const allMissed = [p(1, 'Sad Starter', true, 4.0, 20.0)]
+    expect(byKeyWith(week1, allMissed).has('nostradamus')).toBe(false)
+  })
+
+  it('omits player awards entirely before any player has a result', () => {
+    const pregame = [p(1, 'Waiting', true, null, 20.0)]
+    const keys = byKeyWith(week1, pregame)
+    expect(keys.has('prime_specimen')).toBe(false)
+    expect(keys.has('nostradamus')).toBe(false)
+  })
+
+  it('awards them mid-week, before any matchup is final', () => {
+    // The best performance of a Sunday is knowable on Sunday. Waiting for the
+    // week to finalize would mean an empty page during the only window anyone
+    // is actually looking at it.
+    const live = week1.map((m) => ({ ...m, status: 'LIVE' }))
+    const keys = byKeyWith(live, roster)
+    expect(keys.has('prime_specimen')).toBe(true)
+    expect(keys.has('cat_burglar')).toBe(false)
+  })
+})
+
+describe('projection-driven awards', () => {
+  // t5 was projected to beat t6 by 22.5 and lost by 10.
+  const projected: AwardMatchup[] = [
+    { ...week1[0], homeProjected: 140, awayProjected: 90 },
+    { ...week1[2], homeProjected: 132.5, awayProjected: 110.0 },
+  ]
+
+  it('gives The Giant Killer to the underdog who won', () => {
+    const a = byKey(projected).get('giant_killer')!
+    expect(a.teamId).toBe(6)
+    expect(a.opponentId).toBe(5)
+    expect(a.metricValue).toBe('22.5')
+  })
+
+  it('gives The Choke Artist to the favourite who lost — the same matchup', () => {
+    const a = byKey(projected).get('choke_artist')!
+    expect(a.teamId).toBe(5)
+    expect(a.opponentId).toBe(6)
+    expect(a.metricValue).toBe('22.5')
+  })
+
+  it('does not treat a favourite who won as an upset', () => {
+    // t1 was projected to win by 50 and did. Neither award applies.
+    const chalk: AwardMatchup[] = [{ ...week1[0], homeProjected: 140, awayProjected: 90 }]
+    const keys = byKey(chalk)
+    expect(keys.has('giant_killer')).toBe(false)
+    expect(keys.has('choke_artist')).toBe(false)
+  })
+
+  it('omits both when ESPN published no projection', () => {
+    const keys = byKey(week1)
+    expect(keys.has('giant_killer')).toBe(false)
+    expect(keys.has('choke_artist')).toBe(false)
   })
 })

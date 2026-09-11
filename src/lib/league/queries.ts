@@ -259,7 +259,8 @@ export async function getSeasonResults(seasonId: number) {
   const db = createPublicClient()
   const { data } = await db
     .from('matchups')
-    .select('matchup_period, home_team_id, away_team_id, home_score, away_score, status')
+    .select(`matchup_period, home_team_id, away_team_id, home_score, away_score, status,
+             home_projected_score, away_projected_score`)
     .eq('season_id', seasonId)
     .order('matchup_period')
 
@@ -270,6 +271,9 @@ export async function getSeasonResults(seasonId: number) {
     homeScore: Number(m.home_score),
     awayScore: Number(m.away_score),
     status: m.status,
+    // ESPN's pregame projection, for the Giant Killer / Choke Artist pair.
+    homeProjected: m.home_projected_score == null ? null : Number(m.home_projected_score),
+    awayProjected: m.away_projected_score == null ? null : Number(m.away_projected_score),
   }))
 }
 
@@ -571,4 +575,64 @@ export async function getEspnStandings(seasonId: number): Promise<EspnStandingRo
     projectedWins: r.projected_wins,
     projectedLosses: r.projected_losses,
   }))
+}
+
+/* ============================================================
+   Per-player weekly scoring
+   ============================================================ */
+
+export interface WeekPlayerScore {
+  seasonTeamId: number
+  espnPlayerId: number
+  name: string
+  position: string
+  nflTeam: string
+  lineupSlot: string
+  isStarter: boolean
+  /** Null until the player's game kicks off — not the same as zero. */
+  actualPoints: number | null
+  projectedPoints: number | null
+}
+
+/**
+ * Every rostered player's line for one week.
+ *
+ * Feeds the player-level awards and the expanded boxscore. Returns an empty
+ * array rather than throwing when the week has not been ingested, so a page
+ * degrades to its placeholders instead of failing (CLAUDE.md).
+ */
+export async function getPlayerWeekScores(
+  seasonId: number,
+  week: number,
+): Promise<WeekPlayerScore[]> {
+  if (!isSupabaseConfigured()) return []
+  const supabase = createPublicClient()
+  const { data, error } = await supabase
+    .from('player_week_scores')
+    .select(`season_team_id, lineup_slot, is_starter, actual_points, projected_points,
+             players ( espn_player_id, full_name, position, nfl_team )`)
+    .eq('season_id', seasonId)
+    .eq('week', week)
+
+  if (error || !data) return []
+
+  type Row = {
+    season_team_id: number; lineup_slot: string; is_starter: boolean
+    actual_points: number | null; projected_points: number | null
+    players: { espn_player_id: number | null; full_name: string | null; position: string | null; nfl_team: string | null } | null
+  }
+
+  return (data as unknown as Row[])
+    .filter((r) => r.players?.espn_player_id != null)
+    .map((r) => ({
+      seasonTeamId: r.season_team_id,
+      espnPlayerId: r.players!.espn_player_id as number,
+      name: r.players!.full_name ?? 'Unknown player',
+      position: r.players!.position ?? '',
+      nflTeam: r.players!.nfl_team ?? '',
+      lineupSlot: r.lineup_slot,
+      isStarter: r.is_starter,
+      actualPoints: r.actual_points == null ? null : Number(r.actual_points),
+      projectedPoints: r.projected_points == null ? null : Number(r.projected_points),
+    }))
 }

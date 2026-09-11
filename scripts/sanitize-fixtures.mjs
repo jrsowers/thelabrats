@@ -90,6 +90,28 @@ for (const file of readdirSync(RAW).filter((f) => f.endsWith('.json'))) {
     })
   }
 
+  // A full boxscore capture is ~1 MB: twelve rosters of fifteen players, each
+  // carrying its own stats array, repeated across all 78 scheduled matchups.
+  //
+  // Keep EVERY schedule entry — their count and shape is itself under test —
+  // and drop only the roster payloads from matchups that teach the parser
+  // nothing. Two week-1 matchups exercise every branch: both sides, starters,
+  // bench, a game already played and one that has not kicked off.
+  if (file === 'mBoxscore.json' && Array.isArray(data.schedule)) {
+    const keep = new Set(
+      data.schedule.filter((m) => m.matchupPeriodId === 1).slice(0, 2).map((m) => m.id),
+    )
+    for (const m of data.schedule) {
+      if (keep.has(m.id)) continue
+      for (const side of ['home', 'away']) {
+        if (!m[side]) continue
+        delete m[side].rosterForCurrentScoringPeriod
+        delete m[side].rosterForMatchupPeriod
+        delete m[side].rosterForMatchupPeriodDelayed
+      }
+    }
+  }
+
   writeFileSync(join(OUT, file), JSON.stringify(data, null, 2) + '\n')
   count++
 }

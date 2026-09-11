@@ -11,7 +11,7 @@ import { readFileSync } from 'node:fs'
 import { leagueResponseSchema } from '@/lib/espn/schemas'
 import {
   toLeagueSettings, toLeagueStatus, toManagers, toTeams, toMatchups, toEspnStandings,
-  isStarterSlot, lineupSlotLabel, proTeamAbbrev,
+  toPlayerWeekScores, isStarterSlot, lineupSlotLabel, proTeamAbbrev,
 } from '@/lib/espn/transforms'
 import { LINEUP_SLOT } from '@/lib/espn/constants'
 
@@ -230,5 +230,97 @@ describe('toEspnStandings', () => {
     expect(rows.every((r) => r.eliminationWeek === null)).toBe(true)
     expect(rows.every((r) => r.finalRank === null)).toBe(true)
     expect(rows.every((r) => r.eliminated === false)).toBe(true)
+  })
+})
+
+describe('toMatchups — live scoring', () => {
+  // Captured 2026-09-11, mid-week-1: two NFL games final, the rest not played.
+  const boxscore = load('mBoxscore.json')
+  const week1 = toMatchups(boxscore).filter((m) => m.week === 1)
+
+  it('reads a live score that ESPN has not finalized', () => {
+    // The regression. `totalPoints` reads 0.0 for every team until ESPN closes
+    // the scoring period, which left the scoreboard at 0-0 for two days.
+    const raw = (boxscore.schedule ?? []).filter((m) => m.matchupPeriodId === 1)
+    expect(raw.every((m) => (m.home?.totalPoints ?? 0) === 0)).toBe(true)
+    expect(week1.some((m) => m.homeScore > 0 || m.awayScore > 0)).toBe(true)
+  })
+
+  it('marks a matchup with points on the board as LIVE, not SCHEDULED', () => {
+    const scoring = week1.filter((m) => m.homeScore > 0 || m.awayScore > 0)
+    expect(scoring.length).toBeGreaterThan(0)
+    expect(scoring.every((m) => m.status === 'LIVE')).toBe(true)
+  })
+
+  it('agrees with the sum of that team’s starters', () => {
+    // ESPN's live team total is its own starters-only sum, so the scoreboard
+    // number and the boxscore beneath it can never disagree. Only the matchups
+    // the fixture still carries rosters for can be checked — see
+    // sanitize-fixtures.mjs for why the rest were stripped.
+    const scored = toPlayerWeekScores(boxscore, 1)
+    const withRosters = (boxscore.schedule ?? []).filter(
+      (x) => x.matchupPeriodId === 1 && x.home?.rosterForCurrentScoringPeriod,
+    )
+    expect(withRosters.length).toBeGreaterThan(0)
+
+    for (const m of withRosters) {
+      const out = week1.find((w) => w.espnMatchupId === m.id)!
+      const starters = scored
+        .filter((p) => p.espnTeamId === m.home?.teamId && p.isStarter)
+        .reduce((n, p) => n + (p.actualPoints ?? 0), 0)
+      expect(out.homeScore).toBeCloseTo(starters, 2)
+    }
+  })
+})
+
+describe('toPlayerWeekScores', () => {
+  const boxscore = load('mBoxscore.json')
+  const rows = toPlayerWeekScores(boxscore, 1)
+
+  it('returns every rostered player on both sides of each matchup', () => {
+    // Two matchups in the trimmed fixture: four teams of fifteen or sixteen.
+    expect(rows.length).toBeGreaterThanOrEqual(60)
+    expect(new Set(rows.map((r) => r.espnTeamId)).size).toBe(4)
+  })
+
+  it('separates actual from projected rather than conflating them', () => {
+    // THE trap (CLAUDE.md): both sit in the same stats array on the same
+    // player, told apart only by statSourceId.
+    const played = rows.filter((r) => r.actualPoints != null && r.actualPoints > 0)
+    expect(played.length).toBeGreaterThan(0)
+    expect(played.every((r) => r.actualPoints !== r.projectedPoints)).toBe(true)
+  })
+
+  it('leaves a player whose game has not started as null, not zero', () => {
+    // Zero would mean "played and scored nothing". Collapsing the two hands
+    // Nostradamus to whoever is projected highest and has not kicked off yet,
+    // as the biggest miss of a week he has not played in.
+    const unplayed = rows.filter((r) => r.actualPoints === null)
+    expect(unplayed.length).toBeGreaterThan(0)
+    expect(rows.some((r) => r.actualPoints !== null)).toBe(true)
+    // A projection without a result is exactly the pre-kickoff state, and the
+    // one carries no information about the other.
+    expect(unplayed.some((r) => r.projectedPoints !== null)).toBe(true)
+  })
+
+  it('ignores stats belonging to another week', () => {
+    // scoringPeriodId must filter as well as statSourceId; week 18 exists in
+    // the same array and would otherwise be read as this week's result.
+    expect(toPlayerWeekScores(boxscore, 18).every((r) => r.actualPoints === null)).toBe(true)
+  })
+
+  it('marks bench and IR as non-starters', () => {
+    const bench = rows.filter((r) => r.lineupSlot === 'BE')
+    expect(bench.length).toBeGreaterThan(0)
+    expect(bench.every((r) => r.isStarter === false)).toBe(true)
+    expect(rows.filter((r) => r.isStarter).every((r) => r.lineupSlot !== 'BE')).toBe(true)
+  })
+
+  it('carries slot eligibility, which the lineup optimizer needs', () => {
+    // A superflex league's OP slot competes with QB for the same players, so
+    // eligibility is the constraint set, not a nice-to-have.
+    const qbs = rows.filter((r) => r.position === 'QB')
+    expect(qbs.length).toBeGreaterThan(0)
+    expect(qbs.every((r) => r.eligibleSlots.includes(0) && r.eligibleSlots.includes(7))).toBe(true)
   })
 })

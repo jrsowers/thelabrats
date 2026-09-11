@@ -8,6 +8,7 @@
 import { describe, it, expect } from 'vitest'
 import {
   decideSync, LIVE_INTERVAL_MS, ROUTINE_INTERVAL_MS, OFFSEASON_INTERVAL_MS,
+  SCORE_ACTIVE_MS,
 } from '@/lib/sync/cadence'
 
 /** A given hour in US Eastern, expressed as a real instant. */
@@ -18,11 +19,14 @@ const et = (day: 'Sun' | 'Mon' | 'Tue' | 'Thu', hour: number) => {
 }
 
 const base = {
-  hasLiveMatchup: false,
+  lastScoreChangeAt: null,
   lastLiveSyncAt: null,
   lastRoutineSyncAt: null,
   seasonActive: true,
 }
+
+/** A score that moved `ms` ago. */
+const moved = (now: Date, ms: number) => new Date(now.getTime() - ms)
 
 describe('decideSync — in season', () => {
   it('goes live during the Sunday window', () => {
@@ -51,18 +55,56 @@ describe('decideSync — in season', () => {
   })
 
   it('escalates to live cadence once a surprise game is detected', () => {
-    // Saturday games are not in any window, but the 15-minute routine sync
-    // flips hasLiveMatchup and the next tick escalates.
+    // Saturday games are in no window. The 15-minute routine sync sees a score
+    // move, and the next tick escalates off that rather than off the clock.
     const now = new Date('2026-12-19T16:00:00-05:00') // Saturday
     expect(decideSync({ ...base, now }).action).toBe('ROUTINE')
-    expect(decideSync({ ...base, now, hasLiveMatchup: true }).action).toBe('LIVE')
+    expect(
+      decideSync({ ...base, now, lastScoreChangeAt: moved(now, 60_000) }).action,
+    ).toBe('LIVE')
   })
 
-  it('still syncs live when a matchup is in progress outside any window', () => {
-    // Overtime, a delayed game, a Saturday special — the clock cannot know.
-    const d = decideSync({ ...base, now: et('Tue', 3), hasLiveMatchup: true })
+  it('keeps live cadence for a game running past its window', () => {
+    // Overtime, a weather delay — the clock cannot know, but the score can.
+    const now = et('Tue', 3)
+    const d = decideSync({ ...base, now, lastScoreChangeAt: moved(now, 60_000) })
     expect(d.action).toBe('LIVE')
-    expect(d.reason).toMatch(/in progress/)
+    expect(d.reason).toMatch(/scores are moving/)
+  })
+
+  it('does NOT poll all week just because a matchup is open', () => {
+    // The regression this signal exists for. A fantasy matchup is open from
+    // Thursday kickoff to Monday night; treating that as live meant polling
+    // every minute through Friday and Saturday to watch nothing happen.
+    const now = new Date('2026-09-11T15:00:00-04:00') // Friday afternoon
+    const d = decideSync({
+      ...base, now,
+      // Last movement was the Thursday night game, sixteen hours ago.
+      lastScoreChangeAt: moved(now, 16 * 60 * 60_000),
+      lastRoutineSyncAt: moved(now, 60_000),
+    })
+    expect(d.action).toBe('IDLE')
+  })
+
+  it('stops live cadence once the scores go quiet', () => {
+    const now = et('Tue', 3)
+    const stale = decideSync({
+      ...base, now,
+      lastScoreChangeAt: moved(now, SCORE_ACTIVE_MS),
+      lastRoutineSyncAt: moved(now, 60_000),
+    })
+    expect(stale.action).toBe('IDLE')
+
+    const fresh = decideSync({
+      ...base, now, lastScoreChangeAt: moved(now, SCORE_ACTIVE_MS - 1_000),
+    })
+    expect(fresh.action).toBe('LIVE')
+  })
+
+  it('covers the gap between a routine sync and the next tick', () => {
+    // SCORE_ACTIVE_MS must exceed ROUTINE_INTERVAL_MS, or a kickoff just after
+    // a routine sync would go stale before the next routine sync could see it.
+    expect(SCORE_ACTIVE_MS).toBeGreaterThan(ROUTINE_INTERVAL_MS)
   })
 
   it('does not re-sync live within the interval', () => {

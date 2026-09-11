@@ -61,7 +61,7 @@ const BUILDERS: Record<string, Builder> = {
   ],
   nostradamus: (c) => [
     t('Nobody else wanted '), ...player(c), t('. '), b(c.managerFirst),
-    t(' started him anyway and cleared projection by '), b(c.value), t('. Seer behaviour.'),
+    t(' started him anyway and cleared projection by '), b(c.value), t('. Seer behavior.'),
   ],
   cat_burglar: (c) => [
     b(c.managerFirst), t(' won with just '), b(`${c.value} points`),

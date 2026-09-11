@@ -202,10 +202,36 @@ export async function syncLeague(syncType = 'league-metadata'): Promise<SyncResu
       throw new Error('mMatchupScore returned no usable matchups — ESPN shape may have changed')
     }
 
+    // What we already had, so a score that did not move keeps its old
+    // `score_changed_at`. Stamping every sync would make the column a slower
+    // copy of `last_synced_at` and tell the cadence nothing.
+    const { data: priorRows } = await db
+      .from('matchups')
+      .select('espn_matchup_id, matchup_period, home_score, away_score, score_changed_at')
+      .eq('season_id', seasonRow.id)
+    const priorByKey = new Map(
+      (priorRows ?? []).map((r) => [`${r.espn_matchup_id}:${r.matchup_period}`, r]),
+    )
+    const syncedAt = new Date().toISOString()
+
     const { data: written } = await db
       .from('matchups')
       .upsert(
-        matchups.map((m) => ({
+        matchups.map((m) => {
+          const prior = priorByKey.get(`${m.espnMatchupId}:${m.matchupPeriod}`)
+          const moved =
+            prior == null ||
+            Number(prior.home_score) !== m.homeScore ||
+            Number(prior.away_score) !== m.awayScore
+          // A brand-new row has no history to compare against, so it does not
+          // count as movement — otherwise the first sync of the season would
+          // read as 78 live matchups.
+          const scoreChangedAt =
+            prior == null ? null
+            : moved ? syncedAt
+            : prior.score_changed_at
+
+          return {
           season_id: seasonRow.id,
           espn_matchup_id: m.espnMatchupId,
           matchup_period: m.matchupPeriod,
@@ -220,8 +246,10 @@ export async function syncLeague(syncType = 'league-metadata'): Promise<SyncResu
           winner_team_id: m.winnerTeamId ? teamIdByEspnId.get(m.winnerTeamId) ?? null : null,
           margin: Math.abs(m.homeScore - m.awayScore),
           is_playoff: m.isPlayoff,
-          last_synced_at: new Date().toISOString(),
-        })),
+          score_changed_at: scoreChangedAt,
+          last_synced_at: syncedAt,
+          }
+        }),
         { onConflict: 'season_id,espn_matchup_id,matchup_period' },
       )
       .select('id')

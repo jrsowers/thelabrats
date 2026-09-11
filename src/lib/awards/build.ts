@@ -7,7 +7,7 @@
  * replaced one award at a time — no page change required.
  */
 import { AWARDS, type AwardDef } from './catalog'
-import { computeWeeklyAwards, type AwardMatchup } from './compute'
+import { computeWeeklyAwards, type AwardMatchup, type AwardPlayer } from './compute'
 import { placeholderAward, type AwardCard, type PlaceholderPools } from './placeholder'
 import { buildCommentary, firstName } from './commentary'
 
@@ -15,11 +15,12 @@ export function buildAwardCards(
   matchups: AwardMatchup[],
   week: number,
   pools: PlaceholderPools,
+  players: AwardPlayer[] = [],
 ): AwardCard[] {
   const byId = new Map(pools.teams.map((t) => [t.seasonTeamId, t]))
   // Engine keys ARE catalog keys, so there is no mapping layer to drift.
   const real = new Map<string, ReturnType<typeof computeWeeklyAwards>[number]>(
-    computeWeeklyAwards(matchups, week).map((a) => [a.key as string, a]),
+    computeWeeklyAwards(matchups, week, players).map((a) => [a.key as string, a]),
   )
 
   return AWARDS.map((def: AwardDef): AwardCard => {
@@ -30,9 +31,11 @@ export function buildAwardCards(
       def,
       teamId: computed.teamId,
       opponentId: computed.opponentId,
-      playerName: null,
-      espnPlayerId: null,
-      playerMeta: null,
+      playerName: computed.player?.name ?? null,
+      espnPlayerId: computed.player?.espnPlayerId ?? null,
+      playerMeta: computed.player
+        ? `${computed.player.position} · ${computed.player.nflTeam}`
+        : null,
       metricValue: computed.metricValue,
       // Real and sample awards share one commentary builder, so the voice
       // cannot diverge between before and after week 1.
@@ -44,6 +47,10 @@ export function buildAwardCards(
         opponentManager: computed.opponentId != null
           ? byId.get(computed.opponentId)?.manager ?? null : null,
         value: computed.metricValue,
+        playerName: computed.player?.name ?? null,
+        playerMeta: computed.player
+          ? `${computed.player.position} · ${computed.player.nflTeam}`
+          : null,
       }),
       supporting: computed.supporting,
       placeholder: false,

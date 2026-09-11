@@ -5,12 +5,12 @@
  * is what makes an ESPN payload change a contained, one-file fix.
  */
 import {
-  LINEUP_SLOT_LABEL, NON_STARTER_SLOTS, PRO_TEAM, POSITION_LABEL,
+  LINEUP_SLOT_LABEL, NON_STARTER_SLOTS, PRO_TEAM, POSITION_LABEL, STAT_SOURCE,
 } from './constants'
 import type { LeagueResponse, PlayerPoolResponse } from './schemas'
 import type {
   FantasyTeam, LeagueSettings, LeagueStatus, Manager, Matchup, MatchupStatus,
-  Transaction, TransactionType, PoolPlayer, EspnTeamStanding,
+  Transaction, TransactionType, PoolPlayer, EspnTeamStanding, PlayerWeekScore,
 } from './types'
 
 export function toLeagueStatus(res: LeagueResponse): LeagueStatus {
@@ -153,6 +153,46 @@ function matchupStatus(winner: string | null | undefined, homePts: number, awayP
   return 'SCHEDULED'
 }
 
+type MatchupSide = NonNullable<LeagueResponse['schedule']>[number]['home']
+
+/**
+ * ⚠️ `totalPoints` IS ZERO UNTIL ESPN CLOSES THE SCORING PERIOD.
+ *
+ * Verified 2026-09-11, mid-week-1 with two NFL games already final: every one
+ * of the twelve teams read `totalPoints: 0.0` while `totalPointsLive` carried
+ * the real score. Reading `totalPoints` is why the scoreboard sat at 0-0 for
+ * two days, and — because a matchup only reaches LIVE when points exist — why
+ * the adaptive cadence never escalated off its 15-minute routine.
+ *
+ * Three fields hold the same number and ESPN populates a different subset per
+ * view, so take whichever is actually filled in:
+ *
+ *   totalPointsLive   the running total; spans a multi-week playoff matchup.
+ *                     Present on mMatchupScore / mScoreboard, NOT on mBoxscore.
+ *   appliedStatTotal  the same figure, and the only one mBoxscore fills.
+ *                     Verified equal to the sum of that team's starters.
+ *   totalPoints       the finalized figure, once ESPN writes it.
+ *
+ * A team that genuinely scores zero reads zero from all three — which is
+ * correct, and harmless, because `winner` decides FINAL, never the points.
+ */
+function sideScore(side: MatchupSide): number {
+  const candidates = [
+    side?.totalPointsLive,
+    side?.rosterForCurrentScoringPeriod?.appliedStatTotal,
+    side?.totalPoints,
+  ]
+  for (const c of candidates) if (typeof c === 'number' && c !== 0) return c
+  return 0
+}
+
+/** Projections follow the same live-vs-final split as the scores. */
+function sideProjected(side: MatchupSide): number | null {
+  const candidates = [side?.totalProjectedPointsLive, side?.totalProjectedPoints]
+  for (const c of candidates) if (typeof c === 'number' && c !== 0) return c
+  return null
+}
+
 /**
  * ⚠️ USE `mMatchupScore`. It is the ONLY view with a complete matchup shape.
  *
@@ -178,8 +218,8 @@ export function toMatchups(res: LeagueResponse): Matchup[] {
     .filter((m): m is typeof m & { id: number; matchupPeriodId: number } =>
       typeof m.id === 'number' && typeof m.matchupPeriodId === 'number')
     .map((m) => {
-    const homePts = m.home?.totalPoints ?? 0
-    const awayPts = m.away?.totalPoints ?? 0
+    const homePts = sideScore(m.home)
+    const awayPts = sideScore(m.away)
     const status = matchupStatus(m.winner, homePts, awayPts)
 
     let winnerTeamId: number | null = null
@@ -198,13 +238,79 @@ export function toMatchups(res: LeagueResponse): Matchup[] {
       awayTeamId: m.away?.teamId ?? null,
       homeScore: homePts,
       awayScore: awayPts,
-      homeProjectedScore: m.home?.totalProjectedPointsLive ?? null,
-      awayProjectedScore: m.away?.totalProjectedPointsLive ?? null,
+      homeProjectedScore: sideProjected(m.home),
+      awayProjectedScore: sideProjected(m.away),
       status,
       winnerTeamId,
       isPlayoff: (m.playoffTierType ?? 'NONE') !== 'NONE',
     }
   })
+}
+
+/**
+ * Per-player scoring for one NFL week — the data every player-level award,
+ * the lineup optimizer and the boxscore depend on.
+ *
+ * ⚠️ REQUIRES BOTH `mMatchupScore` AND `mBoxscore` on the same request, plus
+ * `scoringPeriodId`. Verified 2026-09-11: mMatchupScore carries the rosters and
+ * the live team totals but omits `eligibleSlots`; mBoxscore carries the rosters
+ * and `eligibleSlots` but zeroes the team totals. Neither alone is enough.
+ *
+ * ⚠️ THE STAT-SOURCE TRAP (CLAUDE.md). Actual and projected points sit in the
+ * SAME `stats` array on the same player, told apart only by `statSourceId`, and
+ * entries for OTHER weeks sit there too. Both filters are mandatory: source and
+ * scoring period. Getting either wrong silently swaps projections for results.
+ *
+ * A missing ACTUAL row means the player's game has not kicked off, which is not
+ * the same as scoring zero — see PlayerWeekScore.actualPoints.
+ */
+export function toPlayerWeekScores(
+  res: LeagueResponse,
+  scoringPeriodId: number,
+): PlayerWeekScore[] {
+  const out: PlayerWeekScore[] = []
+
+  for (const m of res.schedule ?? []) {
+    for (const side of [m.home, m.away]) {
+      if (!side) continue
+      const entries = side.rosterForCurrentScoringPeriod?.entries ?? []
+
+      for (const e of entries) {
+        const player = e.playerPoolEntry?.player
+        const espnPlayerId = player?.id ?? e.playerId
+        // A roster entry with no player id cannot be written against
+        // `players`. Dropped rather than defaulted — see toMatchups.
+        if (typeof espnPlayerId !== 'number') continue
+
+        const slotId = e.lineupSlotId ?? -1
+        const stats = player?.stats ?? []
+        const pick = (source: number) =>
+          stats.find(
+            (st) => st.statSourceId === source && st.scoringPeriodId === scoringPeriodId,
+          )?.appliedTotal
+
+        const actual = pick(STAT_SOURCE.ACTUAL)
+        const projected = pick(STAT_SOURCE.PROJECTED)
+
+        out.push({
+          espnPlayerId,
+          fullName: player?.fullName?.trim() || `Player ${espnPlayerId}`,
+          position: positionLabel(player?.defaultPositionId ?? -1),
+          proTeam: proTeamAbbrev(player?.proTeamId ?? -1),
+          espnTeamId: side.teamId,
+          lineupSlotId: slotId,
+          lineupSlot: lineupSlotLabel(slotId),
+          isStarter: isStarterSlot(slotId),
+          actualPoints: typeof actual === 'number' ? actual : null,
+          projectedPoints: typeof projected === 'number' ? projected : null,
+          eligibleSlots: player?.eligibleSlots ?? [],
+          injuryStatus: player?.injuryStatus ?? null,
+        })
+      }
+    }
+  }
+
+  return out
 }
 
 /**

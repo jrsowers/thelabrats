@@ -15,8 +15,15 @@ export type SyncAction = 'LIVE' | 'ROUTINE' | 'IDLE'
 export interface CadenceInput {
   /** Current instant. */
   now: Date
-  /** True if any matchup is already known to be in progress. */
-  hasLiveMatchup: boolean
+  /**
+   * When any matchup's score last actually moved.
+   *
+   * ⚠️ NOT "is a matchup open". A fantasy matchup is open continuously from the
+   * Thursday kickoff to the Monday night whistle, four days that are mostly
+   * not football; treating that as live meant polling every minute all Friday.
+   * A moving score is the honest signal that a game is being played.
+   */
+  lastScoreChangeAt: Date | null
   /** When the last successful sync of each kind finished. */
   lastLiveSyncAt: Date | null
   lastRoutineSyncAt: Date | null
@@ -45,10 +52,10 @@ export const OFFSEASON_INTERVAL_MS = 12 * 60 * MIN
  * Friday afternoon as live — 1,440 pointless syncs a week.
  *
  * Off-schedule games are still covered, because the escalation is self-healing:
- * the routine sync runs every 15 minutes regardless and updates matchup status,
- * so a surprise Saturday kickoff sets hasLiveMatchup within 15 minutes, which
- * escalates to live cadence on the next tick. A quarter-hour of lag on a game
- * nobody expected beats polling all season for games that mostly do not happen.
+ * the routine sync runs every 15 minutes regardless, so a surprise Saturday
+ * kickoff moves a score within 15 minutes, and `lastScoreChangeAt` escalates to
+ * live cadence on the next tick. A quarter-hour of lag on a game nobody
+ * expected beats polling all season for games that mostly do not happen.
  */
 function inGameWindow(now: Date): boolean {
   const et = new Intl.DateTimeFormat('en-US', {
@@ -66,11 +73,22 @@ function inGameWindow(now: Date): boolean {
   return false
 }
 
+/**
+ * How long after the last score movement to keep polling every minute.
+ *
+ * Must comfortably exceed the routine interval, or a game that starts just
+ * after a routine sync would not be noticed until its movement had already
+ * gone stale. At 20 minutes against a 15-minute routine, a surprise Saturday
+ * kickoff escalates on the tick after the routine sync that first sees it —
+ * which is how the windows below get away with omitting Saturday entirely.
+ */
+export const SCORE_ACTIVE_MS = 20 * MIN
+
 const since = (from: Date | null, now: Date) =>
   from === null ? Number.POSITIVE_INFINITY : now.getTime() - from.getTime()
 
 export function decideSync(input: CadenceInput): CadenceDecision {
-  const { now, hasLiveMatchup, lastLiveSyncAt, lastRoutineSyncAt, seasonActive } = input
+  const { now, lastScoreChangeAt, lastLiveSyncAt, lastRoutineSyncAt, seasonActive } = input
 
   if (!seasonActive) {
     return since(lastRoutineSyncAt, now) >= OFFSEASON_INTERVAL_MS
@@ -78,14 +96,18 @@ export function decideSync(input: CadenceInput): CadenceDecision {
       : { action: 'IDLE', reason: 'offseason, synced recently' }
   }
 
-  // A matchup already in progress outranks the clock — overtime and delayed
-  // games run past any window we could write down.
-  const live = hasLiveMatchup || inGameWindow(now)
+  // Scores actually moving outranks the clock: it covers overtime, weather
+  // delays and the off-schedule slates the windows omit, and it stops on its
+  // own when the last game ends. The window is the cold-start case — at
+  // kickoff nothing has moved yet, so the clock has to open the door.
+  const scoresMoving = since(lastScoreChangeAt, now) < SCORE_ACTIVE_MS
+  const inWindow = inGameWindow(now)
+  const live = scoresMoving || inWindow
 
   if (live && since(lastLiveSyncAt, now) >= LIVE_INTERVAL_MS) {
     return {
       action: 'LIVE',
-      reason: hasLiveMatchup ? 'matchup in progress' : 'inside NFL game window',
+      reason: scoresMoving ? 'scores are moving' : 'inside NFL game window',
     }
   }
 

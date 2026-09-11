@@ -112,8 +112,16 @@ export interface PlayerWeekScore {
   lineupSlotId: number
   lineupSlot: string
   isStarter: boolean
+  /**
+   * Null means ESPN has published no actual line for this player yet — his
+   * game has not started. Zero means he played and scored nothing. Collapsing
+   * the two would turn every un-played starter into a goose egg.
+   */
   actualPoints: number | null
   projectedPoints: number | null
+  /** ESPN's slot eligibility. The lineup optimizer's constraint set. */
+  eligibleSlots: number[]
+  injuryStatus: string | null
 }
 
 export type TransactionType = 'WAIVER' | 'FREE_AGENT' | 'DROP' | 'TRADE' | 'DRAFT' | 'OTHER'

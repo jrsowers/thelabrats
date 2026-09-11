@@ -190,9 +190,22 @@ export const CATEGORY_LABEL: Record<AwardCategory, string> = {
 /** Awards grouped by how expensive their capture is. */
 export const byCadence = (c: CaptureCadence) => AWARDS.filter((a) => a.capture === c)
 
+/**
+ * Data the ingest actually collects, as of 2026-09-11.
+ *
+ * TRANSACTIONS is stored but not yet joined to a week's scoring, and
+ * LINEUP_OPTIMIZER has no solver — it is a constrained assignment problem, and
+ * greedy bench substitution is wrong in a superflex league where the OP slot
+ * competes with QB for the same players. Awards needing either still fall back
+ * to a flagged placeholder.
+ */
+const SATISFIED: ReadonlySet<DataNeed> = new Set<DataNeed>([
+  'FINAL_SCORES', 'PLAYER_SCORES', 'PROJECTIONS',
+])
+
 /** True when every dependency is satisfied by data we already have. */
 export const isComputable = (def: AwardDef) =>
-  def.needs.every((n) => n === 'FINAL_SCORES')
+  def.needs.every((n) => SATISFIED.has(n))
 
 export const NEED_LABEL: Record<DataNeed, string> = {
   FINAL_SCORES: 'Final scores',

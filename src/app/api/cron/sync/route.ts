@@ -3,6 +3,7 @@ import { createServiceClient } from '@/lib/supabase/server'
 import { createEspnClientFromEnv } from '@/lib/espn/client'
 import { syncLeague } from '@/lib/ingest/syncLeague'
 import { syncPlayers } from '@/lib/ingest/syncPlayers'
+import { syncRosters } from '@/lib/ingest/syncRosters'
 import { decideSync } from '@/lib/sync/cadence'
 import { captureSnapshots } from '@/lib/ingest/snapshots'
 
@@ -33,22 +34,28 @@ export async function GET(request: Request) {
   const force = url.searchParams.get('force') === '1'
 
   // What has run, and is anything live right now?
-  const [{ data: lastLive }, { data: lastRoutine }, { data: liveMatchups }, { data: season }] =
+  const [{ data: lastLive }, { data: lastRoutine }, { data: lastMove }, { data: season }] =
     await Promise.all([
       db.from('sync_runs').select('finished_at').eq('sync_type', 'live-scoring')
         .eq('status', 'SUCCESS').order('finished_at', { ascending: false }).limit(1).maybeSingle(),
       db.from('sync_runs').select('finished_at').eq('sync_type', 'league-metadata')
         .eq('status', 'SUCCESS').order('finished_at', { ascending: false }).limit(1).maybeSingle(),
-      db.from('matchups').select('id').eq('status', 'LIVE').limit(1),
-      db.from('seasons').select('status, draft_completed').order('year', { ascending: false })
-        .limit(1).maybeSingle(),
+      // The most recent moment any score moved — see cadence.ts for why this,
+      // and not `status = 'LIVE'`, decides the polling rate.
+      db.from('matchups').select('score_changed_at')
+        .not('score_changed_at', 'is', null)
+        .order('score_changed_at', { ascending: false }).limit(1).maybeSingle(),
+      db.from('seasons').select('id, status, draft_completed, current_matchup_period')
+        .order('year', { ascending: false }).limit(1).maybeSingle(),
     ])
 
   const decision = force
     ? { action: 'ROUTINE' as const, reason: 'forced' }
     : decideSync({
         now: new Date(),
-        hasLiveMatchup: (liveMatchups?.length ?? 0) > 0,
+        lastScoreChangeAt: lastMove?.score_changed_at
+          ? new Date(lastMove.score_changed_at)
+          : null,
         lastLiveSyncAt: lastLive?.finished_at ? new Date(lastLive.finished_at) : null,
         lastRoutineSyncAt: lastRoutine?.finished_at ? new Date(lastRoutine.finished_at) : null,
         // Preseason still counts as active: the draft, roster moves and the
@@ -72,12 +79,23 @@ export async function GET(request: Request) {
     if (!result.ok) console.error('player sync failed:', result.error)
   }
 
+  // Per-player scoring for the current week. Runs on BOTH cadences: the live
+  // pass is what makes the boxscore and the weekly awards move during games,
+  // and the routine pass catches up whatever the live pass missed.
+  let rosters = null
+  if (season?.id && league.ok) {
+    const week = season.current_matchup_period ?? 1
+    const result = await syncRosters(espn, season.id, week)
+    rosters = { week: result.week, scores: result.scores, ok: result.ok }
+    // A roster failure must not fail the whole sync — team scores and
+    // standings are already written and correct by this point.
+    if (!result.ok) console.error('roster sync failed:', result.error)
+  }
+
   // History must be captured as it happens — ESPN never exposes a past score.
   let snapshots = null
-  const { data: seasonRow } = await db.from('seasons').select('id')
-    .order('year', { ascending: false }).limit(1).maybeSingle()
-  if (seasonRow && league.ok) {
-    snapshots = await captureSnapshots(seasonRow.id)
+  if (season?.id && league.ok) {
+    snapshots = await captureSnapshots(season.id)
   }
 
   return NextResponse.json({
@@ -86,5 +104,6 @@ export async function GET(request: Request) {
     reason: decision.reason,
     league: { ok: league.ok, records: league.recordsProcessed, detail: league.detail },
     players,
+    rosters,
   }, { status: league.ok ? 200 : 500 })
 }

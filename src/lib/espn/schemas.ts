@@ -105,10 +105,53 @@ export const statusSchema = z.object({
   previousSeasons: z.array(num).nullish(),
 })
 
+/** One player's scoring line for a single period. See STAT_SOURCE. */
+const playerStatSchema = z.object({
+  statSourceId: maybeNum,
+  statSplitTypeId: maybeNum,
+  scoringPeriodId: maybeNum,
+  appliedTotal: maybeNum,
+})
+
+const rosterEntrySchema = z.object({
+  playerId: maybeNum,
+  lineupSlotId: maybeNum,
+  playerPoolEntry: z.object({
+    appliedStatTotal: maybeNum,
+    player: z.object({
+      id: maybeNum,
+      fullName: z.string().nullish(),
+      defaultPositionId: maybeNum,
+      proTeamId: maybeNum,
+      injuryStatus: z.string().nullish(),
+      eligibleSlots: z.array(num).nullish(),
+      stats: z.array(playerStatSchema).nullish(),
+    }).nullish(),
+  }).nullish(),
+})
+
 const matchupSideSchema = z.object({
   teamId: num,
   totalPoints: maybeNum,
+  /**
+   * ⚠️ The RUNNING total. `totalPoints` stays 0 until ESPN closes the scoring
+   * period, so this is the only live number — see toMatchups.
+   * Populated by mMatchupScore / mScoreboard, NOT by mBoxscore.
+   */
+  totalPointsLive: maybeNum,
+  totalProjectedPoints: maybeNum,
   totalProjectedPointsLive: maybeNum,
+  /** Commissioner stat correction, already folded into the live totals. */
+  adjustment: maybeNum,
+  /**
+   * The lineup as it stands for the requested `scoringPeriodId`.
+   * `appliedStatTotal` here equals the sum of the STARTERS' actual points —
+   * verified across all 12 teams, in both mBoxscore and mMatchupScore.
+   */
+  rosterForCurrentScoringPeriod: z.object({
+    appliedStatTotal: maybeNum,
+    entries: z.array(rosterEntrySchema).nullish(),
+  }).nullish(),
 }).nullish()
 
 export const matchupSchema = z.object({

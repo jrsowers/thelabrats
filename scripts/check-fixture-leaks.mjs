@@ -10,6 +10,17 @@ import { join } from 'node:path'
 const RAW = 'fixtures/raw', OUT = 'fixtures'
 if (!existsSync(RAW)) { console.log('no raw captures — nothing to check'); process.exit(0) }
 
+/**
+ * NFL players are public figures, and fixtures ship their names on purpose —
+ * the draft board is a list of them. Their `firstName` / `lastName` / `name`
+ * look identical to a league member's, so a boxscore capture would otherwise
+ * add 400 of them to the secret list and flag every other fixture that names
+ * one. Identity is collected from everything EXCEPT these subtrees.
+ */
+const NOT_IDENTIFYING_KEYS = new Set([
+  'player', 'playerPoolEntry', 'players', 'playerPoolEntries',
+])
+
 const secrets = new Set()
 for (const f of readdirSync(RAW).filter((x) => x.endsWith('.json'))) {
   const d = JSON.parse(readFileSync(join(RAW, f), 'utf8'))
@@ -19,6 +30,7 @@ for (const f of readdirSync(RAW).filter((x) => x.endsWith('.json'))) {
     } else if (Array.isArray(n)) n.forEach(walk)
     else if (n && typeof n === 'object') {
       for (const [k, v] of Object.entries(n)) {
+        if (NOT_IDENTIFYING_KEYS.has(k)) continue
         if (['firstName', 'lastName', 'displayName', 'name', 'abbrev', 'location', 'nickname'].includes(k)
             && typeof v === 'string' && v.trim()) secrets.add(v.trim())
         walk(v)
