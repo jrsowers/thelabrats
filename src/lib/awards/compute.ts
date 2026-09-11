@@ -3,7 +3,8 @@
  *
  * Pure and deterministic (§22.8): every award is derived from stored data and
  * regenerable, so a failed sync delays an award but never loses it. Nothing is
- * written — the awards table stays empty by design.
+ * written HERE — generate.ts persists the result, once per week, after Monday
+ * Night Football. See release.ts for why once.
  *
  * SCOPE: team scores, ESPN's pregame projections, and per-player scoring lines.
  * The two awards that still fall back to sample values are The Mastermind and

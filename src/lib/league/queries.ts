@@ -636,3 +636,77 @@ export async function getPlayerWeekScores(
       projectedPoints: r.projected_points == null ? null : Number(r.projected_points),
     }))
 }
+
+/* ============================================================
+   Published awards
+   ============================================================ */
+
+export interface StoredAward {
+  key: string
+  teamId: number
+  opponentId: number | null
+  metricValue: string
+  headline: string
+  supporting: { label: string; value: string }[]
+  player: { espnPlayerId: number; name: string; position: string; nflTeam: string } | null
+}
+
+type AwardExtras = {
+  opponentId?: number | null
+  metricValue?: string
+  supporting?: { label: string; value: string }[]
+  player?: StoredAward['player']
+}
+
+/**
+ * One week's published awards.
+ *
+ * Studs & Duds reads from here rather than recomputing: a week is generated
+ * once after Monday Night Football and then it is settled, so the page cannot
+ * change its mind about who won something (§22.1a).
+ *
+ * Empty until that week has been generated, which is the page's cue to show
+ * its pending state rather than a wrong answer.
+ */
+export async function getPublishedAwards(
+  seasonId: number,
+  week: number,
+): Promise<StoredAward[]> {
+  if (!isSupabaseConfigured()) return []
+  const supabase = createPublicClient()
+  const { data, error } = await supabase
+    .from('awards')
+    .select('award_type, recipient_team_id, score, headline, supporting_stats')
+    .eq('season_id', seasonId)
+    .eq('week', week)
+
+  if (error || !data) return []
+
+  return data
+    .filter((r) => r.recipient_team_id != null)
+    .map((r) => {
+      const extras = (r.supporting_stats ?? {}) as AwardExtras
+      return {
+        key: r.award_type,
+        teamId: r.recipient_team_id as number,
+        opponentId: extras.opponentId ?? null,
+        // The formatted string is what the card shows; `score` is the numeric
+        // column, kept for sorting and the season leaderboard.
+        metricValue: extras.metricValue ?? String(r.score ?? ''),
+        headline: r.headline ?? '',
+        supporting: extras.supporting ?? [],
+        player: extras.player ?? null,
+      }
+    })
+}
+
+/** Weeks that have published awards, ascending. */
+export async function getPublishedAwardWeeks(seasonId: number): Promise<number[]> {
+  if (!isSupabaseConfigured()) return []
+  const supabase = createPublicClient()
+  const { data, error } = await supabase
+    .from('awards').select('week').eq('season_id', seasonId)
+  if (error || !data) return []
+  return [...new Set(data.map((r) => r.week).filter((w): w is number => w != null))]
+    .sort((a, b) => a - b)
+}

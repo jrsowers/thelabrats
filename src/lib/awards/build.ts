@@ -1,27 +1,37 @@
 /**
  * Assembles the cards a week's award page renders.
  *
- * Real computation wins wherever the data supports it; everything else falls
- * back to a clearly-flagged placeholder so the layout can be judged before
- * week 1. The moment player scoring lands, the placeholders start being
- * replaced one award at a time — no page change required.
+ * Takes awards that have ALREADY been decided — read from the `awards` table,
+ * written once per week by generate.ts — and fills anything missing with a
+ * clearly-flagged placeholder. It does not compute, so the page cannot change
+ * its mind about who won something between two page loads.
+ *
+ * Award types with no stored row fall back to a placeholder, which covers both
+ * an award whose data does not exist yet and a week nobody has published.
  */
 import { AWARDS, type AwardDef } from './catalog'
-import { computeWeeklyAwards, type AwardMatchup, type AwardPlayer } from './compute'
 import { placeholderAward, type AwardCard, type PlaceholderPools } from './placeholder'
 import { buildCommentary, firstName } from './commentary'
 
+/** The decided-award shape, whether it came from the engine or the database. */
+export interface DecidedAward {
+  key: string
+  teamId: number
+  opponentId: number | null
+  metricValue: string
+  headline: string
+  supporting: { label: string; value: string }[]
+  player?: { espnPlayerId: number; name: string; position: string; nflTeam: string } | null
+}
+
 export function buildAwardCards(
-  matchups: AwardMatchup[],
+  decided: DecidedAward[],
   week: number,
   pools: PlaceholderPools,
-  players: AwardPlayer[] = [],
 ): AwardCard[] {
   const byId = new Map(pools.teams.map((t) => [t.seasonTeamId, t]))
   // Engine keys ARE catalog keys, so there is no mapping layer to drift.
-  const real = new Map<string, ReturnType<typeof computeWeeklyAwards>[number]>(
-    computeWeeklyAwards(matchups, week, players).map((a) => [a.key as string, a]),
-  )
+  const real = new Map(decided.map((a) => [a.key, a]))
 
   return AWARDS.map((def: AwardDef): AwardCard => {
     const computed = real.get(def.key)

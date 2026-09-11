@@ -1,9 +1,9 @@
 /**
  * Placeholder award data.
  *
- * Thirteen of the twenty awards cannot be computed until player-level scoring
- * exists. This fills those cards with plausible values so the layout can be
- * judged before week 1.
+ * Fills a card the engine could not decide — an award whose data the ingest
+ * does not collect yet, or any award on a week that has not been published —
+ * with plausible values, so the layout is judgeable either way.
  *
  * Three rules keep it honest:
  *  1. It NEVER writes anything. Cards are decorated on the way to the view.

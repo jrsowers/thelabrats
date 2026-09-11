@@ -207,10 +207,11 @@ describe('player-driven awards', () => {
     expect(keys.has('nostradamus')).toBe(false)
   })
 
-  it('awards them mid-week, before any matchup is final', () => {
-    // The best performance of a Sunday is knowable on Sunday. Waiting for the
-    // week to finalize would mean an empty page during the only window anyone
-    // is actually looking at it.
+  it('decides player awards without waiting on a final matchup', () => {
+    // The engine can settle these from player lines alone. WHEN the league
+    // sees them is a separate decision — awards publish once, Tuesday morning
+    // (see release.ts) — but the two concerns stay independent, which is what
+    // lets preview mode render a simulated week.
     const live = week1.map((m) => ({ ...m, status: 'LIVE' }))
     const keys = byKeyWith(live, roster)
     expect(keys.has('prime_specimen')).toBe(true)

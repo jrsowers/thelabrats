@@ -839,3 +839,42 @@ transactions to that week's scoring.
 boxscore capture added 400 public figures to the secret list and flagged 318
 false positives across fixtures that name players on purpose. Player subtrees
 are now excluded.
+
+## 2026-09-11 — Studs & Duds publishes once, Tuesday morning
+
+James's call, hours after the awards first went live: generate once at the end
+of the week rather than computing on every request.
+
+**The reason it matters more than it sounds.** A recomputed award can change.
+The Prime Specimen named after the early Sunday games loses the title to the 4pm
+slate; whoever screenshotted it at 2pm is holding something the site no longer
+agrees with. An award that shifts under you is worse than one that arrives a day
+late. Studs & Duds is a week in review, and now it reads like one.
+
+**This reverses a decision made earlier the same day.** The first cut had player
+awards landing mid-week on the argument that the best performance of a Sunday is
+knowable on Sunday, and that holding every card until Monday leaves the page
+empty during the window people actually visit. That argument was about
+engagement; James's is about trust, and trust wins. The engine still decides
+player awards without a final matchup — preview mode needs it — but nothing
+reaches the league until the week is settled.
+
+**Timing is a condition, not a cron entry.** The same reasoning as
+`lib/sync/cadence.ts`: a job pinned to "Tuesday 06:00" fires once, and a tick
+lost to a deploy costs the week its awards with nothing to say so. The release
+window opens Tuesday 06:00 ET and stays open through Saturday, evaluated by the
+two-minute sync. Sunday and Monday are closed, because a week can look finished
+at Sunday teatime with Monday night still to come.
+
+**A week qualifies only when EVERY matchup in it is final**, not when any is.
+The looser test would release a week mid-slate, which is the exact failure this
+whole change exists to prevent.
+
+**Only real awards are written.** Placeholders stay a render-time decoration.
+Persisting invented values is how sample data stops being distinguishable from
+the real thing, and the entire placeholder design rests on it never being
+written to the database.
+
+**The page opens on the latest PUBLISHED week, not the live one.** Defaulting to
+the current week would show an empty page for the five days between Tuesday and
+the following Monday — most of the time anyone is looking.

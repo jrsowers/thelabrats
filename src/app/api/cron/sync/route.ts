@@ -6,6 +6,7 @@ import { syncPlayers } from '@/lib/ingest/syncPlayers'
 import { syncRosters } from '@/lib/ingest/syncRosters'
 import { decideSync } from '@/lib/sync/cadence'
 import { captureSnapshots } from '@/lib/ingest/snapshots'
+import { publishDueAwards } from '@/lib/awards/publish'
 
 export const dynamic = 'force-dynamic'
 // Sync is a handful of ESPN calls plus upserts; well inside Vercel's ceiling,
@@ -127,6 +128,15 @@ export async function GET(request: Request) {
     snapshots = await captureSnapshots(season.id)
   }
 
+  // Studs & Duds publishes once a week, Tuesday morning. This is a CONDITION
+  // rather than its own cron entry, so a tick lost to a deploy is caught by the
+  // next one instead of skipping the week — see lib/awards/release.ts.
+  let awards = null
+  if (season?.id && league.ok) {
+    awards = await publishDueAwards(season.id, new Date())
+    if (!awards.ok) console.error('award release failed:', awards.error)
+  }
+
   return NextResponse.json({
     action: decision.action,
     snapshots,
@@ -135,5 +145,6 @@ export async function GET(request: Request) {
     league: { ok: league.ok, records: league.recordsProcessed, detail: league.detail },
     players,
     rosters,
+    awards,
   }, { status: league.ok ? 200 : 500 })
 }

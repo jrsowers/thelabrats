@@ -1829,19 +1829,50 @@ Clearly label them.
 
 ---
 
-# 22.1a When an award can be computed
+# 22.1a When awards are published
 
-*Added 2026-09-11.*
+*Added 2026-09-11. Revised the same day — see the note at the end.*
 
-**Player awards land during the week; matchup awards wait for it to finish.**
+**A week is generated ONCE, Tuesday morning, and is then settled.**
 
-The best performance of a Sunday is knowable on Sunday, and holding every card
-until the week finalizes leaves the page empty during the only window anyone is
-looking at it. "Lowest winning score", by contrast, is meaningless while games
-are still being played.
+Studs & Duds is a week in review, not a live feed. An award that recomputes on
+every request can change: a Prime Specimen named after the early games loses the
+title to the 4pm slate, and whoever screenshotted it at 2pm is holding something
+the site no longer agrees with. Awards that shift under you are worse than
+awards that arrive a day late.
 
-So the engine emits player-driven awards from whatever player lines exist, and
-matchup-driven awards only for a week with final results.
+So `generate.ts` writes a week's awards to the `awards` table (§14.14) after
+Monday Night Football, and the page reads from there. It never computes at
+request time — the one exception is `?preview=live`, which exists to judge the
+layout against an invented season and has nothing published to read.
+
+## Timing is a condition, not a cron entry
+
+The release window opens **Tuesday 06:00 ET** and stays open through Saturday.
+Sunday and Monday are closed: a week can look finished at Sunday teatime with
+Monday night still to come.
+
+The two-minute sync evaluates that condition, the same way it decides its own
+cadence (§15.5). A job pinned to "Tuesday 06:00" fires once, and a tick lost to
+a deploy or an outage would silently cost the week its awards. Staying open
+through Saturday makes it self-healing, and lets a week that finalizes late be
+picked up when it finalizes rather than seven days later.
+
+A week qualifies only when **every** matchup in it is FINAL. Anything looser
+releases a week while a game is still being played.
+
+## The page during the week
+
+`/awards` opens on the most recent PUBLISHED week rather than the live one —
+landing on a week whose awards do not exist yet shows an empty page during the
+days most people visit. `?week=` still reaches any week, and an unpublished one
+says so plainly instead of showing numbers that will change.
+
+> **Superseded:** an earlier draft of this section had player awards landing
+> during the week and matchup awards waiting for it to finish. James called it
+> on 2026-09-11: generate once, Tuesday morning. The engine can still decide a
+> player award from player lines alone — that is what preview mode uses — but
+> nothing reaches the league until the week is settled.
 
 **Only STARTED players win player awards.** A 44-point week from someone's bench
 is a Bench Bum story, not a Prime Specimen one — the award is for the manager's
@@ -1858,6 +1889,11 @@ is projected highest and has not taken a snap.
 | Computed | Cat Burglar, Dumpster Fire, Bad Beat, Public Execution, Prime Specimen, Nostradamus, Giant Killer, Choke Artist |
 | Needs the lineup optimizer | The Mastermind, The Bench Bum |
 | Needs a transaction-to-scoring join | Waiver Wire Wizard, Galaxy Brain |
+
+Only REAL awards are written. Placeholder cards stay a render-time decoration —
+persisting invented values is how sample data stops being distinguishable from
+the real thing (§22.8), and the whole placeholder design rests on it never being
+written.
 
 The optimizer is a constrained assignment problem, not a sort. Greedy bench
 substitution is wrong in this league, where the OP slot competes with QB for the

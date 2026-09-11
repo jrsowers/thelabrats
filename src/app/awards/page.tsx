@@ -1,10 +1,13 @@
 import type { Metadata } from 'next'
 import {
   getLeagueOverview, getSeasonTeams, getSeasonResults, getReigningChampion,
-  getPlayerSample, getPlayerWeekScores, getLastSync, hasActiveGames, type StandingsTeam,
+  getPlayerSample, getPlayerWeekScores, getLastSync, hasActiveGames,
+  getPublishedAwards, getPublishedAwardWeeks, type StandingsTeam,
 } from '@/lib/league/queries'
 import { simulateSeason } from '@/lib/league/preview'
-import { buildAwardCards } from '@/lib/awards/build'
+import { buildAwardCards, type DecidedAward } from '@/lib/awards/build'
+import { computeWeeklyAwards } from '@/lib/awards/compute'
+import { RELEASE_HOUR_ET } from '@/lib/awards/release'
 import { awardsBySection, isComputable, type AwardSection } from '@/lib/awards/catalog'
 import type { AwardCard } from '@/lib/awards/placeholder'
 import { AppShell } from '@/components/navigation/app-shell'
@@ -101,22 +104,30 @@ export default async function AwardsPage({
   const params = await searchParams
   const isPreview = params.preview === 'live'
 
-  // Defaults to the live week; ?week= lets anyone look back.
+  // Awards are published once a week, after Monday Night Football. The page
+  // therefore opens on the most recent PUBLISHED week, not the live one —
+  // landing on a week whose awards do not exist yet shows an empty page during
+  // the days most people visit. ?week= still reaches any week.
+  const publishedWeeks = await getPublishedAwardWeeks(overview.seasonId)
+  const latestPublished = publishedWeeks.at(-1) ?? overview.currentWeek
+
   const requested = Number(params.week)
   const week = Math.min(
-    Math.max(Number.isFinite(requested) ? requested : overview.currentWeek, 1),
+    Math.max(Number.isFinite(requested) ? requested : latestPublished, 1),
     overview.regularSeasonWeeks,
   )
 
   const champion = await getReigningChampion()
-  const [teams, rawResults, players, weekScores, lastSync, gamesActive] = await Promise.all([
-    getSeasonTeams(overview.seasonId, champion),
-    getSeasonResults(overview.seasonId),
-    getPlayerSample(150),
-    getPlayerWeekScores(overview.seasonId, week),
-    getLastSync(),
-    hasActiveGames(overview.currentWeek),
-  ])
+  const [teams, rawResults, players, weekScores, published, lastSync, gamesActive] =
+    await Promise.all([
+      getSeasonTeams(overview.seasonId, champion),
+      getSeasonResults(overview.seasonId),
+      getPlayerSample(150),
+      getPlayerWeekScores(overview.seasonId, week),
+      getPublishedAwards(overview.seasonId, week),
+      getLastSync(),
+      hasActiveGames(overview.currentWeek),
+    ])
   const byId = new Map(teams.map((t) => [t.seasonTeamId, t]))
 
   const results = isPreview ? simulateSeason(rawResults, overview.regularSeasonWeeks) : rawResults
@@ -135,21 +146,26 @@ export default async function AwardsPage({
     awayProjected: isPreview ? null : rawResults[i]?.awayProjected ?? null,
   }))
 
-  // The simulator invents a season; laying real player lines over it would
-  // credit a manager for a performance that did not happen in it.
-  const awardPlayers = isPreview ? [] : weekScores
+  // Preview is the one place the engine still runs at request time: it exists
+  // to judge the layout against an invented season, and there is nothing
+  // published to read. Everything real comes from the awards table.
+  const decided: DecidedAward[] = isPreview
+    ? computeWeeklyAwards(awardMatchups, week, []).map((a) => ({ ...a, key: a.key }))
+    : published
 
-  const cards = buildAwardCards(
-    awardMatchups,
-    week,
-    {
-      teams: teams.map((t) => ({
-        seasonTeamId: t.seasonTeamId, name: t.name, manager: t.manager,
-      })),
-      players,
-    },
-    awardPlayers,
-  )
+  const cards = buildAwardCards(decided, week, {
+    teams: teams.map((t) => ({
+      seasonTeamId: t.seasonTeamId, name: t.name, manager: t.manager,
+    })),
+    players,
+  })
+
+  // Nothing published for this week yet. Distinguish "Monday night has not
+  // happened" from "nobody ever generated this", because only one of them
+  // resolves on its own.
+  const isUnpublished = !isPreview && published.length === 0
+  const weekIsOver = results.some((m) => m.week === week)
+    && results.filter((m) => m.week === week).every((m) => m.status === 'FINAL')
 
   // Catalog order: manager judgement, then matchups, then players.
   const order = new Map(
@@ -164,14 +180,11 @@ export default async function AwardsPage({
   const studs = inOrder('STUDS')
   const duds = inOrder('DUDS')
 
-  // Two different reasons a card is still a sample, and saying "needs player
-  // scoring" for both stopped being true the moment player scoring landed.
-  //   waiting — the engine computes this one, but the week is not over.
-  //   pending — the data it needs is not collected yet at all.
+  // Placeholders on a PUBLISHED week mean only one thing: an award whose data
+  // the ingest does not collect yet. On an unpublished week they mean the week
+  // has not been released, which is a different message entirely.
   const placeholders = cards.filter((c) => c.placeholder)
-  const waiting = placeholders.filter((c) => isComputable(c.def))
   const pending = placeholders.filter((c) => !isComputable(c.def))
-  const weekIsFinal = results.some((m) => m.week === week && m.status === 'FINAL')
 
   return (
     <AppShell leagueName={overview.leagueName}>
@@ -188,7 +201,23 @@ export default async function AwardsPage({
         </div>
       </header>
 
-      {placeholders.length > 0 && (
+      {isUnpublished ? (
+        <div className="mb-7 flex flex-wrap items-center gap-x-3 gap-y-2 rounded-lg border border-warn/40 bg-warn-soft px-4 py-3">
+          <Tag tone="warn">Not published</Tag>
+          <p className="text-[13px] text-muted">
+            Week {week} awards go up <strong className="text-text">Tuesday morning</strong>,
+            once Monday Night Football is in the books.{' '}
+            {weekIsOver
+              ? 'The week is final — they publish on the next sync after '
+                + `${RELEASE_HOUR_ET} AM Eastern Tuesday.`
+              : 'The week is still being played.'}
+            {' '}Every card below is a sample until then.
+            {publishedWeeks.length > 0 && (
+              <> The latest published week is {publishedWeeks.at(-1)}.</>
+            )}
+          </p>
+        </div>
+      ) : placeholders.length > 0 && (
         <div className="mb-7 flex flex-wrap items-center gap-x-3 gap-y-2 rounded-lg border border-warn/40 bg-warn-soft px-4 py-3">
           <Tag tone="warn">Sample data</Tag>
           <p className="text-[13px] text-muted">
@@ -196,18 +225,10 @@ export default async function AwardsPage({
             marked
             <span className="ml-1 mr-0.5 font-mono text-[10px] uppercase tracking-wider text-warn">Sample</span>
             {'. '}
-            {waiting.length > 0 && !weekIsFinal && (
-              <>
-                {pending.length > 0 ? `${waiting.length} are ` : 'They are '}
-                waiting on the week to finish — a lowest winning score means nothing
-                while games are still being played.{' '}
-              </>
-            )}
             {pending.length > 0 && (
               <>
-                {waiting.length > 0 && !weekIsFinal ? `The other ${pending.length} need ` : 'They need '}
-                the lineup optimizer and a transaction-to-scoring join, neither of which
-                is built yet.
+                They need the lineup optimizer and a transaction-to-scoring join,
+                neither of which is built yet.
               </>
             )}
           </p>

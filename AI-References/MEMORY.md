@@ -193,7 +193,7 @@ Apex, www, and `thelabrats-gray.vercel.app` all resolve.
 | 4 | Standings — H2H tiebreak, movement, clinching | ✅ |
 | 5 | Playoff Picture — bracket + bubble + ESPN's odds | ✅ |
 | 6 | Transactions | ✅ Verified against real adds, drops, a trade and IR moves |
-| 7 | Studs & Duds | 🔨 8 of 12 real; 2 need the optimizer, 2 need a txn join |
+| 7 | Studs & Duds | 🔨 8 of 12 real, published Tuesdays; 4 need more data |
 | 8 | Record Books | ✅ Champions Corner + Firsts and Worsts (records accumulate) |
 
 ---
@@ -373,6 +373,15 @@ tell was a number that was suspiciously round.
 `npm run test:responsive` (62 ✅) · build ✅ · deployed and confirmed against
 production: six LIVE matchups with real scores, 187 player rows, Brock Purdy
 holding both The Prime Specimen and Fantasy Nostradamus.
+
+**Late in the session James reversed the awards timing.** Studs & Duds now
+publishes ONCE, Tuesday morning, from the `awards` table — not computed per
+request. An award that recomputes can change under whoever is looking at it, and
+that matters more than having something on the page by Sunday teatime. The page
+opens on the latest published week; an unpublished week says so rather than
+showing numbers that will move. Release timing is a condition the two-minute
+sync evaluates (`lib/awards/release.ts`), never its own cron entry — a lost tick
+must cost minutes, not a week.
 
 Open: the lineup optimizer (blocks The Mastermind and The Bench Bum;
 `eligibleSlots` is now parsed and ready for it), the transaction-to-scoring join
