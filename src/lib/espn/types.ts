@@ -125,8 +125,9 @@ export interface PlayerWeekScore {
 }
 
 export type TransactionType = 'WAIVER' | 'FREE_AGENT' | 'DROP' | 'TRADE' | 'DRAFT' | 'OTHER'
-  | 'IR_PLACE'
-  | 'IR_ACTIVATE'
+  | 'IR_PLACE' | 'IR_ACTIVATE'
+  /** A start/sit swap. Counted by the awards engine, hidden from the log. */
+  | 'LINEUP'
 
 export interface TransactionItem {
   espnPlayerId: number

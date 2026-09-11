@@ -453,7 +453,11 @@ export async function getTransactionLog(seasonId: number, limit = 200): Promise<
         players ( espn_player_id, full_name, position, nfl_team ) )
     `)
     .eq('season_id', seasonId)
-    .neq('transaction_type', 'DRAFT')
+    .not('transaction_type', 'in', '("DRAFT","LINEUP")')
+    // DRAFT is its own page. LINEUP is a start/sit swap — a real roster
+    // decision, counted by The Galaxy Brain, but a log of "moved a player to
+    // the bench" forty times a week buries the moves people came to read.
+    //
     // A log records what HAPPENED. A cancelled waiver and a pending trade
     // proposal both showed here as though they had gone through.
     .eq('status', 'EXECUTED')

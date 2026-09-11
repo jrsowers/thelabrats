@@ -193,7 +193,7 @@ Apex, www, and `thelabrats-gray.vercel.app` all resolve.
 | 4 | Standings — H2H tiebreak, movement, clinching | ✅ |
 | 5 | Playoff Picture — bracket + bubble + ESPN's odds | ✅ |
 | 6 | Transactions | ✅ Verified against real adds, drops, a trade and IR moves |
-| 7 | Studs & Duds | 🔨 8 of 12 real, published Tuesdays; 4 need more data |
+| 7 | Studs & Duds | 🔨 10 of 12 real, published Tuesdays; 2 need the optimizer |
 | 8 | Record Books | ✅ Champions Corner + Firsts and Worsts (records accumulate) |
 
 ---
@@ -383,9 +383,15 @@ showing numbers that will move. Release timing is a condition the two-minute
 sync evaluates (`lib/awards/release.ts`), never its own cron entry — a lost tick
 must cost minutes, not a week.
 
+**The Waiver Wire Wizard and The Galaxy Brain are wired up too.** James asked
+whether they actually were; they were not. Building them meant stopping the
+parser from discarding ESPN's lineup-change transactions — a start/sit swap is a
+`ROSTER` row with `LINEUP` items, stored now as type `LINEUP`, counted by the
+award, and still hidden from the transaction log where it would be noise. One
+row per decision, not per player: ESPN sends a swap as one row with two items.
+
 Open: the lineup optimizer (blocks The Mastermind and The Bench Bum;
-`eligibleSlots` is now parsed and ready for it), the transaction-to-scoring join
-(blocks The Waiver Wire Wizard and The Galaxy Brain), `/awards` is still
+`eligibleSlots` is now parsed and ready for it), `/awards` is still
 `ready: false` in the nav and therefore URL-only, tier-2 dossier review, the
 ROBBERY badge, the Yahoo 2025 export, and `fixtures/league-teams.json` still
 leaks real names.

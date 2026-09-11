@@ -337,33 +337,42 @@ const TRANSACTION_TYPE: Record<string, TransactionType> = {
 const IR_SLOT = 21
 
 /**
- * ROSTER transactions are lineup changes, and almost all of them are start/sit
- * decisions that would flood a transaction log every week. The exception is IR:
- * moving a player onto or off injured reserve is a real roster event.
+ * What kind of roster event an ESPN `ROSTER` transaction actually is.
  *
- * Returns null for an ordinary shuffle, so the caller can drop it.
+ * ESPN files three different things under one type, told apart only by the
+ * lineup slots its items touch:
+ *
+ *   IR_PLACE / IR_ACTIVATE  a player moved onto or off injured reserve
+ *   LINEUP                  an ordinary start/sit swap
+ *
+ * ⚠️ ONE TRANSACTION PER DECISION. ESPN records a swap as a single ROSTER row
+ * carrying TWO LINEUP items — the player coming in and the player going out.
+ * Counting items would score one substitution as two moves.
  */
-function irKind(t: { items?: { fromLineupSlotId?: number | null; toLineupSlotId?: number | null }[] | null }):
-  'IR_PLACE' | 'IR_ACTIVATE' | null {
+function rosterKind(t: { items?: { fromLineupSlotId?: number | null; toLineupSlotId?: number | null }[] | null }):
+  'IR_PLACE' | 'IR_ACTIVATE' | 'LINEUP' {
   for (const it of t.items ?? []) {
     if (it.toLineupSlotId === IR_SLOT) return 'IR_PLACE'
     if (it.fromLineupSlotId === IR_SLOT) return 'IR_ACTIVATE'
   }
-  return null
+  return 'LINEUP'
 }
 
 export function toTransactions(res: LeagueResponse): Transaction[] {
   const raw = res.transactions ?? []
   return raw
-    // Keep ROSTER rows only when they touch injured reserve.
-    .filter((t) => (t.type ?? '') !== 'ROSTER' || irKind(t) !== null)
     .map((t, i) => {
-      const ir = (t.type ?? '') === 'ROSTER' ? irKind(t) : null
+      // Every ROSTER row is now kept. Start/sit swaps are stored as LINEUP and
+      // excluded from the transaction log by getTransactionLog, because a log
+      // full of bench moves is noise — but they are real roster decisions and
+      // The Galaxy Brain counts them.
+      const roster = (t.type ?? '') === 'ROSTER' ? rosterKind(t) : null
+      const ir = roster === 'IR_PLACE' || roster === 'IR_ACTIVATE' ? roster : null
 
       const items = (t.items ?? [])
-        // LINEUP items are normally noise, but on an IR move they are the whole
-        // event — the player being placed or activated.
-        .filter((it) => it.playerId != null && ((it.type ?? '') !== 'LINEUP' || ir !== null))
+        // On an IR or lineup move the LINEUP items ARE the event — the player
+        // being placed, activated, or swapped.
+        .filter((it) => it.playerId != null && ((it.type ?? '') !== 'LINEUP' || roster !== null))
         .map((it) => ({
           espnPlayerId: it.playerId as number,
           action: (ir === 'IR_PLACE' ? 'DROP'
@@ -379,7 +388,7 @@ export function toTransactions(res: LeagueResponse): Transaction[] {
         // ESPN ids are usually strings; fall back to a stable positional key so
         // a missing id cannot collapse several transactions onto one row.
         espnTransactionId: String(t.id ?? `unknown-${t.processDate ?? 0}-${i}`),
-        type: ir ?? TRANSACTION_TYPE[t.type ?? ''] ?? 'OTHER',
+        type: roster ?? TRANSACTION_TYPE[t.type ?? ''] ?? 'OTHER',
         status: t.status ?? 'UNKNOWN',
         espnTeamId: t.teamId ?? null,
         proposedAt: t.proposedDate ? new Date(t.proposedDate).toISOString() : null,

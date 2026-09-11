@@ -6,12 +6,11 @@
  * written HERE — generate.ts persists the result, once per week, after Monday
  * Night Football. See release.ts for why once.
  *
- * SCOPE: team scores, ESPN's pregame projections, and per-player scoring lines.
- * The two awards that still fall back to sample values are The Mastermind and
- * The Bench Bum: both need a slot-aware lineup optimizer, which is a
- * constrained assignment problem rather than a sort, and both are wrong if
- * solved greedily in a superflex league. The two transaction-driven awards are
- * likewise still pending.
+ * SCOPE: team scores, ESPN's pregame projections, per-player scoring lines and
+ * the week's transactions. The two awards that still fall back to sample values
+ * are The Mastermind and The Bench Bum: both need a slot-aware lineup
+ * optimizer, which is a constrained assignment problem rather than a sort, and
+ * both are wrong if solved greedily in a superflex league.
  *
  * Every award here is won by a MANAGER, not a matchup — including the ones that
  * describe a matchup outcome. "Lost by the largest margin" belongs to the team
@@ -29,6 +28,21 @@ export interface AwardMatchup {
   /** ESPN's pregame projection. Null before ESPN publishes one. */
   homeProjected?: number | null
   awayProjected?: number | null
+}
+
+/**
+ * One roster move, from `transactions`.
+ *
+ * ⚠️ ONE ROW PER DECISION. ESPN records a start/sit swap as a single row with
+ * two items — the player in and the player out — so counting rows counts moves
+ * and counting items counts them twice.
+ */
+export interface AwardTransaction {
+  seasonTeamId: number
+  /** WAIVER, FREE_AGENT, TRADE, DROP, IR_PLACE, IR_ACTIVATE, LINEUP. */
+  kind: string
+  /** ESPN ids of players this move ACQUIRED. Empty for a drop or a bench move. */
+  acquiredPlayerIds: number[]
 }
 
 /** One player's line for the week, from player_week_scores. */
@@ -58,6 +72,8 @@ export type ComputedAwardKey =
   | 'nostradamus'
   | 'giant_killer'
   | 'choke_artist'
+  | 'waiver_wire_wizard'
+  | 'galaxy_brain'
 
 export interface ComputedAward {
   key: ComputedAwardKey
@@ -117,11 +133,15 @@ export function computeWeeklyAwards(
   all: AwardMatchup[],
   week: number,
   players: AwardPlayer[] = [],
+  transactions: AwardTransaction[] = [],
 ): ComputedAward[] {
   // Player awards land DURING the week — the best performance of a Sunday is
   // knowable on Sunday. Matchup awards need the week finished, because "lowest
   // winning score" is meaningless while games are still being played.
-  const playerAwards = computePlayerAwards(players)
+  const playerAwards = [
+    ...computePlayerAwards(players),
+    ...computeWaiverAward(players, transactions),
+  ]
 
   const matchups = all.filter((m) => m.week === week && m.status === 'FINAL')
   if (matchups.length === 0) return playerAwards
@@ -227,7 +247,111 @@ export function computeWeeklyAwards(
     }
   }
 
+  // ---- The Galaxy Brain: most roster moves, among managers who lost ----
+  // "Roster moves" is every decision the manager made inside the scoring
+  // period: waiver claims, free agent adds, drops, trades, IR moves and
+  // start/sit swaps. ESPN scopes each transaction to a period itself, which is
+  // the league's own Wednesday-waivers-to-Monday-night boundary — better than
+  // any window we could define.
+  const movesByTeam = new Map<number, Map<string, number>>()
+  for (const t of transactions) {
+    const kinds = movesByTeam.get(t.seasonTeamId) ?? new Map<string, number>()
+    kinds.set(t.kind, (kinds.get(t.kind) ?? 0) + 1)
+    movesByTeam.set(t.seasonTeamId, kinds)
+  }
+  const totalMoves = (teamId: number) =>
+    [...(movesByTeam.get(teamId)?.values() ?? [])].reduce((n, c) => n + c, 0)
+
+  const busiest = [...losers]
+    .map((s) => ({ side: s, moves: totalMoves(s.teamId) }))
+    .filter((x) => x.moves > 0)
+    .sort((a, b) => b.moves - a.moves)[0]
+
+  // A week where every loser stood pat has no Galaxy Brain, and saying so beats
+  // handing it to someone who made a single move (§22.2).
+  if (busiest && busiest.moves > 1) {
+    const kinds = movesByTeam.get(busiest.side.teamId) ?? new Map()
+    awards.push({
+      key: 'galaxy_brain',
+      teamId: busiest.side.teamId,
+      opponentId: busiest.side.opponentId,
+      metricValue: String(busiest.moves),
+      headline: `${busiest.moves} roster moves. Still lost by ${f1(busiest.side.against - busiest.side.score)}.`,
+      // The breakdown, so nobody has to guess what counted as a move.
+      supporting: [
+        ...MOVE_LABELS
+          .filter(([kind]) => (kinds.get(kind) ?? 0) > 0)
+          .map(([kind, label]) => ({ label, value: String(kinds.get(kind)) })),
+        { label: 'Final', value: `${f1(busiest.side.score)}–${f1(busiest.side.against)}` },
+      ],
+    })
+  }
+
   return [...awards, ...playerAwards]
+}
+
+/** Display order and wording for the Galaxy Brain breakdown. */
+const MOVE_LABELS: [string, string][] = [
+  ['WAIVER', 'Waiver claims'],
+  ['FREE_AGENT', 'Free agents'],
+  ['TRADE', 'Trades'],
+  ['DROP', 'Drops'],
+  ['LINEUP', 'Lineup changes'],
+  ['IR_PLACE', 'To IR'],
+  ['IR_ACTIVATE', 'From IR'],
+]
+
+/**
+ * The Waiver Wire Wizard: the highest-scoring player acquired this week.
+ *
+ * Credited to the manager who claimed him, per the catalog formula — which
+ * deliberately does NOT require that the pickup was started. "Grabbed the
+ * highest scoring free agent" is the claim being made, and a manager who
+ * correctly identified him has done the hard part even if he sat. Whether he
+ * started is shown on the card instead of silently deciding it.
+ *
+ * Trades are excluded: acquiring a player by trade is a different skill, and
+ * The Cat Burglar is not this award.
+ */
+function computeWaiverAward(
+  players: AwardPlayer[],
+  transactions: AwardTransaction[],
+): ComputedAward[] {
+  const pickups = new Map<number, number>()
+  for (const t of transactions) {
+    if (t.kind !== 'WAIVER' && t.kind !== 'FREE_AGENT') continue
+    for (const id of t.acquiredPlayerIds) pickups.set(id, t.seasonTeamId)
+  }
+  if (pickups.size === 0) return []
+
+  const scored = players
+    .filter((p) => pickups.has(p.espnPlayerId) && p.actualPoints != null)
+    // The team that CLAIMED him, which is not always the team he ended the
+    // week on — a pickup can be dropped again days later.
+    .map((p) => ({ p, teamId: pickups.get(p.espnPlayerId) as number }))
+    .sort((a, b) => (b.p.actualPoints as number) - (a.p.actualPoints as number))
+
+  const best = scored[0]
+  if (!best) return []
+
+  return [{
+    key: 'waiver_wire_wizard',
+    teamId: best.teamId,
+    opponentId: null,
+    metricValue: f1(best.p.actualPoints as number),
+    headline: `${best.p.name} scored ${f1(best.p.actualPoints as number)} after being picked up this week.`,
+    supporting: [
+      { label: 'Position', value: `${best.p.position} · ${best.p.nflTeam}` },
+      { label: 'Lineup', value: best.p.isStarter ? 'Started' : 'Benched' },
+      ...(best.p.projectedPoints != null
+        ? [{ label: 'Projected', value: f1(best.p.projectedPoints) }]
+        : []),
+    ],
+    player: {
+      espnPlayerId: best.p.espnPlayerId, name: best.p.name,
+      position: best.p.position, nflTeam: best.p.nflTeam,
+    },
+  }]
 }
 
 /**

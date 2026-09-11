@@ -9,7 +9,7 @@
 import { describe, it, expect } from 'vitest'
 import {
   computeWeeklyAwards, computeAwardLeaderboard,
-  type AwardMatchup, type AwardPlayer,
+  type AwardMatchup, type AwardPlayer, type AwardTransaction,
 } from '@/lib/awards/compute'
 import { AWARDS, awardsBySection, isComputable } from '@/lib/awards/catalog'
 
@@ -27,6 +27,10 @@ const week1: AwardMatchup[] = [
   g(3, 1, 5, 6, 120.0, 130.0),  // t5 loses with a strong score
   g(4, 1, 7, 8, 70.0, 68.0),    // t7 wins ugly
 ]
+
+const byKeyAll = (
+  m: AwardMatchup[], players: AwardPlayer[], transactions: AwardTransaction[], w = 1,
+) => new Map(computeWeeklyAwards(m, w, players, transactions).map((a) => [a.key as string, a]))
 
 const byKeyWith = (m: AwardMatchup[], players: AwardPlayer[], w = 1) =>
   new Map(computeWeeklyAwards(m, w, players).map((a) => [a.key as string, a]))
@@ -139,11 +143,19 @@ describe('catalog', () => {
       i === 2 ? { ...m, homeProjected: 132.5, awayProjected: 110 }
       : { ...m, homeProjected: m.homeScore, awayProjected: m.awayScore },
     )
-    const players: AwardPlayer[] = [{
-      seasonTeamId: 1, espnPlayerId: 1, name: 'Star', position: 'WR', nflTeam: 'PHI',
-      isStarter: true, actualPoints: 30, projectedPoints: 12,
-    }]
-    const produced = new Set(computeWeeklyAwards(withProjections, 1, players).map((a) => a.key))
+    const players: AwardPlayer[] = [
+      { seasonTeamId: 1, espnPlayerId: 1, name: 'Star', position: 'WR', nflTeam: 'PHI',
+        isStarter: true, actualPoints: 30, projectedPoints: 12 },
+      { seasonTeamId: 2, espnPlayerId: 2, name: 'Pickup', position: 'RB', nflTeam: 'DAL',
+        isStarter: true, actualPoints: 18, projectedPoints: 8 },
+    ]
+    const transactions: AwardTransaction[] = [
+      { seasonTeamId: 2, kind: 'FREE_AGENT', acquiredPlayerIds: [2] },
+      { seasonTeamId: 2, kind: 'LINEUP', acquiredPlayerIds: [] },
+    ]
+    const produced = new Set(
+      computeWeeklyAwards(withProjections, 1, players, transactions).map((a) => a.key),
+    )
     for (const def of AWARDS.filter(isComputable)) {
       expect(produced.has(def.key as never), `${def.name} is marked computable`).toBe(true)
     }
@@ -252,5 +264,105 @@ describe('projection-driven awards', () => {
     const keys = byKey(week1)
     expect(keys.has('giant_killer')).toBe(false)
     expect(keys.has('choke_artist')).toBe(false)
+  })
+})
+
+describe('transaction-driven awards', () => {
+  const p = (
+    seasonTeamId: number, espnPlayerId: number, name: string,
+    isStarter: boolean, actualPoints: number | null,
+  ): AwardPlayer => ({
+    seasonTeamId, espnPlayerId, name, position: 'RB', nflTeam: 'DAL',
+    isStarter, actualPoints, projectedPoints: 7,
+  })
+
+  describe('The Waiver Wire Wizard', () => {
+    const roster = [
+      p(2, 10, 'Free Agent Find', true, 24.5),
+      p(2, 11, 'Benched Pickup', false, 31.0),
+      p(1, 12, 'Rostered All Along', true, 40.0), // never acquired
+      p(3, 13, 'Traded For', true, 33.0),
+    ]
+
+    it('credits the manager who claimed the highest-scoring pickup', () => {
+      const txns: AwardTransaction[] = [{ seasonTeamId: 2, kind: 'FREE_AGENT', acquiredPlayerIds: [10] }]
+      const a = byKeyAll(week1, roster, txns).get('waiver_wire_wizard')!
+      expect(a.teamId).toBe(2)
+      expect(a.player?.name).toBe('Free Agent Find')
+      expect(a.metricValue).toBe('24.5')
+    })
+
+    it('ignores a high scorer who was never picked up', () => {
+      // The 40-point week belongs to someone rostered since the draft.
+      const txns: AwardTransaction[] = [{ seasonTeamId: 2, kind: 'WAIVER', acquiredPlayerIds: [10] }]
+      const a = byKeyAll(week1, roster, txns).get('waiver_wire_wizard')!
+      expect(a.player?.name).not.toBe('Rostered All Along')
+    })
+
+    it('counts a pickup who scored from the bench, and says he was benched', () => {
+      // The catalog formula is "grabbed the highest scoring free agent" — it
+      // does not require starting him. The card says which, rather than the
+      // engine silently deciding.
+      const txns: AwardTransaction[] = [{ seasonTeamId: 2, kind: 'FREE_AGENT', acquiredPlayerIds: [10, 11] }]
+      const a = byKeyAll(week1, roster, txns).get('waiver_wire_wizard')!
+      expect(a.player?.name).toBe('Benched Pickup')
+      expect(a.supporting).toContainEqual({ label: 'Lineup', value: 'Benched' })
+    })
+
+    it('excludes players acquired by trade', () => {
+      // Winning a trade is a different skill, and a different award.
+      const txns: AwardTransaction[] = [{ seasonTeamId: 3, kind: 'TRADE', acquiredPlayerIds: [13] }]
+      expect(byKeyAll(week1, roster, txns).has('waiver_wire_wizard')).toBe(false)
+    })
+
+    it('omits the award in a week with no pickups', () => {
+      expect(byKeyAll(week1, roster, []).has('waiver_wire_wizard')).toBe(false)
+    })
+
+    it('credits the claiming team, not whoever holds him now', () => {
+      // A pickup can be dropped again days later; the claim is what is judged.
+      const moved = [p(1, 10, 'Free Agent Find', true, 24.5)]
+      const txns: AwardTransaction[] = [{ seasonTeamId: 2, kind: 'FREE_AGENT', acquiredPlayerIds: [10] }]
+      expect(byKeyAll(week1, moved, txns).get('waiver_wire_wizard')!.teamId).toBe(2)
+    })
+  })
+
+  describe('The Galaxy Brain', () => {
+    // t5 lost to t6; t1 won big. Both are busy.
+    const busy = (teamId: number, kinds: string[]): AwardTransaction[] =>
+      kinds.map((kind) => ({ seasonTeamId: teamId, kind, acquiredPlayerIds: [] }))
+
+    it('counts every kind of move, and only among managers who lost', () => {
+      const txns = [
+        ...busy(5, ['FREE_AGENT', 'DROP', 'LINEUP', 'LINEUP', 'WAIVER']),
+        ...busy(1, ['FREE_AGENT', 'LINEUP', 'LINEUP', 'LINEUP', 'TRADE', 'DROP']), // t1 WON
+      ]
+      const a = byKeyAll(week1, [], txns).get('galaxy_brain')!
+      expect(a.teamId).toBe(5)
+      expect(a.metricValue).toBe('5')
+    })
+
+    it('counts lineup swaps, which is the whole point of the joke', () => {
+      const txns = busy(5, ['LINEUP', 'LINEUP', 'LINEUP', 'LINEUP'])
+      expect(byKeyAll(week1, [], txns).get('galaxy_brain')!.metricValue).toBe('4')
+    })
+
+    it('breaks the total down, so nobody has to guess what counted', () => {
+      const txns = busy(5, ['FREE_AGENT', 'FREE_AGENT', 'LINEUP', 'IR_PLACE'])
+      const a = byKeyAll(week1, [], txns).get('galaxy_brain')!
+      expect(a.supporting).toContainEqual({ label: 'Free agents', value: '2' })
+      expect(a.supporting).toContainEqual({ label: 'Lineup changes', value: '1' })
+      expect(a.supporting).toContainEqual({ label: 'To IR', value: '1' })
+    })
+
+    it('omits the award when the busiest loser made a single move', () => {
+      // One waiver claim is not a big brain. Saying nothing beats mocking
+      // somebody for managing their team once (§22.2).
+      expect(byKeyAll(week1, [], busy(5, ['WAIVER'])).has('galaxy_brain')).toBe(false)
+    })
+
+    it('omits the award when every loser stood pat', () => {
+      expect(byKeyAll(week1, [], []).has('galaxy_brain')).toBe(false)
+    })
   })
 })

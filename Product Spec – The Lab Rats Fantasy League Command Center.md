@@ -1886,9 +1886,42 @@ is projected highest and has not taken a snap.
 
 | Status | Awards |
 | --- | --- |
-| Computed | Cat Burglar, Dumpster Fire, Bad Beat, Public Execution, Prime Specimen, Nostradamus, Giant Killer, Choke Artist |
+| Computed | Cat Burglar, Dumpster Fire, Bad Beat, Public Execution, Prime Specimen, Nostradamus, Giant Killer, Choke Artist, Waiver Wire Wizard, Galaxy Brain |
 | Needs the lineup optimizer | The Mastermind, The Bench Bum |
-| Needs a transaction-to-scoring join | Waiver Wire Wizard, Galaxy Brain |
+
+## What counts as a roster move
+
+*Added 2026-09-11.*
+
+**The Galaxy Brain** counts every decision a manager made inside ESPN's scoring
+period — its own Wednesday-waivers-to-Monday-night boundary, which beats any
+window we could define — among managers who lost:
+
+```text
+waiver claims · free agent adds · drops · trades · IR moves · start/sit swaps
+```
+
+⚠️ **One transaction per decision, not one per player.** ESPN records a start/sit
+swap as a single ROSTER row carrying TWO lineup items, the player in and the
+player out. Counting items would score one substitution as two moves.
+
+Only EXECUTED transactions count: a cancelled waiver and a pending trade are not
+moves anyone made. DRAFT is excluded, or 180 picks would win week 1 outright.
+The card shows the breakdown, so nobody has to guess what was counted.
+
+Lineup swaps are stored (as transaction type `LINEUP`) but stay OUT of the
+Transaction Log — a log of "moved a player to the bench" forty times a week
+buries the moves people came to read.
+
+**The Waiver Wire Wizard** takes the highest-scoring player acquired from
+waivers or free agency that week, credited to the manager who CLAIMED him — not
+whoever holds him now, since a pickup can be dropped again days later. Trades
+are excluded; winning a trade is a different skill and a different award.
+
+It deliberately does not require that the pickup was started. "Grabbed the
+highest scoring free agent" is the claim the award makes, and identifying him is
+the hard part. The card says whether he started rather than the engine silently
+deciding it.
 
 Only REAL awards are written. Placeholder cards stay a render-time decoration —
 persisting invented values is how sample data stops being distinguishable from

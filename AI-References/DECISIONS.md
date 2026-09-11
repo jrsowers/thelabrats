@@ -878,3 +878,48 @@ written to the database.
 **The page opens on the latest PUBLISHED week, not the live one.** Defaulting to
 the current week would show an empty page for the five days between Tuesday and
 the following Monday — most of the time anyone is looking.
+
+## 2026-09-11 — The Waiver Wire Wizard and The Galaxy Brain are real now
+
+James asked directly whether either was actually wired up. They were not — both
+were placeholders, and the "Jesse picked up Jared Goff and he went off for 72.0
+pts" on the page was invented sample data seeded from the award key. Both are
+now computed from stored transactions.
+
+**ESPN logs lineup changes, and we had been throwing them away.** A start/sit
+swap arrives as a `ROSTER` transaction whose items are `LINEUP` moves between
+slots. The parser dropped every non-IR ROSTER row, correctly, because a
+transaction LOG full of bench moves is noise. But they are real roster
+decisions, and The Galaxy Brain — "made the most roster moves and still lost" —
+is a worse award without them: the manager who shuffled his lineup nine times is
+exactly who the joke is about. They are now stored as type `LINEUP`, counted by
+the award, and still excluded from the log.
+
+**One transaction per decision, not one per player.** ESPN records a swap as a
+single row carrying two items, the player in and the player out. Counting items
+would have scored one substitution as two moves and handed the award to whoever
+made the most substitutions rather than the most decisions.
+
+**The scoring period is ESPN's, not ours.** Each transaction carries its own
+`scoringPeriodId`, which is the league's real Wednesday-waivers-to-Monday-night
+boundary. Defining our own window would have been guesswork that drifts from
+what the league actually sees.
+
+**The Waiver Wire Wizard credits the CLAIMING team**, not whoever holds the
+player now — a pickup can be dropped again days later, and the claim is the
+thing being judged. Trades are excluded: winning a trade is a different skill.
+
+**It does not require that the pickup was started.** The catalog formula is
+"grabbed the highest scoring free agent", and identifying him is the hard part.
+The card reports whether he started instead of the engine silently deciding.
+That is a real judgement call and worth revisiting if the league disagrees.
+
+**Both omit rather than reach.** No pickups that week means no Wizard; a single
+waiver claim is not a Galaxy Brain. Mocking somebody for managing their team
+once is worse than showing nothing (§22.2).
+
+**The hypothesised transaction fixture is retired.** That file carried a header
+warning that the parser was verified for internal consistency only, because the
+league had no transactions when it was written. It now runs against a real
+capture: 211 transactions, including the seven lineup swaps and three cancelled
+waivers that the hand-written fixture never had.

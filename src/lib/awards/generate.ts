@@ -22,7 +22,10 @@
  */
 import { createServiceClient } from '@/lib/supabase/server'
 import { AWARDS } from './catalog'
-import { computeWeeklyAwards, type AwardMatchup, type AwardPlayer } from './compute'
+import {
+  computeWeeklyAwards,
+  type AwardMatchup, type AwardPlayer, type AwardTransaction,
+} from './compute'
 
 export interface GenerateResult {
   ok: boolean
@@ -38,6 +41,7 @@ export async function generateWeeklyAwards(
   week: number,
   matchups: AwardMatchup[],
   players: AwardPlayer[],
+  transactions: AwardTransaction[] = [],
   { regenerate = false }: { regenerate?: boolean } = {},
 ): Promise<GenerateResult> {
   const db = createServiceClient()
@@ -55,7 +59,7 @@ export async function generateWeeklyAwards(
       if ((count ?? 0) > 0) return { ok: true, week, awards: 0 }
     }
 
-    const computed = computeWeeklyAwards(matchups, week, players)
+    const computed = computeWeeklyAwards(matchups, week, players, transactions)
     if (computed.length === 0) return { ok: true, week, awards: 0 }
 
     // Player evidence points at `players.id`, not ESPN's id.

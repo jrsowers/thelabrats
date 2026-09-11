@@ -10,7 +10,7 @@
 import { createServiceClient } from '@/lib/supabase/server'
 import { decideRelease } from './release'
 import { generateWeeklyAwards, type GenerateResult } from './generate'
-import type { AwardMatchup, AwardPlayer } from './compute'
+import type { AwardMatchup, AwardPlayer, AwardTransaction } from './compute'
 
 export interface PublishResult {
   ok: boolean
@@ -103,7 +103,36 @@ export async function publishDueAwards(
           projectedPoints: r.projected_points == null ? null : Number(r.projected_points),
         }))
 
-      generated.push(await generateWeeklyAwards(seasonId, week, awardMatchups, players))
+      // ---- the week's roster moves ----
+      // EXECUTED only: a cancelled waiver and a pending trade are not moves
+      // anybody made. DRAFT is excluded — 180 picks would win every week.
+      const { data: txns, error: txnError } = await db
+        .from('transactions')
+        .select('id, transaction_type, season_team_id, transaction_items ( action, players ( espn_player_id ) )')
+        .eq('season_id', seasonId)
+        .eq('week', week)
+        .eq('status', 'EXECUTED')
+        .neq('transaction_type', 'DRAFT')
+      if (txnError) throw new Error(`transactions read failed: ${txnError.message}`)
+
+      type TxnRow = {
+        transaction_type: string; season_team_id: number | null
+        transaction_items: { action: string; players: { espn_player_id: number | null } | null }[] | null
+      }
+
+      const transactions: AwardTransaction[] = (txns as unknown as TxnRow[] ?? [])
+        .filter((t) => t.season_team_id != null)
+        .map((t) => ({
+          seasonTeamId: t.season_team_id as number,
+          kind: t.transaction_type,
+          acquiredPlayerIds: (t.transaction_items ?? [])
+            .filter((i) => i.action === 'ADD' && i.players?.espn_player_id != null)
+            .map((i) => i.players!.espn_player_id as number),
+        }))
+
+      generated.push(
+        await generateWeeklyAwards(seasonId, week, awardMatchups, players, transactions),
+      )
     }
 
     const failed = generated.find((g) => !g.ok)

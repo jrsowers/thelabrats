@@ -17,9 +17,11 @@ const payload = leagueResponseSchema.parse(
 const txns = toTransactions(payload)
 
 describe('toTransactions', () => {
-  it('drops ROSTER entries, which are lineup changes rather than moves', () => {
-    expect(txns.find((t) => t.espnTransactionId === 'TXN-0004')).toBeUndefined()
-    expect(txns).toHaveLength(4)
+  it('keeps a ROSTER entry as a LINEUP move rather than dropping it', () => {
+    // It used to be dropped. Start/sit swaps stay out of the transaction LOG,
+    // but they are real roster decisions and The Galaxy Brain counts them.
+    expect(txns.find((t) => t.espnTransactionId === 'TXN-0004')?.type).toBe('LINEUP')
+    expect(txns).toHaveLength(5)
   })
 
   it('maps ESPN types onto ours', () => {
@@ -55,5 +57,44 @@ describe('toTransactions', () => {
   it('converts ESPN epoch millis to ISO timestamps', () => {
     const t = txns.find((t) => t.espnTransactionId === 'TXN-0001')!
     expect(t.processedAt).toMatch(/^\d{4}-\d{2}-\d{2}T/)
+  })
+})
+
+describe('toTransactions — against the real capture', () => {
+  // Replaces the hypothesised-only coverage this file opened with. Captured
+  // 2026-09-11, after a draft, eleven free agent moves, two waiver claims, a
+  // trade, seven IR moves and seven start/sit swaps (§60).
+  const real = toTransactions(
+    leagueResponseSchema.parse(JSON.parse(readFileSync('fixtures/mTransactions2.json', 'utf8'))),
+  )
+
+  it('keeps every transaction ESPN sent', () => {
+    expect(real).toHaveLength(211)
+  })
+
+  it('splits ESPN’s one ROSTER type into IR moves and lineup swaps', () => {
+    const roster = real.filter((t) =>
+      t.type === 'IR_PLACE' || t.type === 'IR_ACTIVATE' || t.type === 'LINEUP')
+    expect(roster).toHaveLength(14)
+    expect(real.filter((t) => t.type === 'IR_PLACE')).toHaveLength(7)
+    expect(real.filter((t) => t.type === 'LINEUP')).toHaveLength(7)
+  })
+
+  it('records a swap as ONE transaction carrying two players', () => {
+    // ESPN sends the player coming in and the player going out as two items on
+    // a single row. Counting items would score one substitution as two moves.
+    const swaps = real.filter((t) => t.type === 'LINEUP' && t.items.length === 2)
+    expect(swaps.length).toBeGreaterThan(0)
+  })
+
+  it('keeps a cancelled waiver, flagged, rather than silently dropping it', () => {
+    const canceled = real.filter((t) => t.status === 'CANCELED')
+    expect(canceled).toHaveLength(3)
+    expect(canceled.every((t) => t.type === 'WAIVER')).toBe(true)
+  })
+
+  it('scopes every transaction to a scoring period the awards can group by', () => {
+    const nonDraft = real.filter((t) => t.type !== 'DRAFT')
+    expect(nonDraft.every((t) => t.scoringPeriod != null)).toBe(true)
   })
 })

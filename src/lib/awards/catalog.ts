@@ -169,7 +169,7 @@ export const AWARDS: AwardDef[] = [
   {
     key: 'galaxy_brain', name: 'The Galaxy Brain', section: 'DUDS', category: 'MANAGER',
     blurb: 'Made the most roster moves and still lost.',
-    formula: 'Most adds, drops and trades within the scoring period, among managers who lost.',
+    formula: 'Most roster moves within ESPN\'s scoring period, among managers who lost — waiver claims, free agent adds, drops, trades, IR moves and start/sit swaps. A swap counts once, not once per player.',
     needs: ['TRANSACTIONS', 'FINAL_SCORES'], capture: 'FINAL_ONLY',
     metricLabel: 'Roster moves', evidence: 'MATCHUP',
   },
@@ -193,14 +193,13 @@ export const byCadence = (c: CaptureCadence) => AWARDS.filter((a) => a.capture =
 /**
  * Data the ingest actually collects, as of 2026-09-11.
  *
- * TRANSACTIONS is stored but not yet joined to a week's scoring, and
- * LINEUP_OPTIMIZER has no solver — it is a constrained assignment problem, and
- * greedy bench substitution is wrong in a superflex league where the OP slot
- * competes with QB for the same players. Awards needing either still fall back
- * to a flagged placeholder.
+ * LINEUP_OPTIMIZER is the last gap, and it has no solver: it is a constrained
+ * assignment problem, and greedy bench substitution is wrong in a superflex
+ * league where the OP slot competes with QB for the same players. The two
+ * awards needing it still fall back to a flagged placeholder.
  */
 const SATISFIED: ReadonlySet<DataNeed> = new Set<DataNeed>([
-  'FINAL_SCORES', 'PLAYER_SCORES', 'PROJECTIONS',
+  'FINAL_SCORES', 'PLAYER_SCORES', 'PROJECTIONS', 'TRANSACTIONS',
 ])
 
 /** True when every dependency is satisfied by data we already have. */
