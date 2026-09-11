@@ -190,6 +190,75 @@ the wrong one silently swaps real scores for projections everywhere in the app.
 **Write a fixture test for this specifically.** It is the highest-consequence,
 lowest-visibility mistake available in this integration.
 
+`stats` also carries entries for OTHER scoring periods, so **both** filters are
+mandatory — `statSourceId` AND `scoringPeriodId`. Filtering on source alone
+reads some other week's result as this one's.
+
+### A missing ACTUAL row is not a zero
+
+A player whose game has not kicked off has no `statSourceId: 0` entry at all.
+Defaulting that to `0` says he played and scored nothing, which hands Fantasy
+Nostradamus to whoever was projected highest and has not taken a snap. Store
+null; see `PlayerWeekScore.actualPoints`.
+
+---
+
+## ⚠️ `totalPoints` IS ZERO UNTIL THE PERIOD CLOSES — verified 2026-09-11
+
+Captured mid-week-1, with two NFL games already final and real fantasy points
+on the board. Every one of the twelve teams read:
+
+```json
+{ "totalPoints": 0.0, "totalPointsLive": 13.0, "pointsByScoringPeriod": { "1": 13.0 } }
+```
+
+`totalPoints` is the FINALIZED figure and stays at zero until ESPN closes the
+scoring period — days after the points are real. Reading it left the scoreboard
+at 0-0 through a live slate, and because a matchup only reaches LIVE when it has
+points, the adaptive sync cadence never escalated either. One wrong field, two
+broken features.
+
+Three fields carry the same number, and each view fills a different subset:
+
+| Field | mMatchupScore | mScoreboard | mBoxscore |
+| --- | --- | --- | --- |
+| `totalPoints` | 0 until finalized | 0 until finalized | 0 until finalized |
+| `totalPointsLive` | ✅ | ✅ | ✗ (reads 0) |
+| `pointsByScoringPeriod` | ✅ | ✅ | ✗ (empty) |
+| `rosterForCurrentScoringPeriod.appliedStatTotal` | ✅ | ✅ | ✅ |
+
+So take whichever is actually populated — `totalPointsLive`, then the roster's
+`appliedStatTotal`, then `totalPoints`. **`appliedStatTotal` is verified equal
+to the sum of that team's STARTERS' actual points**, across all twelve teams in
+both views, so the scoreboard total and the boxscore beneath it cannot disagree.
+
+A team that genuinely scores zero reads zero from all three, which is correct —
+`winner` is what decides FINAL, never the points.
+
+---
+
+## Rosters and per-player scoring — verified 2026-09-11
+
+Pass `scoringPeriodId=N`. Rosters arrive under
+`schedule[].home|away.rosterForCurrentScoringPeriod.entries[]`.
+
+**Request BOTH `mMatchupScore` AND `mBoxscore`.** Neither is sufficient:
+
+| | mMatchupScore | mBoxscore |
+| --- | --- | --- |
+| roster entries | ✅ | ✅ |
+| `appliedStatTotal` | ✅ | ✅ |
+| `totalPointsLive` | ✅ | ✗ |
+| `player.eligibleSlots` | ✗ | ✅ |
+
+`eligibleSlots` is the lineup optimizer's constraint set — a QB returns
+`[0, 7, 20, 21]`, so slot 7 (OP) competes with slot 0 for the same player. That
+is what makes a greedy bench substitution wrong in this league.
+
+Each entry gives `lineupSlotId`, `playerPoolEntry.appliedStatTotal` (the
+player's actual for the period) and `player.stats[]` (actual and projected, per
+the stat-source rules above).
+
 ---
 
 ## Transactions (`mTransactions2`)
@@ -317,6 +386,9 @@ fixture for each into `/fixtures/`.
       1 — the commissioner widened it before week 1
 - [x] `mTeam` + `mStandings` standings and forecast fields
 
-**Still blocked until Week 1 games:**
-- [ ] `statSourceId` 0 vs 1 behavior against a real scored week
-- [ ] Pro team ID map against real player rows
+**Done 2026-09-11 (mid-week-1, two NFL games final):**
+- [x] `statSourceId` 0 vs 1 against a real scored week — both filters needed,
+      and a missing actual row is null rather than zero
+- [x] `totalPoints` reads 0 until the period closes; `totalPointsLive` is live
+- [x] Roster + per-player scoring shape; needs mMatchupScore AND mBoxscore
+- [x] Pro team ID map against real player rows

@@ -783,3 +783,59 @@ destructured only `data` and ignored `error`, so a failing write reported
 SUCCESS on every sync. Every ingest write now throws on error and verifies the
 row count it wrote. This is the second time a silent failure has cost a day —
 the first was an empty migration file that `db push` recorded as applied.
+
+## 2026-09-11 — The live score is not in the field called `totalPoints`
+
+Three failures wearing one symptom: the scoreboard sat at 0-0 through a live
+slate, and Studs & Duds had nothing to compute from.
+
+**`totalPoints` is zero until ESPN closes the scoring period.** Verified
+mid-week-1 with two NFL games already final: all twelve teams read 0.0 while
+`totalPointsLive` carried the real number. Three ESPN fields hold the same
+figure and every view fills a different subset, so the parser now takes
+whichever is populated. `appliedStatTotal` is verified equal to the sum of a
+team's starters, so the scoreboard total and the boxscore beneath it cannot
+disagree. Full field-by-view table in `ESPN-API.md`.
+
+**Fixing that exposed the cadence's real bug.** Its live signal was
+`status = 'LIVE'`, which had been dead code while scores were stuck at zero and
+became far too generous once they were not: a fantasy matchup is open
+continuously from the Thursday kickoff to the Monday night whistle. Live cadence
+would have run for four days — roughly 5,700 requests to watch nothing happen on
+a Friday afternoon.
+
+**A moving score is the honest signal.** `matchups.score_changed_at` is written
+only when a score actually differs from the stored one, never on every sync, or
+it would just be a slower copy of `last_synced_at`. It needs no game-window
+guesses, so it covers the Saturday and holiday slates the windows deliberately
+omit, and it stops on its own when the last game ends. The windows remain as the
+cold-start case: at kickoff nothing has moved yet, so the clock opens the door.
+
+**`player_week_scores` was never written by anything.** Not a bug in the sync so
+much as a missing half of it — `syncLeague` covered settings, teams, matchups
+and transactions, and no code path ever touched the table. Studs & Duds was
+short seven awards because the data did not exist, not because the engine
+could not compute them.
+
+**Player awards land during the week, matchup awards wait for it to finish.**
+The best performance of a Sunday is knowable on Sunday. Holding every card until
+the week finalizes would leave the page empty during the only window anyone is
+looking at it. "Lowest winning score", by contrast, is meaningless while games
+are still being played.
+
+**Only STARTED players win The Prime Specimen.** A 44-point week from someone's
+bench is a Bench Bum story. The award is for the manager's decision, and leaving
+him on the bench was the opposite decision.
+
+**Still deliberately unbuilt:** The Mastermind and The Bench Bum need a
+slot-aware lineup optimizer. It is a constrained assignment problem, not a sort,
+and greedy bench substitution is wrong in a superflex league where the OP slot
+competes with QB for the same players. `eligibleSlots` is now parsed and
+available for it. The two transaction-driven awards need a join from
+transactions to that week's scoring.
+
+**The leak checker treated NFL players as league members.** It harvested every
+`firstName` / `lastName` in a raw capture as an identifier, so the first
+boxscore capture added 400 public figures to the secret list and flagged 318
+false positives across fixtures that name players on purpose. Player subtrees
+are now excluded.

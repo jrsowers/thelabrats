@@ -1022,6 +1022,21 @@ Use this for administration and debugging.
 
 ---
 
+## 14.18a matchups.score_changed_at
+
+*Added 2026-09-11.*
+
+When a matchup's score last actually MOVED — written by the ingest only when the
+incoming score differs from the stored one, never on every sync.
+
+This drives the live sync cadence (§15.5). The previous signal was
+`status = 'LIVE'`, which is true continuously from the Thursday kickoff to the
+Monday night whistle: four days, mostly not football. A moving score needs no
+game-window guesses, so it also covers the Saturday and holiday slates the
+windows deliberately omit, and it stops on its own when the last game ends.
+
+---
+
 ## 14.19 espn_team_standings
 
 *Added 2026-09-06.*
@@ -1723,6 +1738,26 @@ This is one of the highest-risk logic areas in the application.
 
 ---
 
+# 20.7 Live scores
+
+*Added 2026-09-11.*
+
+⚠️ **ESPN's `totalPoints` reads zero until the scoring period closes.** It is
+the finalized figure, written days after the points are real. Three fields carry
+the same number and every view fills a different subset, so the ingest takes
+whichever is populated: `totalPointsLive`, then the roster's `appliedStatTotal`,
+then `totalPoints`. Field-by-view table in `AI-References/ESPN-API.md`.
+
+`appliedStatTotal` is ESPN's own starters-only sum, verified equal across all
+twelve teams, so a team's scoreboard total and the boxscore beneath it can never
+disagree.
+
+A matchup reaches LIVE when it has points and no winner. A team that genuinely
+scores zero reads zero from all three fields, which is correct — `winner` is
+what decides FINAL, never the points.
+
+---
+
 # 21.9 ESPN's Forecast
 
 *Added 2026-09-06.*
@@ -1791,6 +1826,42 @@ Week 8 - In Progress
 awards may be shown as provisional.
 
 Clearly label them.
+
+---
+
+# 22.1a When an award can be computed
+
+*Added 2026-09-11.*
+
+**Player awards land during the week; matchup awards wait for it to finish.**
+
+The best performance of a Sunday is knowable on Sunday, and holding every card
+until the week finalizes leaves the page empty during the only window anyone is
+looking at it. "Lowest winning score", by contrast, is meaningless while games
+are still being played.
+
+So the engine emits player-driven awards from whatever player lines exist, and
+matchup-driven awards only for a week with final results.
+
+**Only STARTED players win player awards.** A 44-point week from someone's bench
+is a Bench Bum story, not a Prime Specimen one — the award is for the manager's
+decision, and leaving him on the bench was the opposite decision.
+
+**A missing result is not a zero.** A player whose game has not kicked off has
+no actual line at all. Reading that as zero hands Fantasy Nostradamus to whoever
+is projected highest and has not taken a snap.
+
+## Current coverage
+
+| Status | Awards |
+| --- | --- |
+| Computed | Cat Burglar, Dumpster Fire, Bad Beat, Public Execution, Prime Specimen, Nostradamus, Giant Killer, Choke Artist |
+| Needs the lineup optimizer | The Mastermind, The Bench Bum |
+| Needs a transaction-to-scoring join | Waiver Wire Wizard, Galaxy Brain |
+
+The optimizer is a constrained assignment problem, not a sort. Greedy bench
+substitution is wrong in this league, where the OP slot competes with QB for the
+same players — `eligibleSlots` is parsed and stored for when it is built.
 
 ---
 

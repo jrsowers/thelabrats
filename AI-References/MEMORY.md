@@ -4,11 +4,18 @@ Running state of the build. **Update this at the end of every working session.**
 A future session should be able to read this file and `SOUL.md` and resume
 without re-reading the conversation.
 
-**Last updated:** 2026-09-06
+**Last updated:** 2026-09-11
 
 ---
 
 ## Current status
+
+**2026-09-11 — week 1 in progress, live scoring works.** Two NFL games final,
+the Sunday slate ahead. The scoreboard shows real live scores, the sync
+escalates to one-minute polling while scores are moving, and
+`player_week_scores` is being collected for the first time. Studs & Duds now
+computes four awards for real; two more need the lineup optimizer and two need a
+transaction-to-scoring join. See Session 8.
 
 **2026-09-06 — season live, week 1 not yet played.** The draft is done, the
 recap and report cards are published, the transaction log is running against
@@ -182,11 +189,11 @@ Apex, www, and `thelabrats-gray.vercel.app` all resolve.
 | --- | --- | --- |
 | 1 | Foundation — scaffold, ESPN adapter, migrations, RLS, ingestion, preview mode | ✅ |
 | 2 | ESPN league import | ✅ |
-| 3 | Live Scoreboard | ✅ (live polling still to come) |
+| 3 | Live Scoreboard | ✅ live scores + adaptive polling verified in week 1 |
 | 4 | Standings — H2H tiebreak, movement, clinching | ✅ |
 | 5 | Playoff Picture — bracket + bubble + ESPN's odds | ✅ |
 | 6 | Transactions | ✅ Verified against real adds, drops, a trade and IR moves |
-| 7 | Studs & Duds | 🔨 7 of 14 awards; player awards need week 1 |
+| 7 | Studs & Duds | 🔨 8 of 12 real; 2 need the optimizer, 2 need a txn join |
 | 8 | Record Books | ✅ Champions Corner + Firsts and Worsts (records accumulate) |
 
 ---
@@ -327,3 +334,49 @@ Open: tier-2 dossier review (Keenan Allen, Miles Sanders, Deshaun Watson), the
 ROBBERY badge is untested, the Yahoo 2025 export, and `fixtures/league-teams.json`
 still leaks real names — it predates `fixtures/raw/` and the sanitizer never
 regenerates it.
+
+## Session 8 — 2026-09-11 (live scoring, and the data Studs & Duds was missing)
+
+**`totalPoints` is zero until ESPN closes the scoring period.** This is the
+single most valuable thing in this file. Verified mid-week-1 with two NFL games
+already final: every team read `totalPoints: 0.0` while `totalPointsLive`
+carried the real score. We had been reading `totalPoints`, so the scoreboard sat
+at 0-0 for two days with real points on the board.
+
+**One wrong field broke two features.** A matchup only reaches LIVE when it has
+points, so it never did, so the adaptive cadence never escalated — it routine-
+synced every 15 minutes straight through a live slate. Two symptoms, one cause,
+and the second was invisible until the first was fixed.
+
+**Then fixing it exposed the cadence's real bug.** Its live signal was
+`status = 'LIVE'`, and a fantasy matchup is LIVE from Thursday kickoff to Monday
+night. That would have polled every minute for four days. It now keys off
+`matchups.score_changed_at`, written only when a score actually moves — which
+needs no game-window guesses and therefore also covers the Saturday slates the
+windows deliberately omit.
+
+**`player_week_scores` had zero rows all season** because nothing ever wrote it.
+`syncLeague` covered settings, teams, matchups and transactions; there was no
+roster ingest at all. That, not the award engine, is why Studs & Duds was mostly
+placeholders. `syncRosters` now fills it — and needs BOTH `mMatchupScore` and
+`mBoxscore` on one request, because the first omits `eligibleSlots` and the
+second zeroes the team totals.
+
+**The lesson, again:** the bug was not in any code that looked wrong. Every
+function did exactly what it said. Finding it took reading the actual ESPN
+payload next to the actual database rows next to the actual page. The repo has
+now been bitten three times by a silent wrong-but-plausible value — swallowed
+upsert errors, an empty migration, and now a zeroed field — and each time the
+tell was a number that was suspiciously round.
+
+**Verification:** `npm test` (231 ✅, 15 files) · `npx tsc --noEmit` ✅ ·
+`npm run test:responsive` (62 ✅) · build ✅ · deployed and confirmed against
+production: six LIVE matchups with real scores, 187 player rows, Brock Purdy
+holding both The Prime Specimen and Fantasy Nostradamus.
+
+Open: the lineup optimizer (blocks The Mastermind and The Bench Bum;
+`eligibleSlots` is now parsed and ready for it), the transaction-to-scoring join
+(blocks The Waiver Wire Wizard and The Galaxy Brain), `/awards` is still
+`ready: false` in the nav and therefore URL-only, tier-2 dossier review, the
+ROBBERY badge, the Yahoo 2025 export, and `fixtures/league-teams.json` still
+leaks real names.
