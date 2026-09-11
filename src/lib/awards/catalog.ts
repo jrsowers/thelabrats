@@ -193,13 +193,12 @@ export const byCadence = (c: CaptureCadence) => AWARDS.filter((a) => a.capture =
 /**
  * Data the ingest actually collects, as of 2026-09-11.
  *
- * LINEUP_OPTIMIZER is the last gap, and it has no solver: it is a constrained
- * assignment problem, and greedy bench substitution is wrong in a superflex
- * league where the OP slot competes with QB for the same players. The two
- * awards needing it still fall back to a flagged placeholder.
+ * All of it, now that `eligible_slots` is stored and the optimizer exists. The
+ * remaining need, LIVE_EVENTS, belongs to awards nothing in the catalog claims
+ * yet.
  */
 const SATISFIED: ReadonlySet<DataNeed> = new Set<DataNeed>([
-  'FINAL_SCORES', 'PLAYER_SCORES', 'PROJECTIONS', 'TRANSACTIONS',
+  'FINAL_SCORES', 'PLAYER_SCORES', 'PROJECTIONS', 'TRANSACTIONS', 'LINEUP_OPTIMIZER',
 ])
 
 /** True when every dependency is satisfied by data we already have. */

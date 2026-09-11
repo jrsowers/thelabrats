@@ -26,14 +26,20 @@ export async function publishDueAwards(
   const db = createServiceClient()
 
   try {
-    const [matchupRes, awardRes] = await Promise.all([
+    const [matchupRes, awardRes, seasonRes] = await Promise.all([
       db.from('matchups')
         .select('id, week, home_team_id, away_team_id, home_score, away_score, status, home_projected_score, away_projected_score')
         .eq('season_id', seasonId),
       db.from('awards').select('week').eq('season_id', seasonId),
+      db.from('seasons').select('lineup_slot_counts').eq('id', seasonId).maybeSingle(),
     ])
     if (matchupRes.error) throw new Error(`matchups read failed: ${matchupRes.error.message}`)
     if (awardRes.error) throw new Error(`awards read failed: ${awardRes.error.message}`)
+    if (seasonRes.error) throw new Error(`season read failed: ${seasonRes.error.message}`)
+
+    // The shape of a legal lineup. Without it the optimizer has no seats and
+    // the two lineup awards stay placeholders rather than guessing.
+    const slotCounts = (seasonRes.data?.lineup_slot_counts ?? {}) as Record<string, number>
 
     const matchups = matchupRes.data ?? []
 
@@ -79,13 +85,14 @@ export async function publishDueAwards(
 
       const { data: scores, error } = await db
         .from('player_week_scores')
-        .select('season_team_id, is_starter, actual_points, projected_points, players ( espn_player_id, full_name, position, nfl_team )')
+        .select('season_team_id, is_starter, lineup_slot_id, eligible_slots, actual_points, projected_points, players ( espn_player_id, full_name, position, nfl_team )')
         .eq('season_id', seasonId)
         .eq('week', week)
       if (error) throw new Error(`player_week_scores read failed: ${error.message}`)
 
       type Row = {
         season_team_id: number; is_starter: boolean
+        lineup_slot_id: number; eligible_slots: number[] | null
         actual_points: number | null; projected_points: number | null
         players: { espn_player_id: number | null; full_name: string | null; position: string | null; nfl_team: string | null } | null
       }
@@ -99,6 +106,8 @@ export async function publishDueAwards(
           position: r.players!.position ?? '',
           nflTeam: r.players!.nfl_team ?? '',
           isStarter: r.is_starter,
+          lineupSlotId: r.lineup_slot_id,
+          eligibleSlots: r.eligible_slots ?? [],
           actualPoints: r.actual_points == null ? null : Number(r.actual_points),
           projectedPoints: r.projected_points == null ? null : Number(r.projected_points),
         }))
@@ -131,7 +140,9 @@ export async function publishDueAwards(
         }))
 
       generated.push(
-        await generateWeeklyAwards(seasonId, week, awardMatchups, players, transactions),
+        await generateWeeklyAwards(
+          seasonId, week, awardMatchups, players, transactions, slotCounts,
+        ),
       )
     }
 

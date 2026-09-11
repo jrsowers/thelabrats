@@ -180,11 +180,13 @@ export default async function AwardsPage({
   const studs = inOrder('STUDS')
   const duds = inOrder('DUDS')
 
-  // Placeholders on a PUBLISHED week mean only one thing: an award whose data
-  // the ingest does not collect yet. On an unpublished week they mean the week
-  // has not been released, which is a different message entirely.
+  // On an unpublished week every card is a placeholder, which gets its own
+  // message. On a PUBLISHED one a placeholder means the engine found no
+  // qualifying candidate — a week where nobody beat their projection has no
+  // Nostradamus — unless the award still needs data nobody collects.
   const placeholders = cards.filter((c) => c.placeholder)
   const pending = placeholders.filter((c) => !isComputable(c.def))
+  const uncontested = placeholders.filter((c) => isComputable(c.def))
 
   return (
     <AppShell leagueName={overview.leagueName}>
@@ -225,10 +227,16 @@ export default async function AwardsPage({
             marked
             <span className="ml-1 mr-0.5 font-mono text-[10px] uppercase tracking-wider text-warn">Sample</span>
             {'. '}
+            {uncontested.length > 0 && (
+              <>
+                {pending.length > 0 ? `${uncontested.length} had ` : 'Nobody qualified — '}
+                no qualifying candidate this week.{' '}
+              </>
+            )}
             {pending.length > 0 && (
               <>
-                They need the lineup optimizer and a transaction-to-scoring join,
-                neither of which is built yet.
+                {uncontested.length > 0 ? `The other ${pending.length} need ` : 'They need '}
+                data the ingest does not collect yet.
               </>
             )}
           </p>

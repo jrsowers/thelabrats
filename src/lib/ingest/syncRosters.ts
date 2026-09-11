@@ -96,6 +96,9 @@ export async function syncRosters(
         is_starter: s.isStarter,
         projected_points: s.projectedPoints,
         actual_points: s.actualPoints,
+        // The lineup optimizer's constraint set. NOT derivable from position —
+        // a QB lists the superflex OP slot too.
+        eligible_slots: s.eligibleSlots,
         game_status: s.injuryStatus,
         last_synced_at: new Date().toISOString(),
       }))

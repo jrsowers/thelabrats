@@ -42,6 +42,7 @@ export async function generateWeeklyAwards(
   matchups: AwardMatchup[],
   players: AwardPlayer[],
   transactions: AwardTransaction[] = [],
+  slotCounts: Record<string | number, number> = {},
   { regenerate = false }: { regenerate?: boolean } = {},
 ): Promise<GenerateResult> {
   const db = createServiceClient()
@@ -59,7 +60,7 @@ export async function generateWeeklyAwards(
       if ((count ?? 0) > 0) return { ok: true, week, awards: 0 }
     }
 
-    const computed = computeWeeklyAwards(matchups, week, players, transactions)
+    const computed = computeWeeklyAwards(matchups, week, players, transactions, slotCounts)
     if (computed.length === 0) return { ok: true, week, awards: 0 }
 
     // Player evidence points at `players.id`, not ESPN's id.

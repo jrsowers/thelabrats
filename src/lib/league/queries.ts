@@ -592,7 +592,10 @@ export interface WeekPlayerScore {
   position: string
   nflTeam: string
   lineupSlot: string
+  lineupSlotId: number
   isStarter: boolean
+  /** Slots this player could legally have filled. The optimizer's constraints. */
+  eligibleSlots: number[]
   /** Null until the player's game kicks off — not the same as zero. */
   actualPoints: number | null
   projectedPoints: number | null
@@ -613,7 +616,8 @@ export async function getPlayerWeekScores(
   const supabase = createPublicClient()
   const { data, error } = await supabase
     .from('player_week_scores')
-    .select(`season_team_id, lineup_slot, is_starter, actual_points, projected_points,
+    .select(`season_team_id, lineup_slot, lineup_slot_id, is_starter, eligible_slots,
+             actual_points, projected_points,
              players ( espn_player_id, full_name, position, nfl_team )`)
     .eq('season_id', seasonId)
     .eq('week', week)
@@ -621,7 +625,8 @@ export async function getPlayerWeekScores(
   if (error || !data) return []
 
   type Row = {
-    season_team_id: number; lineup_slot: string; is_starter: boolean
+    season_team_id: number; lineup_slot: string; lineup_slot_id: number
+    is_starter: boolean; eligible_slots: number[] | null
     actual_points: number | null; projected_points: number | null
     players: { espn_player_id: number | null; full_name: string | null; position: string | null; nfl_team: string | null } | null
   }
@@ -635,7 +640,9 @@ export async function getPlayerWeekScores(
       position: r.players!.position ?? '',
       nflTeam: r.players!.nfl_team ?? '',
       lineupSlot: r.lineup_slot,
+      lineupSlotId: r.lineup_slot_id,
       isStarter: r.is_starter,
+      eligibleSlots: r.eligible_slots ?? [],
       actualPoints: r.actual_points == null ? null : Number(r.actual_points),
       projectedPoints: r.projected_points == null ? null : Number(r.projected_points),
     }))

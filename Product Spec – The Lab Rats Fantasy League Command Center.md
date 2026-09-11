@@ -1037,6 +1037,23 @@ windows deliberately omit, and it stops on its own when the last game ends.
 
 ---
 
+## 14.6a player_week_scores.eligible_slots
+
+*Added 2026-09-11.*
+
+ESPN lineup slot ids a player may legally occupy, per player per week. The
+lineup optimizer's constraint set (§22.1c).
+
+⚠️ NOT derivable from `position`. A QB returns `[0, 7, 20, 21]`: slot 7 is the
+superflex OP, which competes with QB for the same players, and that is precisely
+what makes a greedy bench substitution wrong in this league. ESPN also grants
+multi-position eligibility to individual players.
+
+Stored per week rather than per player because eligibility can change
+mid-season — a player who gains TE eligibility leaves the old weeks honest.
+
+---
+
 ## 14.19 espn_team_standings
 
 *Added 2026-09-06.*
@@ -1884,10 +1901,43 @@ is projected highest and has not taken a snap.
 
 ## Current coverage
 
-| Status | Awards |
-| --- | --- |
-| Computed | Cat Burglar, Dumpster Fire, Bad Beat, Public Execution, Prime Specimen, Nostradamus, Giant Killer, Choke Artist, Waiver Wire Wizard, Galaxy Brain |
-| Needs the lineup optimizer | The Mastermind, The Bench Bum |
+All twelve awards are computed from stored data. None are placeholders by
+design any more — a card falls back to a sample only when the engine found no
+qualifying candidate that week, which is itself the honest answer.
+
+## The lineup optimizer
+
+*Added 2026-09-11.*
+
+The Mastermind and The Bench Bum are the same number read from opposite ends:
+the gap between what a manager started and the best lineup his roster allowed.
+
+⚠️ **This is an assignment problem, not a sort.** Walking the roster from highest
+score down and dropping each player into the best open slot is provably wrong,
+and wrong in exactly the shape this league has — slot 7 (OP) is a superflex, so
+it competes with slot 0 for the same players, and a greedy pass commits a player
+to a slot before it knows what the next player needs.
+
+It is solved exactly, by maximum-weight bipartite matching between starting
+seats and players (the Hungarian algorithm). Correctness is the whole point: this
+number IS two awards, and a plausible wrong answer is indistinguishable from a
+right one.
+
+Constraints:
+
+- **`eligible_slots` per player per week** (§14.6a), from ESPN. NOT derivable
+  from position — a QB returns `[0, 7, 20, 21]`.
+- **Players on IR are not candidates.** They cannot legally be started, and
+  including them would hand The Bench Bum to whoever had the unluckiest injury.
+- **A missing stat line is ZERO here**, and null everywhere else in the engine.
+  This runs only on a final week, where nothing is left to play, so "no actual
+  row" means he did not score — reading it as unknown would drop eligible
+  players out of the optimal lineup and understate every gap.
+- **No eligibility, no award.** An optimum computed without a constraint set is
+  a fabricated number, so both awards stay silent rather than guess.
+
+One manager never holds both ends of the measure, and a week where nobody wasted
+anything has no Bench Bum.
 
 ## What counts as a roster move
 

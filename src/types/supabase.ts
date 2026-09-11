@@ -696,6 +696,7 @@ export type Database = {
       player_week_scores: {
         Row: {
           actual_points: number | null
+          eligible_slots: number[]
           game_status: string | null
           id: number
           is_starter: boolean
@@ -710,6 +711,7 @@ export type Database = {
         }
         Insert: {
           actual_points?: number | null
+          eligible_slots?: number[]
           game_status?: string | null
           id?: never
           is_starter: boolean
@@ -724,6 +726,7 @@ export type Database = {
         }
         Update: {
           actual_points?: number | null
+          eligible_slots?: number[]
           game_status?: string | null
           id?: never
           is_starter?: boolean

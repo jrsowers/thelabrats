@@ -193,7 +193,7 @@ Apex, www, and `thelabrats-gray.vercel.app` all resolve.
 | 4 | Standings — H2H tiebreak, movement, clinching | ✅ |
 | 5 | Playoff Picture — bracket + bubble + ESPN's odds | ✅ |
 | 6 | Transactions | ✅ Verified against real adds, drops, a trade and IR moves |
-| 7 | Studs & Duds | 🔨 10 of 12 real, published Tuesdays; 2 need the optimizer |
+| 7 | Studs & Duds | ✅ all 12 computed, published Tuesday mornings |
 | 8 | Record Books | ✅ Champions Corner + Firsts and Worsts (records accumulate) |
 
 ---
@@ -390,8 +390,16 @@ parser from discarding ESPN's lineup-change transactions — a start/sit swap is
 award, and still hidden from the transaction log where it would be noise. One
 row per decision, not per player: ESPN sends a swap as one row with two items.
 
-Open: the lineup optimizer (blocks The Mastermind and The Bench Bum;
-`eligibleSlots` is now parsed and ready for it), `/awards` is still
+**The lineup optimizer is built, so all twelve awards are real.** James thought
+we only had to wait for the week to end; in fact `eligibleSlots` was parsed and
+then discarded (never stored), and there was no solver. It is maximum-weight
+bipartite matching — greedy is wrong in a superflex league, where OP competes
+with QB for the same players — cross-checked against an independent bitmask DP
+over 500 random rosters. Watch for two traps recorded in DECISIONS: the
+Hungarian formulation hangs when seats outnumber players (fixed with empty-seat
+columns), and a missing stat line means ZERO here and null everywhere else.
+
+Open: `/awards` is still
 `ready: false` in the nav and therefore URL-only, tier-2 dossier review, the
 ROBBERY badge, the Yahoo 2025 export, and `fixtures/league-teams.json` still
 leaks real names.

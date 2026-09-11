@@ -923,3 +923,54 @@ warning that the parser was verified for internal consistency only, because the
 league had no transactions when it was written. It now runs against a real
 capture: 211 transactions, including the seven lineup swaps and three cancelled
 waivers that the hand-written fixture never had.
+
+## 2026-09-11 — The lineup optimizer, and why greedy was never an option
+
+James thought the data was all there and we only needed the week to finish. Half
+right: `eligibleSlots` had been parsed since rosters were first ingested and
+then thrown away — never stored — and the solver did not exist. Neither needed
+the week to end, because the Tuesday release gate already does the waiting.
+
+**It is an assignment problem, not a sort.** CLAUDE.md has said so since before
+there was any code to be wrong. Walking the roster from highest score down and
+dropping each player into the best open slot commits a player before it knows
+what the next player needs, and nothing in it can walk that back. In a superflex
+league the OP slot competes with QB for the same bodies, so the failure is not
+theoretical — it is the ordinary case.
+
+Solved exactly by maximum-weight bipartite matching, Hungarian algorithm. A
+roster is sixteen players and ten seats, so cost is irrelevant; correctness is
+the whole point, because this number IS two awards and a plausible wrong answer
+looks exactly like a right one.
+
+**The Hungarian formulation needs at least as many columns as rows**, and with
+more seats than players it never finds an augmenting path — `delta` stays
+infinite and the loop spins forever. That is what a short roster looks like: a
+bye week, an unfilled kicker slot. Every seat now also gets an "leave this one
+empty" column priced at zero. The bug surfaced as a hanging test suite, which is
+the best possible way for it to surface.
+
+**Verified against an independent exact solver.** A bitmask DP — obviously
+correct, far too slow to ship — cross-checks the matching over 500 random
+rosters, including superflex-heavy ones where the OP slot actually bites. A
+second Hungarian implementation would have shared whatever misconception the
+first had.
+
+**IR players are not candidates.** They cannot legally be started, and including
+them would hand The Bench Bum to whoever had the unluckiest injury rather than
+the worst decision.
+
+**A missing stat line is ZERO here and null everywhere else.** Elsewhere it
+means "has not kicked off", and reading it as zero would make a player the
+week's biggest projection miss without playing a snap. The optimizer only ever
+runs on a final week, where nothing is left to play: he did not score. Treating
+him as unknown would silently drop eligible players out of the optimal lineup
+and understate every gap.
+
+**No eligibility, no award.** Before `eligible_slots` was stored there was no
+constraint set. Both awards stay silent rather than publish an optimum computed
+from nothing.
+
+**Sanity check that mattered:** the first real run gave The Bench Bum to 4th and
+Inshes at 13.9 — which is exactly Mike Evans, who scored 13.9 on their bench
+that week. The optimizer found the real gap without being told where to look.

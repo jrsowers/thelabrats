@@ -16,6 +16,10 @@
  * describe a matchup outcome. "Lost by the largest margin" belongs to the team
  * that lost it.
  */
+import { NON_STARTER_SLOTS, LINEUP_SLOT } from '@/lib/espn/constants'
+import { optimalLineup, startingSeats, pointsLeftOnBench } from '@/lib/lineup/optimize'
+
+const IR_SLOT = LINEUP_SLOT.IR
 
 export interface AwardMatchup {
   matchupId: number
@@ -53,6 +57,10 @@ export interface AwardPlayer {
   position: string
   nflTeam: string
   isStarter: boolean
+  /** ESPN slot he actually occupied. 21 is IR, which cannot be started. */
+  lineupSlotId: number
+  /** Slots he could legally have occupied. The optimizer's constraint set. */
+  eligibleSlots: number[]
   /**
    * Null when the player's game has not kicked off. NOT the same as zero, and
    * treating it as zero would hand The Prime Specimen to whoever happens to be
@@ -74,6 +82,8 @@ export type ComputedAwardKey =
   | 'choke_artist'
   | 'waiver_wire_wizard'
   | 'galaxy_brain'
+  | 'mastermind'
+  | 'bench_bum'
 
 export interface ComputedAward {
   key: ComputedAwardKey
@@ -134,6 +144,8 @@ export function computeWeeklyAwards(
   week: number,
   players: AwardPlayer[] = [],
   transactions: AwardTransaction[] = [],
+  /** ESPN's lineup_slot_counts. Without it there is no lineup to optimize. */
+  slotCounts: Record<string | number, number> = {},
 ): ComputedAward[] {
   // Player awards land DURING the week — the best performance of a Sunday is
   // knowable on Sunday. Matchup awards need the week finished, because "lowest
@@ -247,6 +259,51 @@ export function computeWeeklyAwards(
     }
   }
 
+  // ---- The Mastermind / The Bench Bum ----
+  // Both are the same number read from opposite ends: the gap between what a
+  // manager started and the best lineup his roster allowed. Only computed on a
+  // final week, which is what makes it safe to read a missing stat line as a
+  // zero rather than as "has not played" — see optimalLineup.
+  const lineupGaps = computeLineupGaps(players, slotCounts)
+
+  if (lineupGaps.length > 0) {
+    const tightest = lineupGaps[0]
+    const loosest = lineupGaps[lineupGaps.length - 1]
+
+    awards.push({
+      key: 'mastermind',
+      teamId: tightest.teamId,
+      opponentId: null,
+      metricValue: f1(tightest.gap),
+      headline: tightest.gap === 0
+        ? 'Started the best lineup his roster allowed. Nothing left behind.'
+        : `Left just ${f1(tightest.gap)} on the bench — the tightest lineup of the week.`,
+      supporting: [
+        { label: 'Started', value: f1(tightest.started) },
+        { label: 'Best possible', value: f1(tightest.best) },
+      ],
+    })
+
+    // A week where everybody nailed it has no Bench Bum, and one manager
+    // cannot hold both ends of the same measure.
+    if (loosest.teamId !== tightest.teamId && loosest.gap > 0) {
+      awards.push({
+        key: 'bench_bum',
+        teamId: loosest.teamId,
+        opponentId: null,
+        metricValue: f1(loosest.gap),
+        headline: `Left ${f1(loosest.gap)} points sitting on the bench.`,
+        supporting: [
+          { label: 'Started', value: f1(loosest.started) },
+          { label: 'Best possible', value: f1(loosest.best) },
+          ...(loosest.missed
+            ? [{ label: 'Should have started', value: loosest.missed }]
+            : []),
+        ],
+      })
+    }
+  }
+
   // ---- The Galaxy Brain: most roster moves, among managers who lost ----
   // "Roster moves" is every decision the manager made inside the scoring
   // period: waiver claims, free agent adds, drops, trades, IR moves and
@@ -288,6 +345,88 @@ export function computeWeeklyAwards(
   }
 
   return [...awards, ...playerAwards]
+}
+
+interface LineupGap {
+  teamId: number
+  /** What the manager's starters actually scored. */
+  started: number
+  /** What the best legal lineup would have scored. */
+  best: number
+  gap: number
+  /** The benched player who should have started, for the card. */
+  missed: string | null
+}
+
+/**
+ * Every manager's gap between the lineup started and the best one available,
+ * ascending — tightest first.
+ *
+ * ⚠️ IR PLAYERS ARE NOT CANDIDATES. A player on injured reserve cannot be
+ * started, whatever his eligible slots say, so including him would invent a
+ * lineup nobody was allowed to field and hand The Bench Bum to whoever had the
+ * unluckiest injury.
+ *
+ * ⚠️ A MISSING STAT LINE IS ZERO HERE. Everywhere else in this engine it means
+ * "has not kicked off"; this runs only on a final week, where it means he did
+ * not score. Treating it as unknown would quietly drop eligible players out of
+ * the optimal lineup and understate every gap.
+ */
+function computeLineupGaps(
+  players: AwardPlayer[],
+  slotCounts: Record<string | number, number>,
+): LineupGap[] {
+  const seats = startingSeats(slotCounts, NON_STARTER_SLOTS)
+  if (seats.length === 0 || players.length === 0) return []
+
+  const byTeam = new Map<number, AwardPlayer[]>()
+  for (const p of players) {
+    const roster = byTeam.get(p.seasonTeamId) ?? []
+    roster.push(p)
+    byTeam.set(p.seasonTeamId, roster)
+  }
+
+  const gaps: LineupGap[] = []
+  for (const [teamId, roster] of byTeam) {
+    // Without eligibility there is no constraint set, and an "optimal" lineup
+    // computed from nothing would be a fabricated number on a real card.
+    if (roster.every((p) => p.eligibleSlots.length === 0)) continue
+
+    const candidates = roster
+      .filter((p) => p.lineupSlotId !== IR_SLOT && p.eligibleSlots.length > 0)
+      .map((p) => ({
+        espnPlayerId: p.espnPlayerId,
+        name: p.name,
+        points: p.actualPoints ?? 0,
+        eligibleSlots: p.eligibleSlots,
+      }))
+
+    const started = roster
+      .filter((p) => p.isStarter)
+      .reduce((n, p) => n + (p.actualPoints ?? 0), 0)
+
+    const optimal = optimalLineup(candidates, seats)
+    const gap = pointsLeftOnBench(optimal.total, started)
+
+    // The single biggest miss: the highest scorer the optimizer would have
+    // started who was actually on the bench.
+    const startedIds = new Set(roster.filter((p) => p.isStarter).map((p) => p.espnPlayerId))
+    const missed = optimal.assignments
+      .map((a) => a.player)
+      .filter((p) => !startedIds.has(p.espnPlayerId))
+      .sort((a, b) => b.points - a.points)[0]
+
+    gaps.push({
+      teamId,
+      started,
+      best: optimal.total,
+      gap,
+      missed: missed ? `${missed.name} (${f1(missed.points)})` : null,
+    })
+  }
+
+  // Ties break on team id so the same week always names the same manager.
+  return gaps.sort((a, b) => a.gap - b.gap || a.teamId - b.teamId)
 }
 
 /** Display order and wording for the Galaxy Brain breakdown. */

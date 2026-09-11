@@ -145,16 +145,23 @@ describe('catalog', () => {
     )
     const players: AwardPlayer[] = [
       { seasonTeamId: 1, espnPlayerId: 1, name: 'Star', position: 'WR', nflTeam: 'PHI',
-        isStarter: true, actualPoints: 30, projectedPoints: 12 },
+        isStarter: true, lineupSlotId: 4, eligibleSlots: [4, 23], actualPoints: 30,
+        projectedPoints: 12 },
       { seasonTeamId: 2, espnPlayerId: 2, name: 'Pickup', position: 'RB', nflTeam: 'DAL',
-        isStarter: true, actualPoints: 18, projectedPoints: 8 },
+        isStarter: true, lineupSlotId: 2, eligibleSlots: [2, 23], actualPoints: 18,
+        projectedPoints: 8 },
+      // A benched scorer, so the lineup awards have a gap to find.
+      { seasonTeamId: 1, espnPlayerId: 3, name: 'Benched', position: 'WR', nflTeam: 'NYG',
+        isStarter: false, lineupSlotId: 20, eligibleSlots: [4, 23], actualPoints: 25,
+        projectedPoints: 10 },
     ]
     const transactions: AwardTransaction[] = [
       { seasonTeamId: 2, kind: 'FREE_AGENT', acquiredPlayerIds: [2] },
       { seasonTeamId: 2, kind: 'LINEUP', acquiredPlayerIds: [] },
     ]
     const produced = new Set(
-      computeWeeklyAwards(withProjections, 1, players, transactions).map((a) => a.key),
+      computeWeeklyAwards(withProjections, 1, players, transactions, { 4: 1, 2: 1, 23: 1 })
+        .map((a) => a.key),
     )
     for (const def of AWARDS.filter(isComputable)) {
       expect(produced.has(def.key as never), `${def.name} is marked computable`).toBe(true)
@@ -175,7 +182,9 @@ describe('player-driven awards', () => {
     actualPoints: number | null, projectedPoints: number | null,
   ): AwardPlayer => ({
     seasonTeamId, espnPlayerId: name.length * 100 + seasonTeamId, name,
-    position: 'WR', nflTeam: 'PHI', isStarter, actualPoints, projectedPoints,
+    position: 'WR', nflTeam: 'PHI', isStarter,
+    lineupSlotId: isStarter ? 4 : 20, eligibleSlots: [4, 23, 7],
+    actualPoints, projectedPoints,
   })
 
   const roster: AwardPlayer[] = [
@@ -273,7 +282,8 @@ describe('transaction-driven awards', () => {
     isStarter: boolean, actualPoints: number | null,
   ): AwardPlayer => ({
     seasonTeamId, espnPlayerId, name, position: 'RB', nflTeam: 'DAL',
-    isStarter, actualPoints, projectedPoints: 7,
+    isStarter, lineupSlotId: isStarter ? 2 : 20, eligibleSlots: [2, 23, 7],
+    actualPoints, projectedPoints: 7,
   })
 
   describe('The Waiver Wire Wizard', () => {
@@ -364,5 +374,107 @@ describe('transaction-driven awards', () => {
     it('omits the award when every loser stood pat', () => {
       expect(byKeyAll(week1, [], []).has('galaxy_brain')).toBe(false)
     })
+  })
+})
+
+describe('lineup-efficiency awards', () => {
+  const QB = 0, RB = 2, WR = 4, OP = 7, BE = 20, IR = 21, FLEX = 23
+  const SLOTS = { [QB]: 1, [RB]: 1, [WR]: 1, [FLEX]: 1, [BE]: 5, [IR]: 2 }
+
+  const pl = (
+    seasonTeamId: number, espnPlayerId: number, name: string,
+    lineupSlotId: number, actualPoints: number | null, eligibleSlots: number[],
+  ): AwardPlayer => ({
+    seasonTeamId, espnPlayerId, name, position: 'RB', nflTeam: 'DAL',
+    isStarter: lineupSlotId !== BE && lineupSlotId !== IR,
+    lineupSlotId, eligibleSlots, actualPoints, projectedPoints: 10,
+  })
+
+  /** A manager who started exactly the right people. */
+  const perfect = (teamId: number) => [
+    pl(teamId, teamId * 100 + 1, 'QB1', QB, 20, [QB, OP]),
+    pl(teamId, teamId * 100 + 2, 'RB1', RB, 15, [RB, FLEX, OP]),
+    pl(teamId, teamId * 100 + 3, 'WR1', WR, 12, [WR, FLEX, OP]),
+    pl(teamId, teamId * 100 + 4, 'FLEX1', FLEX, 10, [RB, FLEX, OP]),
+    pl(teamId, teamId * 100 + 5, 'Bench', BE, 2, [RB, FLEX, OP]),
+  ]
+
+  /** A manager who benched a better player than the one he started. */
+  const wasteful = (teamId: number) => [
+    pl(teamId, teamId * 100 + 1, 'QB1', QB, 18, [QB, OP]),
+    pl(teamId, teamId * 100 + 2, 'RB1', RB, 4, [RB, FLEX, OP]),
+    pl(teamId, teamId * 100 + 3, 'WR1', WR, 9, [WR, FLEX, OP]),
+    pl(teamId, teamId * 100 + 4, 'FLEX1', FLEX, 5, [RB, FLEX, OP]),
+    pl(teamId, teamId * 100 + 5, 'Benched Star', BE, 27, [RB, FLEX, OP]),
+  ]
+
+  const run = (players: AwardPlayer[]) =>
+    new Map(computeWeeklyAwards(week1, 1, players, [], SLOTS).map((a) => [a.key as string, a]))
+
+  it('gives The Mastermind to the tightest lineup of the week', () => {
+    const a = run([...perfect(1), ...wasteful(2)]).get('mastermind')!
+    expect(a.teamId).toBe(1)
+    expect(a.metricValue).toBe('0.0')
+  })
+
+  it('gives The Bench Bum to the loosest, and names the player', () => {
+    const a = run([...perfect(1), ...wasteful(2)]).get('bench_bum')!
+    expect(a.teamId).toBe(2)
+    // Benched Star (27) should have replaced RB1 (4): a 23-point gap.
+    expect(a.metricValue).toBe('23.0')
+    expect(a.supporting).toContainEqual({ label: 'Should have started', value: 'Benched Star (27.0)' })
+  })
+
+  it('never hands both ends of the same measure to one manager', () => {
+    // A single-team week would otherwise make the same person both the
+    // tightest and the loosest lineup.
+    const keys = run(perfect(1))
+    expect(keys.has('mastermind')).toBe(true)
+    expect(keys.has('bench_bum')).toBe(false)
+  })
+
+  it('omits The Bench Bum when nobody wasted anything', () => {
+    const keys = run([...perfect(1), ...perfect(2)])
+    expect(keys.has('bench_bum')).toBe(false)
+  })
+
+  it('does not count an IR player as startable', () => {
+    // He cannot legally be started, so a 40-point week on IR is not a gap —
+    // otherwise the unluckiest injury wins The Bench Bum every time.
+    const withIr = [
+      ...perfect(1),
+      pl(1, 199, 'Stashed', IR, 40, [RB, FLEX, OP]),
+    ]
+    const a = run([...withIr, ...wasteful(2)]).get('mastermind')!
+    expect(a.teamId).toBe(1)
+    expect(a.metricValue).toBe('0.0')
+  })
+
+  it('treats a missing stat line as a zero, not as unknown', () => {
+    // A final week has nothing left to play. Reading null as "unknown" would
+    // drop an eligible player out of the optimal lineup and understate the gap.
+    const noLine = [
+      pl(3, 301, 'QB1', QB, 10, [QB, OP]),
+      pl(3, 302, 'RB1', RB, null, [RB, FLEX, OP]),
+      pl(3, 303, 'WR1', WR, 8, [WR, FLEX, OP]),
+      pl(3, 304, 'FLEX1', FLEX, 6, [RB, FLEX, OP]),
+    ]
+    const a = run([...noLine, ...wasteful(2)]).get('mastermind')!
+    expect(a.teamId).toBe(3)
+    expect(a.metricValue).toBe('0.0')
+  })
+
+  it('stays silent when eligibility was never collected', () => {
+    // Before eligible_slots was stored there was no constraint set, and an
+    // "optimal" lineup computed from nothing is a fabricated number on a card.
+    const blind = perfect(1).map((p) => ({ ...p, eligibleSlots: [] }))
+    expect(run(blind).has('mastermind')).toBe(false)
+  })
+
+  it('stays silent when the league has no lineup shape', () => {
+    const noSlots = new Map(
+      computeWeeklyAwards(week1, 1, perfect(1), [], {}).map((a) => [a.key as string, a]),
+    )
+    expect(noSlots.has('mastermind')).toBe(false)
   })
 })
