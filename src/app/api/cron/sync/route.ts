@@ -34,7 +34,12 @@ export async function GET(request: Request) {
   const force = url.searchParams.get('force') === '1'
 
   // What has run, and is anything live right now?
-  const [{ data: lastLive }, { data: lastRoutine }, { data: lastMove }, { data: season }] =
+  //
+  // ⚠️ Every one of these reads decides the cadence, so a silent failure does
+  // not error — it downgrades. A null `lastMove` reads as "no game in progress"
+  // and drops live polling to the 15-minute routine in the middle of a slate,
+  // which is indistinguishable from working. Errors are surfaced below.
+  const [lastLiveRes, lastRoutineRes, lastMoveRes, seasonRes] =
     await Promise.all([
       db.from('sync_runs').select('finished_at').eq('sync_type', 'live-scoring')
         .eq('status', 'SUCCESS').order('finished_at', { ascending: false }).limit(1).maybeSingle(),
@@ -48,6 +53,20 @@ export async function GET(request: Request) {
       db.from('seasons').select('id, status, draft_completed, current_matchup_period')
         .order('year', { ascending: false }).limit(1).maybeSingle(),
     ])
+
+  const readErrors = [
+    ['last live sync', lastLiveRes.error],
+    ['last routine sync', lastRoutineRes.error],
+    ['last score movement', lastMoveRes.error],
+    ['season', seasonRes.error],
+  ].filter(([, e]) => e).map(([label, e]) => `${label}: ${(e as { message: string }).message}`)
+
+  if (readErrors.length > 0) console.error('cadence state read failed:', readErrors.join('; '))
+
+  const lastLive = lastLiveRes.data
+  const lastRoutine = lastRoutineRes.data
+  const lastMove = lastMoveRes.data
+  const season = seasonRes.data
 
   const decision = force
     ? { action: 'ROUTINE' as const, reason: 'forced' }
@@ -63,8 +82,18 @@ export async function GET(request: Request) {
         seasonActive: season?.status !== 'COMPLETE',
       })
 
+  // The inputs, not just the verdict. A cadence that behaves oddly for one
+  // tick is otherwise unreconstructable after the fact — the state it read is
+  // gone by the time anyone looks.
+  const inputs = {
+    lastScoreChangeAt: lastMove?.score_changed_at ?? null,
+    lastLiveSyncAt: lastLive?.finished_at ?? null,
+    lastRoutineSyncAt: lastRoutine?.finished_at ?? null,
+    readErrors: readErrors.length > 0 ? readErrors : undefined,
+  }
+
   if (decision.action === 'IDLE') {
-    return NextResponse.json({ action: 'IDLE', reason: decision.reason })
+    return NextResponse.json({ action: 'IDLE', reason: decision.reason, inputs })
   }
 
   const espn = createEspnClientFromEnv()
@@ -102,6 +131,7 @@ export async function GET(request: Request) {
     action: decision.action,
     snapshots,
     reason: decision.reason,
+    inputs,
     league: { ok: league.ok, records: league.recordsProcessed, detail: league.detail },
     players,
     rosters,
