@@ -129,9 +129,14 @@ export default async function Page({
 
       {/* ---- Scoreboard ---- */}
       <section>
-        <div className="overflow-hidden rounded-lg border border-border">
-          {/* Card header: week navigation left, playoff shortcut right. */}
-          <div className="flex items-center justify-between gap-4 border-b border-border bg-surface-2 px-3 py-2.5 sm:px-4">
+        {/* Below sm the matchups are standalone cards on the page background,
+            so there is nothing left for an outer container to enclose — it
+            would just draw a box around a set of boxes. */}
+        <div className="sm:overflow-hidden sm:rounded-lg sm:border sm:border-border">
+          {/* Week navigation left, playoff shortcut right. A toolbar on mobile,
+              the card's header bar from sm up. A grey bar on the grey page
+              background reads as nothing at all. */}
+          <div className="mb-3 flex items-center justify-between gap-4 px-1 py-1 sm:mb-0 sm:border-b sm:border-border sm:bg-surface-2 sm:px-4 sm:py-2.5">
             <nav className="flex items-center gap-1 sm:gap-2" aria-label="Week selection">
               <Link
                 href={`/?week=${Math.max(1, week - 1)}${isPreview ? '&preview=live' : ''}`}
@@ -173,11 +178,11 @@ export default async function Page({
           </div>
 
           {matchups.length === 0 ? (
-            <div className="bg-surface">
+            <div className="bg-surface max-sm:rounded-lg max-sm:border max-sm:border-border">
               <EmptyState title={`No matchups scheduled for week ${week}.`} />
             </div>
           ) : (
-            <ul className="divide-y divide-border">
+            <ul className="max-sm:space-y-3 sm:divide-y sm:divide-border">
               {matchups.map((m, i) => (
                 <MatchupRow key={m.id} matchup={m} index={i} />
               ))}

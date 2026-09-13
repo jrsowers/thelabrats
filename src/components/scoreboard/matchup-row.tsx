@@ -16,6 +16,12 @@ import { Tag, LiveBadge, TeamAvatar } from '@/components/ui/primitives'
  *    side got ~77px of name, which truncated every team to 'TYLER'S T...'
  *    and wrapped the record mid-token. Stacked, each side owns the full
  *    width and the avatar earns its place back.
+ *  - Below sm each matchup is ALSO ITS OWN CARD. Stacked sides inside one
+ *    continuous list read as twelve loose scores rather than six games — there
+ *    was nothing to say where a matchup started or ended, and a hairline
+ *    divider between games looked identical to the gap between two sides of
+ *    the same game. White card on the grey page, with air between, does the
+ *    grouping that the divider could not.
  */
 function Side({
   side, leading, align = 'left',
@@ -79,9 +85,13 @@ export function MatchupRow({ matchup, index }: { matchup: Matchup; index: number
   const homeLeads = (home?.score ?? 0) > (away?.score ?? 0)
   const awayLeads = (away?.score ?? 0) > (home?.score ?? 0)
 
+  // The card treatment is written with `max-sm:` rather than as an override on
+  // `sm:`, so the desktop classes stay byte-for-byte what they were. Setting
+  // border-width twice and relying on which rule Tailwind emits last is the
+  // kind of silent CSS failure this project has already been bitten by.
   return (
     <li
-      className="state-bar flex flex-col gap-2.5 bg-surface px-4 py-3.5 transition-colors hover:bg-surface-2/60 sm:grid sm:grid-cols-[1fr_auto_1fr] sm:items-center sm:gap-6 sm:px-5"
+      className="state-bar flex flex-col gap-2.5 bg-surface px-4 py-3.5 transition-colors hover:bg-surface-2/60 max-sm:rounded-lg max-sm:border max-sm:border-border sm:grid sm:grid-cols-[1fr_auto_1fr] sm:items-center sm:gap-6 sm:px-5"
       style={{ '--state': isLive ? 'var(--live)' : isFinal ? 'var(--border-strong)' : 'transparent' } as React.CSSProperties}
     >
       <Side side={away} leading={awayLeads} />
