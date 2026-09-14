@@ -202,34 +202,43 @@ export async function syncLeague(syncType = 'league-metadata'): Promise<SyncResu
       throw new Error('mMatchupScore returned no usable matchups — ESPN shape may have changed')
     }
 
-    // What we already had, so a score that did not move keeps its old
-    // `score_changed_at`. Stamping every sync would make the column a slower
-    // copy of `last_synced_at` and tell the cadence nothing.
-    const { data: priorRows } = await db
+    // What we already had, so we can tell which scores actually MOVED.
+    //
+    // ⚠️ The error is surfaced. An earlier version destructured only `data`,
+    // and a failed read there did not merely skip the comparison — every
+    // matchup then looked brand new, and the bulk upsert wrote
+    // `score_changed_at: null` across all 78 rows. Five of week 1's six lost
+    // their stamp that way, silently, during a live slate.
+    const { data: priorRows, error: priorError } = await db
       .from('matchups')
       .select('espn_matchup_id, matchup_period, home_score, away_score, score_changed_at')
       .eq('season_id', seasonRow.id)
+    if (priorError) throw new Error(`matchups read failed: ${priorError.message}`)
+
     const priorByKey = new Map(
       (priorRows ?? []).map((r) => [`${r.espn_matchup_id}:${r.matchup_period}`, r]),
     )
     const syncedAt = new Date().toISOString()
+
+    // Which matchups moved this sync. Stamped AFTER the upsert, as a targeted
+    // update of only these rows — see below.
+    const movedKeys: { espnMatchupId: number; matchupPeriod: number }[] = []
 
     const { data: written } = await db
       .from('matchups')
       .upsert(
         matchups.map((m) => {
           const prior = priorByKey.get(`${m.espnMatchupId}:${m.matchupPeriod}`)
+          // A row with no history has nothing to compare against, so it does
+          // NOT count as movement — otherwise the first sync of the season
+          // would read as 78 live matchups.
           const moved =
-            prior == null ||
-            Number(prior.home_score) !== m.homeScore ||
-            Number(prior.away_score) !== m.awayScore
-          // A brand-new row has no history to compare against, so it does not
-          // count as movement — otherwise the first sync of the season would
-          // read as 78 live matchups.
-          const scoreChangedAt =
-            prior == null ? null
-            : moved ? syncedAt
-            : prior.score_changed_at
+            prior != null &&
+            (Number(prior.home_score) !== m.homeScore ||
+              Number(prior.away_score) !== m.awayScore)
+          if (moved) {
+            movedKeys.push({ espnMatchupId: m.espnMatchupId, matchupPeriod: m.matchupPeriod })
+          }
 
           return {
           season_id: seasonRow.id,
@@ -246,7 +255,6 @@ export async function syncLeague(syncType = 'league-metadata'): Promise<SyncResu
           winner_team_id: m.winnerTeamId ? teamIdByEspnId.get(m.winnerTeamId) ?? null : null,
           margin: Math.abs(m.homeScore - m.awayScore),
           is_playoff: m.isPlayoff,
-          score_changed_at: scoreChangedAt,
           last_synced_at: syncedAt,
           }
         }),
@@ -254,6 +262,29 @@ export async function syncLeague(syncType = 'league-metadata'): Promise<SyncResu
       )
       .select('id')
     detail.matchups = written?.length ?? 0
+
+    // Stamp the movers, and ONLY the movers.
+    //
+    // Kept out of the bulk upsert deliberately. Every row in one upsert must
+    // carry the same columns, so a matchup we could not compare would have had
+    // to send *something* for `score_changed_at` — and the something was null,
+    // which erased history rather than declining to add to it. A targeted
+    // update can say nothing about the rows it does not touch.
+    //
+    // One statement per mover rather than two `.in()` filters: those would
+    // match the CROSS PRODUCT of ids and periods, stamping matchups that never
+    // moved. At most a handful of games move in any one sync, so the round
+    // trips are cheap and the filter is exactly the row's unique key.
+    for (const key of movedKeys) {
+      const { error: stampError } = await db
+        .from('matchups')
+        .update({ score_changed_at: syncedAt })
+        .eq('season_id', seasonRow.id)
+        .eq('espn_matchup_id', key.espnMatchupId)
+        .eq('matchup_period', key.matchupPeriod)
+      if (stampError) throw new Error(`score_changed_at update failed: ${stampError.message}`)
+    }
+    detail.scoresMoved = movedKeys.length
 
     // ---- transactions ----
     // Upserted on espn_transaction_id so a move seen by two syncs inserts once
