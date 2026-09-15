@@ -93,13 +93,13 @@ const BUILDERS: Record<string, Builder> = {
     t('. Any closer and they would have needed a steward\'s inquiry.'),
   ],
   socialist: (c) => [
-    t('Nobody on '), b(c.managerFirst), t('\'s roster did more than '), b(c.value),
-    t(' of the work. Everyone contributed, everyone shared, everyone goes home '),
-    t('with a participation ribbon. Seize the means of production.'),
+    t('The worst starter '), b(c.managerFirst), t(' put out still scored '),
+    b(c.value), t('. No holes, no passengers, nobody having a quiet one. '),
+    t('From each according to their ability, and all that.'),
   ],
   one_man_army: (c) => [
-    ...player(c), t(' was '), b(c.value), t(' of '), b(c.managerFirst),
-    t('\'s entire score. The other nine were there for moral support.'),
+    ...player(c), t(' was '), b(c.value), t(' of the score that won it for '),
+    b(c.managerFirst), t('. The other nine turned up and watched.'),
   ],
   slay_girl_slay: (c) => [
     b(c.managerFirst), t(' had '), b(`${c.value} starters`),

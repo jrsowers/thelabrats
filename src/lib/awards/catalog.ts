@@ -145,17 +145,22 @@ export const AWARDS: AwardDef[] = [
   },
   {
     key: 'socialist', name: 'The Socialist', section: 'STUDS', category: 'MANAGER',
-    blurb: 'Everybody chipped in. Nobody carried it.',
-    // Deliberately the mirror of The One Man Army, the way The Giant Killer
-    // mirrors The Choke Artist: one measurement, both ends, two managers.
-    formula: 'Smallest share of a team\'s starter points contributed by its highest scorer.',
+    blurb: 'Not one bad start in the whole lineup.',
+    // Measured on the FLOOR, not on how flat the distribution was. Share of
+    // team total put five of twelve managers inside a single percentage point
+    // of each other and handed the award to whoever happened to score most —
+    // see the note in compute.ts.
+    formula: 'Highest-scoring WEAKEST starter in the league: the manager whose worst start was still better than anyone else\'s worst start.',
     needs: ['PLAYER_SCORES'], capture: 'WEEKLY_BOXSCORE',
-    metricLabel: 'Top scorer\'s share',
+    metricLabel: 'Weakest starter',
   },
   {
     key: 'one_man_army', name: 'The One Man Army', section: 'STUDS', category: 'MANAGER',
-    blurb: 'One player did nearly all of it.',
-    formula: 'Largest share of a team\'s starter points contributed by a single player.',
+    blurb: 'One player did the heavy lifting.',
+    // WINNERS ONLY. Across the whole league this lands on the lowest scorer
+    // every week, because a small total makes every slice look big — week 1
+    // would have given it to the team that also took The Dumpster Fire.
+    formula: 'Largest share of a team\'s starter points contributed by a single player, among managers who WON their matchup.',
     needs: ['PLAYER_SCORES'], capture: 'WEEKLY_BOXSCORE',
     metricLabel: 'Share of team', evidence: 'PLAYER',
   },

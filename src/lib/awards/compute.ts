@@ -139,6 +139,20 @@ interface Side {
   projectedAgainst: number | null
 }
 
+/**
+ * Teams that won their matchup this week, for awards that only make sense
+ * against a result. Empty until the week is final, which correctly omits them.
+ */
+function winnerIds(all: AwardMatchup[], week: number): Set<number> {
+  const out = new Set<number>()
+  for (const m of all) {
+    if (m.week !== week || m.status !== 'FINAL') continue
+    if (m.homeScore > m.awayScore && m.homeTeamId != null) out.add(m.homeTeamId)
+    if (m.awayScore > m.homeScore && m.awayTeamId != null) out.add(m.awayTeamId)
+  }
+  return out
+}
+
 /** One row per team, which is the shape every manager award reasons over. */
 function toSides(matchups: AwardMatchup[]): Side[] {
   const out: Side[] = []
@@ -189,7 +203,7 @@ export function computeWeeklyAwards(
   const playerAwards = [
     ...computePlayerAwards(players),
     ...computeWaiverAward(players, transactions),
-    ...computeRosterShapeAwards(players),
+    ...computeRosterShapeAwards(players, winnerIds(all, week)),
   ]
 
   const matchups = all.filter((m) => m.week === week && m.status === 'FINAL')
@@ -466,11 +480,25 @@ export function computeWeeklyAwards(
 /**
  * Awards about the SHAPE of a roster's scoring rather than its size.
  *
- * These are the ones that break the clustering. Every other award in the
- * library ranks managers by how much they scored, so the same few collect them
- * all; concentration and consistency are close to independent of the total.
+ * ⚠️ SHARE OF TEAM TOTAL IS NOT A SHAPE MEASURE. Both of these originally read
+ * the top scorer's percentage of his team, and it failed twice over against
+ * real week 1 data:
+ *
+ *   * It correlated -0.64 with the team's total. That is arithmetic, not luck
+ *     — score badly and whoever did score owns a bigger fraction — so The One
+ *     Man Army went to the WORST team in the league, piling a third award onto
+ *     the manager who already had The Dumpster Fire and The Public Execution.
+ *   * Its range was 20% to 35%, with five of twelve teams tied at 20-21%. The
+ *     Socialist was a coin flip between five managers.
+ *
+ * So The Socialist now reads a team's WEAKEST starter, which correlates +0.33
+ * and spreads from -1.0 to 5.1, and The One Man Army is restricted to teams
+ * that actually won — carrying a loss is The Bad Beat's story, not this one.
  */
-function computeRosterShapeAwards(players: AwardPlayer[]): ComputedAward[] {
+function computeRosterShapeAwards(
+  players: AwardPlayer[],
+  winners: Set<number>,
+): ComputedAward[] {
   const awards: ComputedAward[] = []
   const evidence = (p: AwardPlayer) => ({
     espnPlayerId: p.espnPlayerId, name: p.name, position: p.position, nflTeam: p.nflTeam,
@@ -486,6 +514,8 @@ function computeRosterShapeAwards(players: AwardPlayer[]): ComputedAward[] {
   interface Shape {
     teamId: number
     top: AwardPlayer
+    /** The lowest-scoring starter. The Socialist's measure. */
+    floor: AwardPlayer
     share: number
     total: number
     over: number
@@ -501,9 +531,11 @@ function computeRosterShapeAwards(players: AwardPlayer[]): ComputedAward[] {
     const total = starters.reduce((n, p) => n + (p.actualPoints as number), 0)
     if (starters.length === 0 || total <= 0) continue
 
-    const top = [...starters].sort(
+    const ranked = [...starters].sort(
       (a, b) => (b.actualPoints as number) - (a.actualPoints as number),
-    )[0]
+    )
+    const top = ranked[0]
+    const floor = ranked[ranked.length - 1]
 
     const projected = starters.filter((p) => p.projectedPoints != null)
     const beat = projected.filter((p) => (p.actualPoints as number) > (p.projectedPoints as number))
@@ -511,6 +543,7 @@ function computeRosterShapeAwards(players: AwardPlayer[]): ComputedAward[] {
     shapes.push({
       teamId,
       top,
+      floor,
       share: (top.actualPoints as number) / total,
       total,
       over: beat.length,
@@ -524,37 +557,50 @@ function computeRosterShapeAwards(players: AwardPlayer[]): ComputedAward[] {
 
   const pct = (n: number) => `${Math.round(n * 100)}%`
 
-  // ---- The One Man Army / The Socialist ----
-  // One measurement read from both ends, like Giant Killer and Choke Artist.
-  const byShare = [...shapes].sort((a, b) => b.share - a.share || a.teamId - b.teamId)
-  const carried = byShare[0]
-  const shared = byShare[byShare.length - 1]
+  // ---- The One Man Army: one player carried them to a WIN ----
+  // Winners only. Unrestricted, this lands on the lowest-scoring team in the
+  // league every time, and "he was 35% of an 81-point disaster" is not the
+  // story the award is telling.
+  const carried = [...shapes]
+    .filter((x) => winners.has(x.teamId))
+    .sort((a, b) => b.share - a.share || a.teamId - b.teamId)[0]
 
-  awards.push({
-    key: 'one_man_army',
-    teamId: carried.teamId,
-    opponentId: null,
-    metricValue: pct(carried.share),
-    scoreValue: carried.share,
-    headline: `${carried.top.name} was ${pct(carried.share)} of the whole team.`,
-    supporting: [
-      { label: 'Player points', value: f1(carried.top.actualPoints as number) },
-      { label: 'Team total', value: f1(carried.total) },
-    ],
-    player: evidence(carried.top),
-  })
+  if (carried) {
+    awards.push({
+      key: 'one_man_army',
+      teamId: carried.teamId,
+      opponentId: null,
+      metricValue: pct(carried.share),
+      scoreValue: carried.share,
+      headline: `${carried.top.name} was ${pct(carried.share)} of the score that won it.`,
+      supporting: [
+        { label: 'Player points', value: f1(carried.top.actualPoints as number) },
+        { label: 'Next best', value: f1(carried.total - (carried.top.actualPoints as number)) },
+        { label: 'Team total', value: f1(carried.total) },
+      ],
+      player: evidence(carried.top),
+    })
+  }
 
-  // One manager cannot hold both ends of the same measure.
-  if (shared.teamId !== carried.teamId) {
+  // ---- The Socialist: nobody on the roster had a bad day ----
+  // The highest FLOOR in the league, not the flattest percentage. A lineup
+  // where the worst starter still cleared five points is a real thing to have
+  // done; being 20% rather than 21% concentrated is not.
+  const shared = [...shapes]
+    .sort((a, b) =>
+      (b.floor.actualPoints as number) - (a.floor.actualPoints as number) || a.teamId - b.teamId)[0]
+
+  // A week where somebody's weakest starter scored nothing has no Socialist.
+  // Every roster had a bad day, and saying so beats crowning the least bad.
+  if (shared && (shared.floor.actualPoints as number) > 0 && shared.teamId !== carried?.teamId) {
     awards.push({
       key: 'socialist',
       teamId: shared.teamId,
       opponentId: null,
-      metricValue: pct(shared.share),
-      scoreValue: shared.share,
-      headline: `No starter did more than ${pct(shared.share)} of the work.`,
+      metricValue: f1(shared.floor.actualPoints as number),
+      headline: `Their worst starter still put up ${f1(shared.floor.actualPoints as number)}.`,
       supporting: [
-        { label: 'Top scorer', value: f1(shared.top.actualPoints as number) },
+        { label: 'Weakest starter', value: `${shared.floor.name} · ${f1(shared.floor.actualPoints as number)}` },
         { label: 'Team total', value: f1(shared.total) },
       ],
     })

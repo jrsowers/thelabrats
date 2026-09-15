@@ -521,35 +521,64 @@ describe('roster-shape awards', () => {
     sh(2, 21, 'Even A', 25, 30), sh(2, 22, 'Even B', 25, 30),
     sh(2, 23, 'Even C', 25, 30), sh(2, 24, 'Even D', 25, 30),
   ]
+  // week1 game 1 is t1 150.0 over t2 60.0, so team 1 won and team 2 lost.
   const run = (players: AwardPlayer[]) =>
     new Map(computeWeeklyAwards(week1, 1, players, [], {}, []).map((a) => [a.key as string, a]))
 
-  it('gives The One Man Army to the most concentrated roster', () => {
+  it('gives The One Man Army to the most concentrated roster that WON', () => {
     const a = run([...carried, ...shared]).get('one_man_army')!
     expect(a.teamId).toBe(1)
     expect(a.metricValue).toBe('80%')
     expect(a.player?.name).toBe('The Guy')
   })
 
-  it('gives The Socialist to the most evenly spread roster', () => {
-    const a = run([...carried, ...shared]).get('socialist')!
-    expect(a.teamId).toBe(2)
-    expect(a.metricValue).toBe('25%')
+  it('never gives The One Man Army to a team that lost', () => {
+    // The regression this restriction exists for. Unrestricted, a share of
+    // team total lands on the LOWEST scorer in the league every week — week 1
+    // would have handed it to the manager who already had The Dumpster Fire
+    // and The Public Execution.
+    //
+    // Team 2 lost 60-150 and is the most concentrated roster on the board
+    // here, and still does not win it.
+    const lopsidedLoser = [
+      sh(2, 25, 'Lone Hero', 55, 20), sh(2, 26, 'Nobody A', 3, 10),
+      sh(2, 27, 'Nobody B', 2, 10),
+    ]
+    const a = run(lopsidedLoser).get('one_man_army')
+    expect(a).toBeUndefined()
   })
 
-  it('never gives one manager both ends of the same measure', () => {
+  it('gives The Socialist to the highest FLOOR, not the flattest percentage', () => {
+    // Team 2's worst starter scored 25; team 1's scored 3.
+    const a = run([...carried, ...shared]).get('socialist')!
+    expect(a.teamId).toBe(2)
+    expect(a.metricValue).toBe('25.0')
+  })
+
+  it('is not decided by how much a team scored', () => {
+    // Team 3 scores twice as much as team 2 with a WORSE floor, and still
+    // loses the award. Share of team total got this backwards: it correlated
+    // -0.64 with the total, so the Socialist went to whoever scored most.
+    const richButHollow = [
+      sh(3, 31, 'Big A', 90, 40), sh(3, 32, 'Big B', 90, 40),
+      sh(3, 33, 'Quiet One', 4, 12),
+    ]
+    const a = run([...shared, ...richButHollow]).get('socialist')!
+    expect(a.teamId).toBe(2)
+  })
+
+  it('is omitted when every roster had somebody score nothing', () => {
+    const allHoles = [
+      sh(4, 41, 'Fine', 30, 20), sh(4, 42, 'Zero', 0, 11),
+      sh(5, 51, 'Fine Too', 28, 20), sh(5, 52, 'Also Zero', 0, 9),
+    ]
+    expect(run(allHoles).has('socialist')).toBe(false)
+  })
+
+  it('never gives one manager both awards', () => {
     const only = run(carried)
     expect(only.get('one_man_army')?.teamId).toBe(1)
     expect(only.has('socialist')).toBe(false)
-  })
-
-  it('is independent of how much a team scored', () => {
-    // The whole point. Team 3 scores twice as much as team 2 with the same
-    // shape, and the shape awards do not move.
-    const rich = shared.map((p) => ({ ...p, seasonTeamId: 3, espnPlayerId: p.espnPlayerId + 100, actualPoints: 50 }))
-    const a = run([...carried, ...rich]).get('socialist')!
-    expect(a.teamId).toBe(3)
-    expect(a.metricValue).toBe('25%')
   })
 
   it('skips a team whose starters scored nothing rather than dividing by zero', () => {
