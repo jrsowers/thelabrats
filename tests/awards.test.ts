@@ -935,3 +935,23 @@ describe('Fantasy Nostradamus states the projection, not the market', () => {
     expect(text).not.toMatch(/undefined/)
   })
 })
+
+describe('The Control Group reads cleanly with a signed metric', () => {
+  it('uses the two real numbers rather than splicing the sign into prose', () => {
+    // "finished within +4.3 of exactly what they were projected" is what
+    // happens when a display value with a sign gets used mid-sentence.
+    const text = buildCommentary('control_group', {
+      managerFirst: 'Bree', teamName: 'Bree’s Badass Boys', value: '+4.3',
+      extra: { Projected: '120.1', Scored: '124.4' },
+    }).map((s) => s.text).join('')
+    expect(text).not.toMatch(/within \+/)
+    expect(text).toMatch(/projected for 120\.1 and scored 124\.4/)
+  })
+
+  it('strips the sign when falling back on an older stored week', () => {
+    const text = buildCommentary('control_group', {
+      managerFirst: 'Bree', teamName: 'X', value: '−4.3',
+    }).map((s) => s.text).join('')
+    expect(text).toMatch(/within 4\.3 of/)
+  })
+})

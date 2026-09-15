@@ -113,11 +113,20 @@ const BUILDERS: Record<string, Builder> = {
     b(c.managerFirst), t(' was projected to lose to '), ...opponent(c), t(' by '),
     b(c.value), t('. Won anyway. Somebody check the tape.'),
   ],
-  control_group: (c) => [
-    b(c.managerFirst), t(' finished within '), b(c.value),
-    t(' of exactly what they were projected to score. No drama, no disasters, '),
-    t('nothing to talk about. The scientific method in team form.'),
-  ],
+  // The metric carries a sign so the card can colour it. Splicing "+4.3" into
+  // a sentence gives "within +4.3 of", so the prose uses the two real numbers
+  // instead and lets the direction speak for itself.
+  control_group: (c) => (c.extra?.Projected && c.extra?.Scored
+    ? [
+        b(c.managerFirst), t(' was projected for '), b(c.extra.Projected),
+        t(' and scored '), b(c.extra.Scored), t('. No drama, no disasters, '),
+        t('nothing to talk about. The scientific method in team form.'),
+      ]
+    : [
+        b(c.managerFirst), t(' finished within '), b(c.value.replace(/^[+\u2212-]/, '')),
+        t(' of exactly what they were projected to score. No drama, no disasters, '),
+        t('nothing to talk about. The scientific method in team form.'),
+      ]),
   photo_finish: (c) => [
     b(c.managerFirst), t(' beat '), ...opponent(c), t(' by '), b(c.value),
     t('. Any closer and they would have needed a steward\'s inquiry.'),
