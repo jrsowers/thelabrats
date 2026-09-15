@@ -8,7 +8,7 @@
  * missed tick costs minutes instead of a whole week.
  */
 import { createServiceClient } from '@/lib/supabase/server'
-import { computeMovement } from '@/lib/standings/compute'
+import { computeRankChange } from '@/lib/standings/compute'
 import { decideRelease } from './release'
 import { generateWeeklyAwards, type GenerateResult } from './generate'
 import type { AwardMatchup, AwardPlayer, AwardTransaction, AwardSnapshot } from './compute'
@@ -174,9 +174,9 @@ export async function publishDueAwards(
 
       // ---- movement down the table ----
       // Reuses the standings engine rather than re-deriving a rank here, so
-      // The Free Fall can never disagree with the table the league is looking
+      // Free Fallin' can never disagree with the table the league is looking
       // at. Empty in week 1, which has no prior standings to fall from.
-      const movement = computeMovement(
+      const rankChanges = computeRankChange(
         awardMatchups.map((m) => ({
           week: m.week,
           homeTeamId: m.homeTeamId,
@@ -192,7 +192,7 @@ export async function publishDueAwards(
       generated.push(
         await generateWeeklyAwards(
           seasonId, week, awardMatchups, players, transactions, slotCounts,
-          snapshots, movement,
+          snapshots, rankChanges,
         ),
       )
     }

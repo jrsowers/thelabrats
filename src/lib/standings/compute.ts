@@ -357,3 +357,42 @@ export function reconcileWithEspn(
 
   return { rows: ordered, usedEspnSeeds: true, recordMismatches }
 }
+
+export interface RankChange {
+  seasonTeamId: number
+  /** Position after last week. */
+  from: number
+  /** Position after this week. */
+  to: number
+}
+
+/**
+ * Where each team sat before this week and where they sit now.
+ *
+ * `computeMovement` returns only the delta, which is all the standings page
+ * needs. The Free Fallin' award has to SHOW both ends of the slide, and
+ * re-deriving a rank anywhere else would risk disagreeing with the table the
+ * league is reading.
+ *
+ * Empty before week 2, which has no prior table to have moved within.
+ */
+export function computeRankChange(
+  matchups: StandingsInput[],
+  teams: TeamMeta[],
+  throughWeek: number,
+): RankChange[] {
+  if (throughWeek <= 1) return []
+
+  const before = computeStandings(matchups, teams, throughWeek - 1)
+  if (before.every((r) => r.gamesPlayed === 0)) return []
+
+  const now = computeStandings(matchups, teams, throughWeek)
+  const priorRank = new Map(before.map((r) => [r.seasonTeamId, r.rank]))
+
+  return now
+    .map((row) => ({
+      seasonTeamId: row.seasonTeamId,
+      from: priorRank.get(row.seasonTeamId) ?? row.rank,
+      to: row.rank,
+    }))
+}

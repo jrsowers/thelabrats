@@ -181,14 +181,38 @@ const BUILDERS: Record<string, Builder> = {
     b(c.managerFirst), t(' lost to '), ...opponent(c), t(' by '),
     b(`${c.value} points`), t('. Guess their team forgot to get off the bus!'),
   ],
-  bench_bum: (c) => [
-    b(c.managerFirst), t('\u2019s optimal lineup was worth '), b(`${c.value} more points`),
-    t('. It was sitting on the bench the whole time.'),
-  ],
-  free_fall: (c) => [
-    b(c.managerFirst), t(' fell '), b(`${c.value} places`),
-    t(' in the table this week. Same league, longer way down.'),
-  ],
+  // The gap is the same number either way, but it means something different
+  // on the best week in the league than it does on a loss. Scolding the
+  // runaway top scorer for leaving points behind is not the joke.
+  bench_bum: (c) => {
+    if (c.extra?.verdict === 'league-best') {
+      return [
+        b(c.managerFirst), t(' went scorched earth this week and still had '),
+        b(`${c.value} more points`), t(' sitting on the bench. '),
+        t('Top score in the league, and it could have been so much worse for everyone else.'),
+      ]
+    }
+    if (c.extra?.verdict === 'won') {
+      return [
+        b(c.managerFirst), t(' won, and left '), b(`${c.value} points`),
+        t(' on the bench doing it. Nobody is checking the receipts on a win.'),
+      ]
+    }
+    return [
+      b(c.managerFirst), t('\u2019s optimal lineup was worth '), b(`${c.value} more points`),
+      t('. It was sitting on the bench the whole time.'),
+    ]
+  },
+  free_fall: (c) => (c.extra?.['Starting rank'] && c.extra?.['Ending rank']
+    ? [
+        b(c.managerFirst), t(' slid from '), b(c.extra['Starting rank']),
+        t(' to '), b(c.extra['Ending rank']),
+        t(' this week. Free fallin\u2019, and not in the fun Tom Petty way.'),
+      ]
+    : [
+        b(c.managerFirst), t(' dropped '), b(`${c.value.replace(/^[\u2212-]/, '')} places`),
+        t(' this week. Same league, longer way down.'),
+      ]),
   understudy: (c) => [
     ...player(c), t(' put up '), b(`${c.value} pts`), t(' for '), b(c.managerFirst),
     t(' and did it in street clothes. Best seat in the house.'),

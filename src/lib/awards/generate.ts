@@ -44,7 +44,7 @@ export async function generateWeeklyAwards(
   transactions: AwardTransaction[] = [],
   slotCounts: Record<string | number, number> = {},
   snapshots: AwardSnapshot[] = [],
-  movement: Map<number, number> = new Map(),
+  rankChanges: { seasonTeamId: number; from: number; to: number }[] = [],
   { regenerate = false }: { regenerate?: boolean } = {},
 ): Promise<GenerateResult> {
   const db = createServiceClient()
@@ -63,7 +63,7 @@ export async function generateWeeklyAwards(
     }
 
     const computed = computeWeeklyAwards(
-      matchups, week, players, transactions, slotCounts, snapshots, movement,
+      matchups, week, players, transactions, slotCounts, snapshots, rankChanges,
     )
     const kings = computePositionKings(players)
     if (computed.length === 0 && kings.length === 0) return { ok: true, week, awards: 0 }

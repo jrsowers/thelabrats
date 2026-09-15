@@ -231,26 +231,27 @@ export const AWARDS: AwardDef[] = [
     metricLabel: 'Points left behind',
   },
   {
-    key: 'free_fall', name: 'The Free Fall', section: 'DUDS', category: 'MANAGER',
-    blurb: 'Dropped further down the table than anyone.',
+    key: 'free_fall', name: 'Free Fallin\u2019', section: 'DUDS', category: 'MANAGER',
+    blurb: 'Dropped further down the leaderboard than anyone.',
     // "Record and points" is not a second measurement bolted on — it is what
     // the standings rank already IS, in this league's own seeding order:
     // head-to-head record, then head-to-head, then points for. Falling in the
     // table therefore folds both in by construction.
     formula: 'Largest drop in standings position against last week, under the league\'s own seeding rules. Cannot exist in week 1, which has no table to fall from.',
     needs: ['FINAL_SCORES'], capture: 'FINAL_ONLY',
-    metricLabel: 'Places lost',
+    metricLabel: 'Ranking change',
+    signedMetric: true,
   },
   {
     key: 'understudy', name: 'The Understudy', section: 'DUDS', category: 'MANAGER',
-    blurb: 'The best performance nobody started.',
+    blurb: 'The best performing player nobody started.',
     // Distinct from The Bench Bum, which measures the GAP to the best legal
     // lineup. This is one player, and the two regularly land on different
     // managers — a huge bench week only becomes a gap if the starter you left
     // in was worse.
     formula: 'Highest-scoring player left on a bench. Injured reserve is excluded — he could not have been started.',
     needs: ['PLAYER_SCORES'], capture: 'WEEKLY_BOXSCORE',
-    metricLabel: 'Points benched', evidence: 'PLAYER',
+    metricLabel: 'Points wasted', evidence: 'PLAYER',
   },
   {
     key: 'galaxy_brain', name: 'The Galaxy Brain', section: 'DUDS', category: 'MANAGER',

@@ -178,11 +178,11 @@ describe('catalog', () => {
     // One snapshot showing team 6 behind, so Sweatin' It Out qualifies too,
     // and one team that slid down the table for The Free Fall.
     const snapshots = [{ matchupId: 3, homeScore: 130, awayScore: 10, capturedAt: SUN_AFTERNOON }]
-    const movement = new Map([[7, -3]])
+    const rankChanges = [{ seasonTeamId: 7, from: 4, to: 7 }]
     const produced = new Set(
       computeWeeklyAwards(
         withProjections, 1, players, transactions, { 4: 1, 2: 1, 0: 1, 23: 1 },
-        snapshots, movement,
+        snapshots, rankChanges,
       ).map((a) => a.key),
     )
     for (const def of AWARDS.filter(isComputable)) {
@@ -379,12 +379,20 @@ describe('transaction-driven awards', () => {
       expect(byKeyAll(week1, [], txns).get('galaxy_brain')!.metricValue).toBe('4')
     })
 
-    it('breaks the total down, so nobody has to guess what counted', () => {
+    it('fits the whole breakdown in the one row the card renders', () => {
+      // The card shows only the first TWO supporting stats. A row per kind
+      // meant a headline of 6 sat above "3 free agents" and "1 lineup change",
+      // with the two IR moves that made up the difference silently cut off.
       const txns = busy(5, ['FREE_AGENT', 'FREE_AGENT', 'LINEUP', 'IR_PLACE'])
       const a = byKeyAll(week1, [], txns).get('galaxy_brain')!
-      expect(a.supporting).toContainEqual({ label: 'Free agents', value: '2' })
-      expect(a.supporting).toContainEqual({ label: 'Lineup changes', value: '1' })
-      expect(a.supporting).toContainEqual({ label: 'To IR', value: '1' })
+      expect(a.supporting[0].label).toBe('Breakdown')
+      expect(a.supporting[0].value).toBe('2 FA · 1 lineup · 1 to IR')
+      expect(a.supporting).toHaveLength(2)
+
+      // Every move in the headline is accounted for in the one row.
+      const counted = a.supporting[0].value.split(' · ')
+        .reduce((n, part) => n + Number(part.split(' ')[0]), 0)
+      expect(String(counted)).toBe(a.metricValue)
     })
 
     it('omits the award when the busiest loser made a single move', () => {
@@ -743,36 +751,91 @@ describe('matchup-shape awards', () => {
   })
 })
 
-describe('The Free Fall', () => {
-  const run = (movement: Map<number, number>) =>
+describe('Free Fallin\u2019', () => {
+  const run = (rankChanges: { seasonTeamId: number; from: number; to: number }[]) =>
     new Map(
-      computeWeeklyAwards(week1, 1, [], [], {}, [], movement).map((a) => [a.key as string, a]),
+      computeWeeklyAwards(week1, 1, [], [], {}, [], rankChanges).map((a) => [a.key as string, a]),
     )
 
   it('goes to the biggest drop down the table', () => {
-    // t1 gained two, t5 lost one, t7 lost four.
-    const a = run(new Map([[1, 2], [5, -1], [7, -4]])).get('free_fall')!
+    const a = run([
+      { seasonTeamId: 1, from: 4, to: 2 },   // climbed two
+      { seasonTeamId: 5, from: 6, to: 7 },   // fell one
+      { seasonTeamId: 7, from: 3, to: 7 },   // fell four
+    ]).get('free_fall')!
     expect(a.teamId).toBe(7)
-    expect(a.metricValue).toBe('4')
+    expect(a.metricValue).toBe('\u22124')
+    expect(a.metricTone).toBe('loss')
+  })
+
+  it('measures PLACES, which a twelve-team league caps at eleven', () => {
+    // The sample card once read "121.6 places", which is points wearing a
+    // rank's label. Any figure with a decimal, or above eleven here, means the
+    // card is showing a placeholder rather than a result.
+    const a = run([{ seasonTeamId: 7, from: 1, to: 12 }]).get('free_fall')!
+    expect(a.scoreValue).toBe(11)
+    expect(Number.isInteger(a.scoreValue)).toBe(true)
+  })
+
+  it('shows where they started and where they ended up', () => {
+    const a = run([{ seasonTeamId: 7, from: 3, to: 7 }]).get('free_fall')!
+    expect(a.supporting).toEqual([
+      { label: 'Starting rank', value: '3' },
+      { label: 'Ending rank', value: '7' },
+    ])
   })
 
   it('ignores teams that climbed or held station', () => {
-    expect(run(new Map([[1, 3], [3, 0]])).has('free_fall')).toBe(false)
+    expect(run([
+      { seasonTeamId: 1, from: 6, to: 3 },
+      { seasonTeamId: 3, from: 5, to: 5 },
+    ]).has('free_fall')).toBe(false)
   })
 
   it('cannot exist in week 1, which has no table to fall from', () => {
-    // computeMovement returns an empty map before week 2, and inventing a
-    // starting rank to fall from would be a fabricated number.
-    expect(run(new Map()).has('free_fall')).toBe(false)
-  })
-
-  it('names the opponent it happened against', () => {
-    const a = run(new Map([[5, -3]])).get('free_fall')!
-    expect(a.opponentId).toBe(6)
+    expect(run([]).has('free_fall')).toBe(false)
   })
 
   it('says place, not places, for a single spot', () => {
-    expect(run(new Map([[5, -1]])).get('free_fall')!.headline).toMatch(/1 place\b/)
+    expect(run([{ seasonTeamId: 5, from: 4, to: 5 }]).get('free_fall')!.headline)
+      .toMatch(/1 place\b/)
+  })
+})
+
+describe('The Bench Bum reads the week it is judging', () => {
+  const QB = 0, RB = 2, BE = 20
+  const SLOTS = { [QB]: 1, [RB]: 1, [BE]: 5 }
+  const p = (teamId: number, id: number, name: string, slot: number, points: number): AwardPlayer => ({
+    seasonTeamId: teamId, espnPlayerId: id, name, position: 'RB', nflTeam: 'DAL',
+    isStarter: slot !== BE, lineupSlotId: slot, eligibleSlots: slot === QB ? [QB] : [RB],
+    actualPoints: points, projectedPoints: 10,
+  })
+
+  it('does not scold the highest scorer in the league', () => {
+    // week1 game 1: t1 scores 150, the league high. Leaving points behind on
+    // the best week anyone had is a flex, not a failure.
+    const roster = [
+      p(1, 11, 'QB1', QB, 25), p(1, 12, 'RB1', RB, 4), p(1, 13, 'Benched', BE, 40),
+      // A rival with a perfect lineup, so team 1 is the LOOSEST rather than
+      // holding both ends of the measure and being omitted.
+      p(3, 31, 'QB1', QB, 20), p(3, 32, 'RB1', RB, 18), p(3, 33, 'Bench', BE, 2),
+    ]
+    const a = computeWeeklyAwards(week1, 1, roster, [], SLOTS, [])
+      .find((x) => x.key === 'bench_bum')!
+    expect(a.commentaryExtras?.verdict).toBe('league-best')
+
+    const text = buildCommentary('bench_bum', {
+      managerFirst: 'Jesse', teamName: 'Mr. Anderson', value: '40.8',
+      extra: { verdict: 'league-best' },
+    }).map((s) => s.text).join('')
+    expect(text).toMatch(/scorched earth/)
+  })
+
+  it('keeps the sting for a manager who lost', () => {
+    const text = buildCommentary('bench_bum', {
+      managerFirst: 'Jesse', teamName: 'X', value: '40.8', extra: { verdict: 'lost' },
+    }).map((s) => s.text).join('')
+    expect(text).toMatch(/sitting on the bench the whole time/)
   })
 })
 

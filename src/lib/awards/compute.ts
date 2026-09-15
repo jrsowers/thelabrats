@@ -240,10 +240,10 @@ export function computeWeeklyAwards(
   /** In-game captures, for the one award that needs the continuous record. */
   snapshots: AwardSnapshot[] = [],
   /**
-   * seasonTeamId -> places gained against last week; negative is a fall.
-   * Empty in week 1, which has no table to move within.
+   * Where each team sat before this week and where they sit now. Empty in
+   * week 1, which has no table to move within.
    */
-  movement: Map<number, number> = new Map(),
+  rankChanges: { seasonTeamId: number; from: number; to: number }[] = [],
 ): ComputedAward[] {
   // Player awards land DURING the week — the best performance of a Sunday is
   // knowable on Sunday. Matchup awards need the week finished, because "lowest
@@ -286,7 +286,7 @@ export function computeWeeklyAwards(
       opponentId: worst.opponentId,
       metricValue: f1(worst.score),
       headline: `${f1(worst.score)} points. Nobody in the league did worse.`,
-      supporting: [{ label: 'Opponent', value: f1(worst.against) }],
+      supporting: [{ label: 'Final score', value: `${f1(worst.score)}\u2013${f1(worst.against)}` }],
     })
   }
 
@@ -313,7 +313,7 @@ export function computeWeeklyAwards(
       opponentId: beaten.opponentId,
       metricValue: f1(margin),
       headline: `Beaten by ${f1(margin)}. This was not a contest.`,
-      supporting: [{ label: 'Final', value: `${f1(beaten.score)}–${f1(beaten.against)}` }],
+      supporting: [{ label: 'Final score', value: `${f1(beaten.score)}\u2013${f1(beaten.against)}` }],
     })
   }
 
@@ -337,7 +337,7 @@ export function computeWeeklyAwards(
       headline: `Projected to lose by ${f1(upset.deficit)}. Won by ${f1(upset.side.score - upset.side.against)}.`,
       supporting: [
         { label: 'Projected', value: `${f1(upset.side.projected as number)}–${f1(upset.side.projectedAgainst as number)}` },
-        { label: 'Final', value: `${f1(upset.side.score)}–${f1(upset.side.against)}` },
+        { label: 'Final score', value: `${f1(upset.side.score)}\u2013${f1(upset.side.against)}` },
       ],
     })
 
@@ -352,7 +352,7 @@ export function computeWeeklyAwards(
         headline: `Projected to win by ${f1(upset.deficit)}. Lost by ${f1(upset.side.score - upset.side.against)}.`,
         supporting: [
           { label: 'Projected', value: `${f1(upset.side.projectedAgainst as number)}–${f1(upset.side.projected as number)}` },
-          { label: 'Final', value: `${f1(upset.side.against)}–${f1(upset.side.score)}` },
+          { label: 'Final score', value: `${f1(upset.side.against)}\u2013${f1(upset.side.score)}` },
         ],
       })
     }
@@ -364,6 +364,11 @@ export function computeWeeklyAwards(
   // final week, which is what makes it safe to read a missing stat line as a
   // zero rather than as "has not played" — see optimalLineup.
   const lineupGaps = computeLineupGaps(players, slotCounts)
+  // Context for The Bench Bum. Jesse posted the highest score in the league
+  // by forty points in week 1 and the card called it a mistake; the gap is
+  // real, but "you left points behind" on the best week anyone had reads as a
+  // scolding rather than a joke.
+  const topScore = Math.max(...sides.map((x) => x.score), 0)
 
   if (lineupGaps.length > 0) {
     const tightest = lineupGaps[0]
@@ -388,12 +393,21 @@ export function computeWeeklyAwards(
     // A week where everybody nailed it has no Bench Bum, and one manager
     // cannot hold both ends of the same measure.
     if (loosest.teamId !== tightest.teamId && loosest.gap > 0) {
+      const bumSide = sides.find((x) => x.teamId === loosest.teamId)
+      const ledTheLeague = bumSide != null && bumSide.score >= topScore
+      const won = bumSide != null && bumSide.score > bumSide.against
+
       awards.push({
         key: 'bench_bum',
         teamId: loosest.teamId,
-        opponentId: null,
+        opponentId: bumSide?.opponentId ?? null,
         metricValue: f1(loosest.gap),
-        headline: `The optimal lineup was worth ${f1(loosest.gap)} more.`,
+        commentaryExtras: {
+          verdict: ledTheLeague ? 'league-best' : won ? 'won' : 'lost',
+        },
+        headline: ledTheLeague
+          ? `Top score in the league, and ${f1(loosest.gap)} more was still available.`
+          : `The optimal lineup was worth ${f1(loosest.gap)} more.`,
         supporting: [
           { label: 'Best possible', value: f1(loosest.best) },
           { label: 'Actual lineup', value: f1(loosest.started) },
@@ -435,12 +449,19 @@ export function computeWeeklyAwards(
       opponentId: busiest.side.opponentId,
       metricValue: String(busiest.moves),
       headline: `${busiest.moves} roster moves. Still lost by ${f1(busiest.side.against - busiest.side.score)}.`,
-      // The breakdown, so nobody has to guess what counted as a move.
+      // ⚠️ ONE ROW, NOT ONE PER KIND. The card renders only the first two
+      // supporting stats, so a four-line breakdown showed "3 free agents" and
+      // "1 lineup change" against a headline of 6 and silently dropped the two
+      // IR moves that made up the difference.
       supporting: [
-        ...MOVE_LABELS
-          .filter(([kind]) => (kinds.get(kind) ?? 0) > 0)
-          .map(([kind, label]) => ({ label, value: String(kinds.get(kind)) })),
-        { label: 'Final', value: `${f1(busiest.side.score)}–${f1(busiest.side.against)}` },
+        {
+          label: 'Breakdown',
+          value: MOVE_LABELS
+            .filter(([kind]) => (kinds.get(kind) ?? 0) > 0)
+            .map(([kind, , short]) => `${kinds.get(kind)} ${short}`)
+            .join(' \u00b7 '),
+        },
+        { label: 'Final score', value: `${f1(busiest.side.score)}\u2013${f1(busiest.side.against)}` },
       ],
     })
   }
@@ -457,7 +478,7 @@ export function computeWeeklyAwards(
       opponentId: closest.opponentId,
       metricValue: f1(margin),
       headline: `Won by ${f1(margin)} — the closest game of the week.`,
-      supporting: [{ label: 'Final', value: `${f1(closest.score)}–${f1(closest.against)}` }],
+      supporting: [{ label: 'Final score', value: `${f1(closest.score)}\u2013${f1(closest.against)}` }],
     })
   }
 
@@ -510,25 +531,31 @@ export function computeWeeklyAwards(
     })
   }
 
-  // ---- The Free Fall: biggest drop down the table ----
+  // ---- Free Fallin': biggest drop down the table ----
   // The rank already encodes record first and points second, in the league's
   // own seeding order, so nothing extra needs weighting here.
-  const fallen = [...movement.entries()]
-    .map(([teamId, places]) => ({ teamId, dropped: -places }))
+  //
+  // ⚠️ THE METRIC IS PLACES, NOT POINTS. In a twelve-team league the most
+  // anyone can fall is eleven, so any figure with a decimal or above eleven
+  // means the card is showing a placeholder rather than a result.
+  const fallen = [...rankChanges]
+    .map((r) => ({ ...r, dropped: r.to - r.from }))
     .filter((x) => x.dropped > 0)
-    .sort((a, b) => b.dropped - a.dropped || a.teamId - b.teamId)[0]
+    .sort((a, b) => b.dropped - a.dropped || a.seasonTeamId - b.seasonTeamId)[0]
 
   if (fallen) {
-    const side = sides.find((s) => s.teamId === fallen.teamId)
     awards.push({
       key: 'free_fall',
-      teamId: fallen.teamId,
-      opponentId: side?.opponentId ?? null,
-      metricValue: String(fallen.dropped),
-      headline: `Down ${fallen.dropped} ${fallen.dropped === 1 ? 'place' : 'places'} in the standings.`,
-      supporting: side
-        ? [{ label: 'This week', value: `${f1(side.score)}–${f1(side.against)}` }]
-        : [],
+      teamId: fallen.seasonTeamId,
+      opponentId: sides.find((s) => s.teamId === fallen.seasonTeamId)?.opponentId ?? null,
+      metricValue: `\u2212${fallen.dropped}`,
+      scoreValue: fallen.dropped,
+      metricTone: 'loss',
+      headline: `Down ${fallen.dropped} ${fallen.dropped === 1 ? 'place' : 'places'}, from ${fallen.from} to ${fallen.to}.`,
+      supporting: [
+        { label: 'Starting rank', value: String(fallen.from) },
+        { label: 'Ending rank', value: String(fallen.to) },
+      ],
     })
   }
 
@@ -823,15 +850,18 @@ function computeLineupGaps(
   return gaps.sort((a, b) => a.gap - b.gap || a.teamId - b.teamId)
 }
 
-/** Display order and wording for the Galaxy Brain breakdown. */
-const MOVE_LABELS: [string, string][] = [
-  ['WAIVER', 'Waiver claims'],
-  ['FREE_AGENT', 'Free agents'],
-  ['TRADE', 'Trades'],
-  ['DROP', 'Drops'],
-  ['LINEUP', 'Lineup changes'],
-  ['IR_PLACE', 'To IR'],
-  ['IR_ACTIVATE', 'From IR'],
+/**
+ * Display order for the Galaxy Brain breakdown: kind, long label, and the
+ * short form used in the single-row summary the card has space for.
+ */
+const MOVE_LABELS: [string, string, string][] = [
+  ['WAIVER', 'Waiver claims', 'waiver'],
+  ['FREE_AGENT', 'Free agents', 'FA'],
+  ['TRADE', 'Trades', 'trade'],
+  ['DROP', 'Drops', 'drop'],
+  ['LINEUP', 'Lineup changes', 'lineup'],
+  ['IR_PLACE', 'To IR', 'to IR'],
+  ['IR_ACTIVATE', 'From IR', 'from IR'],
 ]
 
 /**

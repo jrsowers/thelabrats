@@ -142,6 +142,20 @@ export function placeholderAward(
         supporting: [{ label: 'Slot', value: 'FLEX' }],
       }
     },
+    free_fall: () => {
+      // PLACES, not points. The generic generator produced figures like 121.6,
+      // which is impossible in a twelve-team league and read as a broken
+      // calculation rather than as sample data.
+      const dropped = 1 + Math.floor(r() * 5)
+      const from = 2 + Math.floor(r() * 5)
+      return {
+        value: `\u2212${dropped}`,
+        supporting: [
+          { label: 'Starting rank', value: String(from) },
+          { label: 'Ending rank', value: String(from + dropped) },
+        ],
+      }
+    },
     giant_killer: () => {
       // A DEFICIT, so the magnitude is the number. The leading minus made the
       // sample card read "projected to lose by -30.0", which looks like a bug
