@@ -72,6 +72,33 @@ const BUILDERS: Record<string, Builder> = {
     b(c.managerFirst), t(' was projected to lose to '), ...opponent(c), t(' by '),
     b(c.value), t('. Won anyway. Somebody check the tape.'),
   ],
+  control_group: (c) => [
+    b(c.managerFirst), t(' finished within '), b(c.value),
+    t(' of exactly what he was projected to score. No drama, no disasters, '),
+    t('nothing to talk about. The scientific method in team form.'),
+  ],
+  photo_finish: (c) => [
+    b(c.managerFirst), t(' beat '), ...opponent(c), t(' by '), b(c.value),
+    t('. Any closer and they would have needed a steward\'s inquiry.'),
+  ],
+  socialist: (c) => [
+    t('Nobody on '), b(c.managerFirst), t('\'s roster did more than '), b(c.value),
+    t(' of the work. Everyone contributed, everyone shared, everyone goes home '),
+    t('with a participation ribbon. Seize the means of production.'),
+  ],
+  one_man_army: (c) => [
+    ...player(c), t(' was '), b(c.value), t(' of '), b(c.managerFirst),
+    t('\'s entire score. The other nine were there for moral support.'),
+  ],
+  slay_girl_slay: (c) => [
+    b(c.managerFirst), t(' had '), b(`${c.value} starters`),
+    t(' clear their projection. Not one weak link in the whole lineup. '),
+    t('Absolutely no notes.'),
+  ],
+  sweatin_it_out: (c) => [
+    b(c.managerFirst), t(' was down '), b(c.value), t(' to '), ...opponent(c),
+    t(' and won anyway. Somewhere a remote control did not survive.'),
+  ],
   prime_specimen: (c) => [
     b(c.managerFirst), t(' started '), ...player(c), t(' and watched him drop '),
     b(`${c.value} pts`), t(' — the best performance in the league this week.'),
@@ -97,6 +124,14 @@ const BUILDERS: Record<string, Builder> = {
   bench_bum: (c) => [
     b(c.managerFirst), t(' left '), b(`${c.value} points`),
     t(' sitting on the bench. The winning lineup was right there the whole time.'),
+  ],
+  free_fall: (c) => [
+    b(c.managerFirst), t(' fell '), b(`${c.value} places`),
+    t(' in the table this week. Same league, longer way down.'),
+  ],
+  understudy: (c) => [
+    ...player(c), t(' put up '), b(`${c.value} pts`), t(' for '), b(c.managerFirst),
+    t(' and did it in street clothes. Best seat in the house.'),
   ],
   galaxy_brain: (c) => [
     b(c.managerFirst), t(' made '), b(`${c.value} roster moves`),

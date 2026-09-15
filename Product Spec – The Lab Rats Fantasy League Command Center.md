@@ -1901,9 +1901,48 @@ is projected highest and has not taken a snap.
 
 ## Current coverage
 
-All twelve awards are computed from stored data. None are placeholders by
-design any more — a card falls back to a sample only when the engine found no
-qualifying candidate that week, which is itself the honest answer.
+All twenty awards are computed from stored data, plus the Position Kings strip.
+None are placeholders by design any more — a card falls back to a sample only
+when the engine found no qualifying candidate that week, which is itself the
+honest answer.
+
+## 22.1b Spreading the awards
+
+*Added 2026-09-14.*
+
+Week 1's first pass gave ten awards to four managers. Two-thirds of the league
+went home empty, and that was structural rather than unlucky: every award is a
+LEAGUE-WIDE EXTREMUM over one number, and most of those numbers are flavours of
+"who scored a lot this week", so they collapse onto the same few people. Two
+pairs were near-duplicates outright — the same Caleb Williams game won both The
+Prime Specimen and Fantasy Nostradamus, and the lowest scorer is usually also
+the biggest loser.
+
+Eight additions fixed it, chosen because they measure something OTHER than
+magnitude:
+
+| Award | Measures |
+| --- | --- |
+| **Position Kings** | best starter at each of QB/RB/WR/TE/K/DST — a strip, not cards |
+| **The Control Group** | closest to its own projection; the only award not about an extreme |
+| **The Understudy** | best week from a bench |
+| **The Photo Finish** | narrowest win |
+| **The Socialist** | smallest share taken by a roster's top scorer |
+| **The One Man Army** | largest share — the mirror of The Socialist |
+| **Slay Girl Slay** | most starters clearing their projection |
+| **Sweatin' It Out** | biggest deficit a winner ever faced |
+| **The Free Fall** | biggest drop down the table |
+
+Position Kings is the one that spreads MECHANICALLY: it partitions the player
+pool rather than ranking managers, and one player cannot be the best
+quarterback and the best tight end. Kicker and defence are the most valuable
+rows precisely because neither has anything to do with whether a team is good.
+
+Result on week 1's data: **nine of twelve managers on the page, up from four.**
+
+⚠️ The Free Fall cannot exist in week 1 — there is no prior table to fall from,
+and `computeMovement` returns nothing before week 2. It is omitted rather than
+invented.
 
 ## The lineup optimizer
 

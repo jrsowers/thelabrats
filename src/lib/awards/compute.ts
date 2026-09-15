@@ -49,6 +49,18 @@ export interface AwardTransaction {
   acquiredPlayerIds: number[]
 }
 
+/**
+ * The score of one matchup at one moment, from matchup_snapshots.
+ *
+ * Only Sweatin' It Out reads these. Everything else in the library works from
+ * final numbers, which is why the capture cadence is declared per award.
+ */
+export interface AwardSnapshot {
+  matchupId: number
+  homeScore: number
+  awayScore: number
+}
+
 /** One player's line for the week, from player_week_scores. */
 export interface AwardPlayer {
   seasonTeamId: number
@@ -84,6 +96,14 @@ export type ComputedAwardKey =
   | 'galaxy_brain'
   | 'mastermind'
   | 'bench_bum'
+  | 'control_group'
+  | 'photo_finish'
+  | 'socialist'
+  | 'one_man_army'
+  | 'slay_girl_slay'
+  | 'sweatin_it_out'
+  | 'understudy'
+  | 'free_fall'
 
 export interface ComputedAward {
   key: ComputedAwardKey
@@ -146,6 +166,13 @@ export function computeWeeklyAwards(
   transactions: AwardTransaction[] = [],
   /** ESPN's lineup_slot_counts. Without it there is no lineup to optimize. */
   slotCounts: Record<string | number, number> = {},
+  /** In-game captures, for the one award that needs the continuous record. */
+  snapshots: AwardSnapshot[] = [],
+  /**
+   * seasonTeamId -> places gained against last week; negative is a fall.
+   * Empty in week 1, which has no table to move within.
+   */
+  movement: Map<number, number> = new Map(),
 ): ComputedAward[] {
   // Player awards land DURING the week — the best performance of a Sunday is
   // knowable on Sunday. Matchup awards need the week finished, because "lowest
@@ -153,6 +180,7 @@ export function computeWeeklyAwards(
   const playerAwards = [
     ...computePlayerAwards(players),
     ...computeWaiverAward(players, transactions),
+    ...computeRosterShapeAwards(players),
   ]
 
   const matchups = all.filter((m) => m.week === week && m.status === 'FINAL')
@@ -344,7 +372,234 @@ export function computeWeeklyAwards(
     })
   }
 
+  // ---- The Photo Finish: narrowest win of the week ----
+  const closest = [...winners].sort(
+    (a, b) => (a.score - a.against) - (b.score - b.against),
+  )[0]
+  if (closest) {
+    const margin = closest.score - closest.against
+    awards.push({
+      key: 'photo_finish',
+      teamId: closest.teamId,
+      opponentId: closest.opponentId,
+      metricValue: f1(margin),
+      headline: `Won by ${f1(margin)} — the closest game of the week.`,
+      supporting: [{ label: 'Final', value: `${f1(closest.score)}–${f1(closest.against)}` }],
+    })
+  }
+
+  // ---- Sweatin' It Out: biggest deficit erased ----
+  // Defined as the largest deficit EVER faced rather than "behind going into
+  // Monday night". No calendar arithmetic, it uses the whole record rather
+  // than one arbitrary instant, and "came back from 40 down" is the better
+  // story anyway.
+  const byMatchup = new Map<number, AwardSnapshot[]>()
+  for (const snap of snapshots) {
+    const list = byMatchup.get(snap.matchupId) ?? []
+    list.push(snap)
+    byMatchup.set(snap.matchupId, list)
+  }
+
+  const comebacks = winners
+    .map((side) => {
+      const isHome = matchups.find((m) => m.matchupId === side.matchupId)?.homeTeamId === side.teamId
+      const worst = (byMatchup.get(side.matchupId) ?? []).reduce((deepest, snap) => {
+        const deficit = isHome
+          ? snap.awayScore - snap.homeScore
+          : snap.homeScore - snap.awayScore
+        return Math.max(deepest, deficit)
+      }, 0)
+      return { side, deficit: worst }
+    })
+    .filter((c) => c.deficit > 0)
+    .sort((a, b) => b.deficit - a.deficit)
+
+  const comeback = comebacks[0]
+  if (comeback) {
+    awards.push({
+      key: 'sweatin_it_out',
+      teamId: comeback.side.teamId,
+      opponentId: comeback.side.opponentId,
+      metricValue: f1(comeback.deficit),
+      headline: `Trailed by ${f1(comeback.deficit)} at the worst of it. Won by ${f1(comeback.side.score - comeback.side.against)}.`,
+      supporting: [
+        { label: 'Biggest deficit', value: f1(comeback.deficit) },
+        { label: 'Final', value: `${f1(comeback.side.score)}–${f1(comeback.side.against)}` },
+      ],
+    })
+  }
+
+  // ---- The Free Fall: biggest drop down the table ----
+  // The rank already encodes record first and points second, in the league's
+  // own seeding order, so nothing extra needs weighting here.
+  const fallen = [...movement.entries()]
+    .map(([teamId, places]) => ({ teamId, dropped: -places }))
+    .filter((x) => x.dropped > 0)
+    .sort((a, b) => b.dropped - a.dropped || a.teamId - b.teamId)[0]
+
+  if (fallen) {
+    const side = sides.find((s) => s.teamId === fallen.teamId)
+    awards.push({
+      key: 'free_fall',
+      teamId: fallen.teamId,
+      opponentId: side?.opponentId ?? null,
+      metricValue: String(fallen.dropped),
+      headline: `Down ${fallen.dropped} ${fallen.dropped === 1 ? 'place' : 'places'} in the standings.`,
+      supporting: side
+        ? [{ label: 'This week', value: `${f1(side.score)}–${f1(side.against)}` }]
+        : [],
+    })
+  }
+
   return [...awards, ...playerAwards]
+}
+
+/**
+ * Awards about the SHAPE of a roster's scoring rather than its size.
+ *
+ * These are the ones that break the clustering. Every other award in the
+ * library ranks managers by how much they scored, so the same few collect them
+ * all; concentration and consistency are close to independent of the total.
+ */
+function computeRosterShapeAwards(players: AwardPlayer[]): ComputedAward[] {
+  const awards: ComputedAward[] = []
+  const evidence = (p: AwardPlayer) => ({
+    espnPlayerId: p.espnPlayerId, name: p.name, position: p.position, nflTeam: p.nflTeam,
+  })
+
+  const byTeam = new Map<number, AwardPlayer[]>()
+  for (const p of players) {
+    const roster = byTeam.get(p.seasonTeamId) ?? []
+    roster.push(p)
+    byTeam.set(p.seasonTeamId, roster)
+  }
+
+  interface Shape {
+    teamId: number
+    top: AwardPlayer
+    share: number
+    total: number
+    over: number
+    overBy: number
+    offProjection: number
+  }
+
+  const shapes: Shape[] = []
+  for (const [teamId, roster] of byTeam) {
+    const starters = roster.filter((p) => p.isStarter && p.actualPoints != null)
+    // A team whose starters scored nothing has no shape to speak of, and a
+    // share of zero points is a division by zero waiting to happen.
+    const total = starters.reduce((n, p) => n + (p.actualPoints as number), 0)
+    if (starters.length === 0 || total <= 0) continue
+
+    const top = [...starters].sort(
+      (a, b) => (b.actualPoints as number) - (a.actualPoints as number),
+    )[0]
+
+    const projected = starters.filter((p) => p.projectedPoints != null)
+    const beat = projected.filter((p) => (p.actualPoints as number) > (p.projectedPoints as number))
+
+    shapes.push({
+      teamId,
+      top,
+      share: (top.actualPoints as number) / total,
+      total,
+      over: beat.length,
+      overBy: beat.reduce((n, p) => n + ((p.actualPoints as number) - (p.projectedPoints as number)), 0),
+      offProjection: Math.abs(
+        total - projected.reduce((n, p) => n + (p.projectedPoints as number), 0),
+      ),
+    })
+  }
+  if (shapes.length === 0) return awards
+
+  const pct = (n: number) => `${Math.round(n * 100)}%`
+
+  // ---- The One Man Army / The Socialist ----
+  // One measurement read from both ends, like Giant Killer and Choke Artist.
+  const byShare = [...shapes].sort((a, b) => b.share - a.share || a.teamId - b.teamId)
+  const carried = byShare[0]
+  const shared = byShare[byShare.length - 1]
+
+  awards.push({
+    key: 'one_man_army',
+    teamId: carried.teamId,
+    opponentId: null,
+    metricValue: pct(carried.share),
+    headline: `${carried.top.name} was ${pct(carried.share)} of the whole team.`,
+    supporting: [
+      { label: 'His points', value: f1(carried.top.actualPoints as number) },
+      { label: 'Team total', value: f1(carried.total) },
+    ],
+    player: evidence(carried.top),
+  })
+
+  // One manager cannot hold both ends of the same measure.
+  if (shared.teamId !== carried.teamId) {
+    awards.push({
+      key: 'socialist',
+      teamId: shared.teamId,
+      opponentId: null,
+      metricValue: pct(shared.share),
+      headline: `No starter did more than ${pct(shared.share)} of the work.`,
+      supporting: [
+        { label: 'Top scorer', value: f1(shared.top.actualPoints as number) },
+        { label: 'Team total', value: f1(shared.total) },
+      ],
+    })
+  }
+
+  // ---- The Control Group: closest to its own projection ----
+  const calm = [...shapes].sort((a, b) => a.offProjection - b.offProjection || a.teamId - b.teamId)[0]
+  awards.push({
+    key: 'control_group',
+    teamId: calm.teamId,
+    opponentId: null,
+    metricValue: f1(calm.offProjection),
+    headline: `Finished ${f1(calm.offProjection)} from his projection. Nothing to see here.`,
+    supporting: [{ label: 'Scored', value: f1(calm.total) }],
+  })
+
+  // ---- Slay Girl Slay: most starters over their projection ----
+  const slayed = [...shapes].sort((a, b) => b.over - a.over || b.overBy - a.overBy)[0]
+  // A week where nobody's lineup beat expectations has no winner, and handing
+  // it to whoever managed one overperformer is not the same award (§22.2).
+  if (slayed.over > 1) {
+    awards.push({
+      key: 'slay_girl_slay',
+      teamId: slayed.teamId,
+      opponentId: null,
+      metricValue: String(slayed.over),
+      headline: `${slayed.over} starters beat their projection.`,
+      supporting: [{ label: 'Combined over', value: f1(slayed.overBy) }],
+    })
+  }
+
+  // ---- The Understudy: best week from a bench ----
+  // IR is excluded: he could not legally have been started, so leaving him
+  // there was not a decision.
+  const benched = players
+    .filter((p) => !p.isStarter && p.lineupSlotId !== IR_SLOT && p.actualPoints != null)
+    .sort((a, b) => (b.actualPoints as number) - (a.actualPoints as number))[0]
+
+  if (benched && (benched.actualPoints as number) > 0) {
+    awards.push({
+      key: 'understudy',
+      teamId: benched.seasonTeamId,
+      opponentId: null,
+      metricValue: f1(benched.actualPoints as number),
+      headline: `${benched.name} scored ${f1(benched.actualPoints as number)} without leaving the bench.`,
+      supporting: [
+        { label: 'Position', value: `${benched.position} · ${benched.nflTeam}` },
+        ...(benched.projectedPoints != null
+          ? [{ label: 'Projected', value: f1(benched.projectedPoints) }]
+          : []),
+      ],
+      player: evidence(benched),
+    })
+  }
+
+  return awards
 }
 
 interface LineupGap {
@@ -579,4 +834,65 @@ export function computeAwardLeaderboard(
       .sort((a, b) => b.count - a.count))
   }
   return out
+}
+
+
+/* ============================================================
+   Position Kings
+   ============================================================ */
+
+/**
+ * Best started player at each position.
+ *
+ * Not an award in the catalog sense — it renders as a strip across the top of
+ * the page rather than as seven more cards, and it is stored under its own
+ * keys.
+ *
+ * It is here because it is the ONLY thing in the library that spreads
+ * mechanically. Every award ranks managers against each other on one number,
+ * so the same few collect them all; this partitions the player pool instead,
+ * and one player cannot be the best quarterback AND the best tight end. The
+ * kicker and the defense are the most valuable rows precisely because neither
+ * has anything to do with whether a team is good.
+ */
+export const KING_POSITIONS = ['QB', 'RB', 'WR', 'TE', 'K', 'D/ST'] as const
+export type KingPosition = (typeof KING_POSITIONS)[number]
+
+export interface PositionKing {
+  position: KingPosition
+  seasonTeamId: number
+  espnPlayerId: number
+  name: string
+  nflTeam: string
+  points: number
+  projectedPoints: number | null
+}
+
+export function computePositionKings(players: AwardPlayer[]): PositionKing[] {
+  const kings: PositionKing[] = []
+
+  for (const position of KING_POSITIONS) {
+    const best = players
+      .filter((p) => p.isStarter && p.position === position && p.actualPoints != null)
+      // Ties break on player id so the same week always crowns the same player.
+      .sort((a, b) =>
+        (b.actualPoints as number) - (a.actualPoints as number) ||
+        a.espnPlayerId - b.espnPlayerId)[0]
+
+    // A position nobody started has no king. Showing the best BENCHED player
+    // there would quietly change what the row means.
+    if (!best) continue
+
+    kings.push({
+      position,
+      seasonTeamId: best.seasonTeamId,
+      espnPlayerId: best.espnPlayerId,
+      name: best.name,
+      nflTeam: best.nflTeam,
+      points: best.actualPoints as number,
+      projectedPoints: best.projectedPoints,
+    })
+  }
+
+  return kings
 }

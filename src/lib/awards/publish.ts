@@ -8,9 +8,10 @@
  * missed tick costs minutes instead of a whole week.
  */
 import { createServiceClient } from '@/lib/supabase/server'
+import { computeMovement } from '@/lib/standings/compute'
 import { decideRelease } from './release'
 import { generateWeeklyAwards, type GenerateResult } from './generate'
-import type { AwardMatchup, AwardPlayer, AwardTransaction } from './compute'
+import type { AwardMatchup, AwardPlayer, AwardTransaction, AwardSnapshot } from './compute'
 
 export interface PublishResult {
   ok: boolean
@@ -26,16 +27,18 @@ export async function publishDueAwards(
   const db = createServiceClient()
 
   try {
-    const [matchupRes, awardRes, seasonRes] = await Promise.all([
+    const [matchupRes, awardRes, seasonRes, teamRes] = await Promise.all([
       db.from('matchups')
         .select('id, week, home_team_id, away_team_id, home_score, away_score, status, home_projected_score, away_projected_score')
         .eq('season_id', seasonId),
       db.from('awards').select('week').eq('season_id', seasonId),
       db.from('seasons').select('lineup_slot_counts').eq('id', seasonId).maybeSingle(),
+      db.from('season_teams').select('id, team_name').eq('season_id', seasonId),
     ])
     if (matchupRes.error) throw new Error(`matchups read failed: ${matchupRes.error.message}`)
     if (awardRes.error) throw new Error(`awards read failed: ${awardRes.error.message}`)
     if (seasonRes.error) throw new Error(`season read failed: ${seasonRes.error.message}`)
+    if (teamRes.error) throw new Error(`season_teams read failed: ${teamRes.error.message}`)
 
     // The shape of a legal lineup. Without it the optimizer has no seats and
     // the two lineup awards stay placeholders rather than guessing.
@@ -139,9 +142,56 @@ export async function publishDueAwards(
             .map((i) => i.players!.espn_player_id as number),
         }))
 
+      // ---- in-game captures ----
+      // Only Sweatin' It Out reads these, and only for this week's matchups.
+      // Paged past PostgREST's row cap: a live Sunday produces hundreds of
+      // snapshots an hour, and a silently truncated first page would quietly
+      // shrink every comeback to whatever the tail happened to contain.
+      const weekMatchupIds = matchups.filter((m) => m.week === week).map((m) => m.id)
+      const snapshots: AwardSnapshot[] = []
+      if (weekMatchupIds.length > 0) {
+        const PAGE = 1000
+        for (let from = 0; ; from += PAGE) {
+          const { data, error } = await db
+            .from('matchup_snapshots')
+            .select('matchup_id, home_score, away_score')
+            .in('matchup_id', weekMatchupIds)
+            .order('id')
+            .range(from, from + PAGE - 1)
+          if (error) throw new Error(`matchup_snapshots read failed: ${error.message}`)
+          if (!data || data.length === 0) break
+          for (const r of data) {
+            snapshots.push({
+              matchupId: r.matchup_id,
+              homeScore: Number(r.home_score),
+              awayScore: Number(r.away_score),
+            })
+          }
+          if (data.length < PAGE) break
+        }
+      }
+
+      // ---- movement down the table ----
+      // Reuses the standings engine rather than re-deriving a rank here, so
+      // The Free Fall can never disagree with the table the league is looking
+      // at. Empty in week 1, which has no prior standings to fall from.
+      const movement = computeMovement(
+        awardMatchups.map((m) => ({
+          week: m.week,
+          homeTeamId: m.homeTeamId,
+          awayTeamId: m.awayTeamId,
+          homeScore: m.homeScore,
+          awayScore: m.awayScore,
+          status: m.status,
+        })),
+        (teamRes.data ?? []).map((t) => ({ seasonTeamId: t.id, name: t.team_name })),
+        week,
+      )
+
       generated.push(
         await generateWeeklyAwards(
           seasonId, week, awardMatchups, players, transactions, slotCounts,
+          snapshots, movement,
         ),
       )
     }

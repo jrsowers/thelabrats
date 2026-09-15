@@ -974,3 +974,53 @@ from nothing.
 **Sanity check that mattered:** the first real run gave The Bench Bum to 4th and
 Inshes at 13.9 — which is exactly Mike Evans, who scored 13.9 on their bench
 that week. The optimizer found the real gap without being told where to look.
+
+## 2026-09-14 — Twenty awards, because twelve landed on four people
+
+James: "Seems like a lot of redundancy in those awards." He was right, and it
+was structural rather than a bad week.
+
+**Every award is a league-wide extremum over one number, and most of those
+numbers measure the same thing.** Week 1's first pass gave ten awards to four
+managers. The same Caleb Williams game won both The Prime Specimen and Fantasy
+Nostradamus. Substation Superstars took both The Dumpster Fire and The Public
+Execution, because the lowest scorer is usually also the biggest loser. Twelve
+awards were really about eight measurements, and all eight were flavours of
+"who scored a lot this week" — the one axis that clusters.
+
+**The fix was to add awards that measure something other than magnitude**, not
+to pass a trophy to the runner-up. Spreading the load by naming someone who did
+not actually win is the one move that would have made the page dishonest.
+
+**Position Kings is the only section that spreads mechanically.** It partitions
+the player pool instead of ranking managers, so one player cannot be the best
+quarterback and the best tight end. Kicker and defence are the most valuable
+rows in it precisely because neither has anything to do with whether a team is
+any good. It renders as a strip rather than six more cards — nineteen cards plus
+six would bury the awards that take judgement under a leaderboard.
+
+**Result: nine of twelve managers on week 1's page, up from four.**
+
+**The Socialist and The One Man Army are one measurement read from both ends**,
+the way The Giant Killer already mirrors The Choke Artist. Guarded so one
+manager can never hold both ends of it.
+
+**Sweatin' It Out is defined as the largest deficit EVER faced, not "behind
+going into Monday night."** The obvious definition needs calendar arithmetic
+and picks one arbitrary instant; this one uses the whole snapshot record, needs
+no clock, and "came back from 46 down" is the better story anyway. It is the
+only award in the library that needs the continuous capture.
+
+**The Micromanager was already built.** James proposed it — most roster moves,
+still lost — which is The Galaxy Brain exactly. Flagged rather than shipped
+twice; adding redundancy to a change about removing redundancy would have been
+a poor joke. The name is his to change.
+
+**The Free Fall cannot exist in week 1**, and says so by being absent. There is
+no prior table to fall from, and inventing a starting rank would be a fabricated
+number on a real card.
+
+**Studs now outnumber Duds twelve to eight.** James called it explicitly: "I'm
+not too worried about having more Studs than Duds. I'm sure this will continue
+to evolve." The test that asserted an even split asserted a moment, not an
+invariant, and now checks that every award has a section instead.

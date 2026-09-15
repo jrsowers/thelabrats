@@ -126,6 +126,56 @@ export const AWARDS: AwardDef[] = [
     needs: ['PLAYER_SCORES'], capture: 'WEEKLY_BOXSCORE',
     metricLabel: 'Points', evidence: 'PLAYER',
   },
+  {
+    key: 'control_group', name: 'The Control Group', section: 'STUDS', category: 'MANAGER',
+    blurb: 'Scored almost exactly what the projections said.',
+    // The only award in the library that is not about an extreme. It exists
+    // because every other one measures who scored a lot or a little, which is
+    // why the same three managers kept collecting all of them.
+    formula: 'Smallest gap between a team\'s starter points and the sum of those starters\' projections, in either direction.',
+    needs: ['PLAYER_SCORES', 'PROJECTIONS'], capture: 'WEEKLY_BOXSCORE',
+    metricLabel: 'Off projection',
+  },
+  {
+    key: 'photo_finish', name: 'The Photo Finish', section: 'STUDS', category: 'MATCHUP',
+    blurb: 'Survived the closest game of the week.',
+    formula: 'Narrowest winning margin of the week, credited to the manager who survived it.',
+    needs: ['FINAL_SCORES'], capture: 'FINAL_ONLY',
+    metricLabel: 'Margin', evidence: 'MATCHUP',
+  },
+  {
+    key: 'socialist', name: 'The Socialist', section: 'STUDS', category: 'MANAGER',
+    blurb: 'Everybody chipped in. Nobody carried it.',
+    // Deliberately the mirror of The One Man Army, the way The Giant Killer
+    // mirrors The Choke Artist: one measurement, both ends, two managers.
+    formula: 'Smallest share of a team\'s starter points contributed by its highest scorer.',
+    needs: ['PLAYER_SCORES'], capture: 'WEEKLY_BOXSCORE',
+    metricLabel: 'Top scorer\'s share',
+  },
+  {
+    key: 'one_man_army', name: 'The One Man Army', section: 'STUDS', category: 'MANAGER',
+    blurb: 'One player did nearly all of it.',
+    formula: 'Largest share of a team\'s starter points contributed by a single player.',
+    needs: ['PLAYER_SCORES'], capture: 'WEEKLY_BOXSCORE',
+    metricLabel: 'Share of team', evidence: 'PLAYER',
+  },
+  {
+    key: 'slay_girl_slay', name: 'Slay Girl Slay', section: 'STUDS', category: 'MANAGER',
+    blurb: 'Nearly the whole lineup beat its projection.',
+    formula: 'Most started players who finished above their own projection. Ties broken by the total amount cleared.',
+    needs: ['PLAYER_SCORES', 'PROJECTIONS'], capture: 'WEEKLY_BOXSCORE',
+    metricLabel: 'Starters over',
+  },
+  {
+    key: 'sweatin_it_out', name: 'Sweatin\' It Out', section: 'STUDS', category: 'MATCHUP',
+    blurb: 'Was losing. Won anyway.',
+    // The one award that needs the continuous record. Defined as the largest
+    // deficit ever faced rather than "behind going into Monday night", so it
+    // needs no calendar arithmetic and tells a better story besides.
+    formula: 'Largest deficit a team ever faced in its matchup and still won, measured across every in-game snapshot.',
+    needs: ['LIVE_EVENTS'], capture: 'CONTINUOUS',
+    metricLabel: 'Deficit erased', evidence: 'MATCHUP',
+  },
 
   // ---------------- DUDS ----------------
   // Also all manager awards. Where a matchup outcome is the subject, the award
@@ -167,6 +217,28 @@ export const AWARDS: AwardDef[] = [
     metricLabel: 'Points left behind',
   },
   {
+    key: 'free_fall', name: 'The Free Fall', section: 'DUDS', category: 'MANAGER',
+    blurb: 'Dropped further down the table than anyone.',
+    // "Record and points" is not a second measurement bolted on — it is what
+    // the standings rank already IS, in this league's own seeding order:
+    // head-to-head record, then head-to-head, then points for. Falling in the
+    // table therefore folds both in by construction.
+    formula: 'Largest drop in standings position against last week, under the league\'s own seeding rules. Cannot exist in week 1, which has no table to fall from.',
+    needs: ['FINAL_SCORES'], capture: 'FINAL_ONLY',
+    metricLabel: 'Places lost',
+  },
+  {
+    key: 'understudy', name: 'The Understudy', section: 'DUDS', category: 'MANAGER',
+    blurb: 'The best performance nobody started.',
+    // Distinct from The Bench Bum, which measures the GAP to the best legal
+    // lineup. This is one player, and the two regularly land on different
+    // managers — a huge bench week only becomes a gap if the starter you left
+    // in was worse.
+    formula: 'Highest-scoring player left on a bench. Injured reserve is excluded — he could not have been started.',
+    needs: ['PLAYER_SCORES'], capture: 'WEEKLY_BOXSCORE',
+    metricLabel: 'Points benched', evidence: 'PLAYER',
+  },
+  {
     key: 'galaxy_brain', name: 'The Galaxy Brain', section: 'DUDS', category: 'MANAGER',
     blurb: 'Made the most roster moves and still lost.',
     formula: 'Most roster moves within ESPN\'s scoring period, among managers who lost — waiver claims, free agent adds, drops, trades, IR moves and start/sit swaps. A swap counts once, not once per player.',
@@ -199,6 +271,8 @@ export const byCadence = (c: CaptureCadence) => AWARDS.filter((a) => a.capture =
  */
 const SATISFIED: ReadonlySet<DataNeed> = new Set<DataNeed>([
   'FINAL_SCORES', 'PLAYER_SCORES', 'PROJECTIONS', 'TRANSACTIONS', 'LINEUP_OPTIMIZER',
+  // captureSnapshots has been recording every sync since 2026-09-11.
+  'LIVE_EVENTS',
 ])
 
 /** True when every dependency is satisfied by data we already have. */

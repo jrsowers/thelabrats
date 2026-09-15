@@ -711,6 +711,65 @@ export async function getPublishedAwards(
     })
 }
 
+export interface PublishedKing {
+  position: string
+  teamId: number
+  espnPlayerId: number | null
+  name: string
+  nflTeam: string
+  points: number
+  projectedPoints: number | null
+}
+
+/**
+ * The Position Kings strip for one week.
+ *
+ * Stored in the same table as the awards, under `position_king_*` keys, so it
+ * publishes and settles by exactly the same rules. Kept out of
+ * `getPublishedAwards` because it renders as a strip, not as cards — and the
+ * card builder walks the catalog, which these deliberately are not in.
+ */
+export async function getPublishedPositionKings(
+  seasonId: number,
+  week: number,
+): Promise<PublishedKing[]> {
+  if (!isSupabaseConfigured()) return []
+  const supabase = createPublicClient()
+  const { data, error } = await supabase
+    .from('awards')
+    .select('award_type, recipient_team_id, score, supporting_stats')
+    .eq('season_id', seasonId)
+    .eq('week', week)
+    .like('award_type', 'position_king_%')
+
+  if (error || !data) return []
+
+  type Extras = {
+    position?: string
+    projectedPoints?: number | null
+    player?: { espnPlayerId: number; name: string; nflTeam: string }
+  }
+
+  const rows = data
+    .filter((r) => r.recipient_team_id != null)
+    .map((r) => {
+      const extras = (r.supporting_stats ?? {}) as Extras
+      return {
+        position: extras.position ?? r.award_type.replace('position_king_', ''),
+        teamId: r.recipient_team_id as number,
+        espnPlayerId: extras.player?.espnPlayerId ?? null,
+        name: extras.player?.name ?? 'Unknown player',
+        nflTeam: extras.player?.nflTeam ?? '',
+        points: Number(r.score ?? 0),
+        projectedPoints: extras.projectedPoints ?? null,
+      }
+    })
+
+  // Lineup order, not alphabetical or whatever Postgres returned.
+  const order = ['QB', 'RB', 'WR', 'TE', 'K', 'D/ST']
+  return rows.sort((a, b) => order.indexOf(a.position) - order.indexOf(b.position))
+}
+
 /** Weeks that have published awards, ascending. */
 export async function getPublishedAwardWeeks(seasonId: number): Promise<number[]> {
   if (!isSupabaseConfigured()) return []

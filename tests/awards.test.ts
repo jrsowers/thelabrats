@@ -113,10 +113,14 @@ describe('computeAwardLeaderboard', () => {
 })
 
 describe('catalog', () => {
-  it('has six Studs and six Duds, all manager awards', () => {
-    expect(awardsBySection('STUDS')).toHaveLength(6)
-    expect(awardsBySection('DUDS')).toHaveLength(6)
-    expect(AWARDS.every((a) => a.category === 'MANAGER')).toBe(true)
+  it('sorts every award into a section, and every award is won by a manager', () => {
+    // Deliberately NOT an even split any more. James added seven awards on
+    // 2026-09-14 to break the clustering, most of them Studs, and called the
+    // imbalance explicitly: an award library is meant to keep evolving.
+    expect(AWARDS).toHaveLength(20)
+    expect(awardsBySection('STUDS').length + awardsBySection('DUDS').length).toBe(AWARDS.length)
+    expect(awardsBySection('STUDS').length).toBeGreaterThan(0)
+    expect(awardsBySection('DUDS').length).toBeGreaterThan(0)
   })
 
   it('gives every award a unique key AND a unique name', () => {
@@ -154,14 +158,30 @@ describe('catalog', () => {
       { seasonTeamId: 1, espnPlayerId: 3, name: 'Benched', position: 'WR', nflTeam: 'NYG',
         isStarter: false, lineupSlotId: 20, eligibleSlots: [4, 23], actualPoints: 25,
         projectedPoints: 10 },
+      // A second overperforming starter, so Slay Girl Slay has a real winner
+      // rather than being handed to whoever managed exactly one.
+      { seasonTeamId: 1, espnPlayerId: 4, name: 'Also Good', position: 'RB', nflTeam: 'SF',
+        isStarter: true, lineupSlotId: 2, eligibleSlots: [2, 23], actualPoints: 22,
+        projectedPoints: 9 },
+      // A third team, so One Man Army and The Socialist land on different
+      // managers instead of collapsing onto one.
+      { seasonTeamId: 5, espnPlayerId: 5, name: 'Solo', position: 'QB', nflTeam: 'BUF',
+        isStarter: true, lineupSlotId: 0, eligibleSlots: [0, 7], actualPoints: 40,
+        projectedPoints: 41 },
     ]
     const transactions: AwardTransaction[] = [
       { seasonTeamId: 2, kind: 'FREE_AGENT', acquiredPlayerIds: [2] },
       { seasonTeamId: 2, kind: 'LINEUP', acquiredPlayerIds: [] },
     ]
+    // One snapshot showing team 6 behind, so Sweatin' It Out qualifies too,
+    // and one team that slid down the table for The Free Fall.
+    const snapshots = [{ matchupId: 3, homeScore: 130, awayScore: 10 }]
+    const movement = new Map([[7, -3]])
     const produced = new Set(
-      computeWeeklyAwards(withProjections, 1, players, transactions, { 4: 1, 2: 1, 23: 1 })
-        .map((a) => a.key),
+      computeWeeklyAwards(
+        withProjections, 1, players, transactions, { 4: 1, 2: 1, 0: 1, 23: 1 },
+        snapshots, movement,
+      ).map((a) => a.key),
     )
     for (const def of AWARDS.filter(isComputable)) {
       expect(produced.has(def.key as never), `${def.name} is marked computable`).toBe(true)
@@ -476,5 +496,226 @@ describe('lineup-efficiency awards', () => {
       computeWeeklyAwards(week1, 1, perfect(1), [], {}).map((a) => [a.key as string, a]),
     )
     expect(noSlots.has('mastermind')).toBe(false)
+  })
+})
+
+describe('roster-shape awards', () => {
+  // These exist to break the clustering: every other award ranks managers by
+  // how MUCH they scored, so concentration and consistency must not.
+  const sh = (
+    seasonTeamId: number, espnPlayerId: number, name: string,
+    actualPoints: number, projectedPoints: number, isStarter = true,
+  ): AwardPlayer => ({
+    seasonTeamId, espnPlayerId, name, position: 'WR', nflTeam: 'PHI',
+    isStarter, lineupSlotId: isStarter ? 4 : 20, eligibleSlots: [4, 23],
+    actualPoints, projectedPoints,
+  })
+
+  // Team 1: one player is 80 of 100. Team 2: four players, 25 each.
+  const carried = [
+    sh(1, 11, 'The Guy', 80, 40), sh(1, 12, 'Filler A', 10, 10),
+    sh(1, 13, 'Filler B', 7, 7), sh(1, 14, 'Filler C', 3, 3),
+  ]
+  const shared = [
+    sh(2, 21, 'Even A', 25, 30), sh(2, 22, 'Even B', 25, 30),
+    sh(2, 23, 'Even C', 25, 30), sh(2, 24, 'Even D', 25, 30),
+  ]
+  const run = (players: AwardPlayer[]) =>
+    new Map(computeWeeklyAwards(week1, 1, players, [], {}, []).map((a) => [a.key as string, a]))
+
+  it('gives The One Man Army to the most concentrated roster', () => {
+    const a = run([...carried, ...shared]).get('one_man_army')!
+    expect(a.teamId).toBe(1)
+    expect(a.metricValue).toBe('80%')
+    expect(a.player?.name).toBe('The Guy')
+  })
+
+  it('gives The Socialist to the most evenly spread roster', () => {
+    const a = run([...carried, ...shared]).get('socialist')!
+    expect(a.teamId).toBe(2)
+    expect(a.metricValue).toBe('25%')
+  })
+
+  it('never gives one manager both ends of the same measure', () => {
+    const only = run(carried)
+    expect(only.get('one_man_army')?.teamId).toBe(1)
+    expect(only.has('socialist')).toBe(false)
+  })
+
+  it('is independent of how much a team scored', () => {
+    // The whole point. Team 3 scores twice as much as team 2 with the same
+    // shape, and the shape awards do not move.
+    const rich = shared.map((p) => ({ ...p, seasonTeamId: 3, espnPlayerId: p.espnPlayerId + 100, actualPoints: 50 }))
+    const a = run([...carried, ...rich]).get('socialist')!
+    expect(a.teamId).toBe(3)
+    expect(a.metricValue).toBe('25%')
+  })
+
+  it('skips a team whose starters scored nothing rather than dividing by zero', () => {
+    const blanked = [sh(9, 91, 'Ghost', 0, 12), sh(9, 92, 'Ghost Two', 0, 11)]
+    const keys = run([...carried, ...shared, ...blanked])
+    expect(keys.get('one_man_army')?.teamId).toBe(1)
+    expect(keys.get('socialist')?.teamId).toBe(2)
+  })
+
+  describe('The Control Group', () => {
+    it('rewards the team closest to its own projection, high or low', () => {
+      // Team 2 scored 100 against 120 projected: 20 off.
+      // Team 4 scored 100 against 102 projected: 2 off, and wins.
+      const precise = [
+        sh(4, 41, 'Exactly A', 50, 51), sh(4, 42, 'Exactly B', 50, 51),
+      ]
+      const a = run([...carried, ...shared, ...precise]).get('control_group')!
+      expect(a.teamId).toBe(4)
+      expect(a.metricValue).toBe('2.0')
+    })
+
+    it('does not care which side of the projection a team landed on', () => {
+      const under = [sh(5, 51, 'Under', 47, 50)]
+      const over = [sh(6, 61, 'Over', 53, 50)]
+      // Both are 3 off. The tie breaks on team id, deterministically.
+      const a = run([...carried, ...under, ...over]).get('control_group')!
+      expect(a.teamId).toBe(5)
+    })
+  })
+
+  describe('Slay Girl Slay', () => {
+    it('counts starters who cleared their own projection', () => {
+      // Team 1 has exactly ONE starter over (the fillers land on their number),
+      // team 2 has none, so neither qualifies. Team 8 has three.
+      const slayed = [
+        sh(8, 81, 'Over A', 20, 12), sh(8, 82, 'Over B', 18, 11),
+        sh(8, 83, 'Over C', 15, 14), sh(8, 84, 'Under', 2, 9),
+      ]
+      const a = run([...carried, ...shared, ...slayed]).get('slay_girl_slay')!
+      expect(a.teamId).toBe(8)
+      expect(a.metricValue).toBe('3')
+    })
+
+    it('breaks a tie on how much was cleared, not on who is first', () => {
+      const byTwo = [sh(8, 81, 'A', 20, 12), sh(8, 82, 'B', 18, 11)]      // +15
+      const byMore = [sh(9, 91, 'C', 40, 12), sh(9, 92, 'D', 38, 11)]     // +55
+      const a = run([...byTwo, ...byMore]).get('slay_girl_slay')!
+      expect(a.teamId).toBe(9)
+    })
+
+    it('is omitted when nobody managed more than one overperformer', () => {
+      // One lucky starter is not a lineup that slayed.
+      const barely = [sh(7, 71, 'Lone Star', 30, 10), sh(7, 72, 'Flop', 1, 20)]
+      expect(run(barely).has('slay_girl_slay')).toBe(false)
+    })
+  })
+
+  describe('The Understudy', () => {
+    it('finds the best week from a bench', () => {
+      const withBench = [
+        ...carried,
+        sh(2, 29, 'Should Have Played', 44, 12, false),
+      ]
+      const a = run(withBench).get('understudy')!
+      expect(a.teamId).toBe(2)
+      expect(a.metricValue).toBe('44.0')
+      expect(a.player?.name).toBe('Should Have Played')
+    })
+
+    it('ignores a player on injured reserve', () => {
+      // He could not legally have been started, so leaving him there was not
+      // a decision anybody made.
+      const stashed = [
+        ...carried,
+        { ...sh(2, 28, 'On IR', 99, 20, false), lineupSlotId: 21 },
+      ]
+      expect(run(stashed).get('understudy')?.player?.name).not.toBe('On IR')
+    })
+
+    it('is omitted when every bench scored nothing', () => {
+      const quiet = [...carried, sh(2, 27, 'Also Nothing', 0, 9, false)]
+      expect(run(quiet).has('understudy')).toBe(false)
+    })
+  })
+})
+
+describe('matchup-shape awards', () => {
+  const run = (m: AwardMatchup[], snapshots: { matchupId: number; homeScore: number; awayScore: number }[] = []) =>
+    new Map(computeWeeklyAwards(m, 1, [], [], {}, snapshots).map((a) => [a.key as string, a]))
+
+  describe('The Photo Finish', () => {
+    it('goes to the narrowest win, not the highest score', () => {
+      // week1 game 2 is t3 101.0 over t4 100.5 — half a point.
+      const a = run(week1).get('photo_finish')!
+      expect(a.teamId).toBe(3)
+      expect(a.opponentId).toBe(4)
+      expect(a.metricValue).toBe('0.5')
+    })
+  })
+
+  describe("Sweatin' It Out", () => {
+    it('measures the biggest deficit a winner ever faced', () => {
+      // t1 won 150-60 but was 40 behind at one point.
+      const snaps = [
+        { matchupId: 1, homeScore: 10, awayScore: 50 },
+        { matchupId: 1, homeScore: 90, awayScore: 55 },
+        { matchupId: 1, homeScore: 150, awayScore: 60 },
+      ]
+      const a = run(week1, snaps).get('sweatin_it_out')!
+      expect(a.teamId).toBe(1)
+      expect(a.metricValue).toBe('40.0')
+    })
+
+    it('reads the deficit from the winner’s own side of the matchup', () => {
+      // Game 3: t5 120, t6 130 — the AWAY team won. A snapshot where home led
+      // by 25 is a 25-point deficit for t6, not a lead.
+      const snaps = [{ matchupId: 3, homeScore: 80, awayScore: 55 }]
+      const a = run(week1, snaps).get('sweatin_it_out')!
+      expect(a.teamId).toBe(6)
+      expect(a.metricValue).toBe('25.0')
+    })
+
+    it('is omitted when every winner led wire to wire', () => {
+      const snaps = [
+        { matchupId: 1, homeScore: 30, awayScore: 5 },
+        { matchupId: 1, homeScore: 150, awayScore: 60 },
+      ]
+      expect(run(week1, snaps).has('sweatin_it_out')).toBe(false)
+    })
+
+    it('is omitted entirely when no snapshots were captured', () => {
+      // A week before continuous capture existed has no comeback story, and
+      // inventing one from the final score would be a guess.
+      expect(run(week1).has('sweatin_it_out')).toBe(false)
+    })
+  })
+})
+
+describe('The Free Fall', () => {
+  const run = (movement: Map<number, number>) =>
+    new Map(
+      computeWeeklyAwards(week1, 1, [], [], {}, [], movement).map((a) => [a.key as string, a]),
+    )
+
+  it('goes to the biggest drop down the table', () => {
+    // t1 gained two, t5 lost one, t7 lost four.
+    const a = run(new Map([[1, 2], [5, -1], [7, -4]])).get('free_fall')!
+    expect(a.teamId).toBe(7)
+    expect(a.metricValue).toBe('4')
+  })
+
+  it('ignores teams that climbed or held station', () => {
+    expect(run(new Map([[1, 3], [3, 0]])).has('free_fall')).toBe(false)
+  })
+
+  it('cannot exist in week 1, which has no table to fall from', () => {
+    // computeMovement returns an empty map before week 2, and inventing a
+    // starting rank to fall from would be a fabricated number.
+    expect(run(new Map()).has('free_fall')).toBe(false)
+  })
+
+  it('names the opponent it happened against', () => {
+    const a = run(new Map([[5, -3]])).get('free_fall')!
+    expect(a.opponentId).toBe(6)
+  })
+
+  it('says place, not places, for a single spot', () => {
+    expect(run(new Map([[5, -1]])).get('free_fall')!.headline).toMatch(/1 place\b/)
   })
 })

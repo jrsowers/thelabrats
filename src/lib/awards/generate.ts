@@ -23,8 +23,8 @@
 import { createServiceClient } from '@/lib/supabase/server'
 import { AWARDS } from './catalog'
 import {
-  computeWeeklyAwards,
-  type AwardMatchup, type AwardPlayer, type AwardTransaction,
+  computeWeeklyAwards, computePositionKings,
+  type AwardMatchup, type AwardPlayer, type AwardTransaction, type AwardSnapshot,
 } from './compute'
 
 export interface GenerateResult {
@@ -43,6 +43,8 @@ export async function generateWeeklyAwards(
   players: AwardPlayer[],
   transactions: AwardTransaction[] = [],
   slotCounts: Record<string | number, number> = {},
+  snapshots: AwardSnapshot[] = [],
+  movement: Map<number, number> = new Map(),
   { regenerate = false }: { regenerate?: boolean } = {},
 ): Promise<GenerateResult> {
   const db = createServiceClient()
@@ -60,11 +62,17 @@ export async function generateWeeklyAwards(
       if ((count ?? 0) > 0) return { ok: true, week, awards: 0 }
     }
 
-    const computed = computeWeeklyAwards(matchups, week, players, transactions, slotCounts)
-    if (computed.length === 0) return { ok: true, week, awards: 0 }
+    const computed = computeWeeklyAwards(
+      matchups, week, players, transactions, slotCounts, snapshots, movement,
+    )
+    const kings = computePositionKings(players)
+    if (computed.length === 0 && kings.length === 0) return { ok: true, week, awards: 0 }
 
     // Player evidence points at `players.id`, not ESPN's id.
-    const espnIds = computed.map((a) => a.player?.espnPlayerId).filter((id): id is number => id != null)
+    const espnIds = [
+      ...computed.map((a) => a.player?.espnPlayerId),
+      ...kings.map((k) => k.espnPlayerId),
+    ].filter((id): id is number => id != null)
     const playerIdByEspnId = new Map<number, number>()
     if (espnIds.length > 0) {
       const { data, error } = await db
@@ -97,13 +105,37 @@ export async function generateWeeklyAwards(
       is_provisional: false,
     }))
 
+    // The strip rides in the same table under its own keys, so it is published
+    // and settled by exactly the same rules as everything else.
+    const kingRows = kings.map((k) => ({
+      season_id: seasonId,
+      week,
+      award_type: `position_king_${k.position}`,
+      award_name: `Best ${k.position}`,
+      recipient_type: 'PLAYER' as const,
+      recipient_team_id: k.seasonTeamId,
+      recipient_player_id: playerIdByEspnId.get(k.espnPlayerId) ?? null,
+      score: k.points,
+      headline: `${k.name} — ${k.points.toFixed(1)}`,
+      supporting_stats: {
+        position: k.position,
+        player: {
+          espnPlayerId: k.espnPlayerId, name: k.name,
+          position: k.position, nflTeam: k.nflTeam,
+        },
+        projectedPoints: k.projectedPoints,
+      },
+      is_provisional: false,
+    }))
+
+    const all = [...rows, ...kingRows]
     const { data: written, error } = await db
       .from('awards')
-      .upsert(rows, { onConflict: 'season_id,week,award_type' })
+      .upsert(all, { onConflict: 'season_id,week,award_type' })
       .select('id')
     if (error) throw new Error(`awards upsert failed: ${error.message}`)
-    if ((written?.length ?? 0) !== rows.length) {
-      throw new Error(`awards upsert wrote ${written?.length ?? 0} of ${rows.length}`)
+    if ((written?.length ?? 0) !== all.length) {
+      throw new Error(`awards upsert wrote ${written?.length ?? 0} of ${all.length}`)
     }
 
     return { ok: true, week, awards: written?.length ?? 0 }

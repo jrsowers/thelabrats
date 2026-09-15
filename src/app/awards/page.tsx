@@ -2,7 +2,8 @@ import type { Metadata } from 'next'
 import {
   getLeagueOverview, getSeasonTeams, getSeasonResults, getReigningChampion,
   getPlayerSample, getPlayerWeekScores, getLastSync, hasActiveGames,
-  getPublishedAwards, getPublishedAwardWeeks, type StandingsTeam,
+  getPublishedAwards, getPublishedAwardWeeks, getPublishedPositionKings,
+  type StandingsTeam,
 } from '@/lib/league/queries'
 import { simulateSeason } from '@/lib/league/preview'
 import { buildAwardCards, type DecidedAward } from '@/lib/awards/build'
@@ -15,6 +16,7 @@ import { FieldBackdrop } from '@/components/ui/field-backdrop'
 import { WeekSelect } from '@/components/ui/week-select'
 import { Eyebrow, TeamAvatar, Tag } from '@/components/ui/primitives'
 import { AwardGrid } from '@/components/awards/award-grid'
+import { PositionKings } from '@/components/awards/position-kings'
 import { SyncStatus } from '@/components/ui/sync-status'
 
 export const dynamic = 'force-dynamic'
@@ -118,13 +120,14 @@ export default async function AwardsPage({
   )
 
   const champion = await getReigningChampion()
-  const [teams, rawResults, players, weekScores, published, lastSync, gamesActive] =
+  const [teams, rawResults, players, weekScores, published, kings, lastSync, gamesActive] =
     await Promise.all([
       getSeasonTeams(overview.seasonId, champion),
       getSeasonResults(overview.seasonId),
       getPlayerSample(150),
       getPlayerWeekScores(overview.seasonId, week),
       getPublishedAwards(overview.seasonId, week),
+      getPublishedPositionKings(overview.seasonId, week),
       getLastSync(),
       hasActiveGames(overview.currentWeek),
     ])
@@ -229,8 +232,8 @@ export default async function AwardsPage({
             {'. '}
             {uncontested.length > 0 && (
               <>
-                {pending.length > 0 ? `${uncontested.length} had ` : 'Nobody qualified — '}
-                no qualifying candidate this week.{' '}
+                {pending.length > 0 ? `${uncontested.length} of them had ` : 'No manager met the bar for '}
+                {pending.length > 0 ? 'no qualifying candidate this week.' : 'them this week.'}{' '}
               </>
             )}
             {pending.length > 0 && (
@@ -242,6 +245,11 @@ export default async function AwardsPage({
           </p>
         </div>
       )}
+
+      <PositionKings
+        kings={isPreview ? [] : kings}
+        teamName={(id) => byId.get(id)?.name ?? 'Team'}
+      />
 
       <AwardGrid
         toolbar={
