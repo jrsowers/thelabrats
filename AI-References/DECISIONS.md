@@ -1186,3 +1186,32 @@ like `check-pronouns.ts`, not a gate. The judgement is which repeats are motifs.
 
 **`textOf` is a function declaration, not a const arrow**, because the
 within-week scan runs above it and needs it hoisted. Worth leaving alone.
+
+## 2026-09-15 — Managers have pronouns, and they are data
+
+James supplied the list for all twelve. **he/him:** Jesse, Doug, Colin, Mike,
+Tyler, Jay, James, Evan, Justin. **she/her:** Chenell, Bree, Keshia.
+
+**This supersedes the they/them-for-everyone rule.** That was a safe default
+adopted when the roster's pronouns were unknown — not a claim that the managers
+use they/them — and it had started to produce visibly stilted copy: "It requires
+Colin to take Colin's advice", where the sentence wanted "his own advice".
+
+**`src/content/managers.ts` is the source of truth**, keyed on first name
+because that is what recaps and awards print. `pronounsFor()` falls back to
+they/them for anyone unlisted, and that fallback is the one piece of the old
+rule that survives permanently: **never infer a pronoun from a name.** An
+unlisted manager gets neutral copy until somebody asks them.
+
+**`check-pronouns.ts` got sharper rather than redundant.** It used to flag every
+gendered pronoun near a manager; it now asks whether the pronoun *matches that
+manager*, in three buckets — a wrong gendered pronoun (real bug), a masculine
+one near a she/her manager (usually an NFL player, worth a glance), and neutral
+phrasing (not an error, but often a leftover worth making specific). The first
+run flagged four; one was Bree's projection, correctly.
+
+**The awards engine still uses they/them, deliberately.** `ctx.managerFirst` is
+available and `pronounsFor` would work today, but those templates render
+PUBLISHED award cards — changing them rewrites copy the league has already read,
+which is the drift §22.8 exists to prevent. Recaps are written fresh each week
+and use the real pronouns now. Switching the awards engine is a separate call.

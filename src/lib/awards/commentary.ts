@@ -29,15 +29,25 @@ export interface CommentaryContext {
 }
 
 /**
- * ⚠️ MANAGERS TAKE THEY/THEM. This league is gender diverse, and a template
- * cannot know who will win an award — "what he was projected to score" went
- * out on the live page under Bree Noble's name before anyone caught it.
+ * ⚠️ THE TEMPLATES BELOW USE THEY/THEM FOR MANAGERS, AND STILL DO ON PURPOSE.
  *
- * NFL players are a different case: the league's player pool is all men, so
- * "he went off for 13.5" about a wide receiver is accurate rather than assumed.
- * Every gendered pronoun below refers to a PLAYER, and the test in
- * tests/awards.test.ts holds that line for any award with no player on the
- * card.
+ * The original reason is gone: manager pronouns were unknown, a template could
+ * not know who would win an award, and "what he was projected to score" went
+ * out on the live page under Bree Noble's name before anyone caught it. James
+ * supplied the real list on 2026-09-15 — see `src/content/managers.ts` — and
+ * `ctx.managerFirst` is right there, so `pronounsFor(ctx.managerFirst)` would
+ * work today.
+ *
+ * It has not been done because these templates render PUBLISHED award cards.
+ * Changing them rewrites copy the league has already read and screenshotted,
+ * which is the exact drift §22.8 exists to prevent, and it is a call worth
+ * making deliberately rather than as a side effect. Weekly recaps, which are
+ * written fresh each time, already use the real pronouns.
+ *
+ * NFL players are a separate case and always were: the player pool is all men,
+ * so "he went off for 13.5" about a wide receiver is accurate rather than
+ * assumed. Every gendered pronoun below refers to a PLAYER, and the test in
+ * tests/awards.test.ts holds that line for any award with no player on the card.
  */
 const b = (text: string): Segment => ({ text, bold: true })
 const t = (text: string): Segment => ({ text })

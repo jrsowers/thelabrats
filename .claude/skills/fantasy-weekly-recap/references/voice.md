@@ -50,7 +50,10 @@ sentence. The undercut is where the laugh lives.
 about the future, and he owns it the following week.
 
 **Talks to the league by name.** "Doug." "Chenell." Not "the manager in first
-place." First names, always.
+place." First names, always — and each manager's own pronouns, from
+`src/content/managers.ts`. Neutral phrasing was a safe default while those were
+unknown; it is no longer, and it reads stilted when the real word is available
+("It requires Colin to take Colin's advice" is now "his own advice").
 
 ## What he never does
 

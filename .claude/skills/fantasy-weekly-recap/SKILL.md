@@ -157,8 +157,11 @@ and `coverImage`, then run the gate: `npm test`, `npx tsc --noEmit`,
   institution, never the harm*. A concussion, a torn achilles, an arrest, an
   allegation — those are not material. The fantasy consequence of an injury is
   fair game; the injury is not.
-- **This league is gender diverse.** Managers take they/them unless you know
-  otherwise. No gendered collectives — no "twelve men enter".
+- **Use each manager's actual pronouns**, from `src/content/managers.ts`. That
+  file is the source of truth and supersedes the old they/them-for-everyone
+  default, which existed only because nobody had told us. Never infer a pronoun
+  from a name; anyone not in that table takes they/them until they are.
+  `check-pronouns.ts` flags any pronoun near a manager that does not match.
 - **Never invent a stat.** Every number comes from the gathered data or a
   searched source. A made-up stat in a recap full of real ones is undetectable
   and corrosive.
