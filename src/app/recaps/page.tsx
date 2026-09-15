@@ -68,9 +68,12 @@ export default async function RecapsPage() {
                 <p className="mt-2.5 max-w-2xl text-[14.5px] leading-relaxed text-muted">
                   {lead.summary}
                 </p>
+                {/* The lead story gets the full-size byline, not the card one —
+                    it is a hero, and it sits directly above the archive grid
+                    where the compact version appears for contrast. */}
                 {lead.author && (
                   <div className="mt-4">
-                    <Byline author={lead.author} variant="compact" />
+                    <Byline author={lead.author} variant="inline" />
                   </div>
                 )}
                 <span className="mt-4 inline-flex items-center gap-1.5 rounded-md bg-brand px-3.5 py-2 text-[13px] font-semibold text-brand-ink transition-colors group-hover:bg-brand-hover">

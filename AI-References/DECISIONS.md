@@ -1090,3 +1090,24 @@ before the character existed, but one card without a face in a row of faces
 reads as a rendering bug rather than a meaningful distinction. `author` stays
 optional on the type so it does not lie, and the card layout still handles its
 absence.
+
+**2026-09-15, same day: the first pass was too safe, and the spec now says so.**
+James's note: "the humor feels pretty safe… he doesn't pull any punches. Nobody
+is safe from his roasting and he's not afraid to tell a joke that's a little on
+the edge of propriety." `voice.md` gained a calibration section with the
+concrete moves — escalate past good taste then land flat, diagnose rather than
+observe, say the cruel version of the true thing, refuse to let something go *on
+the page*, mandatory hot takes, earned nicknames, profanity capped at
+hell/damn/God/ass.
+
+**This did not move the roast boundary, and the spec is now explicit about
+why.** Burner roasts decisions without mercy; he does not touch bodies.
+Injuries, health, family, legal situations are not material at any intensity.
+The recap reports Darnold's hip flat and says so in the text — "that is the
+entire medical report, it is not funny, and I am not going to make it funny" —
+then pivots to the manager who started him and is merciless about *that*. The
+boundary is what lets the rest of the voice be as harsh as it is: the roast
+stays funny precisely because nobody is mocked for something that happened *to*
+them.
+
+Every number survived the rewrite unchanged. The revision is tone only.

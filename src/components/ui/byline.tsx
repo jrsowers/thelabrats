@@ -12,10 +12,12 @@ import type { Author } from '@/content/author'
  *            joke. Deliberately large: the correspondent is half the reason the
  *            page exists, and at 34px he was a footnote.
  * - `compact` rides on every archive card, so the author is attached to the
- *            work everywhere it appears rather than only once you open it.
+ *            work everywhere it appears rather than only once you open it. It
+ *            is the smallest of the three and still deliberately not small —
+ *            a 30px face in a grid of cards is a favicon, not a byline.
  */
 const SIZES = {
-  compact: { avatar: 30, name: 13, title: 9, gap: 'gap-2' },
+  compact: { avatar: 42, name: 15.5, title: 10, gap: 'gap-2.5' },
   inline: { avatar: 54, name: 20, title: 11, gap: 'gap-3.5' },
   card: { avatar: 64, name: 21, title: 11, gap: 'gap-4' },
 } as const
