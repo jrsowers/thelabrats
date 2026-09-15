@@ -28,12 +28,23 @@ export interface CommentaryContext {
   extra?: Record<string, string>
 }
 
+/**
+ * ⚠️ MANAGERS TAKE THEY/THEM. This league is gender diverse, and a template
+ * cannot know who will win an award — "what he was projected to score" went
+ * out on the live page under Bree Noble's name before anyone caught it.
+ *
+ * NFL players are a different case: the league's player pool is all men, so
+ * "he went off for 13.5" about a wide receiver is accurate rather than assumed.
+ * Every gendered pronoun below refers to a PLAYER, and the test in
+ * tests/awards.test.ts holds that line for any award with no player on the
+ * card.
+ */
 const b = (text: string): Segment => ({ text, bold: true })
 const t = (text: string): Segment => ({ text })
 
 /** "Jared Goff (QB - DET)" as bold name + plain meta. */
 function player(ctx: CommentaryContext): Segment[] {
-  if (!ctx.playerName) return [b('his flex play')]
+  if (!ctx.playerName) return [b('the flex play')]
   return ctx.playerMeta
     ? [b(ctx.playerName), t(` (${ctx.playerMeta})`)]
     : [b(ctx.playerName)]
@@ -41,7 +52,7 @@ function player(ctx: CommentaryContext): Segment[] {
 
 /** "Mr. Anderson (Jesse Anderson)" as bold team + plain manager. */
 function opponent(ctx: CommentaryContext): Segment[] {
-  if (!ctx.opponentTeam) return [b('his opponent')]
+  if (!ctx.opponentTeam) return [b('their opponent')]
   return ctx.opponentManager
     ? [b(ctx.opponentTeam), t(` (${ctx.opponentManager})`)]
     : [b(ctx.opponentTeam)]
@@ -74,7 +85,7 @@ const BUILDERS: Record<string, Builder> = {
   ],
   control_group: (c) => [
     b(c.managerFirst), t(' finished within '), b(c.value),
-    t(' of exactly what he was projected to score. No drama, no disasters, '),
+    t(' of exactly what they were projected to score. No drama, no disasters, '),
     t('nothing to talk about. The scientific method in team form.'),
   ],
   photo_finish: (c) => [
@@ -119,7 +130,7 @@ const BUILDERS: Record<string, Builder> = {
   ],
   public_execution: (c) => [
     b(c.managerFirst), t(' lost to '), ...opponent(c), t(' by '),
-    b(`${c.value} points`), t('. Guess his team forgot to get off the bus!'),
+    b(`${c.value} points`), t('. Guess their team forgot to get off the bus!'),
   ],
   bench_bum: (c) => [
     b(c.managerFirst), t(' left '), b(`${c.value} points`),

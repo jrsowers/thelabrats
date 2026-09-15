@@ -12,6 +12,7 @@ import {
   type AwardMatchup, type AwardPlayer, type AwardTransaction,
 } from '@/lib/awards/compute'
 import { AWARDS, awardsBySection, isComputable } from '@/lib/awards/catalog'
+import { buildCommentary } from '@/lib/awards/commentary'
 
 const g = (
   matchupId: number, week: number, home: number, away: number,
@@ -717,5 +718,47 @@ describe('The Free Fall', () => {
 
   it('says place, not places, for a single spot', () => {
     expect(run(new Map([[5, -1]])).get('free_fall')!.headline).toMatch(/1 place\b/)
+  })
+})
+
+describe('commentary never assumes a manager’s gender', () => {
+  // A template cannot know who will win. "of exactly what he was projected to
+  // score" shipped to production under Bree Noble's name, which is exactly the
+  // failure this guard exists to stop repeating.
+  //
+  // NFL players are the deliberate exception: that pool is all men, so "he
+  // went off for 13.5" about a receiver is accurate rather than assumed. The
+  // check therefore runs only on awards whose card shows no player.
+  const GENDERED = /\b(he|him|his|she|her|hers)\b/i
+
+  const context = {
+    managerFirst: 'Bree',
+    teamName: 'Bree’s Badass Boys',
+    opponentTeam: 'Dad Bod',
+    opponentManager: 'Jay Clouse',
+    value: '12.3',
+  }
+
+  for (const def of AWARDS.filter((a) => a.evidence !== 'PLAYER' && !a.player)) {
+    it(`${def.name} refers to its winner without a gendered pronoun`, () => {
+      const text = buildCommentary(def.key, context).map((s) => s.text).join('')
+      const hit = text.match(GENDERED)
+      expect(hit, `${def.name}: "${text}"`).toBeNull()
+    })
+  }
+
+  it('still allows a gendered pronoun for an NFL player', () => {
+    // The guard must not be so broad that it flattens real copy about a real
+    // person whose pronouns are not in question.
+    const text = buildCommentary('nostradamus', {
+      ...context, playerName: 'Caleb Williams', playerMeta: 'QB · CHI',
+    }).map((s) => s.text).join('')
+    expect(text).toMatch(/started him anyway/)
+  })
+
+  it('falls back to a neutral phrase when there is no player or opponent', () => {
+    const bare = buildCommentary('nostradamus', { ...context, playerName: null })
+      .map((s) => s.text).join('')
+    expect(bare).not.toMatch(/\bhis flex\b/)
   })
 })

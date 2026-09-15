@@ -91,7 +91,10 @@ export async function generateWeeklyAwards(
       recipient_type: 'TEAM' as const,
       recipient_team_id: a.teamId,
       recipient_player_id: a.player ? playerIdByEspnId.get(a.player.espnPlayerId) ?? null : null,
-      score: Number(a.metricValue),
+      // `metricValue` is a DISPLAY string and may carry a unit: Number("35%")
+      // is NaN, which Postgres stored as null and left the season leaderboard
+      // unable to sort two of the awards.
+      score: a.scoreValue ?? Number(a.metricValue),
       headline: a.headline,
       // The card needs the opponent and the formatted metric back, and neither
       // has a column. Kept whole so the round-trip is lossless.

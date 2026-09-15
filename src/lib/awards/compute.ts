@@ -111,7 +111,16 @@ export interface ComputedAward {
   teamId: number
   /** The other side of the matchup, where relevant. */
   opponentId: number | null
+  /** What the card SHOWS. May carry a unit, e.g. "35%". */
   metricValue: string
+  /**
+   * What the card MEANS, for the numeric `awards.score` column that the season
+   * leaderboard sorts on. Defaults to `Number(metricValue)`, which is right
+   * for every award whose display value is a bare number — and NaN for the two
+   * that render a percentage, which is how they first shipped with a null
+   * score.
+   */
+  scoreValue?: number
   headline: string
   supporting: { label: string; value: string }[]
   /** The player the award is evidence of, for player-driven awards. */
@@ -289,7 +298,7 @@ export function computeWeeklyAwards(
 
   // ---- The Mastermind / The Bench Bum ----
   // Both are the same number read from opposite ends: the gap between what a
-  // manager started and the best lineup his roster allowed. Only computed on a
+  // manager started and the best lineup their roster allowed. Only computed on a
   // final week, which is what makes it safe to read a missing stat line as a
   // zero rather than as "has not played" — see optimalLineup.
   const lineupGaps = computeLineupGaps(players, slotCounts)
@@ -304,7 +313,7 @@ export function computeWeeklyAwards(
       opponentId: null,
       metricValue: f1(tightest.gap),
       headline: tightest.gap === 0
-        ? 'Started the best lineup his roster allowed. Nothing left behind.'
+        ? 'Started the best lineup their roster allowed. Nothing left behind.'
         : `Left just ${f1(tightest.gap)} on the bench — the tightest lineup of the week.`,
       supporting: [
         { label: 'Started', value: f1(tightest.started) },
@@ -526,9 +535,10 @@ function computeRosterShapeAwards(players: AwardPlayer[]): ComputedAward[] {
     teamId: carried.teamId,
     opponentId: null,
     metricValue: pct(carried.share),
+    scoreValue: carried.share,
     headline: `${carried.top.name} was ${pct(carried.share)} of the whole team.`,
     supporting: [
-      { label: 'His points', value: f1(carried.top.actualPoints as number) },
+      { label: 'Player points', value: f1(carried.top.actualPoints as number) },
       { label: 'Team total', value: f1(carried.total) },
     ],
     player: evidence(carried.top),
@@ -541,6 +551,7 @@ function computeRosterShapeAwards(players: AwardPlayer[]): ComputedAward[] {
       teamId: shared.teamId,
       opponentId: null,
       metricValue: pct(shared.share),
+      scoreValue: shared.share,
       headline: `No starter did more than ${pct(shared.share)} of the work.`,
       supporting: [
         { label: 'Top scorer', value: f1(shared.top.actualPoints as number) },
@@ -556,7 +567,7 @@ function computeRosterShapeAwards(players: AwardPlayer[]): ComputedAward[] {
     teamId: calm.teamId,
     opponentId: null,
     metricValue: f1(calm.offProjection),
-    headline: `Finished ${f1(calm.offProjection)} from his projection. Nothing to see here.`,
+    headline: `Finished ${f1(calm.offProjection)} from their projection. Nothing to see here.`,
     supporting: [{ label: 'Scored', value: f1(calm.total) }],
   })
 
