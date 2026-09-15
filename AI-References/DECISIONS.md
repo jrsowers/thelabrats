@@ -1210,8 +1210,18 @@ one near a she/her manager (usually an NFL player, worth a glance), and neutral
 phrasing (not an error, but often a leftover worth making specific). The first
 run flagged four; one was Bree's projection, correctly.
 
-**The awards engine still uses they/them, deliberately.** `ctx.managerFirst` is
-available and `pronounsFor` would work today, but those templates render
-PUBLISHED award cards — changing them rewrites copy the league has already read,
-which is the drift §22.8 exists to prevent. Recaps are written fresh each week
-and use the real pronouns now. Switching the awards engine is a separate call.
+**The awards engine uses them too** — James called it the same day, so the
+tradeoff was taken rather than deferred. `pron(ctx)` resolves from
+`ctx.managerFirst`, so no caller changed: every award already carries the name
+it is about. This rewrites copy on already-published cards, normally the drift
+§22.8 prevents, and it is an accepted one-off: commentary was always built at
+render time rather than stored, and the change makes cards more accurate, not
+less.
+
+**The test asked the wrong question and now asks the right one.** It used to
+assert that NO gendered pronoun ever appeared — absence as a proxy for
+correctness. It now builds every playerless award three times, as a he/him
+manager, a she/her manager and an unlisted one, and asserts the pronoun matches
+each. Plus a test that the copy *actually inflects* rather than dodging pronouns
+altogether, because every other assertion would pass on evasive copy — which is
+precisely the behaviour we just moved away from. 350 tests to 382.

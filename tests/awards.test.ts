@@ -841,44 +841,81 @@ describe('The Bench Bum reads the week it is judging', () => {
   })
 })
 
-describe('commentary never assumes a manager’s gender', () => {
-  // A template cannot know who will win. "of exactly what he was projected to
-  // score" shipped to production under Bree Noble's name, which is exactly the
-  // failure this guard exists to stop repeating.
+describe('commentary uses each manager’s own pronouns', () => {
+  // The old version of this guard asserted that NO gendered pronoun ever
+  // appeared, because manager pronouns were unknown and "of exactly what he was
+  // projected to score" had shipped to production under Bree Noble's name.
   //
-  // NFL players are the deliberate exception: that pool is all men, so "he
-  // went off for 13.5" about a receiver is accurate rather than assumed. The
-  // check therefore runs only on awards whose card shows no player.
-  const GENDERED = /\b(he|him|his|she|her|hers)\b/i
+  // The pronouns are known now (src/content/managers.ts), so the guard asks the
+  // sharper question instead: does the pronoun match the person it is about?
+  // Absence was only ever a proxy for correctness.
+  //
+  // NFL players remain the deliberate exception — that pool is all men, so "he
+  // went off for 13.5" about a receiver is accurate rather than assumed. These
+  // cases therefore run only on awards whose card shows no player.
+  const FEMININE = /\b(she|her|hers)\b/i
+  const MASCULINE = /\b(he|him|his)\b/i
 
-  const context = {
-    managerFirst: 'Bree',
-    teamName: 'Bree’s Badass Boys',
+  const base = {
+    teamName: 'A Team',
     opponentTeam: 'Dad Bod',
     opponentManager: 'Jay Clouse',
     value: '12.3',
   }
+  const noPlayer = AWARDS.filter((a) => a.evidence !== 'PLAYER' && !a.player)
 
-  for (const def of AWARDS.filter((a) => a.evidence !== 'PLAYER' && !a.player)) {
-    it(`${def.name} refers to its winner without a gendered pronoun`, () => {
-      const text = buildCommentary(def.key, context).map((s) => s.text).join('')
-      const hit = text.match(GENDERED)
-      expect(hit, `${def.name}: "${text}"`).toBeNull()
+  for (const def of noPlayer) {
+    it(`${def.name} never calls a he/him manager she`, () => {
+      const text = buildCommentary(def.key, { ...base, managerFirst: 'Jesse' })
+        .map((s) => s.text).join('')
+      expect(text.match(FEMININE), `${def.name}: "${text}"`).toBeNull()
+    })
+
+    it(`${def.name} never calls a she/her manager he`, () => {
+      const text = buildCommentary(def.key, { ...base, managerFirst: 'Bree' })
+        .map((s) => s.text).join('')
+      expect(text.match(MASCULINE), `${def.name}: "${text}"`).toBeNull()
+    })
+
+    it(`${def.name} stays neutral for a manager we have no pronouns for`, () => {
+      // The safe default has to survive, or a new manager gets guessed at.
+      const text = buildCommentary(def.key, { ...base, managerFirst: 'Nobody' })
+        .map((s) => s.text).join('')
+      expect(text.match(FEMININE), `${def.name}: "${text}"`).toBeNull()
+      expect(text.match(MASCULINE), `${def.name}: "${text}"`).toBeNull()
     })
   }
+
+  it('actually inflects, rather than just avoiding the pronoun', () => {
+    // Without this, every test above would pass on copy that dodges pronouns
+    // entirely — which is the behaviour we just deliberately moved away from.
+    const bree = buildCommentary('control_group', { ...base, managerFirst: 'Bree' })
+      .map((s) => s.text).join('')
+    const jesse = buildCommentary('control_group', { ...base, managerFirst: 'Jesse' })
+      .map((s) => s.text).join('')
+    expect(bree).toMatch(/exactly what she was projected to score/)
+    expect(jesse).toMatch(/exactly what he was projected to score/)
+  })
+
+  it('keeps plural agreement on the neutral fallback', () => {
+    const them = buildCommentary('control_group', { ...base, managerFirst: 'Nobody' })
+      .map((s) => s.text).join('')
+    expect(them).toMatch(/exactly what they were projected to score/)
+  })
 
   it('still allows a gendered pronoun for an NFL player', () => {
     // The guard must not be so broad that it flattens real copy about a real
     // person whose pronouns are not in question.
     const text = buildCommentary('nostradamus', {
-      ...context, playerName: 'Caleb Williams', playerMeta: 'QB · CHI',
+      ...base, managerFirst: 'Bree', playerName: 'Caleb Williams', playerMeta: 'QB · CHI',
     }).map((s) => s.text).join('')
     expect(text).toMatch(/who started him/)
   })
 
   it('falls back to a neutral phrase when there is no player or opponent', () => {
-    const bare = buildCommentary('nostradamus', { ...context, playerName: null })
-      .map((s) => s.text).join('')
+    const bare = buildCommentary('nostradamus', {
+      ...base, managerFirst: 'Bree', playerName: null,
+    }).map((s) => s.text).join('')
     expect(bare).not.toMatch(/\bhis flex\b/)
   })
 })

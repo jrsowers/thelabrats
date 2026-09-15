@@ -11,6 +11,7 @@
  *
  * Voice per SOUL.md: roast the decision, never the person.
  */
+import { pronounsFor } from '@/content/managers'
 
 export interface Segment { text: string; bold?: boolean }
 
@@ -29,26 +30,30 @@ export interface CommentaryContext {
 }
 
 /**
- * ⚠️ THE TEMPLATES BELOW USE THEY/THEM FOR MANAGERS, AND STILL DO ON PURPOSE.
+ * ⚠️ MANAGERS TAKE THEIR OWN PRONOUNS, FROM `src/content/managers.ts`.
  *
- * The original reason is gone: manager pronouns were unknown, a template could
- * not know who would win an award, and "what he was projected to score" went
- * out on the live page under Bree Noble's name before anyone caught it. James
- * supplied the real list on 2026-09-15 — see `src/content/managers.ts` — and
- * `ctx.managerFirst` is right there, so `pronounsFor(ctx.managerFirst)` would
- * work today.
+ * These templates used they/them for everybody, because manager pronouns were
+ * unknown and a template cannot know who will win an award — "of exactly what
+ * he was projected to score" once shipped to the live page under Bree Noble's
+ * name. James supplied the real list on 2026-09-15 and asked for the engine to
+ * use it, so the pronoun is resolved per recipient from `ctx.managerFirst`.
  *
- * It has not been done because these templates render PUBLISHED award cards.
- * Changing them rewrites copy the league has already read and screenshotted,
- * which is the exact drift §22.8 exists to prevent, and it is a call worth
- * making deliberately rather than as a side effect. Weekly recaps, which are
- * written fresh each time, already use the real pronouns.
+ * This DOES rewrite copy on already-published award cards, which is normally
+ * the drift §22.8 exists to prevent. Accepted deliberately: commentary has
+ * always been built at render time rather than stored, the change makes the
+ * cards more accurate rather than less, and James called it explicitly.
  *
- * NFL players are a separate case and always were: the player pool is all men,
- * so "he went off for 13.5" about a wide receiver is accurate rather than
- * assumed. Every gendered pronoun below refers to a PLAYER, and the test in
- * tests/awards.test.ts holds that line for any award with no player on the card.
+ * `pronounsFor` falls back to they/them for anyone not in the table, so a new
+ * manager reads neutrally instead of being guessed at. Never infer a pronoun
+ * from a name.
+ *
+ * NFL players are a separate case and always were: that pool is all men, so
+ * "he went off for 13.5" about a receiver is accurate rather than assumed.
  */
+
+/** The recipient's pronouns. Every award already carries the name it is about. */
+const pron = (c: CommentaryContext) => pronounsFor(c.managerFirst)
+
 const b = (text: string): Segment => ({ text, bold: true })
 const t = (text: string): Segment => ({ text })
 
@@ -62,7 +67,7 @@ function player(ctx: CommentaryContext): Segment[] {
 
 /** "Mr. Anderson (Jesse Anderson)" as bold team + plain manager. */
 function opponent(ctx: CommentaryContext): Segment[] {
-  if (!ctx.opponentTeam) return [b('their opponent')]
+  if (!ctx.opponentTeam) return [b(`${pronounsFor(ctx.managerFirst).possessive} opponent`)]
   return ctx.opponentManager
     ? [b(ctx.opponentTeam), t(` (${ctx.opponentManager})`)]
     : [b(ctx.opponentTeam)]
@@ -76,11 +81,11 @@ const BUILDERS: Record<string, Builder> = {
   // the copy has to say "additional" or it reads as a claim about the bench.
   mastermind: (c) => (Number(c.value) === 0
     ? [
-        b(c.managerFirst), t(' started their optimal lineup outright. '),
+        b(c.managerFirst), t(` started ${pron(c).possessive} optimal lineup outright. `),
         t('Not one additional point was available anywhere on the bench. Surgical.'),
       ]
     : [
-        b(c.managerFirst), t(' came closest to their optimal lineup this week, leaving just '),
+        b(c.managerFirst), t(` came closest to ${pron(c).possessive} optimal lineup this week, leaving just `),
         b(`${c.value} additional points`), t(' on the bench. Surgical.'),
       ]),
   // Finding the best free agent on the wire and then leaving him on the bench
@@ -134,18 +139,18 @@ const BUILDERS: Record<string, Builder> = {
       ]
     : [
         b(c.managerFirst), t(' finished within '), b(c.value.replace(/^[+\u2212-]/, '')),
-        t(' of exactly what they were projected to score. No drama, no disasters, '),
+        t(` of exactly what ${pron(c).subject} ${pron(c).subject === 'they' ? 'were' : 'was'} projected to score. No drama, no disasters, `),
         t('nothing to talk about. The scientific method in team form.'),
       ]),
   photo_finish: (c) => [
     b(c.managerFirst), t(' beat '), ...opponent(c), t(' by '), b(c.value),
-    t('. Any closer and they would have needed a steward\'s inquiry.'),
+    t('. Any closer and it would have needed a steward\u2019s inquiry.'),
   ],
   // Distribution, not quality. The award cannot tell a good week from a bad
   // one — only a flat one — so the copy must not imply the lineup was strong.
   socialist: (c) => [
     t('Just '), b(`${c.value} points`), t(' separated '), b(c.managerFirst),
-    t('\u2019s best starter from their worst. Everybody did the same amount of '),
+    t(`\u2019s best starter from ${pron(c).possessive} worst. Everybody did the same amount of `),
     t('work, for better or for worse. From each according to their ability.'),
   ],
   one_man_army: (c) => [
@@ -189,7 +194,7 @@ const BUILDERS: Record<string, Builder> = {
   ],
   public_execution: (c) => [
     b(c.managerFirst), t(' lost to '), ...opponent(c), t(' by '),
-    b(`${c.value} points`), t('. Guess their team forgot to get off the bus!'),
+    b(`${c.value} points`), t(`. Guess ${pron(c).possessive} team forgot to get off the bus!`),
   ],
   // The gap is the same number either way, but it means something different
   // on the best week in the league than it does on a loss. Scolding the
