@@ -222,6 +222,10 @@ export function placeholderAward(
       playerMeta: def.evidence === 'PLAYER' && player
         ? `${player.position} - ${player.nflTeam}` : null,
       value: built.value,
+      // Sample cards get the same detail a real one would, so a caption that
+      // branches on its supporting stats shows the shape the league will
+      // actually see rather than the fallback wording.
+      extra: Object.fromEntries(built.supporting.map((x) => [x.label, x.value])),
     }),
     supporting: built.supporting,
     placeholder: true,

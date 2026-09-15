@@ -14,6 +14,7 @@ import {
 } from '@/lib/awards/compute'
 import { AWARDS, awardsBySection, isComputable } from '@/lib/awards/catalog'
 import { buildCommentary } from '@/lib/awards/commentary'
+import { placeholderAward } from '@/lib/awards/placeholder'
 
 const g = (
   matchupId: number, week: number, home: number, away: number,
@@ -1062,5 +1063,36 @@ describe('slatePhase says when, from the clock rather than from a guess', () => 
     }).map((s) => s.text).join('')
     expect(text).toMatch(/won anyway/)
     expect(text).not.toMatch(/undefined/)
+  })
+})
+
+describe('sample cards preview the real caption', () => {
+  it('gives a placeholder the same detail a real award would carry', () => {
+    // A caption that branches on its supporting stats otherwise shows the
+    // fallback wording on every sample card, which is the one thing a
+    // placeholder exists NOT to do — it is meant to look like the real week.
+    const card = placeholderAward(
+      AWARDS.find((a) => a.key === 'free_fall')!,
+      3,
+      { teams: [{ seasonTeamId: 1, name: 'Nobody Knows', manager: 'Doug Rotman' }], players: [] },
+    )
+    const text = card.commentary.map((s) => s.text).join('')
+    expect(text).toMatch(/slid from \d+ to \d+/)
+    expect(text).toMatch(/Tom Petty/)
+  })
+
+  it('keeps a sample rank slide inside what a twelve-team league allows', () => {
+    for (let week = 1; week <= 13; week++) {
+      const card = placeholderAward(
+        AWARDS.find((a) => a.key === 'free_fall')!,
+        week,
+        { teams: [{ seasonTeamId: 1, name: 'X', manager: 'Y' }], players: [] },
+      )
+      const dropped = Number(card.metricValue.replace(/[^0-9.]/g, ''))
+      expect(Number.isInteger(dropped), `week ${week}: ${card.metricValue}`).toBe(true)
+      expect(dropped).toBeLessThanOrEqual(11)
+      const ending = Number(card.supporting.find((s) => s.label === 'Ending rank')!.value)
+      expect(ending).toBeLessThanOrEqual(12)
+    }
   })
 })
