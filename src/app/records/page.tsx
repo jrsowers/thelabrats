@@ -141,12 +141,76 @@ export default async function RecordsPage() {
         </div>
       </section>
 
-      {/* ================= FIRSTS AND WORSTS ================= */}
+      {/* ================= ALL-TIME LEDGER ================= */}
+      {/* Directly under Champions Corner: the trophies say who won, this says
+          who has actually been good. Its own section rather than a footnote to
+          the records grid, which is where it used to live — and which meant a
+          league with no records yet also showed no ledger. */}
+      {careers.length > 0 && (
+        <section className="mb-11">
+          <div className="mb-6 flex items-baseline justify-between gap-4 border-b border-border pb-1.5">
+            <h2 className="display text-2xl">All-Time Ledger</h2>
+            <span className="font-mono text-[10.5px] uppercase tracking-wider text-dim">
+              Every game ever played
+            </span>
+          </div>
+          <div className="overflow-hidden rounded-lg border border-border">
+            <div className="overflow-x-auto">
+              <table className="w-full min-w-[520px] border-collapse text-left">
+                <thead>
+                  <tr className="border-b border-border bg-surface-2">
+                    <th scope="col" className="eyebrow px-4 py-2.5">Team</th>
+                    <th scope="col" className="eyebrow px-2 py-2.5 text-right">Record</th>
+                    <th scope="col" className="eyebrow px-2 py-2.5 text-right">Win %</th>
+                    <th scope="col" className="eyebrow px-4 py-2.5 text-right">Points</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {careers.map((c) => {
+                    const t = byId.get(c.teamId)
+                    return (
+                      <tr key={c.teamId} className="border-b border-border bg-surface last:border-0">
+                        <td className="px-4 py-2">
+                          <div className="flex items-center gap-2.5">
+                            {t && (
+                              <TeamAvatar
+                                photoUrl={t.photoUrl} logoUrl={t.logoUrl} abbrev={t.abbrev}
+                                size={24} champion={t.isChampion} championYear={t.championYear}
+                              />
+                            )}
+                            <span className="display truncate text-[14.5px]">{t?.name ?? '—'}</span>
+                          </div>
+                        </td>
+                        <td className="px-2 py-2 text-right font-mono text-[12.5px] tnum">
+                          {c.wins}-{c.losses}-{c.ties}
+                        </td>
+                        <td className="px-2 py-2 text-right font-mono text-[12.5px] tnum text-muted">
+                          {(c.winPct * 100).toFixed(1)}%
+                        </td>
+                        <td className="px-4 py-2 text-right font-mono text-[12.5px] tnum">
+                          {f2(c.pointsFor)}
+                        </td>
+                      </tr>
+                    )
+                  })}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* ================= ALL-TIME RECORDS ================= */}
+      {/* ALL-TIME ONLY, by design. Yahoo prints each record twice — once for
+          the current season and once for league history — which doubles the
+          page and, in a young league, prints the same row twice with the same
+          value. One number per record, and it is the best or worst thing that
+          has ever happened here. */}
       <section>
         <div className="mb-6 flex items-baseline justify-between gap-4 border-b border-border pb-1.5">
-          <h2 className="display text-2xl">Firsts and Worsts</h2>
+          <h2 className="display text-2xl">All-Time Records</h2>
           <span className="font-mono text-[10.5px] uppercase tracking-wider text-dim">
-            {overview.season} onward
+            Best and worst, ever
           </span>
         </div>
 
@@ -208,56 +272,6 @@ export default async function RecordsPage() {
               })}
             </div>
 
-            {careers.length > 0 && (
-              <div className="mt-8">
-                <div className="mb-3 border-b border-border pb-1.5">
-                  <h3 className="display text-xl">All-Time Ledger</h3>
-                </div>
-                <div className="overflow-hidden rounded-lg border border-border">
-                  <div className="overflow-x-auto">
-                    <table className="w-full min-w-[520px] border-collapse text-left">
-                      <thead>
-                        <tr className="border-b border-border bg-surface-2">
-                          <th scope="col" className="eyebrow px-4 py-2.5">Team</th>
-                          <th scope="col" className="eyebrow px-2 py-2.5 text-right">Record</th>
-                          <th scope="col" className="eyebrow px-2 py-2.5 text-right">Win %</th>
-                          <th scope="col" className="eyebrow px-4 py-2.5 text-right">Points</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {careers.map((c) => {
-                          const t = byId.get(c.teamId)
-                          return (
-                            <tr key={c.teamId} className="border-b border-border bg-surface last:border-0">
-                              <td className="px-4 py-2">
-                                <div className="flex items-center gap-2.5">
-                                  {t && (
-                                    <TeamAvatar
-                                      photoUrl={t.photoUrl} logoUrl={t.logoUrl} abbrev={t.abbrev}
-                                      size={24} champion={t.isChampion} championYear={t.championYear}
-                                    />
-                                  )}
-                                  <span className="display truncate text-[14.5px]">{t?.name ?? '—'}</span>
-                                </div>
-                              </td>
-                              <td className="px-2 py-2 text-right font-mono text-[12.5px] tnum">
-                                {c.wins}-{c.losses}-{c.ties}
-                              </td>
-                              <td className="px-2 py-2 text-right font-mono text-[12.5px] tnum text-muted">
-                                {(c.winPct * 100).toFixed(1)}%
-                              </td>
-                              <td className="px-4 py-2 text-right font-mono text-[12.5px] tnum">
-                                {f2(c.pointsFor)}
-                              </td>
-                            </tr>
-                          )
-                        })}
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
-              </div>
-            )}
           </>
         )}
       </section>
