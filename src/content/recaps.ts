@@ -98,7 +98,7 @@ export const RECAPS: Recap[] = [
         type: 'paragraph',
         text: 'Jesse started Caleb Williams and banked 41.3, the largest single-player number in the league. Tyler started D’Andre Swift and banked 31.9. Chenell then watched Monangai post 19.4 from the bench. Jesse watched Chuba Hubbard post 22.2 from the bench. And Tyler — Tyler we are going to handle separately, at length, and without mercy.',
       },
-      { type: 'heading', text: 'RAVENS 41 — Chenell Has Purchased The City Of Baltimore' },
+      { type: 'heading', text: 'RAVENS 41, COLTS 23 — Chenell Has Purchased The City Of Baltimore' },
       {
         type: 'paragraph',
         text: 'Derrick Henry went for 144 yards and three touchdowns and moved past Marcus Allen on the all-time list, because at this stage of his career the man is less a running back than a geological event. Baltimore put 31 on the board before halftime. Isaiah Likely got his.',

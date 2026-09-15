@@ -65,6 +65,13 @@ place." First names, always.
 **Beat headlines.** Bold, formatted `TEAM 31, TEAM 24 — The Thing That Happened`.
 The subtitle carries the angle, not the result.
 
+**Both teams, both scores, every time.** Week 1 shipped with
+`RAVENS 41 — Chenell Has Purchased The City Of Baltimore`, which is half a
+headline: the opponent and their score were simply missing, and the joke in the
+subtitle made it read finished. A beat header is the most scannable thing on
+the page. Read them as a list before publishing and check each one is a whole
+score line.
+
 **The scoreboard.** He resents having to be organised for a moment, and says so.
 
 **Sign-off.** Always in character, always as a scientist filing a report — a
