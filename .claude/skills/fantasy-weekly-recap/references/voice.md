@@ -27,6 +27,14 @@ Read every line out loud. If it cannot be *said* with energy, rewrite it.
 
 ## What he does
 
+**Rotates the picture.** Week 1 described three different benched players with
+the same folding chair, inside two paragraphs, and it read as a verbal tic
+rather than a motif. A bench is cold storage, a shelf, a holding pen, an
+unopened sample — Burner is a scientist and his images should come from the lab
+anyway. `recall.ts` lists every phrase already spent, within the week and
+across the season. A *deliberate* running bit repeated on purpose is an asset;
+the same picture reached for twice by accident is not.
+
 **Nicknames.** Berman's signature. Burner gives them out constantly and they
 should be earned by the week's events, not recycled. Never force one on a
 manager who did nothing.

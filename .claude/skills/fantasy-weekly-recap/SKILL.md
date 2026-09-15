@@ -47,6 +47,34 @@ It returns, for the week:
 engine spent its effort deciding who the Bench Bum is so the recap does not
 have to. Do not re-derive them, and never contradict them.
 
+### 2b. Read the season so far
+
+```bash
+npx tsx .claude/skills/fantasy-weekly-recap/scripts/recall.ts <week>
+```
+
+No database, no env — it reads `src/content/recaps.ts` directly. **A weekly
+column that cannot remember last week is twelve disconnected blog posts.** This
+prints the four things that continuity actually needs:
+
+1. **Open predictions.** Burner is loudly, confidently wrong about the future
+   and owns it the following week — but only if the bill arrives. Every call is
+   recorded as a `RecapPrediction` on the recap that made it. Check each against
+   this week's results; if one has settled, set `verdict`, `resolvedWeek` and
+   `resolution` on it **and say so in the recap**. Taking the loss out loud is
+   the whole bit. A prediction still live gets carried, ideally with a line
+   about how well it is aging.
+2. **Who has been named**, with an OVERDUE flag for anyone missing two weeks
+   running. Being ignored stings worse than being roasted, and this is
+   impossible to track by feel past about week three.
+3. **Imagery already spent**, within this week and across the season. Deliberate
+   running bits are an asset; the same picture twice is a tic.
+4. **The story so far** — every prior headline, for callbacks.
+
+Then make **new** calls. Every recap ends with predictions, and every one of
+them goes into `predictions` on the entry, or the next week has nothing to
+collect on.
+
 ### 3. Research the NFL week
 
 Search for the week's results, biggest performances, upsets and injuries.
@@ -102,13 +130,15 @@ not a generic football scene.
 Download the result into `public/recaps/week-N.jpg` and reference it from the
 recap entry. **Never hotlink** the generator's URL; those expire.
 
-### 6. Check the pronouns
+### 6. Check the pronouns and the repeats
 
 ```bash
 npx tsx .claude/skills/fantasy-weekly-recap/scripts/check-pronouns.ts <week>
 ```
 
-It prints every gendered pronoun sitting near a manager's name. For each one,
+Then run `recall.ts <week>` once more, now that the draft is in the file — its
+"repeats inside week N" pass only works on a recap that exists. It prints every
+gendered pronoun sitting near a manager's name. For each one,
 decide: does it refer to a **manager** (rewrite) or an **NFL player** (leave
 it)? It is a review aid rather than a test on purpose — see the file's header
 for why a strict gate would be worse than none. On week 1 it caught two

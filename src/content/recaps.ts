@@ -27,6 +27,28 @@ export type RecapBlock =
    */
   | { type: 'scoreboard'; rows: ScoreboardRow[] }
 
+/**
+ * A call Burner made on the record.
+ *
+ * Structured rather than left in the prose so the next recap can be *made* to
+ * account for it. He is supposed to be confidently wrong in public and own it
+ * the following week, and that only works if the bill actually arrives —
+ * `scripts/recall.ts` prints every open prediction before a recap is written,
+ * and the skill requires each one to be resolved or explicitly carried.
+ */
+export interface RecapPrediction {
+  /** Stable handle. Referenced by the week that settles it. */
+  id: string
+  /** The claim, in one line. */
+  claim: string
+  /** Left unset while the prediction is still live. */
+  verdict?: 'correct' | 'wrong' | 'partial'
+  /** Week the verdict was rendered. */
+  resolvedWeek?: number
+  /** The line he actually used to settle it, so it is never re-litigated. */
+  resolution?: string
+}
+
 export interface ScoreboardRow {
   winner: string
   winnerScore: number
@@ -58,6 +80,8 @@ export interface Recap {
    * a row of faces reads as a bug rather than a distinction.
    */
   author?: Author
+  /** Calls made on the record this week. See RecapPrediction. */
+  predictions?: RecapPrediction[]
   body: RecapBlock[]
 }
 
@@ -74,6 +98,22 @@ export const RECAPS: Recap[] = [
     coverAlt:
       'A lone football player silhouetted against stadium floodlights in heavy rain.',
     author: BURNER,
+    predictions: [
+      {
+        id: 'chenell-september',
+        claim: 'Chenell does not lose in September.',
+      },
+      {
+        id: 'jesse-roster',
+        claim:
+          'Jesse has the most dangerous roster in the league and is its second-most dangerous manager.',
+      },
+      {
+        id: 'tyler-highest-losing-score',
+        claim:
+          'Tyler\u2019s 153.3 will finish the season as the highest losing score anybody posts.',
+      },
+    ],
     body: [
       {
         type: 'paragraph',
@@ -187,7 +227,7 @@ export const RECAPS: Recap[] = [
       { type: 'paragraph', text: 'The optimizer took one look at it and laughed.' },
       {
         type: 'paragraph',
-        text: 'Jesse’s best legal lineup was worth 238.2. Christian Watson put up 29.7 in a folding chair, Chuba Hubbard 22.2 in the chair beside him. Arrange the right names in the right slots and that roster beats the best score anybody in this league produced all week by forty points.',
+        text: 'Jesse’s best legal lineup was worth 238.2. Christian Watson put up 29.7 in cold storage, Chuba Hubbard 22.2 on the shelf beside him. Arrange the right names in the right slots and that roster beats the best score anybody in this league produced all week by forty points.',
       },
       {
         type: 'paragraph',
@@ -209,11 +249,11 @@ export const RECAPS: Recap[] = [
       },
       {
         type: 'paragraph',
-        text: 'Which is exactly what makes it the cruelest line on this page. Tyler played nine-tenths of a lineup from the first quarter of the season, posted a number that beats two thirds of this league, and lost. The Bad Beat is not an insult. It is a coroner’s finding.',
+        text: 'Which is exactly what makes it the cruelest line on this page. Tyler played nine-tenths of a lineup from the opening drive of the season, posted a number that beats two thirds of this league, and lost. The Bad Beat is not an insult. It is a coroner’s finding.',
       },
       {
         type: 'paragraph',
-        text: 'Bryce Young, meanwhile, spent that same afternoon throwing for 361 and three scores in the highest-scoring game in Week 1 history — 38.4 points, from a folding chair, in a week already over by the first quarter. The Understudy is the most tasteless award in the library and it landed on the manager who least deserved to be handed anything.',
+        text: 'Bryce Young, meanwhile, spent that same afternoon throwing for 361 and three scores in the highest-scoring game in Week 1 history — 38.4 points, from Tyler’s bench, in a week that was already lost. The Understudy is the most tasteless award in the library and it landed on the manager who least deserved to be handed anything.',
       },
       {
         type: 'paragraph',
@@ -326,7 +366,7 @@ export const RECAPS: Recap[] = [
       },
       {
         type: 'paragraph',
-        text: 'And Tyler’s 153.3 will finish the season as the highest losing score anybody posts, which is the sort of record that follows a person to a funeral.',
+        text: 'And Tyler’s 153.3 will finish the season as the highest losing score anybody posts, which is the sort of record that follows a person all the way to their funeral.',
       },
       {
         type: 'paragraph',

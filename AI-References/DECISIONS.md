@@ -1154,3 +1154,35 @@ let-off landed on an image the reader had to supply themselves. Rewritten in his
 own vocabulary: *"The experiment simply lost its subject on the fifth snap... I
 roast bad methodology. I do not roast a specimen walking out of the building."*
 `voice.md` now says it: when Burner reaches for a metaphor it comes from the lab.
+
+## 2026-09-15 — The recap remembers the season, mechanically
+
+**A weekly column that cannot remember last week is twelve disconnected blog
+posts.** None of that continuity survives a fresh context window, so it is
+computed rather than recalled. `scripts/recall.ts` runs before writing and
+prints four things:
+
+**Predictions are structured data now.** Burner is supposed to be loudly wrong
+in public and own it the following week, and that only works if the bill
+arrives. Every call is a `RecapPrediction` on the recap that made it — id,
+claim, and a `verdict`/`resolvedWeek`/`resolution` a later week fills in. The
+script lists every open one and the skill requires each to be settled on the
+page or explicitly carried. Week 1 recorded three.
+
+**Who has been named**, with an OVERDUE flag after two missed weeks. The skill
+already said every manager should appear across a season; that is impossible to
+track by feel past about week three, and now it is a line of output.
+
+**Imagery already spent**, both across the season and *inside* the week being
+written. James: "The folding chair metaphor is overdone in this article." It was
+— three benched players described with the same chair inside two paragraphs. The
+cross-week scan would never have caught that, so there is a second pass over the
+single recap. On its first run it also found "the first quarter" twice in one
+section, which was fixed.
+
+Names and the week's central fact repeat legitimately ("highest scoring" four
+times in a recap about the highest-scoring Sunday ever), so this is a review aid
+like `check-pronouns.ts`, not a gate. The judgement is which repeats are motifs.
+
+**`textOf` is a function declaration, not a const arrow**, because the
+within-week scan runs above it and needs it hoisted. Worth leaving alone.
