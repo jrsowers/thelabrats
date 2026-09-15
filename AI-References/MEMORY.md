@@ -405,8 +405,8 @@ Open: tier-2 dossier review, the ROBBERY badge, the Yahoo 2025 export, and
 ## Session 9 — 2026-09-15 (the Weekly Recap, and its author)
 
 **Week 1's recap is live at `/recaps/week-1-the-scoring-record-fell`,** bylined
-by **Dr. Bunsen Blitzer** — a fictional mad-scientist sportscaster whose voice,
-process and boundaries live in `.claude/skills/weekly-recap/`. 1,880 words, an
+by **Dr. Bunsen Burner** — a fictional mad-scientist sportscaster whose voice,
+process and boundaries live in `.claude/skills/fantasy-weekly-recap/`. 1,880 words, an
 8.5-minute read, inside the 7–10 minutes James asked for. `/recaps` and
 `/awards` are both now `ready: true` in the nav with a NEW badge; neither is
 URL-only any more.

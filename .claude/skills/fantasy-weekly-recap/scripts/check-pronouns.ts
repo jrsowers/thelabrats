@@ -1,7 +1,7 @@
 /**
  * Flags gendered pronouns sitting near a manager's name in a recap.
  *
- *   npx tsx .claude/skills/weekly-recap/scripts/check-pronouns.ts [week]
+ *   npx tsx .claude/skills/fantasy-weekly-recap/scripts/check-pronouns.ts [week]
  *
  * ⚠️ THIS IS A REVIEW AID, NOT A GATE, AND THAT IS DELIBERATE.
  *

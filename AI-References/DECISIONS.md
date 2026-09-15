@@ -1029,15 +1029,16 @@ invariant, and now checks that every award has a section instead.
 
 ## 2026-09-15 — The Weekly Recap has an author, and he is fictional
 
-**Dr. Bunsen Blitzer is the byline on every recap from week 1 forward.** A
+**Dr. Bunsen Burner is the byline on every recap.** A
 recap written by "the site" reads like a database; one written by a named
-correspondent reads like a broadcast. The name is a triple pun — Bunsen burner,
-blitz, Wolf Blitzer — and the persona fuses a mad scientist with a
+correspondent reads like a broadcast. The persona fuses a mad scientist with a
 high-energy sportscaster so the lab framing earns jokes instead of decorating
 them. He is obviously fictional and his bio says so in his own register; the
 point is voice, never a claim that a person wrote this.
 
-Voice, process and boundaries live in `.claude/skills/weekly-recap/`. The
+Voice, process and boundaries live in `.claude/skills/fantasy-weekly-recap/`,
+namespaced so a general-purpose "weekly recap" skill elsewhere in the workspace
+cannot collide with it. The
 governing rule is **every NFL beat must land on somebody in this league** — a
 recap of the Ravens beating the Colts is a news summary anybody can get
 elsewhere; a recap noting Derrick Henry went for 144 and three scores *and that
@@ -1077,3 +1078,15 @@ A bug that survived all of this until somebody looked: at a fixed 64px, the
 cover's "Week 1" wrapped to two lines at 375px and landed on top of the ghost
 numeral. Nothing overflowed the viewport, so every responsive assertion passed.
 **Not every layout failure is an overflow.**
+
+**Renamed 2026-09-15:** the character is **Dr. Bunsen Burner** (James: "I think
+that's funnier"), titled *Expert In Applied Gridiron Sciences* — a discipline he
+named himself. The skill is `fantasy-weekly-recap`, not `weekly-recap`, so a
+general "weekly recap" skill for other work in the same Claude Code workspace
+cannot be confused with this one.
+
+**The byline appears on every archive card, week 0 included.** It was written
+before the character existed, but one card without a face in a row of faces
+reads as a rendering bug rather than a meaningful distinction. `author` stays
+optional on the type so it does not lie, and the card layout still handles its
+absence.

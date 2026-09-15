@@ -2,7 +2,7 @@
  * Everything the weekly recap needs from the league, in one pass.
  *
  *   set -a; . ./.env.local; set +a
- *   npx tsx .claude/skills/weekly-recap/scripts/gather.ts <week>
+ *   npx tsx .claude/skills/fantasy-weekly-recap/scripts/gather.ts <week>
  *
  * Read-only. The recap is written from this output plus researched NFL news —
  * never from memory, and never from numbers invented to fit a joke.

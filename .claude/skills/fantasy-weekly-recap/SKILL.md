@@ -1,12 +1,12 @@
 ---
-name: weekly-recap
-description: Write and publish the Lab Rats weekly recap — a Chris Berman-style rundown of the NFL week tied back to the league's own carnage, bylined by Dr. Bunsen Blitzer, with a generated featured image. Use after a week's awards publish (Tuesday morning), or when asked for "the recap", "this week's recap", or "the newsletter".
+name: fantasy-weekly-recap
+description: Write and publish the Lab Rats weekly recap — a Chris Berman-style rundown of the NFL week tied back to the league's own carnage, bylined by Dr. Bunsen Burner, with a generated featured image. Use after a week's awards publish (Tuesday morning), or when asked for "the recap", "this week's recap", or "the newsletter".
 ---
 
 # The Weekly Recap
 
 A 7–10 minute read that gives twelve managers the NFL week that mattered and
-then makes it personal. Published to `/recaps`, bylined by Dr. Bunsen Blitzer.
+then makes it personal. Published to `/recaps`, bylined by Dr. Bunsen Burner.
 
 **Read `references/voice.md` before writing a word.** It is the craft spec;
 this file is the process.
@@ -73,7 +73,7 @@ Cold open          2–4 short lines. The week's thesis, stated with violence.
                    league it hit. NOT every game — only the ones that matter here.
 THE SCOREBOARD     All six matchups, results and margins.
 3–5 league stories One bold heading each. This is the heart of the recap.
-Sign-off           Blitzer's send-off. The page renders his byline card
+Sign-off           Burner's send-off. The page renders his byline card
                    automatically, so end on prose — do not type a signature.
 ```
 
@@ -93,7 +93,7 @@ recap entry. **Never hotlink** the generator's URL; those expire.
 ### 6. Check the pronouns
 
 ```bash
-npx tsx .claude/skills/weekly-recap/scripts/check-pronouns.ts <week>
+npx tsx .claude/skills/fantasy-weekly-recap/scripts/check-pronouns.ts <week>
 ```
 
 It prints every gendered pronoun sitting near a manager's name. For each one,
@@ -104,7 +104,7 @@ violations that were already written.
 
 ### 7. Publish
 
-Add an entry to `src/content/recaps.ts` with `published: true`, `author: BLITZER`
+Add an entry to `src/content/recaps.ts` with `published: true`, `author: BURNER`
 and `coverImage`, then run the gate: `npm test`, `npx tsc --noEmit`,
 `npm run build`, `npm run test:responsive`. Commit and push.
 

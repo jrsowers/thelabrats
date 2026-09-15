@@ -5,6 +5,7 @@ import { publishedRecaps } from '@/content/recaps'
 import { AppShell } from '@/components/navigation/app-shell'
 import { FieldBackdrop } from '@/components/ui/field-backdrop'
 import { RecapCover } from '@/components/ui/recap-cover'
+import { Byline } from '@/components/ui/byline'
 import { Eyebrow, EmptyState } from '@/components/ui/primitives'
 
 export const dynamic = 'force-dynamic'
@@ -67,6 +68,11 @@ export default async function RecapsPage() {
                 <p className="mt-2.5 max-w-2xl text-[14.5px] leading-relaxed text-muted">
                   {lead.summary}
                 </p>
+                {lead.author && (
+                  <div className="mt-4">
+                    <Byline author={lead.author} variant="compact" />
+                  </div>
+                )}
                 <span className="mt-4 inline-flex items-center gap-1.5 rounded-md bg-brand px-3.5 py-2 text-[13px] font-semibold text-brand-ink transition-colors group-hover:bg-brand-hover">
                   Read the recap
                   <span aria-hidden>→</span>
@@ -97,7 +103,14 @@ export default async function RecapsPage() {
                         <p className="mt-2 line-clamp-3 text-[13px] leading-relaxed text-muted">
                           {r.summary}
                         </p>
-                        <span className="mt-auto pt-3.5 font-mono text-[10.5px] uppercase tracking-wider text-brand group-hover:underline">
+                        {r.author && (
+                          <div className="mt-auto pt-3.5">
+                            <Byline author={r.author} variant="compact" />
+                          </div>
+                        )}
+                        <span
+                          className={`${r.author ? 'pt-3' : 'mt-auto pt-3.5'} font-mono text-[10.5px] uppercase tracking-wider text-brand group-hover:underline`}
+                        >
                           Read the recap →
                         </span>
                       </div>

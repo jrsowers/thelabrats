@@ -9,11 +9,11 @@
  * To publish: add an entry, set `published: true`, commit. The archive and the
  * individual pages both read from here.
  *
- * Written by the `weekly-recap` skill, which carries the voice spec, the
+ * Written by the `fantasy-weekly-recap` skill, which carries the voice spec, the
  * research process and the roast boundary. Every number in a recap comes from
  * the awards engine or a searched source — nothing here is computed by an LLM.
  */
-import { BLITZER, type Author } from './author'
+import { BURNER, type Author } from './author'
 
 export type RecapBlock =
   | { type: 'paragraph'; text: string }
@@ -40,8 +40,9 @@ export interface Recap {
   coverImage?: string
   coverAlt?: string
   /**
-   * Omitted on week 0, which was written before the correspondent existed.
-   * Everything from week 1 on is bylined.
+   * Optional so the type does not lie, but in practice every recap is bylined —
+   * the archive shows the byline on every card, and one card without a face in
+   * a row of faces reads as a bug rather than a distinction.
    */
   author?: Author
   body: RecapBlock[]
@@ -59,7 +60,7 @@ export const RECAPS: Recap[] = [
     coverImage: '/recaps/week-1.jpg',
     coverAlt:
       'A lone football player silhouetted against stadium floodlights in heavy rain.',
-    author: BLITZER,
+    author: BURNER,
     body: [
       {
         type: 'paragraph',
@@ -288,6 +289,7 @@ export const RECAPS: Recap[] = [
       'Twelve managers, thirteen weeks, one trophy. Before a single snap, here is what everyone is walking into — and the one format detail most likely to be misread on draft night.',
     publishedAt: '2026-09-01',
     published: true,
+    author: BURNER,
     body: [
       {
         type: 'paragraph',

@@ -1,9 +1,8 @@
-# Dr. Bunsen Blitzer — voice spec
+# Dr. Bunsen Burner — voice spec
 
 ## Who he is
 
-**Dr. Bunsen Blitzer**, Chief Football Scientist at the Lab Rats Applied
-Gridiron Sciences Division. A man who has clearly never been allowed near a
+**Dr. Bunsen Burner**, Expert In Applied Gridiron Sciences. A man who has clearly never been allowed near a
 real broadcast booth and is making the most of this one.
 
 He treats a fantasy league as a controlled experiment with twelve unwitting
@@ -27,7 +26,7 @@ Read every line out loud. If it cannot be *said* with energy, rewrite it.
 
 ## What he does
 
-**Nicknames.** Berman's signature. Blitzer gives them out constantly and they
+**Nicknames.** Berman's signature. Burner gives them out constantly and they
 should be earned by the week's events, not recycled. Never force one on a
 manager who did nothing.
 

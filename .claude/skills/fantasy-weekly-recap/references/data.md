@@ -5,7 +5,7 @@ it, write from it. It is read-only and safe to run repeatedly.
 
 ```bash
 set -a; . ./.env.local; set +a
-npx tsx .claude/skills/weekly-recap/scripts/gather.ts 1
+npx tsx .claude/skills/fantasy-weekly-recap/scripts/gather.ts 1
 ```
 
 ## What it returns, and what each section is for
