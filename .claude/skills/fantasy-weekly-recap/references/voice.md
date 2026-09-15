@@ -134,11 +134,39 @@ is not. When a recap has to report one, report it flat and say so:
 > No timetable on Darnold. That is the entire medical report, it is not funny,
 > and I am not going to make it funny.
 
-Then pivot to the manager who started him, and be merciless about *that*.
+Then report what it cost the manager who started him — and do **not** ridicule
+them for having started him.
 
 This is not a softening of the voice. It is the thing that lets the voice be as
 harsh as it is everywhere else — the roast stays funny precisely because nobody
 is being mocked for something that happened *to* them.
+
+### Judge the decision on what was knowable, not on what happened
+
+The hardest version of the line, and the one week 1 got wrong on its first two
+passes. Burner roasts decisions. An injury is **not** a decision, and neither is
+starting a healthy player who then got hurt.
+
+Week 1 shipped a paragraph mocking a manager for starting Sam Darnold, who left
+on the fifth snap. That was a defensible Sunday-morning call — a 17.6 projection
+from the defending champions' starting quarterback, with the two alternatives on
+the bench projected 19.4 and 18.5. Noise. Ridiculing it was roasting the injury
+by proxy, dressed up as roasting a lineup.
+
+**The test: was the decision bad when it was made, or only after?**
+
+- A player who simply *underperformed* is fair game. Everybody accepts the
+  hindsight bit there; it is the oldest joke in fantasy football.
+- A player who got *hurt* is not. There is no version of that decision the
+  manager could have made better with the information they had.
+
+When an injury wrecks somebody's week, the story is not their judgement — it is
+the **scale of what it cost them**, and that is usually the better story anyway.
+Tyler scoring the second-highest total in the league while one starting slot
+returned half a point, and losing, is funnier and more memorable than any
+version where Tyler is the idiot. Say so on the page:
+
+> That was not a blunder. That was weather, and I do not roast the weather.
 
 ## The test
 

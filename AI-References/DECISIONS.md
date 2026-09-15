@@ -1111,3 +1111,37 @@ stays funny precisely because nobody is mocked for something that happened *to*
 them.
 
 Every number survived the rewrite unchanged. The revision is tone only.
+
+**2026-09-15, week 1 corrections — three real errors, all mine, none in the data.**
+
+**A player's team is not something to recall.** The recap built a paragraph on
+Isaiah Likely being a Raven. He signed with the Giants in March. `gather.ts`
+prints `nfl_team` beside every name and the row said `NYG` the whole time; the
+sentence was written from memory around a joke that needed Baltimore. A wrong
+team is invisible — the sentence scans, the number is right, and only the league
+notices. The fix made the joke better: Chenell also rosters Lamar Jackson, so
+"bought Baltimore" is now literally true at 61.8 of 166.0.
+
+**Judge a decision on what was knowable, not on what happened.** The recap
+mocked Tyler for starting Sam Darnold, who left on the fifth snap. James:
+"An injury is not a manager's decision error." Correct, and the projections back
+it — Darnold 17.6, with Young and Rodgers behind him at 19.4 and 18.5. Noise.
+Ridiculing it was roasting the injury by proxy, dressed as roasting a lineup.
+
+The distinction now in `voice.md`: a player who **underperformed** is fair game,
+because that is the oldest joke in fantasy football. A player who got **hurt** is
+not, because there is no better decision the manager could have made with what
+they had. The story becomes the *scale of the cost* instead — Tyler scoring the
+second-highest total in the league with one starting slot returning half a point,
+and losing — which is a better piece of writing than the version where Tyler is
+an idiot.
+
+**Six scores in a sentence is a wall.** The scoreboard shipped as prose and was
+unreadable. It is now a `scoreboard` block type: one matchup per row, winner
+over loser, margin beneath, names truncating against a fixed score column so a
+long team name cannot push a number off a 320px screen.
+
+That block also broke `check-pronouns.ts`, which read `b.text` for anything that
+was not a stat — and stayed silent under `tsc` because scripts in `.claude/` sit
+outside the app's tsconfig. It switches exhaustively now with a `never` default,
+so the next block type is a compile error rather than a crash.

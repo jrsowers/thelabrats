@@ -25,8 +25,24 @@ const MANAGERS = [
 ]
 const GENDERED = /\b(he|him|his|she|her|hers)\b/i
 
-const blockText = (b: RecapBlock): string =>
-  b.type === 'stat' ? `${b.label} ${b.value} ${b.note ?? ''}` : b.text
+// Exhaustive on purpose. The first version read `b.text` for anything that was
+// not a stat, so adding the scoreboard block made this throw at runtime while
+// tsc stayed quiet — scripts under .claude/ are outside the app's tsconfig.
+// A `never` default turns the next new block type into a compile error here.
+const blockText = (b: RecapBlock): string => {
+  switch (b.type) {
+    case 'stat': return `${b.label} ${b.value} ${b.note ?? ''}`
+    case 'scoreboard':
+      return b.rows.map((r) => `${r.winner} ${r.loser}`).join(' ')
+    case 'paragraph':
+    case 'heading':
+    case 'quote': return b.text
+    default: {
+      const _exhaustive: never = b
+      return _exhaustive
+    }
+  }
+}
 
 const week = process.argv[2] ? Number(process.argv[2]) : null
 let hits = 0

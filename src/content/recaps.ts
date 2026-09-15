@@ -20,6 +20,19 @@ export type RecapBlock =
   | { type: 'heading'; text: string }
   | { type: 'stat'; label: string; value: string; note?: string }
   | { type: 'quote'; text: string; attribution?: string }
+  /**
+   * The week's results. A real block rather than prose, because six scores
+   * written as sentences is a wall of numbers nobody parses — week 1 shipped
+   * them that way and they were unreadable. Winner first in each row.
+   */
+  | { type: 'scoreboard'; rows: ScoreboardRow[] }
+
+export interface ScoreboardRow {
+  winner: string
+  winnerScore: number
+  loser: string
+  loserScore: number
+}
 
 export interface Recap {
   /** URL segment: /recaps/<slug> */
@@ -77,7 +90,7 @@ export const RECAPS: Recap[] = [
       { type: 'paragraph', text: 'Eighty-one.' },
       {
         type: 'paragraph',
-        text: 'Conditions were perfect. Every variable in the experiment was screaming in your favor. A trained monkey with a coin clears a hundred and ten.',
+        text: 'Conditions were perfect. Every variable was screaming in your favor. A trained monkey with a coin clears a hundred and ten.',
       },
       { type: 'paragraph', text: 'God, I love this job.' },
       { type: 'heading', text: 'BEARS 59, PANTHERS 37 — Somebody Left The Gas On' },
@@ -87,7 +100,7 @@ export const RECAPS: Recap[] = [
       },
       {
         type: 'paragraph',
-        text: 'Caleb Williams threw for 269 and two scores, ran for 65 and two more, and spent four quarters conducting himself like a man who had read every word ever written about him and elected to respond in the form of a war crime. Bryce Young answered with 361 yards, three passing touchdowns and a rushing one — the best game of his career, a genuine masterpiece, and he lost by twenty-two. D’Andre Swift: 124 and three. Kyle Monangai: a hundred more, including a 61-yard sprint the Carolina defense observed from a respectful distance, the way you would watch a house fire.',
+        text: 'Caleb Williams threw for 269 and two scores, ran for 65 and two more, and spent four quarters responding to every word ever written about him in the form of a war crime. Bryce Young answered with 361 yards, three passing touchdowns and a rushing one — the best game of his career, and he lost by twenty-two. D’Andre Swift: 124 and three. Kyle Monangai: a hundred more, including a 61-yard sprint the Carolina defense watched the way you would watch a house fire.',
       },
       {
         type: 'paragraph',
@@ -101,7 +114,7 @@ export const RECAPS: Recap[] = [
       { type: 'heading', text: 'RAVENS 41, COLTS 23 — Chenell Has Purchased The City Of Baltimore' },
       {
         type: 'paragraph',
-        text: 'Derrick Henry went for 144 yards and three touchdowns and moved past Marcus Allen on the all-time list, because at this stage of his career the man is less a running back than a geological event. Baltimore put 31 on the board before halftime. Isaiah Likely got his.',
+        text: 'Derrick Henry went for 144 yards and three touchdowns and moved past Marcus Allen on the all-time list, because at this stage of his career the man is less a running back than a geological event. Lamar Jackson went 17 of 25 for 324 and a score and ran in another one himself. Baltimore put 31 on the board before halftime and was never once inconvenienced.',
       },
       {
         type: 'paragraph',
@@ -109,7 +122,7 @@ export const RECAPS: Recap[] = [
       },
       {
         type: 'paragraph',
-        text: 'Let me be precise about what has happened here. The reigning champion did not draft a fantasy football team. The reigning champion acquired commercial real estate in Maryland and is collecting rent on it every Sunday. Henry and Likely combined for 58.6 of a 166.0. Eleven of you drafted players. Chenell drafted a municipality.',
+        text: 'The reigning champion did not draft a fantasy football team. The reigning champion acquired commercial real estate in Maryland and is collecting rent on it every Sunday. Henry and Jackson combined for 61.8 of a 166.0 — the Baltimore backfield and the man handing it the ball, on one roster, in a game Baltimore led from the opening minutes to the end. Eleven of you drafted players. Chenell drafted a municipality.',
       },
       { type: 'heading', text: 'SEAHAWKS 13, PATRIOTS 10 — Five Snaps' },
       {
@@ -118,7 +131,7 @@ export const RECAPS: Recap[] = [
       },
       {
         type: 'paragraph',
-        text: 'What is funny — the single funniest object on my desk this morning — is that a manager in this league looked at a superflex slot, weighed their options like a serious person, and started that man anyway.',
+        text: 'The consequence here was immediate. Tyler had Darnold in the superflex at a projected 17.6 — about as ordinary a Sunday-morning call as this format offers.',
       },
       {
         type: 'paragraph',
@@ -126,12 +139,12 @@ export const RECAPS: Recap[] = [
       },
       {
         type: 'paragraph',
-        text: 'Hold that thought. I will need it in about four hundred words, and I am going to enjoy it.',
+        text: 'Hold that thought. I will need it in four hundred words, and it is worse than you are expecting.',
       },
       { type: 'heading', text: 'BENGALS 33, BUCCANEERS 27 — Two Catches' },
       {
         type: 'paragraph',
-        text: 'Cincinnati won a shootout. Ja’Marr Chase, the best wide receiver currently drawing breath, was targeted four times, caught two of them, and finished with twelve receiving yards — his quietest afternoon since November of 2023. Tampa Bay bracketed him for sixty minutes and dared literally anybody else to beat them. Literally anybody else beat them.',
+        text: 'Cincinnati won a shootout. Ja’Marr Chase, the best wide receiver currently drawing breath, was targeted four times, caught two, and finished with twelve receiving yards — his quietest afternoon since November of 2023. Tampa Bay bracketed him for sixty minutes and dared anybody else to beat them. Anybody else beat them.',
       },
       { type: 'paragraph', text: 'James started Ja’Marr Chase.' },
       { type: 'paragraph', text: 'James received 2.2 points.' },
@@ -143,21 +156,24 @@ export const RECAPS: Recap[] = [
       { type: 'heading', text: 'THE SCOREBOARD' },
       {
         type: 'paragraph',
-        text: 'Regrettably, a portion of my funding is contingent on bookkeeping. Six results, briskly, and then back to the autopsies.',
+        text: 'A portion of my funding is contingent on bookkeeping. Six results, then back to the autopsies.',
       },
       {
-        type: 'paragraph',
-        text: 'Mr. Anderson 197.4, Dad Bod 148.9. Da Reigning Champ 166.0, Tyler’s Talented Team 153.3. Nobody Knows 150.7, Substation Superstars 81.2.',
-      },
-      {
-        type: 'paragraph',
-        text: 'Bree’s Badass Boys 124.4, All Bark All Bite 119.9. Nix Pix a Puka Six 118.1, Burrow My Burden 102.4. PKM Playmakers 114.0, Soft Tissue Issues 111.5.',
+        type: 'scoreboard',
+        rows: [
+          { winner: 'Mr. Anderson', winnerScore: 197.4, loser: 'Dad Bod', loserScore: 148.9 },
+          { winner: 'Da Reigning Champ', winnerScore: 166.0, loser: 'Tyler’s Talented Team', loserScore: 153.3 },
+          { winner: 'Nobody Knows', winnerScore: 150.7, loser: 'Substation Superstars', loserScore: 81.2 },
+          { winner: 'Bree’s Badass Boys', winnerScore: 124.4, loser: 'All Bark, All Bite', loserScore: 119.9 },
+          { winner: 'Nix Pix a Puka Six', winnerScore: 118.1, loser: 'Burrow My Burden', loserScore: 102.4 },
+          { winner: 'PKM Playmakers', winnerScore: 114.0, loser: 'Soft Tissue Issues', loserScore: 111.5 },
+        ],
       },
       {
         type: 'stat',
         label: 'The spread, week one',
         value: '197.4 down to 81.2',
-        note: 'A 116.2-point gap between the best and worst lineups in a twelve-team league. In a normal season that is a December outlier. This week it was a Sunday.',
+        note: 'A 116.2-point gap between the best and worst lineups in a twelve-team league. In a normal season that is a December outlier. Here it was a Sunday.',
       },
       { type: 'heading', text: 'Mr. Anderson Scored 197 And The Machine Still Called Them An Idiot' },
       {
@@ -171,7 +187,7 @@ export const RECAPS: Recap[] = [
       { type: 'paragraph', text: 'The optimizer took one look at it and laughed.' },
       {
         type: 'paragraph',
-        text: 'Jesse’s best legal lineup was worth 238.2. Christian Watson put up 29.7 in a folding chair. Chuba Hubbard put up 22.2 in the chair beside him. Arrange the right names in the right slots and that roster beats the highest score anybody in this league produced all week — by forty points.',
+        text: 'Jesse’s best legal lineup was worth 238.2. Christian Watson put up 29.7 in a folding chair, Chuba Hubbard 22.2 in the chair beside him. Arrange the right names in the right slots and that roster beats the best score anybody in this league produced all week by forty points.',
       },
       {
         type: 'paragraph',
@@ -181,38 +197,32 @@ export const RECAPS: Recap[] = [
         type: 'paragraph',
         text: 'Congratulations, Jesse. You are the most talented manager in this league and you are leaving money on the table like a tourist.',
       },
-      { type: 'heading', text: 'Tyler Benched The Answer And I Will Not Be Letting This Go' },
+      { type: 'heading', text: 'Tyler Scored 153.3 One Man Short And Lost Anyway' },
       {
         type: 'paragraph',
-        text: 'Here is the thought I asked you to hold.',
+        text: 'Here is the thought I asked you to hold. Tyler’s Talented Team scored 153.3, the second-highest total in the entire league. Drop that number into four of the six matchups this week and Tyler wins comfortably, opens 1-0, and none of us discusses it again.',
+      },
+      { type: 'paragraph', text: 'Tyler drew the champion. Tyler lost by 12.7. Tyler also did all of that while one of ten starting slots returned half a point.' },
+      {
+        type: 'paragraph',
+        text: 'And before anybody gets clever in the group chat: that was a defensible Sunday-morning decision made by somebody with no access to the future. Young and Rodgers sat behind Darnold projected 19.4 and 18.5 — noise, not a gap. That was not a blunder. That was weather, and I do not roast the weather.',
       },
       {
         type: 'paragraph',
-        text: 'Tyler’s Talented Team scored 153.3. That is the second-highest total in the entire league. Drop that number into four of the six matchups played this week and Tyler wins comfortably, opens 1-0, and none of us ever discusses it again.',
-      },
-      { type: 'paragraph', text: 'Tyler drew the champion. Tyler lost by 12.7.' },
-      {
-        type: 'paragraph',
-        text: 'And now the flush. The beautiful, ruinous, career-defining flush.',
-      },
-      { type: 'paragraph', text: 'The quarterback Tyler started scored 0.5.' },
-      { type: 'paragraph', text: 'The quarterback Tyler benched scored 38.4.' },
-      {
-        type: 'paragraph',
-        text: 'Bryce Young spent the highest-scoring football game in the history of Week 1 throwing for 361 yards and three scores and running in a fourth — all of it, every single point, from a folding chair on Tyler’s bench. Thirty-seven point nine points of daylight between two names in two boxes. One click. That is the whole distance between 1-0 and this paragraph.',
+        text: 'Which is exactly what makes it the cruelest line on this page. Tyler played nine-tenths of a lineup from the first quarter of the season, posted a number that beats two thirds of this league, and lost. The Bad Beat is not an insult. It is a coroner’s finding.',
       },
       {
         type: 'paragraph',
-        text: 'This is a superflex league. It has been a superflex league since before any of you opened a draft board. The OP slot is not a decorative element, it is not a polite suggestion, and it is not there to hold your feelings.',
+        text: 'Bryce Young, meanwhile, spent that same afternoon throwing for 361 and three scores in the highest-scoring game in Week 1 history — 38.4 points, from a folding chair, in a week already over by the first quarter. The Understudy is the most tasteless award in the library and it landed on the manager who least deserved to be handed anything.',
       },
       {
         type: 'paragraph',
-        text: 'Tyler will win ten games this season. Tyler will also lie awake in February thinking about a folding chair.',
+        text: 'Tyler will win ten games this season. Tyler will also spend every one of them being reminded about the 153.',
       },
       { type: 'heading', text: 'Colin Did All The Work And Then Refused To Collect' },
       {
         type: 'paragraph',
-        text: 'Full credit, sincerely, no notes: Colin identified Stefon Diggs as the best available free agent, spent the claim, cut Travis Hunter to clear the spot, and watched Diggs deliver 13.5 against a 7.5 projection. That is the entire waiver wire process executed flawlessly. That is a manager doing homework on a Tuesday night while the rest of you were asleep.',
+        text: 'Full credit, sincerely, no notes: Colin identified Stefon Diggs as the best available free agent, spent the claim, cut Travis Hunter for the spot, and watched Diggs deliver 13.5 against a 7.5 projection. The whole waiver process executed flawlessly, by a manager doing homework on a Tuesday night while the rest of you slept.',
       },
       { type: 'paragraph', text: 'Colin then benched him.' },
       {
@@ -221,17 +231,25 @@ export const RECAPS: Recap[] = [
       },
       {
         type: 'paragraph',
-        text: 'There is a version of this league in which Colin is genuinely frightening. It requires Colin to take Colin’s advice. Until then we have a manager who does the reading, shows the work, arrives at the correct answer, and puts it in a display case to admire through the glass.',
+        text: 'There is a version of this league in which Colin is genuinely frightening. It requires Colin to take Colin’s advice. Until then we have a manager who does the reading, shows the work, reaches the correct answer, and puts it behind glass to admire.',
       },
       { type: 'heading', text: 'The Champ Was Down 46.7 And Did Not Break A Sweat' },
       {
         type: 'paragraph',
         text: 'At some point during the Sunday afternoon window, Chenell was trailing by 46.7 points. That is not a deficit. That is a diagnosis.',
       },
+      {
+        type: 'paragraph',
+        text: 'The comeback had a postmark on it. Isaiah Likely — who plays for the Giants now, a fact I recommend the rest of you commit to memory — posted 23.8 against a 7.6 projection. Dak Prescott added 19.4 for Dallas. Chenell owned both ends of the same Sunday night football game and billed it for 43.2 points.',
+      },
       { type: 'paragraph', text: 'Final: 166.0 to 153.3.' },
       {
         type: 'paragraph',
-        text: 'The reigning champion opens 1-0 having spent most of an afternoon losing, which is precisely the flavor of week that makes a title defense feel less like a competition and more like a weather system. One week in and the crown is already doing structural damage to eleven people’s self-esteem.',
+        text: 'All of that while Chenell’s kicker and defense combined for exactly 2.0 points. One apiece, against projections of 9.1 and 9.3. Two unmanned roster spots, a 46.7-point hole, and a win. Something deeply unfair is happening here and I intend to investigate it.',
+      },
+      {
+        type: 'paragraph',
+        text: 'One week in and this title defense already feels less like a competition than an inevitability. The crown is doing structural damage to eleven people’s self-esteem.',
       },
       {
         type: 'paragraph',
@@ -249,12 +267,12 @@ export const RECAPS: Recap[] = [
       },
       {
         type: 'paragraph',
-        text: 'The one manager who got every call right is the one manager who needed none of them. I have stared at this for an hour and cannot decide whether it is the most impressive thing on the page or the cruelest.',
+        text: 'The one manager who got every call right is the one manager who needed none of them. I cannot decide whether that is the most impressive thing on this page or the cruelest.',
       },
       { type: 'heading', text: 'The Trade Where Everybody Won And Everybody Lost' },
       {
         type: 'paragraph',
-        text: 'On the fourth of September, Justin sent Trevor Lawrence and Rome Odunze to James for Brock Purdy and MarShawn Lloyd. Clean. Two for two. Adults negotiating in good faith, which in this league is itself a minor scandal.',
+        text: 'On the fourth of September, Justin sent Trevor Lawrence and Rome Odunze to James for Brock Purdy and MarShawn Lloyd. Clean. Two for two. Adults negotiating in good faith, which around here is itself a minor scandal.',
       },
       {
         type: 'paragraph',
@@ -262,37 +280,37 @@ export const RECAPS: Recap[] = [
       },
       {
         type: 'paragraph',
-        text: 'Justin then posted 81.2, the lowest total in the league, and lost by 69.5. James then lost by 2.6 because the best receiver in football caught two passes for twelve yards.',
+        text: 'Justin then posted 81.2, the lowest in the league, and lost by 69.5. James then lost by 2.6 because the best receiver in football caught two passes for twelve yards.',
       },
       {
         type: 'paragraph',
-        text: 'Two managers made a good trade and the universe billed them both for it anyway. Get it framed.',
+        text: 'Two managers made a good trade and the universe billed them both anyway. Get it framed.',
       },
       { type: 'heading', text: 'The Rest Of The Petri Dish' },
       {
         type: 'paragraph',
-        text: 'Mike won the closest game of the week, by 2.6, with the week’s lowest winning score, 114.0 — of which Jaxson Dart was 32.6. Twenty-nine percent of a victory, delivered by one rookie quarterback. Three awards for an afternoon of doing the absolute bare minimum with surgical precision. The Cat Burglar takes only what the job requires and is out the window before the lights come on. It is not pretty and it is 1-0.',
+        text: 'Mike won the closest game of the week, by 2.6, with the week’s lowest winning score, 114.0 — of which Jaxson Dart was 32.6. Twenty-nine percent of a victory delivered by one rookie quarterback, and three awards for an afternoon of doing the bare minimum with surgical precision. The Cat Burglar takes only what the job requires and is out the window before the lights come on. It is not pretty and it is 1-0.',
       },
       {
         type: 'paragraph',
-        text: 'Bree finished 4.3 off their projection and won by 4.5, the most Bree result available to modern science, and I mean that as a compliment to nobody’s entertainment value. Kenneth Walker 32.6, Jalen Hurts 30.7, and Kirk Cousins posting 21.8 on the bench — a public service announcement that this league has more startable quarterbacks than places to start them.',
+        text: 'Bree finished 4.3 off their projection and won by 4.5, the most Bree result available to modern science, and I mean that as a compliment to nobody’s entertainment value. Kenneth Walker 32.6, Jalen Hurts 30.7, and Kirk Cousins posting 21.8 on the bench as a reminder that this league has more startable quarterbacks than places to start them.',
       },
       {
         type: 'paragraph',
-        text: 'Keshia lost by 4.5 with a lineup running from Jordan Love at 24.5 down to Matthew Stafford at 5.1 — a spread of 19.4, the flattest in the league. Everybody chipped in, nobody carried, and the whole thing had the energy of a group project. The Steelers defense turned in 21.0, the best D/ST performance in the league: a lovely thing to own and a deeply upsetting thing to need.',
+        text: 'Keshia lost by 4.5 with a lineup running from Jordan Love at 24.5 down to Matthew Stafford at 5.1 — a spread of 19.4, the flattest in the league. Everybody chipped in, nobody carried, and the whole thing had the energy of a group project. The Steelers defense turned in the league’s best D/ST performance at 21.0: a lovely thing to own, a grim thing to need.',
       },
       {
         type: 'paragraph',
-        text: 'Jay made six roster moves — three free agents, one lineup change, two trips to injured reserve — and posted 148.9, a number that beats seven of the other eleven teams in this league. Jay drew the 197.4. There is no lesson here. Sometimes you do everything right and the experiment kills you anyway.',
+        text: 'Jay made six roster moves — three free agents, one lineup change, two trips to injured reserve — and posted 148.9, a number that beats seven of the other eleven teams. Jay drew the 197.4. There is no lesson here. Sometimes you do everything right and the experiment kills you anyway.',
       },
       {
         type: 'paragraph',
-        text: 'And Evan, whose quarterback’s Minnesota debut ended early and took the afternoon with it, posted 102.4 and lost by 15.7. Some variables are simply not yours to control. We will collect a cleaner sample next week.',
+        text: 'And Evan, whose quarterback’s Minnesota debut ended early and took the afternoon with it, posted 102.4 and lost by 15.7. Some variables are not yours to control. Cleaner sample next week.',
       },
       { type: 'heading', text: 'THE FINDINGS' },
       {
         type: 'paragraph',
-        text: 'One week. Twelve subjects. A scoring environment that broke a record older than most of this room, and a table in which the highest scorer left forty points in a folding chair, the second-highest scorer lost, and the perfect lineup won by a margin that made perfection irrelevant.',
+        text: 'One week. Twelve subjects. A scoring environment that broke a record older than most of this room, and a table in which the highest scorer left forty points in a folding chair, the second-highest scorer lost, and the perfect lineup won by a margin that made perfection pointless.',
       },
       {
         type: 'paragraph',

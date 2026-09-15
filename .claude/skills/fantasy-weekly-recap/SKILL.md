@@ -63,6 +63,18 @@ Prefer, in order:
 data will be months or years behind the season being recapped. Every score,
 stat line and injury goes through a search first.
 
+⚠️ **This includes which team a player is on.** Week 1 shipped a paragraph
+built on Isaiah Likely being a Raven. He signed with the Giants in March. The
+database had `NYG` on the row the whole time — `gather.ts` prints `nfl_team`
+next to every single name — and the sentence was written from memory anyway,
+around a joke that needed him to be in Baltimore.
+
+Offseason movement is the single most likely thing to be stale, and a wrong
+team is invisible: the sentence still scans, the number is still right, and
+only the league notices. **Before naming a player's team, look at the column.**
+If a joke depends on where somebody plays, that is the moment to check, not the
+moment to trust the draft-night version of the roster in your head.
+
 ### 4. Write it
 
 Structure — borrowed from James's own newsletters, not copied:

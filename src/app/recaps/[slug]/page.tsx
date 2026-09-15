@@ -41,6 +41,39 @@ function Block({ block }: { block: RecapBlock }) {
           {block.note && <p className="mt-1.5 text-[12.5px] text-muted">{block.note}</p>}
         </div>
       )
+    case 'scoreboard':
+      return (
+        <div className="my-6 overflow-hidden rounded-lg border border-border">
+          {block.rows.map((r, i) => {
+            const margin = r.winnerScore - r.loserScore
+            return (
+              <div
+                key={i}
+                className={`bg-surface px-4 py-3 ${i > 0 ? 'border-t border-border' : ''}`}
+              >
+                {/* Winner then loser, one per line. Names truncate and the
+                    scores hold a fixed column, so a long team name can never
+                    push a number off a 320px screen. */}
+                <div className="flex items-baseline gap-3">
+                  <span className="display min-w-0 flex-1 truncate text-[15px]">{r.winner}</span>
+                  <span className="display shrink-0 text-[17px] tnum">
+                    {r.winnerScore.toFixed(1)}
+                  </span>
+                </div>
+                <div className="mt-0.5 flex items-baseline gap-3 text-muted">
+                  <span className="min-w-0 flex-1 truncate text-[14px]">{r.loser}</span>
+                  <span className="shrink-0 font-mono text-[14px] tnum">
+                    {r.loserScore.toFixed(1)}
+                  </span>
+                </div>
+                <div className="mt-1.5 font-mono text-[10px] uppercase tracking-wider text-dim tnum">
+                  by {margin.toFixed(1)}
+                </div>
+              </div>
+            )
+          })}
+        </div>
+      )
     case 'quote':
       return (
         <blockquote className="my-6 border-l-2 border-brand pl-4">
