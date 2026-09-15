@@ -1225,3 +1225,50 @@ manager, a she/her manager and an unlisted one, and asserts the pronoun matches
 each. Plus a test that the copy *actually inflects* rather than dodging pronouns
 altogether, because every other assertion would pass on evasive copy — which is
 precisely the behaviour we just moved away from. 350 tests to 382.
+
+## 2026-09-15 — The record book, built out
+
+Twenty-eight records across three sections. Three design calls worth keeping.
+
+**Ties are a first-class concept, not an edge case.** James: "here in our
+inaugural season those will effectively be the same thing, so there might be
+more people tied for a record than usual." A record has `holders`, plural, and
+every one is named. `bestOf` compares on the FORMATTED value rather than the raw
+float — two teams on 119.88 and 119.8849 are tied on a page that prints two
+decimals, and crowning one of them is a lie the reader can see. Week 1 produces
+a six-way tie on Most Wins, and the card says "Shared by 6".
+
+**`tone` is good/bad, replacing `polarity: high/low`.** The old field conflated
+"this number is large" with "this is an achievement", and they come apart
+constantly: the largest margin of defeat is a big number and a bad day; the
+lowest winning score is a small number and still a win. Colour is driven by tone
+alone. A test asserts both pairs, because the failure is invisible — a red card
+on a good record still renders.
+
+**Margins split into the winner's record and the loser's.** Same number, two
+cards, two different teams named. Carrying only one means the biggest beating in
+league history has no victim.
+
+**Scope says what the number MEASURES, not which seasons were eligible.**
+Everything is all-time. "Most points in a season" is an all-time record whose
+unit happens to be a season, and it sits beside the weekly ones under a Week /
+Season chip rather than in a fourth section. No current-season scope exists, so
+Yahoo's duplicate-row problem cannot recur.
+
+**Only settled weeks count.** Team records already ignored non-FINAL matchups,
+but player lines and transactions exist the moment a week opens — so "most
+roster moves in one week" was quietly a live counter for the *current* week,
+reading "Week 2" before week 2 had been played, on a page whose whole premise is
+finished history. A week counts only when every one of its matchups is final.
+
+**Grouped by who is responsible:** Team (scores, margins, streaks, schedules),
+Manager (bench, waivers, draft, moves, awards), Player (individual games). That
+is the question a reader is actually asking — did the team play well, did the
+manager decide well, or did one player have a day. The six per-position bests
+are a strip under the player group, not six more cards, for the same reason
+Position Kings is a strip on Studs & Duds.
+
+**Not built: Yahoo's Team Statistics tab.** Touchdowns and passing/rushing/
+receiving yards are not derivable from what we store — we keep fantasy points,
+not NFL box-score lines. It needs a new table and a statId map. Deliberately
+skipped.

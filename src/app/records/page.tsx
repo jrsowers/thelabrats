@@ -1,11 +1,15 @@
 import type { Metadata } from 'next'
 import {
-  getLeagueOverview, getSeasonTeams, getSeasonResults, getReigningChampion,
-  getSeasonHistory,
+  getLeagueOverview, getSeasonTeams, getReigningChampion, getSeasonHistory,
 } from '@/lib/league/queries'
-import { computeRecords, computeCareers } from '@/lib/records/compute'
+import { getAllTimeRecordInputs } from '@/lib/records/queries'
+import {
+  computeRecords, computeCareers, recordsInGroup, positionRecords, fmtRecord,
+  type LeagueRecord, type RecordGroup,
+} from '@/lib/records/compute'
 import { AppShell } from '@/components/navigation/app-shell'
 import { FieldBackdrop } from '@/components/ui/field-backdrop'
+import { PlayerHeadshot } from '@/components/ui/player-headshot'
 import {
   Eyebrow, TeamAvatar, Trophy, MysteryAvatar, EmptyState,
 } from '@/components/ui/primitives'
@@ -15,21 +19,106 @@ export const metadata: Metadata = { title: 'Record Books' }
 
 const f2 = (n: number) => n.toFixed(2)
 
+/**
+ * Three sections, per James. The alternative was one grid of thirty cards,
+ * which is a wall rather than a record book.
+ *
+ * The split is by WHO OR WHAT IS RESPONSIBLE, which is the question a reader is
+ * actually asking: did the team play well, did the manager decide well, or did
+ * one player have a day? A team record measured over a season and one measured
+ * over a week belong together — hence the scope chip on each card rather than a
+ * fourth section.
+ */
+const GROUPS: { key: RecordGroup; title: string; blurb: string }[] = [
+  { key: 'team', title: 'Team Records', blurb: 'Scores, margins, streaks' },
+  { key: 'manager', title: 'Manager Records', blurb: 'Decisions, not scores' },
+  { key: 'player', title: 'Player Records', blurb: 'Individual performances' },
+]
+
+type TeamLookup = Map<number, Awaited<ReturnType<typeof getSeasonTeams>>[number]>
+
+/**
+ * One record.
+ *
+ * Colour is driven by `tone` (good/bad), never by whether the number is large.
+ * They come apart constantly — the largest margin of defeat is a big number and
+ * a bad day, the lowest winning score is a small number and still a win.
+ */
+function RecordCard({ record, teamOf }: { record: LeagueRecord; teamOf: TeamLookup }) {
+  const colour = record.tone === 'good' ? 'var(--live)' : 'var(--loss)'
+  const [lead, ...rest] = record.holders
+
+  return (
+    <div
+      className="state-bar rounded-lg border border-border bg-surface px-4 py-3.5"
+      style={{ '--state': colour } as React.CSSProperties}
+    >
+      <div className="flex items-baseline justify-between gap-2">
+        <Eyebrow>{record.label}</Eyebrow>
+        <span className="shrink-0 font-mono text-[9px] uppercase tracking-[0.12em] text-dim">
+          {record.scope === 'season' ? 'Season' : 'Week'}
+        </span>
+      </div>
+
+      <div className="display mt-1 text-[32px] leading-none tnum" style={{ color: colour }}>
+        {fmtRecord(record.value, record.format)}
+      </div>
+
+      {/* Every holder is listed. In an inaugural season the all-time record and
+          the season record are the same thing, so ties are common and hiding
+          them would credit one of several teams with something they share. */}
+      <ul className="mt-2 space-y-1.5">
+        {record.holders.map((h, i) => {
+          const t = teamOf.get(h.teamId)
+          return (
+            <li key={`${h.teamId}-${h.year}-${h.week ?? 'season'}-${i}`}>
+              <div className="flex items-center gap-2">
+                {t && (
+                  <TeamAvatar
+                    photoUrl={t.photoUrl} logoUrl={t.logoUrl} abbrev={t.abbrev}
+                    size={22} champion={t.isChampion} championYear={t.championYear}
+                  />
+                )}
+                <span className="truncate text-[13px] font-medium">{t?.name ?? '—'}</span>
+              </div>
+              {h.player && (
+                <div className="mt-0.5 truncate pl-[30px] text-[12px] text-muted">
+                  {h.player.name}
+                </div>
+              )}
+              <div className="mt-0.5 pl-[30px] font-mono text-[10.5px] text-dim tnum">
+                {h.week == null ? `${h.year} season` : `Week ${h.week}, ${h.year}`}
+                {h.context && ` · ${h.context}`}
+              </div>
+            </li>
+          )
+        })}
+      </ul>
+
+      {rest.length > 0 && (
+        <div className="mt-2 font-mono text-[9.5px] uppercase tracking-wider text-dim">
+          {lead && `Shared by ${record.holders.length}`}
+        </div>
+      )}
+    </div>
+  )
+}
+
 export default async function RecordsPage() {
   const overview = await getLeagueOverview()
   if (!overview) return null
 
   const champion = await getReigningChampion()
-  const [teams, results, history] = await Promise.all([
+  const [teams, history, inputs] = await Promise.all([
     getSeasonTeams(overview.seasonId, champion),
-    getSeasonResults(overview.seasonId),
     getSeasonHistory(),
+    getAllTimeRecordInputs(),
   ])
   const byId = new Map(teams.map((t) => [t.seasonTeamId, t]))
 
-  const withYear = results.map((m) => ({ ...m, year: overview.season }))
-  const records = computeRecords(withYear)
-  const careers = computeCareers(withYear).filter((c) => c.games > 0)
+  const records = computeRecords(inputs)
+  const kings = positionRecords(records)
+  const careers = computeCareers(inputs.matchups).filter((c) => c.games > 0)
 
   const completed = history.filter((h) => h.champion)
 
@@ -201,80 +290,103 @@ export default async function RecordsPage() {
       )}
 
       {/* ================= ALL-TIME RECORDS ================= */}
-      {/* ALL-TIME ONLY, by design. Yahoo prints each record twice — once for
-          the current season and once for league history — which doubles the
-          page and, in a young league, prints the same row twice with the same
-          value. One number per record, and it is the best or worst thing that
-          has ever happened here. */}
-      <section>
-        <div className="mb-6 flex items-baseline justify-between gap-4 border-b border-border pb-1.5">
-          <h2 className="display text-2xl">All-Time Records</h2>
-          <span className="font-mono text-[10.5px] uppercase tracking-wider text-dim">
-            Best and worst, ever
-          </span>
-        </div>
+      {records.length === 0 ? (
+        <section>
+          <div className="mb-6 border-b border-border pb-1.5">
+            <h2 className="display text-2xl">All-Time Records</h2>
+          </div>
+          <div className="rounded-lg border border-border bg-surface">
+            <EmptyState
+              title="No records yet."
+              hint="Every one of these is set in week 1 and broken from there."
+            />
+          </div>
+          <p className="mt-4 max-w-2xl text-[13px] text-muted">
+            The 2025 season was played on Yahoo, so there is no game-level history to
+            import — only the final standings above. These records begin accumulating
+            with the first {overview.season} kickoff.
+          </p>
+        </section>
+      ) : (
+        <>
+          {GROUPS.map((g) => {
+            const inGroup = recordsInGroup(records, g.key)
+            if (inGroup.length === 0) return null
+            return (
+              <section key={g.key} className="mb-11">
+                <div className="mb-1.5 flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1 border-b border-border pb-1.5">
+                  <h2 className="display text-2xl">{g.title}</h2>
+                  <span className="font-mono text-[10.5px] uppercase tracking-wider text-dim">
+                    {g.blurb}
+                  </span>
+                </div>
+                <div className="mt-5 grid gap-2.5 sm:grid-cols-2 xl:grid-cols-3">
+                  {inGroup.map((r) => (
+                    <RecordCard key={r.key} record={r} teamOf={byId} />
+                  ))}
+                </div>
 
-        {records.length === 0 ? (
-          <>
-            <div className="rounded-lg border border-border bg-surface">
-              <EmptyState
-                title="No records yet."
-                hint="Every one of these is set in week 1 and broken from there."
-              />
-            </div>
-            <p className="mt-4 max-w-2xl text-[13px] text-muted">
-              The 2025 season was played on Yahoo, so there is no game-level history to
-              import — only the final standings above. These records begin accumulating
-              with the first {overview.season} kickoff.
-            </p>
-          </>
-        ) : (
-          <>
-            <div className="grid gap-2.5 sm:grid-cols-2 xl:grid-cols-3">
-              {records.map((r) => {
-                const team = r.teamId != null ? byId.get(r.teamId) : null
-                const pair = r.teamIds.map((id) => byId.get(id)).filter(Boolean)
-                return (
-                  <div
-                    key={r.key}
-                    className="state-bar rounded-lg border border-border bg-surface px-4 py-3.5"
-                    style={{
-                      '--state': r.polarity === 'high' ? 'var(--live)' : 'var(--loss)',
-                    } as React.CSSProperties}
-                  >
-                    <Eyebrow>{r.label}</Eyebrow>
-                    <div
-                      className="display mt-1 text-[32px] tnum"
-                      style={{ color: r.polarity === 'high' ? 'var(--live)' : 'var(--loss)' }}
-                    >
-                      {f2(r.value)}
+                {/* The per-position bests ride under the player group as a
+                    strip. Six more cards would bury the records that took a
+                    judgement call under a positional leaderboard — the same
+                    reasoning as Position Kings on Studs & Duds. */}
+                {g.key === 'player' && kings.length > 0 && (
+                  <div className="mt-5">
+                    <div className="mb-2.5 flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
+                      <h3 className="display text-lg">Best Ever, By Position</h3>
+                      <span className="font-mono text-[10px] uppercase tracking-wider text-dim">
+                        Started only
+                      </span>
                     </div>
-                    <div className="mt-1.5 flex items-center gap-2">
-                      {team ? (
-                        <>
-                          <TeamAvatar
-                            photoUrl={team.photoUrl} logoUrl={team.logoUrl} abbrev={team.abbrev}
-                            size={22} champion={team.isChampion} championYear={team.championYear}
-                          />
-                          <span className="truncate text-[13px] font-medium">{team.name}</span>
-                        </>
-                      ) : (
-                        <span className="truncate text-[13px] font-medium">
-                          {pair.map((t) => t!.name).join(' vs ')}
-                        </span>
-                      )}
-                    </div>
-                    <div className="mt-1 font-mono text-[10.5px] text-dim tnum">
-                      Week {r.week}, {r.year} · {r.context}
-                    </div>
+                    {/* One column until 640px. At 320 the row is position +
+                        headshot + two lines of text + a five-character score,
+                        which is already the tightest thing on the page. */}
+                    <ul className="grid min-w-0 gap-2 sm:grid-cols-2">
+                      {kings.map((r) => {
+                        const h = r.holders[0]
+                        const t = byId.get(h.teamId)
+                        return (
+                          <li
+                            key={r.key}
+                            className="flex min-w-0 items-center gap-2.5 rounded-lg border border-border bg-surface px-3 py-2.5"
+                          >
+                            <span className="w-8 shrink-0 font-mono text-[10px] font-bold uppercase tracking-[0.1em] text-dim">
+                              {r.label.replace('Best ', '')}
+                            </span>
+                            {h.player && (
+                              <PlayerHeadshot
+                                espnPlayerId={h.player.espnPlayerId}
+                                name={h.player.name}
+                                size={28}
+                                teamAbbrev={h.player.nflTeam}
+                                isTeamDefense={h.player.position === 'D/ST'}
+                              />
+                            )}
+                            <div className="min-w-0 flex-1">
+                              <div className="display truncate text-[15px] leading-tight">
+                                {h.player?.name ?? '—'}
+                              </div>
+                              <div className="truncate font-mono text-[10px] uppercase tracking-wider text-dim">
+                                {t?.name ?? '—'} · W{h.week} {h.year}
+                              </div>
+                            </div>
+                            <div
+                              className="display shrink-0 text-[17px] leading-none tnum"
+                              style={{ color: 'var(--live)' }}
+                            >
+                              {fmtRecord(r.value, r.format)}
+                            </div>
+                          </li>
+                        )
+                      })}
+                    </ul>
                   </div>
-                )
-              })}
-            </div>
-
-          </>
-        )}
-      </section>
+                )}
+              </section>
+            )
+          })}
+        </>
+      )}
     </AppShell>
   )
 }
