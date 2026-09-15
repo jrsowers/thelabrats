@@ -399,7 +399,39 @@ over 500 random rosters. Watch for two traps recorded in DECISIONS: the
 Hungarian formulation hangs when seats outnumber players (fixed with empty-seat
 columns), and a missing stat line means ZERO here and null everywhere else.
 
-Open: `/awards` is still
-`ready: false` in the nav and therefore URL-only, tier-2 dossier review, the
-ROBBERY badge, the Yahoo 2025 export, and `fixtures/league-teams.json` still
-leaks real names.
+Open: tier-2 dossier review, the ROBBERY badge, the Yahoo 2025 export, and
+`fixtures/league-teams.json` still leaks real names.
+
+## Session 9 — 2026-09-15 (the Weekly Recap, and its author)
+
+**Week 1's recap is live at `/recaps/week-1-the-scoring-record-fell`,** bylined
+by **Dr. Bunsen Blitzer** — a fictional mad-scientist sportscaster whose voice,
+process and boundaries live in `.claude/skills/weekly-recap/`. 1,880 words, an
+8.5-minute read, inside the 7–10 minutes James asked for. `/recaps` and
+`/awards` are both now `ready: true` in the nav with a NEW badge; neither is
+URL-only any more.
+
+**The skill is the deliverable, not the one recap.** `scripts/gather.ts` dumps
+everything a recap needs from the database in one read-only pass — matchups,
+the published awards, top starters, busts against projection, bench scores over
+15, roster moves. `references/voice.md` is the craft spec, `image-prompt.md`
+the art direction, `data.md` explains what each section of the dump is for.
+Run `check-pronouns.ts <week>` before publishing; it is a review aid rather
+than a gate, and DECISIONS says why.
+
+**Two rules the recap cannot break:** every NFL fact goes through a web search
+first (training data is behind the season), and no NFL beat ships unless it
+lands on somebody's roster in this league.
+
+Three things worth knowing next time. Higgsfield's `generate_image` needs its
+arguments nested inside `params`, and `soul_cinematic` rejects `quality:
+"1080p"` — only `1.5k` or `2k`. Caricatured players render as claymation
+clowns; rim-lit silhouettes work every time. And the responsive suite's recap
+sample used to be pinned to week 0 — the one recap with no cover and no byline
+— so it passed while the new cover and byline went untested; it now derives
+from `publishedRecaps()[0]`.
+
+**A layout bug got through every responsive assertion:** at a fixed 64px the
+cover's "Week 1" wrapped at 375px and landed on the ghost numeral. Nothing
+overflowed, so nothing failed. Not every layout failure is an overflow — look
+at the page.

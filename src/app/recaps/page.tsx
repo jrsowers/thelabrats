@@ -48,7 +48,14 @@ export default async function RecapsPage() {
           {/* Lead story — the most recent recap gets the wide treatment. */}
           <article className="mb-8 overflow-hidden rounded-lg border border-border bg-surface">
             <Link href={`/recaps/${lead.slug}`} className="group block">
-              <RecapCover week={lead.week} size="hero" className="h-48 sm:h-64" />
+              <RecapCover
+                week={lead.week}
+                src={lead.coverImage}
+                alt={lead.coverAlt}
+                size="hero"
+                priority
+                className="h-48 sm:h-64"
+              />
               <div className="p-5 sm:p-6">
                 <div className="flex items-center gap-2.5">
                   <Eyebrow>{lead.week === 0 ? 'Preseason' : `Week ${lead.week}`}</Eyebrow>
@@ -80,7 +87,7 @@ export default async function RecapsPage() {
                     className="flex flex-col overflow-hidden rounded-lg border border-border bg-surface"
                   >
                     <Link href={`/recaps/${r.slug}`} className="group flex flex-1 flex-col">
-                      <RecapCover week={r.week} className="h-32" />
+                      <RecapCover week={r.week} src={r.coverImage} alt={r.coverAlt} className="h-32" />
                       <div className="flex flex-1 flex-col p-4">
                         <div className="flex items-center gap-2">
                           <Eyebrow>Week {r.week}</Eyebrow>

@@ -33,14 +33,14 @@ export interface NavItem {
  * is over: relabelled "Draft Recap" and moved down beside Record Books, where
  * the other look-backs live. Same route, same icon — only its billing changed.
  *
- * /admin, /awards and /recaps are deliberately absent — reachable by URL only.
+ * /admin is deliberately absent — reachable by URL only.
  */
 export const NAV_ITEMS: NavItem[] = [
   { href: '/',             label: 'Live Scoreboard',  short: 'Scores',  icon: Radio,          ready: true  },
   { href: '/standings',    label: 'League Standings', short: 'Table',   icon: Trophy,         ready: true  },
   { href: '/playoffs',     label: 'Playoff Picture',  short: 'Bracket', icon: BracketIcon,    ready: true  },
   { href: '/transactions', label: 'Transaction Log',  short: 'Moves',   icon: ArrowLeftRight, ready: true  },
-  { href: '/recaps',       label: 'Weekly Recaps',    short: 'Recaps',  icon: Newspaper,      ready: false },
+  { href: '/recaps',       label: 'Weekly Recaps',    short: 'Recaps',  icon: Newspaper,      ready: true, badge: 'NEW' },
   { href: '/awards',       label: 'Studs & Duds',     short: 'Awards',  icon: Award,          ready: true, badge: 'NEW' },
   { href: '/draft',        label: 'Draft Recap',      short: 'Draft',   icon: ListOrdered,    ready: true  },
   { href: '/records',      label: 'Record Books',     short: 'Records', icon: BookOpen,       ready: true  },

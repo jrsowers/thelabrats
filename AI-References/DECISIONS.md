@@ -1024,3 +1024,56 @@ number on a real card.
 not too worried about having more Studs than Duds. I'm sure this will continue
 to evolve." The test that asserted an even split asserted a moment, not an
 invariant, and now checks that every award has a section instead.
+
+---
+
+## 2026-09-15 — The Weekly Recap has an author, and he is fictional
+
+**Dr. Bunsen Blitzer is the byline on every recap from week 1 forward.** A
+recap written by "the site" reads like a database; one written by a named
+correspondent reads like a broadcast. The name is a triple pun — Bunsen burner,
+blitz, Wolf Blitzer — and the persona fuses a mad scientist with a
+high-energy sportscaster so the lab framing earns jokes instead of decorating
+them. He is obviously fictional and his bio says so in his own register; the
+point is voice, never a claim that a person wrote this.
+
+Voice, process and boundaries live in `.claude/skills/weekly-recap/`. The
+governing rule is **every NFL beat must land on somebody in this league** — a
+recap of the Ravens beating the Colts is a news summary anybody can get
+elsewhere; a recap noting Derrick Henry went for 144 and three scores *and that
+Chenell is the only manager who owns him* is the reason the page exists.
+
+**The recap never states an NFL fact from memory.** The model's training data
+is behind the season it is recapping. Every score, stat line and injury in week
+1 went through a web search first, and `scripts/gather.ts` supplies every
+league number from the database. Nothing in a recap is computed by an LLM — the
+awards engine already decided who the Bench Bum is, and the prose dramatises
+that verdict rather than re-deriving it.
+
+**The pronoun check is a script, not a test.** The awards engine has a real
+test for gendered pronouns because its copy comes from templates — the same
+sentence every week, so a rule can be exact. Recap prose cannot be gated that
+way: "Colin then benched him" is correct, because *him* is Stefon Diggs. Any
+pattern strict enough to catch every violation also fires on legitimate
+sentences about NFL players, and a noisy gate gets ignored, which is worse than
+none. So it prints candidates for a human pass. On its first run it surfaced
+four lines in week 1, two of which were real violations already written.
+
+**Cover art is silhouettes, and the fallback is the point.** Caricatured
+players rendered as claymation clowns three times running; rim-lit silhouettes
+inside helmets produce the intended energy every time and cannot fail that way.
+Models also render scoreboards as garbled pseudo-digits, so the prompt both
+forbids text *and* removes the objects that would carry it. `coverImage` is
+optional — without one the cover falls back to a generated treatment, so image
+work is never the reason a finished recap sits in drafts.
+
+**The responsive suite's recap sample is derived, not pinned.** It named
+`week-0-the-lab-opens`, the shortest recap in the archive, with no featured
+image and no byline — so the suite kept passing while the cover and byline it
+was meant to cover went untested. It now resolves to the newest published
+recap, which is both the most elaborate and the one written most recently.
+
+A bug that survived all of this until somebody looked: at a fixed 64px, the
+cover's "Week 1" wrapped to two lines at 375px and landed on top of the ghost
+numeral. Nothing overflowed the viewport, so every responsive assertion passed.
+**Not every layout failure is an overflow.**

@@ -1,5 +1,6 @@
 import { readdirSync, statSync } from 'node:fs'
 import { join, relative, sep } from 'node:path'
+import { publishedRecaps } from '../../src/content/recaps'
 
 const APP_DIR = join(process.cwd(), 'src', 'app')
 
@@ -9,9 +10,15 @@ const APP_DIR = join(process.cwd(), 'src', 'app')
  * A dynamic route with no entry here is a HARD FAILURE, not a skip — silently
  * dropping a route is exactly how a page escapes the responsive net and nobody
  * notices for three weeks.
+ *
+ * The recap sample is DERIVED, not pinned. It used to name week 0, which is the
+ * shortest recap in the archive, carries no featured image and has no byline —
+ * so the suite went on passing while the cover and byline it was supposed to be
+ * checking went untested. The newest recap is both the most elaborate and the
+ * one written most recently, which makes it the one most likely to be wrong.
  */
 export const DYNAMIC_SAMPLES: Record<string, string> = {
-  '[slug]': 'week-0-the-lab-opens',
+  '[slug]': publishedRecaps()[0]?.slug ?? 'week-0-the-lab-opens',
   '[name]': 'jesse',
 }
 

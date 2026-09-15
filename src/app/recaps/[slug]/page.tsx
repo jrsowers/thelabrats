@@ -5,6 +5,7 @@ import { getLeagueOverview } from '@/lib/league/queries'
 import { recapBySlug, publishedRecaps, type RecapBlock } from '@/content/recaps'
 import { AppShell } from '@/components/navigation/app-shell'
 import { RecapCover } from '@/components/ui/recap-cover'
+import { Byline } from '@/components/ui/byline'
 import { Eyebrow } from '@/components/ui/primitives'
 
 export const dynamic = 'force-dynamic'
@@ -79,7 +80,14 @@ export default async function RecapPage({
           ← All recaps
         </Link>
 
-        <RecapCover week={recap.week} size="hero" className="mb-6 h-44 rounded-lg sm:h-56" />
+        <RecapCover
+          week={recap.week}
+          src={recap.coverImage}
+          alt={recap.coverAlt}
+          size="hero"
+          priority
+          className="mb-6 h-44 rounded-lg sm:h-56"
+        />
 
         <header className="mb-7 border-b border-border pb-5">
           <div className="flex items-center gap-2.5">
@@ -88,6 +96,11 @@ export default async function RecapPage({
           </div>
           <h1 className="display mt-2 text-[38px] leading-none sm:text-[48px]">{recap.title}</h1>
           <p className="mt-3 text-[15px] leading-relaxed text-muted">{recap.summary}</p>
+          {recap.author && (
+            <div className="mt-4">
+              <Byline author={recap.author} />
+            </div>
+          )}
         </header>
 
         <article>
@@ -95,6 +108,8 @@ export default async function RecapPage({
             <Block key={i} block={block} />
           ))}
         </article>
+
+        {recap.author && <Byline author={recap.author} variant="card" />}
 
         {(newer || older) && (
           <nav className="mt-10 flex items-stretch gap-3 border-t border-border pt-5">
