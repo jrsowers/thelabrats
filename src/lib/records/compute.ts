@@ -19,7 +19,7 @@ export * from './team'
 export * from './player'
 export * from './manager'
 
-import type { LeagueRecord, RecordGroup } from './types'
+import { RECORD_ORDER, type LeagueRecord, type RecordGroup } from './types'
 import { computeTeamRecords, type RecordMatchup, type RecordSnapshot } from './team'
 import { computePlayerRecords, POSITION_RECORD_KEYS, type RecordPlayerWeek } from './player'
 import {
@@ -83,8 +83,16 @@ export function computeRecords(inputs: RecordInputs): LeagueRecord[] {
   return [...team, ...player, ...manager]
 }
 
-export const recordsInGroup = (records: LeagueRecord[], group: RecordGroup) =>
-  records.filter((r) => r.group === group && !POSITION_RECORD_KEYS.includes(r.key))
+/** A group's records in RECORD_ORDER. Anything unlisted sorts to the end. */
+export const recordsInGroup = (records: LeagueRecord[], group: RecordGroup) => {
+  const rank = (key: string) => {
+    const i = RECORD_ORDER.indexOf(key)
+    return i === -1 ? Number.MAX_SAFE_INTEGER : i
+  }
+  return records
+    .filter((r) => r.group === group && !POSITION_RECORD_KEYS.includes(r.key))
+    .sort((a, b) => rank(a.key) - rank(b.key))
+}
 
 /** The per-position bests, in display order, as their own strip. */
 export const positionRecords = (records: LeagueRecord[]) =>

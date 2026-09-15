@@ -130,11 +130,13 @@ export function computeTeamRecords(
     key: string, label: string, tone: RecordTone, scope: RecordScope,
     format: RecordFormat,
     result: { value: number; winners: { holder: RecordHolder }[] } | null,
+    valueSuffix?: string,
   ) => {
     if (!result || result.winners.length === 0) return
     records.push({
       key, label, group: 'team', scope, tone, format,
       value: result.value,
+      valueSuffix,
       holders: result.winners.map((w) => w.holder),
     })
   }
@@ -249,9 +251,11 @@ export function computeTeamRecords(
     context: (t: TeamSeason) => string,
     pool = seasonRows,
     decimals = 2,
+    valueSuffix?: string,
   ) => {
     const withContext = pool.map((r) => ({ ...r, holder: { ...r.holder, context: context(r.t) } }))
-    add(key, label, tone, 'season', format, bestOf(withContext, (r) => valueOf(r.t), cmp, decimals))
+    add(key, label, tone, 'season', format,
+      bestOf(withContext, (r) => valueOf(r.t), cmp, decimals), valueSuffix)
   }
 
   const record = (t: TeamSeason) =>
@@ -279,12 +283,14 @@ export function computeTeamRecords(
   // Strength of schedule. Facing the league's best scorers all year is bad
   // luck, not an achievement — hence the tones, which run opposite to the
   // size of the number.
+  // The suffix is doing real work: a bare "197.42" on a schedule card reads as
+  // a score this team put up, which is the opposite of what it means.
   pickSeason('toughest_schedule', 'Toughest Schedule', 'bad', 'points',
     (t) => t.pointsAgainst / t.games, HIGH,
-    (t) => `${record(t)} against it`)
+    (t) => `${record(t)} against it`, seasonRows, 2, 'avg opp. score')
   pickSeason('easiest_schedule', 'Easiest Schedule', 'good', 'points',
     (t) => t.pointsAgainst / t.games, LOW,
-    (t) => `${record(t)} against it`)
+    (t) => `${record(t)} against it`, seasonRows, 2, 'avg opp. score')
 
   return records
 }

@@ -60,8 +60,15 @@ function RecordCard({ record, teamOf }: { record: LeagueRecord; teamOf: TeamLook
         </span>
       </div>
 
-      <div className="display mt-1 text-[32px] leading-none tnum" style={{ color: colour }}>
-        {fmtRecord(record.value, record.format)}
+      <div className="mt-1 flex flex-wrap items-baseline gap-x-2">
+        <span className="display text-[32px] leading-none tnum" style={{ color: colour }}>
+          {fmtRecord(record.value, record.format, record.signed)}
+        </span>
+        {record.valueSuffix && (
+          <span className="font-mono text-[10px] uppercase tracking-wider text-dim">
+            {record.valueSuffix}
+          </span>
+        )}
       </div>
 
       {/* Every holder is listed. In an inaugural season the all-time record and
@@ -72,21 +79,43 @@ function RecordCard({ record, teamOf }: { record: LeagueRecord; teamOf: TeamLook
           const t = teamOf.get(h.teamId)
           return (
             <li key={`${h.teamId}-${h.year}-${h.week ?? 'season'}-${i}`}>
-              <div className="flex items-center gap-2">
-                {t && (
-                  <TeamAvatar
-                    photoUrl={t.photoUrl} logoUrl={t.logoUrl} abbrev={t.abbrev}
-                    size={22} champion={t.isChampion} championYear={t.championYear}
+              {/* A player record leads with the player's face — the manager is
+                  the supporting detail there, which is the reverse of a team
+                  record. */}
+              {h.player ? (
+                <div className="flex items-center gap-2">
+                  <PlayerHeadshot
+                    espnPlayerId={h.player.espnPlayerId}
+                    name={h.player.name}
+                    size={26}
+                    teamAbbrev={h.player.nflTeam}
+                    isTeamDefense={h.player.position === 'D/ST'}
                   />
-                )}
-                <span className="truncate text-[13px] font-medium">{t?.name ?? '—'}</span>
-              </div>
-              {h.player && (
-                <div className="mt-0.5 truncate pl-[30px] text-[12px] text-muted">
-                  {h.player.name}
+                  <div className="min-w-0">
+                    <div className="truncate text-[13px] font-medium">{h.player.name}</div>
+                    <div className="flex items-center gap-1.5">
+                      {t && (
+                        <TeamAvatar
+                          photoUrl={t.photoUrl} logoUrl={t.logoUrl} abbrev={t.abbrev}
+                          size={14} champion={t.isChampion} championYear={t.championYear}
+                        />
+                      )}
+                      <span className="truncate text-[11.5px] text-muted">{t?.name ?? '—'}</span>
+                    </div>
+                  </div>
+                </div>
+              ) : (
+                <div className="flex items-center gap-2">
+                  {t && (
+                    <TeamAvatar
+                      photoUrl={t.photoUrl} logoUrl={t.logoUrl} abbrev={t.abbrev}
+                      size={22} champion={t.isChampion} championYear={t.championYear}
+                    />
+                  )}
+                  <span className="truncate text-[13px] font-medium">{t?.name ?? '—'}</span>
                 </div>
               )}
-              <div className="mt-0.5 pl-[30px] font-mono text-[10.5px] text-dim tnum">
+              <div className={`mt-0.5 font-mono text-[10.5px] text-dim tnum ${h.player ? 'pl-[34px]' : 'pl-[30px]'}`}>
                 {h.week == null ? `${h.year} season` : `Week ${h.week}, ${h.year}`}
                 {h.context && ` · ${h.context}`}
               </div>
@@ -309,6 +338,60 @@ export default async function RecordsPage() {
         </section>
       ) : (
         <>
+          {/* ============ BEST BY POSITION ============ */}
+          {/* Top of the record book, per James. It is the most scannable thing
+              on the page — one row per position, six different names — so it
+              earns the first screen where a wall of cards would not. */}
+          {kings.length > 0 && (
+            <section className="mb-11">
+              <div className="mb-4 flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1 border-b border-border pb-1.5">
+                <h2 className="display text-2xl">Best Performances Ever, By Position</h2>
+                <span className="font-mono text-[10.5px] uppercase tracking-wider text-dim">
+                  Started players only
+                </span>
+              </div>
+              <ul className="grid min-w-0 gap-2 sm:grid-cols-2">
+                {kings.map((r) => {
+                  const h = r.holders[0]
+                  const t = byId.get(h.teamId)
+                  return (
+                    <li
+                      key={r.key}
+                      className="flex min-w-0 items-center gap-2.5 rounded-lg border border-border bg-surface px-3 py-2.5"
+                    >
+                      <span className="w-8 shrink-0 font-mono text-[10px] font-bold uppercase tracking-[0.1em] text-dim">
+                        {r.label.replace('Best ', '')}
+                      </span>
+                      {h.player && (
+                        <PlayerHeadshot
+                          espnPlayerId={h.player.espnPlayerId}
+                          name={h.player.name}
+                          size={28}
+                          teamAbbrev={h.player.nflTeam}
+                          isTeamDefense={h.player.position === 'D/ST'}
+                        />
+                      )}
+                      <div className="min-w-0 flex-1">
+                        <div className="display truncate text-[15px] leading-tight">
+                          {h.player?.name ?? '—'}
+                        </div>
+                        <div className="truncate font-mono text-[10px] uppercase tracking-wider text-dim">
+                          {t?.name ?? '—'} · W{h.week} {h.year}
+                        </div>
+                      </div>
+                      <div
+                        className="display shrink-0 text-[17px] leading-none tnum"
+                        style={{ color: 'var(--live)' }}
+                      >
+                        {fmtRecord(r.value, r.format)}
+                      </div>
+                    </li>
+                  )
+                })}
+              </ul>
+            </section>
+          )}
+
           {GROUPS.map((g) => {
             const inGroup = recordsInGroup(records, g.key)
             if (inGroup.length === 0) return null
@@ -326,62 +409,6 @@ export default async function RecordsPage() {
                   ))}
                 </div>
 
-                {/* The per-position bests ride under the player group as a
-                    strip. Six more cards would bury the records that took a
-                    judgement call under a positional leaderboard — the same
-                    reasoning as Position Kings on Studs & Duds. */}
-                {g.key === 'player' && kings.length > 0 && (
-                  <div className="mt-5">
-                    <div className="mb-2.5 flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
-                      <h3 className="display text-lg">Best Ever, By Position</h3>
-                      <span className="font-mono text-[10px] uppercase tracking-wider text-dim">
-                        Started only
-                      </span>
-                    </div>
-                    {/* One column until 640px. At 320 the row is position +
-                        headshot + two lines of text + a five-character score,
-                        which is already the tightest thing on the page. */}
-                    <ul className="grid min-w-0 gap-2 sm:grid-cols-2">
-                      {kings.map((r) => {
-                        const h = r.holders[0]
-                        const t = byId.get(h.teamId)
-                        return (
-                          <li
-                            key={r.key}
-                            className="flex min-w-0 items-center gap-2.5 rounded-lg border border-border bg-surface px-3 py-2.5"
-                          >
-                            <span className="w-8 shrink-0 font-mono text-[10px] font-bold uppercase tracking-[0.1em] text-dim">
-                              {r.label.replace('Best ', '')}
-                            </span>
-                            {h.player && (
-                              <PlayerHeadshot
-                                espnPlayerId={h.player.espnPlayerId}
-                                name={h.player.name}
-                                size={28}
-                                teamAbbrev={h.player.nflTeam}
-                                isTeamDefense={h.player.position === 'D/ST'}
-                              />
-                            )}
-                            <div className="min-w-0 flex-1">
-                              <div className="display truncate text-[15px] leading-tight">
-                                {h.player?.name ?? '—'}
-                              </div>
-                              <div className="truncate font-mono text-[10px] uppercase tracking-wider text-dim">
-                                {t?.name ?? '—'} · W{h.week} {h.year}
-                              </div>
-                            </div>
-                            <div
-                              className="display shrink-0 text-[17px] leading-none tnum"
-                              style={{ color: 'var(--live)' }}
-                            >
-                              {fmtRecord(r.value, r.format)}
-                            </div>
-                          </li>
-                        )
-                      })}
-                    </ul>
-                  </div>
-                )}
               </section>
             )
           })}

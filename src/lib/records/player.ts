@@ -59,12 +59,14 @@ export function computePlayerRecords(rows: RecordPlayerWeek[]): LeagueRecord[] {
     pool: ReturnType<typeof entry>[],
     valueOf: (r: RecordPlayerWeek) => number,
     cmp: (a: number, b: number) => boolean,
+    signed?: '+' | '-',
   ) => {
     const best = bestOf(pool, (e) => valueOf(e.r), cmp)
     if (!best || best.winners.length === 0) return
     records.push({
       key, label, group: 'player', scope: 'week', tone, format: 'points',
       value: best.value,
+      signed,
       holders: best.winners.map((w) => w.holder),
     })
   }
@@ -85,13 +87,23 @@ export function computePlayerRecords(rows: RecordPlayerWeek[]): LeagueRecord[] {
       .map((r) => entry(r, `${r.position} · ${r.nflTeam} · projected ${f(proj(r))}`)),
     pts, LOW)
 
+  // Both are stored as magnitudes and labelled with a sign, because the
+  // direction IS the record: +21.44 and −19.00 are opposite stories.
   add('biggest_overperformance', 'Biggest Over-Performance', 'good',
     withProj.map((r) => entry(r, `${f(proj(r))} projected, ${f(pts(r))} scored`)),
-    (r) => pts(r) - proj(r), HIGH)
+    (r) => pts(r) - proj(r), HIGH, '+')
 
   add('biggest_underperformance', 'Biggest Under-Performance', 'bad',
     withProj.map((r) => entry(r, `${f(proj(r))} projected, ${f(pts(r))} scored`)),
-    (r) => proj(r) - pts(r), HIGH)
+    (r) => proj(r) - pts(r), HIGH, '-')
+
+  // The best game nobody got to count. IR is excluded — a player who could not
+  // legally be started is not a decision anybody made, which is the same line
+  // The Understudy draws over on Studs & Duds.
+  const benched = rows
+    .filter((r) => !r.isStarter && r.lineupSlotId !== 21 && r.actualPoints != null)
+    .map((r) => entry(r, `${r.position} · ${r.nflTeam} · never left the bench`))
+  add('best_bench_game', 'Most Points From a Bench', 'bad', benched, pts, HIGH)
 
   for (const pos of POSITIONS) {
     const pool = started.filter((r) => r.position === pos)

@@ -139,7 +139,7 @@ export function computeManagerRecords(
     perSeason.set(sn, { n: (perSeason.get(sn)?.n ?? 0) + 1, year: t.year, teamId: t.seasonTeamId })
   }
 
-  add('most_moves_week', 'Most Roster Moves, One Week', 'bad', 'week', 'count',
+  add('most_moves_week', 'Most Roster Moves In One Week', 'bad', 'week', 'count',
     bestOf(
       [...perWeek.values()].map((v) => ({
         n: v.n,
@@ -147,7 +147,7 @@ export function computeManagerRecords(
       })),
       (r) => r.n, HIGH, 0,
     ))
-  add('most_moves_season', 'Most Roster Moves, One Season', 'bad', 'season', 'count',
+  add('most_moves_season', 'Most Roster Moves In A Season', 'bad', 'season', 'count',
     bestOf(
       [...perSeason.values()].map((v) => ({
         n: v.n,
@@ -163,17 +163,21 @@ export function computeManagerRecords(
   const scoreOf = new Map<string, RecordPlayerWeek>()
   for (const p of players) scoreOf.set(`${p.year}:${p.week}:${p.seasonTeamId}:${p.espnPlayerId}`, p)
 
+  // ⚠️ STARTED, NOT JUST ACQUIRED. A pickup left on the bench scored nothing
+  // that mattered — it belongs to The Waiver Wire Wizard's punchline, not to a
+  // record about influencing a matchup. James called this: the record is for
+  // the claim that actually changed a result.
   const pickups: { pts: number; holder: RecordHolder }[] = []
   for (const t of moves) {
     if (t.kind !== 'WAIVER' && t.kind !== 'FREE_AGENT') continue
     for (const id of t.acquiredPlayerIds) {
       const row = scoreOf.get(`${t.year}:${t.week}:${t.seasonTeamId}:${id}`)
-      if (!row || row.actualPoints == null) continue
+      if (!row || row.actualPoints == null || !row.isStarter) continue
       pickups.push({
         pts: Number(row.actualPoints),
         holder: {
           teamId: t.seasonTeamId, year: t.year, week: t.week,
-          context: `${row.isStarter ? 'started' : 'left on the bench'} the week of the claim`,
+          context: 'claimed and started the same week',
           player: {
             espnPlayerId: row.espnPlayerId, name: row.name,
             position: row.position, nflTeam: row.nflTeam,
@@ -186,27 +190,42 @@ export function computeManagerRecords(
     bestOf(pickups, (p) => p.pts, HIGH))
 
   // ------------------------------------------------------ draft steal and bust
-  // Season points against draft position. Comparing a pick to the average
-  // return of its own slot needs more history than one season, so this uses the
-  // simpler, honest version: total points produced for the team that drafted
-  // him, contrasted with where he went.
-  const seasonPointsFor = new Map<string, number>()
+  // MEASURED AGAINST PROJECTION, not against raw points.
+  //
+  // The first version used raw season points with a round filter — steals had
+  // to come after round three, busts had to be first-rounders. That measures
+  // draft POSITION, not judgement: a fourth-rounder who was always going to be
+  // good is not a steal, and a first-rounder who got hurt in week 2 is not a
+  // bust in any sense the drafter is responsible for.
+  //
+  // Points minus the season's own projections asks the right question — how
+  // far from expectation did this pick land — and needs no arbitrary round
+  // cutoff, so it works identically in a 10-team league or a 16-round one.
+  const seasonActual = new Map<string, number>()
+  const seasonProjected = new Map<string, number>()
   for (const p of players) {
     if (p.actualPoints == null) continue
     const key = `${p.year}:${p.seasonTeamId}:${p.espnPlayerId}`
-    seasonPointsFor.set(key, (seasonPointsFor.get(key) ?? 0) + Number(p.actualPoints))
+    seasonActual.set(key, (seasonActual.get(key) ?? 0) + Number(p.actualPoints))
+    seasonProjected.set(key, (seasonProjected.get(key) ?? 0) + Number(p.projectedPoints ?? 0))
   }
 
   const drafted = draftPicks
-    .map((d) => ({
-      d,
-      pts: seasonPointsFor.get(`${d.year}:${d.seasonTeamId}:${d.espnPlayerId}`) ?? 0,
-    }))
-    .map(({ d, pts }) => ({
-      d, pts,
+    .map((d) => {
+      const key = `${d.year}:${d.seasonTeamId}:${d.espnPlayerId}`
+      const actual = seasonActual.get(key)
+      const projected = seasonProjected.get(key) ?? 0
+      return { d, actual, projected }
+    })
+    // A pick with no scoring rows never played FOR THIS TEAM — dropped before
+    // kickoff, or traded away. Judging the draft on somebody else's roster
+    // would be measuring the wrong manager.
+    .filter((r): r is typeof r & { actual: number } => r.actual != null)
+    .map(({ d, actual, projected }) => ({
+      delta: actual - projected,
       holder: {
         teamId: d.seasonTeamId, year: d.year, week: null,
-        context: `pick ${d.overall} · ${f(pts)} pts`,
+        context: `pick ${d.overall} \u00b7 ${f(actual)} scored vs ${f(projected)} projected`,
         player: {
           espnPlayerId: d.espnPlayerId, name: d.name,
           position: d.position, nflTeam: d.nflTeam,
@@ -214,26 +233,24 @@ export function computeManagerRecords(
       } satisfies RecordHolder,
     }))
 
-  if (drafted.length > 0) {
-    // Steal: the most points from outside the first three rounds.
-    const teamsPerRound = new Set(draftPicks.map((d) => d.seasonTeamId)).size || 12
-    const lateCutoff = teamsPerRound * 3
-    add('draft_steal', 'Biggest Draft Steal', 'good', 'season', 'points',
-      bestOf(drafted.filter((r) => r.d.overall > lateCutoff), (r) => r.pts, HIGH))
-
-    // Bust: the fewest points from a first-round pick. Deliberately NOT
-    // "lowest scorer overall" — that is always somebody's last pick, which is
-    // not a story about anybody's judgement.
-    const firstRound = drafted.filter((r) => r.d.overall <= teamsPerRound)
-    const bust = bestOf(firstRound, (r) => r.pts, (a, b) => a < b)
-    if (bust && bust.winners.length > 0) {
-      records.push({
-        key: 'draft_bust', label: 'Biggest Draft Bust', group: 'manager',
-        scope: 'season', tone: 'bad', format: 'points',
-        value: bust.value,
-        holders: bust.winners.map((w) => w.holder),
-      })
-    }
+  const steal = bestOf(drafted, (r) => r.delta, HIGH)
+  if (steal && steal.value > 0) {
+    records.push({
+      key: 'draft_steal', label: 'Biggest Draft Steal', group: 'manager',
+      scope: 'season', tone: 'good', format: 'points',
+      value: steal.value, signed: '+', valueSuffix: 'vs projection',
+      holders: steal.winners.map((w) => w.holder),
+    })
+  }
+  const bust = bestOf(drafted, (r) => r.delta, (a, b) => a < b)
+  if (bust && bust.value < 0) {
+    records.push({
+      key: 'draft_bust', label: 'Biggest Draft Bust', group: 'manager',
+      scope: 'season', tone: 'bad', format: 'points',
+      // Stored as a magnitude and labelled, like the other signed records.
+      value: Math.abs(bust.value), signed: '-', valueSuffix: 'vs projection',
+      holders: bust.winners.map((w) => w.holder),
+    })
   }
 
   // ------------------------------------------------------------------ awards

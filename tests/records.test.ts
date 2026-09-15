@@ -201,3 +201,110 @@ describe('records only count weeks that are actually settled', () => {
     expect(out.find((r) => r.key === 'most_moves_week')).toBeUndefined()
   })
 })
+
+describe('records that measure a distance carry their direction', () => {
+  const pw = (
+    espnPlayerId: number, name: string, actual: number, projected: number,
+    isStarter = true, lineupSlotId = 0,
+  ) => ({
+    year: 2026, week: 1, seasonTeamId: 1, espnPlayerId, name,
+    position: 'QB', nflTeam: 'CHI', isStarter, lineupSlotId,
+    eligibleSlots: [0], actualPoints: actual, projectedPoints: projected,
+  })
+
+  const out = computeRecords({
+    matchups: [g(1, 1, 2, 100, 90)],
+    players: [
+      pw(1, 'Over Achiever', 40, 20),
+      pw(2, 'Under Achiever', 2, 22),
+      pw(3, 'Bench Hero', 38, 12, false, 20),
+      pw(4, 'On IR', 99, 10, false, 21),
+    ],
+  })
+  const byKey = new Map(out.map((r) => [r.key, r]))
+
+  it('labels over- and under-performance with a sign', () => {
+    // Both are stored as magnitudes; the sign is what tells them apart.
+    expect(byKey.get('biggest_overperformance')?.value).toBeCloseTo(20)
+    expect(byKey.get('biggest_overperformance')?.signed).toBe('+')
+    expect(byKey.get('biggest_underperformance')?.value).toBeCloseTo(20)
+    expect(byKey.get('biggest_underperformance')?.signed).toBe('-')
+  })
+
+  it('finds the best game nobody started, and ignores IR', () => {
+    // A player on IR could not legally be started, so leaving him there was
+    // not a decision — the same line The Understudy draws.
+    const bench = byKey.get('best_bench_game')
+    expect(bench?.value).toBeCloseTo(38)
+    expect(bench?.holders[0].player?.name).toBe('Bench Hero')
+  })
+
+  it('gives the schedule records a unit, so the number is not read as a score', () => {
+    const r = computeRecords({ matchups: [g(1, 1, 2, 100, 90)] })
+    expect(r.find((x) => x.key === 'toughest_schedule')?.valueSuffix).toBe('avg opp. score')
+  })
+})
+
+describe('manager records judge the decision, not the outcome', () => {
+  const base = {
+    year: 2026, week: 1, seasonTeamId: 1, position: 'WR', nflTeam: 'BUF',
+    eligibleSlots: [4], lineupSlotId: 4, projectedPoints: 5,
+  }
+
+  it('counts a waiver pickup only when it was actually started', () => {
+    // A pickup left on the bench influenced nothing. That is The Waiver Wire
+    // Wizard's punchline, not a record about changing a result.
+    const out = computeRecords({
+      matchups: [g(1, 1, 2, 100, 90)],
+      players: [
+        { ...base, espnPlayerId: 1, name: 'Started Pickup', isStarter: true, actualPoints: 12 },
+        { ...base, espnPlayerId: 2, name: 'Benched Pickup', isStarter: false, lineupSlotId: 20, actualPoints: 40 },
+      ],
+      transactions: [
+        { year: 2026, week: 1, seasonTeamId: 1, kind: 'WAIVER', acquiredPlayerIds: [1, 2] },
+      ],
+    })
+    const r = out.find((x) => x.key === 'best_waiver_pickup')
+    expect(r?.value).toBeCloseTo(12)
+    expect(r?.holders[0].player?.name).toBe('Started Pickup')
+  })
+
+  it('rates a draft pick against its projection, not its round', () => {
+    // The old version needed a round cutoff: steals had to come late, busts had
+    // to be first-rounders. That measures draft POSITION. This measures how far
+    // from expectation the pick landed, which is the actual question.
+    const out = computeRecords({
+      matchups: [g(1, 1, 2, 100, 90)],
+      players: [
+        { ...base, espnPlayerId: 1, name: 'Late Bloomer', isStarter: true, actualPoints: 40, projectedPoints: 10 },
+        { ...base, espnPlayerId: 2, seasonTeamId: 2, name: 'Early Flop', isStarter: true, actualPoints: 1, projectedPoints: 25 },
+      ],
+      draftPicks: [
+        { year: 2026, seasonTeamId: 1, espnPlayerId: 1, name: 'Late Bloomer', position: 'WR', nflTeam: 'BUF', overall: 140 },
+        { year: 2026, seasonTeamId: 2, espnPlayerId: 2, name: 'Early Flop', position: 'WR', nflTeam: 'BUF', overall: 2 },
+      ],
+    })
+    const steal = out.find((x) => x.key === 'draft_steal')
+    const bust = out.find((x) => x.key === 'draft_bust')
+    expect(steal?.value).toBeCloseTo(30)
+    expect(steal?.signed).toBe('+')
+    expect(steal?.holders[0].player?.name).toBe('Late Bloomer')
+    expect(bust?.value).toBeCloseTo(24)
+    expect(bust?.signed).toBe('-')
+    expect(bust?.holders[0].player?.name).toBe('Early Flop')
+  })
+
+  it('ignores a drafted player who never played for the team that drafted him', () => {
+    // Dropped before kickoff or traded away. Judging the draft on somebody
+    // else's roster measures the wrong manager.
+    const out = computeRecords({
+      matchups: [g(1, 1, 2, 100, 90)],
+      players: [],
+      draftPicks: [
+        { year: 2026, seasonTeamId: 1, espnPlayerId: 9, name: 'Never Played', position: 'WR', nflTeam: 'BUF', overall: 1 },
+      ],
+    })
+    expect(out.find((x) => x.key === 'draft_steal')).toBeUndefined()
+    expect(out.find((x) => x.key === 'draft_bust')).toBeUndefined()
+  })
+})

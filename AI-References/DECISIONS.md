@@ -1272,3 +1272,33 @@ Position Kings is a strip on Studs & Duds.
 receiving yards are not derivable from what we store — we keep fantasy points,
 not NFL box-score lines. It needs a new table and a statId map. Deliberately
 skipped.
+
+**2026-09-15, record book refinements.** James's pass over the first build.
+
+**Draft steal and bust are measured against PROJECTION, not raw points.** The
+first version needed arbitrary round cutoffs — steals had to come after round
+three, busts had to be first-rounders — which measures draft *position* rather
+than judgement. A fourth-rounder who was always going to be good is not a steal;
+a first-rounder who got hurt in week 2 is not a bust anybody is responsible for.
+Season points minus season projections asks the right question and needs no
+cutoff, so it works the same in a 10-team league or a 16-round one. A pick with
+no scoring rows for the team that drafted him is skipped: dropped or traded, and
+judging the draft on somebody else's roster measures the wrong manager.
+
+**Best Waiver Pickup requires the player to have been STARTED.** James: "because
+they actually influenced the outcome of the matchup." A claim left on the bench
+is The Waiver Wire Wizard's punchline, not a record.
+
+**`signed` and `valueSuffix` are display metadata on the record, not baked into
+the value.** Magnitudes stay positive and the sign is a label, so sorting and
+comparison never have to care about direction. The suffix exists because a bare
+"197.42" on a schedule card reads as a score that team put up, which is the
+opposite of what it means.
+
+**`RECORD_ORDER` is explicit.** Opposites have to sit next to each other —
+largest win beside largest defeat, narrowest beside narrowest — and computation
+order is an accident of how a file happens to be written.
+
+**Best Performances Ever, By Position moved to the top.** It is the most
+scannable thing on the page: one row per position, six different names, no
+reading required. It earns the first screen where a wall of cards does not.

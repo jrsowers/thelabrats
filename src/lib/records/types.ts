@@ -59,18 +59,72 @@ export interface LeagueRecord {
   tone: RecordTone
   format: RecordFormat
   value: number
+  /**
+   * Unit shown beside the number. Without it a bare "197.42" on a schedule
+   * record reads as a score somebody put up rather than the average their
+   * opponents did.
+   */
+  valueSuffix?: string
+  /**
+   * Print an explicit + or −. Only for records that measure a DISTANCE FROM
+   * something, where the direction is the whole point: 21.44 over projection
+   * and 19.00 under it are different stories told by the same digits.
+   */
+  signed?: '+' | '-'
   /** At least one. More than one is a tie, and ties are expected early on. */
   holders: RecordHolder[]
 }
 
-export const fmtRecord = (value: number, format: RecordFormat): string => {
-  switch (format) {
-    case 'points': return value.toFixed(2)
-    case 'percent': return `${(value * 100).toFixed(1)}%`
-    case 'places': return String(Math.round(value))
-    case 'count': return String(Math.round(value))
-  }
+export const fmtRecord = (
+  value: number, format: RecordFormat, signed?: '+' | '-',
+): string => {
+  const body = (() => {
+    switch (format) {
+      case 'points': return value.toFixed(2)
+      case 'percent': return `${(value * 100).toFixed(1)}%`
+      case 'places': return String(Math.round(value))
+      case 'count': return String(Math.round(value))
+    }
+  })()
+  // Values are stored as magnitudes, so the sign is a label rather than
+  // arithmetic — an under-performance of 19.00 is stored positive and shown
+  // as −19.00.
+  return signed ? `${signed === '-' ? '\u2212' : '+'}${body}` : body
 }
+
+/**
+ * Display order within a group.
+ *
+ * Explicit, because the interesting pairs are opposites and they have to sit
+ * next to each other: the largest win beside the largest defeat, the narrowest
+ * beside the narrowest. Computation order is an accident of how the file is
+ * written and should never decide layout.
+ */
+export const RECORD_ORDER: string[] = [
+  // Team
+  'highest_score', 'lowest_score',
+  'highest_losing', 'lowest_winning',
+  'largest_margin', 'largest_defeat',
+  'smallest_margin', 'smallest_defeat',
+  'highest_combined', 'lowest_combined',
+  'largest_comeback',
+  'most_wins', 'most_losses',
+  'best_win_pct',
+  'longest_win_streak', 'longest_losing_streak',
+  'most_points_season', 'fewest_points_season',
+  'best_scoring_avg', 'worst_scoring_avg',
+  'toughest_schedule', 'easiest_schedule',
+  // Manager
+  'most_bench_points',
+  'best_waiver_pickup',
+  'draft_steal', 'draft_bust',
+  'most_moves_week', 'most_moves_season',
+  'most_studs', 'most_duds',
+  // Player
+  'best_player_game', 'worst_player_game',
+  'biggest_overperformance', 'biggest_underperformance',
+  'best_bench_game',
+]
 
 /**
  * Collect every entry sharing the best value.
