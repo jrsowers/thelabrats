@@ -62,10 +62,17 @@ type Builder = (ctx: CommentaryContext) => Segment[]
 
 const BUILDERS: Record<string, Builder> = {
   // ---- STUDS ----
-  mastermind: (c) => [
-    b(c.managerFirst), t(' left just '), b(`${c.value} points`),
-    t(' on the bench — the tightest lineup anyone put out this week. Surgical.'),
-  ],
+  // The value is the gap to the best LEGAL lineup, not the bench's total, so
+  // the copy has to say "additional" or it reads as a claim about the bench.
+  mastermind: (c) => (Number(c.value) === 0
+    ? [
+        b(c.managerFirst), t(' started their optimal lineup outright. '),
+        t('Not one additional point was available anywhere on the bench. Surgical.'),
+      ]
+    : [
+        b(c.managerFirst), t(' came closest to their optimal lineup this week, leaving just '),
+        b(`${c.value} additional points`), t(' on the bench. Surgical.'),
+      ]),
   waiver_wire_wizard: (c) => [
     b(c.managerFirst), t(' picked up '), ...player(c),
     t(' off the wire and he went off for '), b(`${c.value} pts`), t('. Slay, king!'),
@@ -133,8 +140,8 @@ const BUILDERS: Record<string, Builder> = {
     b(`${c.value} points`), t('. Guess their team forgot to get off the bus!'),
   ],
   bench_bum: (c) => [
-    b(c.managerFirst), t(' left '), b(`${c.value} points`),
-    t(' sitting on the bench. The winning lineup was right there the whole time.'),
+    b(c.managerFirst), t('\u2019s optimal lineup was worth '), b(`${c.value} more points`),
+    t('. It was sitting on the bench the whole time.'),
   ],
   free_fall: (c) => [
     b(c.managerFirst), t(' fell '), b(`${c.value} places`),

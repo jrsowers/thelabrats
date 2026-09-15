@@ -328,10 +328,12 @@ export function computeWeeklyAwards(
       metricValue: f1(tightest.gap),
       headline: tightest.gap === 0
         ? 'Started the best lineup their roster allowed. Nothing left behind.'
-        : `Left just ${f1(tightest.gap)} on the bench — the tightest lineup of the week.`,
+        : `Closest to an optimal lineup — only ${f1(tightest.gap)} more was available.`,
+      // Best possible first: it is the yardstick, and the actual lineup reads
+      // as a comparison against it rather than as a standalone score.
       supporting: [
-        { label: 'Started', value: f1(tightest.started) },
         { label: 'Best possible', value: f1(tightest.best) },
+        { label: 'Actual lineup', value: f1(tightest.started) },
       ],
     })
 
@@ -343,10 +345,10 @@ export function computeWeeklyAwards(
         teamId: loosest.teamId,
         opponentId: null,
         metricValue: f1(loosest.gap),
-        headline: `Left ${f1(loosest.gap)} points sitting on the bench.`,
+        headline: `The optimal lineup was worth ${f1(loosest.gap)} more.`,
         supporting: [
-          { label: 'Started', value: f1(loosest.started) },
           { label: 'Best possible', value: f1(loosest.best) },
+          { label: 'Actual lineup', value: f1(loosest.started) },
           ...(loosest.missed
             ? [{ label: 'Should have started', value: loosest.missed }]
             : []),

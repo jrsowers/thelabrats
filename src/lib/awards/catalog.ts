@@ -85,10 +85,14 @@ export const AWARDS: AwardDef[] = [
   // result, it is shown beneath as evidence rather than as the recipient.
   {
     key: 'mastermind', name: 'The Mastermind', section: 'STUDS', category: 'MANAGER',
-    blurb: 'Left the fewest points sitting on their bench.',
+    // ⚠️ NOT "fewest points on the bench", which is what this said until
+    // 2026-09-15. The number is the gap to the best LEGAL lineup, so a manager
+    // whose bench scored 20 can still sit at zero — none of those twenty
+    // points were reachable from a slot those players were eligible for.
+    blurb: 'Started their most optimal lineup this week.',
     formula: 'Smallest gap between actual starter points and the highest-scoring legal lineup. Needs a slot-aware optimizer — greedy bench substitution is wrong in a superflex league, where the OP slot competes with QB for the same players.',
     needs: ['PLAYER_SCORES', 'LINEUP_OPTIMIZER'], capture: 'WEEKLY_BOXSCORE',
-    metricLabel: 'Points left on bench',
+    metricLabel: 'Points left behind',
   },
   {
     key: 'waiver_wire_wizard', name: 'The Waiver Wire Wizard', section: 'STUDS', category: 'MANAGER',
@@ -216,7 +220,9 @@ export const AWARDS: AwardDef[] = [
   },
   {
     key: 'bench_bum', name: 'The Bench Bum', section: 'DUDS', category: 'MANAGER',
-    blurb: 'Left the most points sitting on their bench.',
+    // Same correction as The Mastermind: this is the gap to the best legal
+    // lineup, not the bench's raw total.
+    blurb: 'Furthest from their optimal lineup this week.',
     formula: 'Largest gap between actual starter points and the highest-scoring legal lineup — the inverse of The Mastermind.',
     needs: ['PLAYER_SCORES', 'LINEUP_OPTIMIZER'], capture: 'WEEKLY_BOXSCORE',
     metricLabel: 'Points left behind',

@@ -791,3 +791,75 @@ describe('commentary never assumes a manager’s gender', () => {
     expect(bare).not.toMatch(/\bhis flex\b/)
   })
 })
+
+describe('The Mastermind is not about bench points', () => {
+  const QB = 0, RB = 2, WR = 4, BE = 20
+  const SLOTS = { [QB]: 1, [RB]: 1, [WR]: 1, [BE]: 5 }
+
+  const p = (
+    teamId: number, id: number, name: string, slot: number,
+    points: number, eligibleSlots: number[],
+  ): AwardPlayer => ({
+    seasonTeamId: teamId, espnPlayerId: id, name, position: 'RB', nflTeam: 'DAL',
+    isStarter: slot !== BE, lineupSlotId: slot, eligibleSlots,
+    actualPoints: points, projectedPoints: 10,
+  })
+
+  it('gives a zero gap to a manager whose bench scored plenty', () => {
+    // The case that exposed the wrong copy. Doug's bench scored over twenty
+    // points in week 1 and his gap was still genuinely zero: none of those
+    // players was eligible for a slot where they would have outscored the
+    // starter in it. "Left the fewest points on the bench" was a lie about
+    // this exact roster.
+    const team = [
+      p(1, 11, 'QB1', QB, 25, [QB]),
+      p(1, 12, 'RB1', RB, 20, [RB]),
+      p(1, 13, 'WR1', WR, 18, [WR]),
+      // A 22-point bench, none of it reachable: this player can only fill QB,
+      // and the QB already in the lineup outscored him.
+      p(1, 14, 'Backup QB', BE, 22, [QB]),
+    ]
+    // A rival who genuinely left points behind, so the award has competition.
+    const rival = [
+      p(2, 21, 'QB1', QB, 15, [QB]),
+      p(2, 22, 'RB1', RB, 4, [RB]),
+      p(2, 23, 'WR1', WR, 9, [WR]),
+      p(2, 24, 'Benched Star', BE, 30, [RB]),
+    ]
+
+    const out = new Map(
+      computeWeeklyAwards(week1, 1, [...team, ...rival], [], SLOTS, []).map((a) => [a.key as string, a]),
+    )
+    const mastermind = out.get('mastermind')!
+    expect(mastermind.teamId).toBe(1)
+    expect(mastermind.metricValue).toBe('0.0')
+
+    // And the loser of the same measure is the one who really did leave points.
+    expect(out.get('bench_bum')!.teamId).toBe(2)
+    expect(out.get('bench_bum')!.metricValue).toBe('26.0')
+  })
+
+  it('says "additional" rather than claiming the bench total', () => {
+    const zero = buildCommentary('mastermind', { managerFirst: 'Doug', teamName: 'X', value: '0.0' })
+      .map((s) => s.text).join('')
+    expect(zero).toMatch(/optimal lineup outright/)
+    expect(zero).not.toMatch(/left just 0\.0 points on the bench/)
+
+    const some = buildCommentary('mastermind', { managerFirst: 'Doug', teamName: 'X', value: '1.9' })
+      .map((s) => s.text).join('')
+    expect(some).toMatch(/1\.9 additional points/)
+  })
+
+  it('shows the best possible lineup above the actual one', () => {
+    const team = [
+      p(1, 11, 'QB1', QB, 25, [QB]),
+      p(1, 12, 'RB1', RB, 4, [RB]),
+      p(1, 13, 'WR1', WR, 9, [WR]),
+      p(1, 14, 'Benched', BE, 30, [RB]),
+    ]
+    const a = computeWeeklyAwards(week1, 1, team, [], SLOTS, [])
+      .find((x) => x.key === 'mastermind')!
+    expect(a.supporting[0].label).toBe('Best possible')
+    expect(a.supporting[1].label).toBe('Actual lineup')
+  })
+})
