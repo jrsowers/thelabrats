@@ -1145,3 +1145,12 @@ That block also broke `check-pronouns.ts`, which read `b.text` for anything that
 was not a stat — and stayed silent under `tsc` because scripts in `.claude/` sit
 outside the app's tsconfig. It switches exhaustively now with a `never` default,
 so the next block type is a compile error rather than a crash.
+
+**A metaphor Burner has not earned is worse than none.** The Darnold let-off
+first read "That was not a blunder. That was weather, and I do not roast the
+weather." James: "What does the weather have to do with any of this?" Nothing —
+it had no setup anywhere in the piece and no connection to a laboratory, so the
+let-off landed on an image the reader had to supply themselves. Rewritten in his
+own vocabulary: *"The experiment simply lost its subject on the fifth snap... I
+roast bad methodology. I do not roast a specimen walking out of the building."*
+`voice.md` now says it: when Burner reaches for a metaphor it comes from the lab.

@@ -104,7 +104,7 @@ export const RECAPS: Recap[] = [
       },
       {
         type: 'paragraph',
-        text: 'Four managers in this league had a stake in that football game.',
+        text: 'Four managers in this league had a stake in that game.',
       },
       { type: 'paragraph', text: 'Two of them played it correctly.' },
       {
@@ -127,7 +127,7 @@ export const RECAPS: Recap[] = [
       { type: 'heading', text: 'SEAHAWKS 13, PATRIOTS 10 — Five Snaps' },
       {
         type: 'paragraph',
-        text: 'The defending champions opened their title defense, and Sam Darnold’s afternoon lasted five snaps before a hip injury ended it. Drew Lock came in, went 16 of 22 for 187 and a score, and Seattle ground out thirteen unanswered to win a rock fight. No timetable on Darnold. That is the entire medical report, it is not funny, and I am not going to make it funny.',
+        text: 'The defending champions opened their title defense, and Sam Darnold’s afternoon lasted five snaps before a hip injury ended it. Drew Lock came in, went 16 of 22 for 187 and a score, and Seattle ground out thirteen unanswered. No timetable on Darnold. That is the entire medical report, it is not funny, and I am not going to make it funny.',
       },
       {
         type: 'paragraph',
@@ -151,7 +151,7 @@ export const RECAPS: Recap[] = [
       { type: 'paragraph', text: 'James lost by 2.6.' },
       {
         type: 'paragraph',
-        text: 'I am not going to insult a room full of adults by connecting those three sentences. I am going to leave them stacked exactly where they are, like a body.',
+        text: 'I am not going to insult a room full of adults by connecting those three sentences. I will leave them stacked where they are, like a body.',
       },
       { type: 'heading', text: 'THE SCOREBOARD' },
       {
@@ -205,7 +205,7 @@ export const RECAPS: Recap[] = [
       { type: 'paragraph', text: 'Tyler drew the champion. Tyler lost by 12.7. Tyler also did all of that while one of ten starting slots returned half a point.' },
       {
         type: 'paragraph',
-        text: 'And before anybody gets clever in the group chat: that was a defensible Sunday-morning decision made by somebody with no access to the future. Young and Rodgers sat behind Darnold projected 19.4 and 18.5 — noise, not a gap. That was not a blunder. That was weather, and I do not roast the weather.',
+        text: 'And before anybody gets clever in the group chat: that was a defensible Sunday-morning decision made by somebody with no access to the future. Young and Rodgers sat behind Darnold projected 19.4 and 18.5 — noise, not a gap. The experiment simply lost its subject on the fifth snap, and no amount of preparation covers that. I roast bad methodology. I do not roast a specimen walking out of the building.',
       },
       {
         type: 'paragraph',
@@ -217,7 +217,7 @@ export const RECAPS: Recap[] = [
       },
       {
         type: 'paragraph',
-        text: 'Tyler will win ten games this season. Tyler will also spend every one of them being reminded about the 153.',
+        text: 'Tyler will win ten games this season. Tyler will also spend every one of them being reminded about coming up short in Week 1.',
       },
       { type: 'heading', text: 'Colin Did All The Work And Then Refused To Collect' },
       {
@@ -227,7 +227,7 @@ export const RECAPS: Recap[] = [
       { type: 'paragraph', text: 'Colin then benched him.' },
       {
         type: 'paragraph',
-        text: 'Diggs sat. Beside him sat Tyler Shough, who scored 33.2. Those two combined for 46.7 points — roughly forty percent of everything Colin actually started — and Colin won the matchup by 15.7 regardless, which is the most infuriating detail in this entire document.',
+        text: 'Diggs sat. Beside him sat Tyler Shough, who scored 33.2. Those two combined for 46.7 points — roughly forty percent of everything Colin actually started — and Colin won by 15.7 regardless, the most infuriating detail in this document.',
       },
       {
         type: 'paragraph',
@@ -263,7 +263,7 @@ export const RECAPS: Recap[] = [
       { type: 'paragraph', text: 'Doug won by 69.5.' },
       {
         type: 'paragraph',
-        text: 'Doug could have benched three starters at random, gone outside for the afternoon, and still won by thirty.',
+        text: 'Doug could have benched three starters at random, gone outside, and still won by thirty.',
       },
       {
         type: 'paragraph',
@@ -289,7 +289,7 @@ export const RECAPS: Recap[] = [
       { type: 'heading', text: 'The Rest Of The Petri Dish' },
       {
         type: 'paragraph',
-        text: 'Mike won the closest game of the week, by 2.6, with the week’s lowest winning score, 114.0 — of which Jaxson Dart was 32.6. Twenty-nine percent of a victory delivered by one rookie quarterback, and three awards for an afternoon of doing the bare minimum with surgical precision. The Cat Burglar takes only what the job requires and is out the window before the lights come on. It is not pretty and it is 1-0.',
+        text: 'Mike won the closest game of the week, by 2.6, with the week’s lowest winning score, 114.0 — of which Jaxson Dart was 32.6. Twenty-nine percent of a victory from one rookie quarterback, and three awards for an afternoon of bare minimum executed with surgical precision. The Cat Burglar takes only what the job requires and is out the window before the lights come on. It is not pretty and it is 1-0.',
       },
       {
         type: 'paragraph',
@@ -314,7 +314,7 @@ export const RECAPS: Recap[] = [
       },
       {
         type: 'paragraph',
-        text: 'Now the hot takes, delivered with the absolute confidence of a man holding no evidence whatsoever.',
+        text: 'Now the hot takes, delivered with the absolute confidence of a man holding no evidence.',
       },
       {
         type: 'paragraph',

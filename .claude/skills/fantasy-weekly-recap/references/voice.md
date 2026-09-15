@@ -166,7 +166,17 @@ Tyler scoring the second-highest total in the league while one starting slot
 returned half a point, and losing, is funnier and more memorable than any
 version where Tyler is the idiot. Say so on the page:
 
-> That was not a blunder. That was weather, and I do not roast the weather.
+> Nothing about that lineup was wrong when it was submitted. The experiment
+> simply lost its subject on the fifth snap, and no amount of preparation covers
+> that. I roast bad methodology. I do not roast a specimen walking out of the
+> building.
+
+Note that the let-off is phrased in **his own vocabulary**. The first attempt
+called the injury "weather" — an image with no setup anywhere in the piece and
+nothing to do with a laboratory, so it read as a non-sequitur and the let-off
+landed on nothing. When Burner reaches for a metaphor it comes from the lab:
+samples, subjects, methodology, equipment, the centrifuge. A borrowed image he
+has not earned is worse than no image.
 
 ## The test
 
