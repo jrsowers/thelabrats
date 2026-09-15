@@ -15,6 +15,7 @@ import {
 import { AWARDS, awardsBySection, isComputable } from '@/lib/awards/catalog'
 import { buildCommentary } from '@/lib/awards/commentary'
 import { placeholderAward } from '@/lib/awards/placeholder'
+import { buildAwardCards, type DecidedAward } from '@/lib/awards/build'
 
 const g = (
   matchupId: number, week: number, home: number, away: number,
@@ -1094,5 +1095,55 @@ describe('sample cards preview the real caption', () => {
       const ending = Number(card.supporting.find((s) => s.label === 'Ending rank')!.value)
       expect(ending).toBeLessThanOrEqual(12)
     }
+  })
+})
+
+describe('a published week never shows invented data', () => {
+  const pools = {
+    teams: [{ seasonTeamId: 1, name: 'Nobody Knows', manager: 'Doug Rotman' }],
+    players: [],
+  }
+  const won: DecidedAward[] = [{
+    key: 'dumpster_fire', teamId: 1, opponentId: null,
+    metricValue: '81.2', headline: 'x', supporting: [],
+  }]
+
+  it('says why there is no winner instead of inventing one', () => {
+    // Week 1 spent a day telling the league that Chenell was projected to lose
+    // by 30 and won anyway. It never happened — that was a sample card on a
+    // published week, which a reader cannot tell apart from a result.
+    const cards = buildAwardCards(won, 1, pools, true)
+    const giantKiller = cards.find((c) => c.def.key === 'giant_killer')!
+    expect(giantKiller.placeholder).toBe(false)
+    expect(giantKiller.unearned).toBe('Nobody qualified for this one.')
+    expect(giantKiller.teamId).toBeNull()
+    expect(giantKiller.commentary).toEqual([])
+  })
+
+  it('tells Free Fallin’ to come back in week 2', () => {
+    const cards = buildAwardCards(won, 1, pools, true)
+    expect(cards.find((c) => c.def.key === 'free_fall')!.unearned)
+      .toMatch(/Arrives in Week 2/)
+  })
+
+  it('stops saying that once a prior week exists', () => {
+    const cards = buildAwardCards(won, 4, pools, true)
+    expect(cards.find((c) => c.def.key === 'free_fall')!.unearned)
+      .toBe('Nobody qualified for this one.')
+  })
+
+  it('keeps the samples on a week that has NOT been published', () => {
+    // Before a week exists, a placeholder is the honest way to show the shape
+    // of what is coming. The dishonesty only begins once it is settled.
+    const cards = buildAwardCards([], 1, pools, false)
+    expect(cards.every((c) => c.placeholder)).toBe(true)
+    expect(cards.every((c) => c.unearned === undefined)).toBe(true)
+  })
+
+  it('leaves a real winner untouched', () => {
+    const card = buildAwardCards(won, 1, pools, true)
+      .find((c) => c.def.key === 'dumpster_fire')!
+    expect(card.unearned).toBeUndefined()
+    expect(card.teamId).toBe(1)
   })
 })

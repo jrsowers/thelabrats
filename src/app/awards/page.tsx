@@ -44,6 +44,16 @@ function CardBody({
   const accent = SECTION_ACCENT[card.def.section]
   const team = card.teamId != null ? teams.get(card.teamId) : null
 
+  // No winner this week. Say so, rather than show a plausible invention that
+  // a reader cannot tell apart from a result.
+  if (card.unearned) {
+    return (
+      <div className="flex flex-1 items-center justify-center py-6 text-center">
+        <p className="max-w-[24ch] text-[13px] leading-relaxed text-dim">{card.unearned}</p>
+      </div>
+    )
+  }
+
   return (
     <>
       {/* The manager wins the award. Where a player earned it, the player
@@ -154,6 +164,10 @@ export default async function AwardsPage({
     awayProjected: isPreview ? null : rawResults[i]?.awayProjected ?? null,
   }))
 
+  // A week with no stored awards has not been released yet. Placeholders are
+  // doing their real job there — showing the shape of a week to come.
+  const isUnpublishedWeek = !isPreview && published.length === 0
+
   // Preview is the one place the engine still runs at request time: it exists
   // to judge the layout against an invented season, and there is nothing
   // published to read. Everything real comes from the awards table.
@@ -161,17 +175,22 @@ export default async function AwardsPage({
     ? computeWeeklyAwards(awardMatchups, week, []).map((a) => ({ ...a, key: a.key }))
     : published
 
-  const cards = buildAwardCards(decided, week, {
-    teams: teams.map((t) => ({
-      seasonTeamId: t.seasonTeamId, name: t.name, manager: t.manager,
-    })),
-    players,
-  })
+  const cards = buildAwardCards(
+    decided,
+    week,
+    {
+      teams: teams.map((t) => ({
+        seasonTeamId: t.seasonTeamId, name: t.name, manager: t.manager,
+      })),
+      players,
+    },
+    !isUnpublishedWeek,
+  )
 
   // Nothing published for this week yet. Distinguish "Monday night has not
   // happened" from "nobody ever generated this", because only one of them
   // resolves on its own.
-  const isUnpublished = !isPreview && published.length === 0
+  const isUnpublished = isUnpublishedWeek
   const weekIsOver = results.some((m) => m.week === week)
     && results.filter((m) => m.week === week).every((m) => m.status === 'FINAL')
 
@@ -195,6 +214,7 @@ export default async function AwardsPage({
   const placeholders = cards.filter((c) => c.placeholder)
   const pending = placeholders.filter((c) => !isComputable(c.def))
   const uncontested = placeholders.filter((c) => isComputable(c.def))
+  const unearned = cards.filter((c) => c.unearned)
 
   return (
     <AppShell leagueName={overview.leagueName}>
@@ -275,6 +295,7 @@ export default async function AwardsPage({
               accent: SECTION_ACCENT.STUDS,
               header: <CardHeader card={c} />,
               body: <CardBody card={c} teams={byId} />,
+              alwaysVisible: Boolean(c.unearned),
             })),
           },
           {
@@ -285,6 +306,7 @@ export default async function AwardsPage({
               accent: SECTION_ACCENT.DUDS,
               header: <CardHeader card={c} />,
               body: <CardBody card={c} teams={byId} />,
+              alwaysVisible: Boolean(c.unearned),
             })),
           },
         ]}

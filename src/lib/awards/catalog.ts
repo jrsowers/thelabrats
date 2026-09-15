@@ -70,6 +70,11 @@ export interface AwardDef {
   metricLabel: string
   /** The headline number carries a sign and a colour. See ComputedAward.metricTone. */
   signedMetric?: boolean
+  /**
+   * Cannot exist in week 1. There is no prior table to have moved within, so
+   * the card says when it arrives rather than showing an invented slide.
+   */
+  needsPriorWeek?: boolean
   /** Heaviest capture cadence this award depends on. */
   capture: CaptureCadence
   /**
@@ -241,6 +246,7 @@ export const AWARDS: AwardDef[] = [
     needs: ['FINAL_SCORES'], capture: 'FINAL_ONLY',
     metricLabel: 'Ranking change',
     signedMetric: true,
+    needsPriorWeek: true,
   },
   {
     key: 'understudy', name: 'The Understudy', section: 'DUDS', category: 'MANAGER',

@@ -9,6 +9,8 @@ export interface GridItem {
   accent: string
   header: ReactNode
   body: ReactNode
+  /** Nothing to spoil, so no frost. */
+  alwaysVisible?: boolean
 }
 
 /**
@@ -52,6 +54,7 @@ export function AwardGrid({
                 accent={item.accent}
                 revealAll={revealAll}
                 header={item.header}
+                alwaysVisible={item.alwaysVisible}
               >
                 {item.body}
               </RevealCard>

@@ -20,6 +20,11 @@ export interface NavItem {
   short: string
   icon: IconComponent
   ready: boolean
+  /**
+   * Small tag after the label. 'SOON' is implied by `ready: false`; 'NEW'
+   * marks a section that has just gone live and is worth a second look.
+   */
+  badge?: 'NEW'
 }
 
 /**
@@ -36,7 +41,7 @@ export const NAV_ITEMS: NavItem[] = [
   { href: '/playoffs',     label: 'Playoff Picture',  short: 'Bracket', icon: BracketIcon,    ready: true  },
   { href: '/transactions', label: 'Transaction Log',  short: 'Moves',   icon: ArrowLeftRight, ready: true  },
   { href: '/recaps',       label: 'Weekly Recaps',    short: 'Recaps',  icon: Newspaper,      ready: false },
-  { href: '/awards',       label: 'Studs & Duds',     short: 'Awards',  icon: Award,          ready: false },
+  { href: '/awards',       label: 'Studs & Duds',     short: 'Awards',  icon: Award,          ready: true, badge: 'NEW' },
   { href: '/draft',        label: 'Draft Recap',      short: 'Draft',   icon: ListOrdered,    ready: true  },
   { href: '/records',      label: 'Record Books',     short: 'Records', icon: BookOpen,       ready: true  },
 ]

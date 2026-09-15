@@ -63,11 +63,18 @@ export function SideNav({
               <>
                 <Icon size={16} strokeWidth={2} className="shrink-0" />
                 <span className="truncate">{item.label}</span>
-                {!item.ready && (
+                {!item.ready ? (
                   <span className="ml-auto font-mono text-[9px] uppercase tracking-wider text-rail-muted/70">
                     Soon
                   </span>
-                )}
+                ) : item.badge ? (
+                  // Live, and worth a second look. Sits where Soon used to, so
+                  // a section that has just shipped reads as a promotion
+                  // rather than as an unchanged row.
+                  <span className="ml-auto rounded-[3px] bg-live/15 px-1 py-px font-mono text-[9px] font-bold uppercase tracking-wider text-live">
+                    {item.badge}
+                  </span>
+                ) : null}
               </>
             )
 
@@ -208,11 +215,15 @@ function MobileNav({
               <>
                 <Icon size={18} strokeWidth={2} className="shrink-0" />
                 <span className="truncate">{item.label}</span>
-                {!item.ready && (
+                {!item.ready ? (
                   <span className="ml-auto font-mono text-[9px] uppercase tracking-wider text-rail-muted/70">
                     Soon
                   </span>
-                )}
+                ) : item.badge ? (
+                  <span className="ml-auto rounded-[3px] bg-live/15 px-1 py-px font-mono text-[9px] font-bold uppercase tracking-wider text-live">
+                    {item.badge}
+                  </span>
+                ) : null}
               </>
             )
             return (

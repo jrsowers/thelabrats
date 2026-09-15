@@ -24,14 +24,33 @@ export function RevealCard({
   revealAll,
   header,
   children,
+  alwaysVisible = false,
 }: {
   accent: string
   revealAll: boolean
   header: ReactNode
   children: ReactNode
+  /**
+   * Skip the frost entirely. A card with no result to spoil has nothing to
+   * reveal, and "Hover to reveal" over the words "Nobody qualified for this
+   * one" promises an answer that is not behind it.
+   */
+  alwaysVisible?: boolean
 }) {
   const [pinned, setPinned] = useState(false)
   const revealed = revealAll || pinned
+
+  if (alwaysVisible) {
+    return (
+      <article
+        className="state-bar relative flex flex-col overflow-hidden rounded-lg border border-border bg-surface"
+        style={{ '--state': accent } as React.CSSProperties}
+      >
+        {header}
+        <div className="flex h-full flex-col gap-3 px-4 py-3.5">{children}</div>
+      </article>
+    )
+  }
 
   return (
     <article

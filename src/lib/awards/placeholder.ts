@@ -35,6 +35,13 @@ export interface AwardCard {
   commentary: Segment[]
   supporting: { label: string; value: string }[]
   placeholder: boolean
+  /**
+   * Set when a PUBLISHED week produced no winner for this award. The card
+   * shows the reason instead of a result — and, crucially, instead of a
+   * plausible invention. A sample is honest before a week exists and
+   * dishonest after it.
+   */
+  unearned?: string
 }
 
 function rng(seed: number) {

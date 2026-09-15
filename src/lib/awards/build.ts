@@ -26,10 +26,30 @@ export interface DecidedAward {
   player?: { espnPlayerId: number; name: string; position: string; nflTeam: string } | null
 }
 
+/**
+ * Why a published week has no winner for an award.
+ *
+ * ⚠️ A SAMPLE IS ONLY HONEST BEFORE THE WEEK EXISTS. Once a week is published,
+ * a placeholder card is indistinguishable from a result — week 1 spent a day
+ * telling the league that Chenell was projected to lose by 30 and won, which
+ * never happened. These say why there is no winner instead.
+ */
+function unearnedReason(def: AwardDef, week: number): string {
+  if (def.needsPriorWeek && week <= 1) {
+    return 'Needs a previous week to measure against. Arrives in Week 2.'
+  }
+  return 'Nobody qualified for this one.'
+}
+
 export function buildAwardCards(
   decided: DecidedAward[],
   week: number,
   pools: PlaceholderPools,
+  /**
+   * True once the week is settled. Before that the placeholders are doing
+   * their real job — showing the shape of a week that has not happened.
+   */
+  published = false,
 ): AwardCard[] {
   const byId = new Map(pools.teams.map((t) => [t.seasonTeamId, t]))
   // Engine keys ARE catalog keys, so there is no mapping layer to drift.
@@ -37,7 +57,23 @@ export function buildAwardCards(
 
   return AWARDS.map((def: AwardDef): AwardCard => {
     const computed = real.get(def.key)
-    if (!computed) return placeholderAward(def, week, pools)
+    if (!computed) {
+      return published
+        ? {
+            def,
+            teamId: null,
+            opponentId: null,
+            playerName: null,
+            espnPlayerId: null,
+            playerMeta: null,
+            metricValue: '\u2014',
+            commentary: [],
+            supporting: [],
+            placeholder: false,
+            unearned: unearnedReason(def, week),
+          }
+        : placeholderAward(def, week, pools)
+    }
 
     return {
       def,
