@@ -119,7 +119,7 @@ export const AWARDS: AwardDef[] = [
   },
   {
     key: 'giant_killer', name: 'The Giant Killer', section: 'STUDS', category: 'MANAGER',
-    blurb: 'Overcame the biggest projected deficit.',
+    blurb: 'Overcame the biggest projected deficit. (Pre-game)',
     // The mirror image of The Choke Artist: same matchup, opposite manager.
     formula: 'Largest pregame projected deficit that still ended in a win.',
     needs: ['PROJECTIONS'], capture: 'PREGAME_PROJECTION',
@@ -148,7 +148,7 @@ export const AWARDS: AwardDef[] = [
     blurb: 'Survived the closest game of the week.',
     formula: 'Narrowest winning margin of the week, credited to the manager who survived it.',
     needs: ['FINAL_SCORES'], capture: 'FINAL_ONLY',
-    metricLabel: 'Margin', evidence: 'MATCHUP',
+    metricLabel: 'Margin of victory', evidence: 'MATCHUP',
   },
   {
     key: 'socialist', name: 'The Socialist', section: 'STUDS', category: 'MANAGER',
@@ -176,11 +176,11 @@ export const AWARDS: AwardDef[] = [
     blurb: 'Nearly the whole lineup beat its projection.',
     formula: 'Most started players who finished above their own projection. Ties broken by the total amount cleared.',
     needs: ['PLAYER_SCORES', 'PROJECTIONS'], capture: 'WEEKLY_BOXSCORE',
-    metricLabel: 'Starters over',
+    metricLabel: 'Overperforming starters',
   },
   {
     key: 'sweatin_it_out', name: 'Sweatin\' It Out', section: 'STUDS', category: 'MATCHUP',
-    blurb: 'Was losing. Won anyway.',
+    blurb: 'Was down big. Came back and won anyway.',
     // The one award that needs the continuous record. Defined as the largest
     // deficit ever faced rather than "behind going into Monday night", so it
     // needs no calendar arithmetic and tells a better story besides.

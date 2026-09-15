@@ -9,6 +9,7 @@
 import { describe, it, expect } from 'vitest'
 import {
   computeWeeklyAwards, computeAwardLeaderboard,
+  slatePhase,
   type AwardMatchup, type AwardPlayer, type AwardTransaction,
 } from '@/lib/awards/compute'
 import { AWARDS, awardsBySection, isComputable } from '@/lib/awards/catalog'
@@ -176,7 +177,7 @@ describe('catalog', () => {
     ]
     // One snapshot showing team 6 behind, so Sweatin' It Out qualifies too,
     // and one team that slid down the table for The Free Fall.
-    const snapshots = [{ matchupId: 3, homeScore: 130, awayScore: 10 }]
+    const snapshots = [{ matchupId: 3, homeScore: 130, awayScore: 10, capturedAt: SUN_AFTERNOON }]
     const movement = new Map([[7, -3]])
     const produced = new Set(
       computeWeeklyAwards(
@@ -684,8 +685,14 @@ describe('roster-shape awards', () => {
   })
 })
 
+/** 6:14 PM Eastern on a Sunday: the real moment week 1's comeback bottomed out. */
+const SUN_AFTERNOON = '2026-09-13T22:14:00Z'
+
 describe('matchup-shape awards', () => {
-  const run = (m: AwardMatchup[], snapshots: { matchupId: number; homeScore: number; awayScore: number }[] = []) =>
+  const run = (
+    m: AwardMatchup[],
+    snapshots: { matchupId: number; homeScore: number; awayScore: number; capturedAt: string }[] = [],
+  ) =>
     new Map(computeWeeklyAwards(m, 1, [], [], {}, snapshots).map((a) => [a.key as string, a]))
 
   describe('The Photo Finish', () => {
@@ -702,9 +709,9 @@ describe('matchup-shape awards', () => {
     it('measures the biggest deficit a winner ever faced', () => {
       // t1 won 150-60 but was 40 behind at one point.
       const snaps = [
-        { matchupId: 1, homeScore: 10, awayScore: 50 },
-        { matchupId: 1, homeScore: 90, awayScore: 55 },
-        { matchupId: 1, homeScore: 150, awayScore: 60 },
+        { matchupId: 1, homeScore: 10, awayScore: 50, capturedAt: SUN_AFTERNOON },
+        { matchupId: 1, homeScore: 90, awayScore: 55, capturedAt: SUN_AFTERNOON },
+        { matchupId: 1, homeScore: 150, awayScore: 60, capturedAt: SUN_AFTERNOON },
       ]
       const a = run(week1, snaps).get('sweatin_it_out')!
       expect(a.teamId).toBe(1)
@@ -714,7 +721,7 @@ describe('matchup-shape awards', () => {
     it('reads the deficit from the winner’s own side of the matchup', () => {
       // Game 3: t5 120, t6 130 — the AWAY team won. A snapshot where home led
       // by 25 is a 25-point deficit for t6, not a lead.
-      const snaps = [{ matchupId: 3, homeScore: 80, awayScore: 55 }]
+      const snaps = [{ matchupId: 3, homeScore: 80, awayScore: 55, capturedAt: SUN_AFTERNOON }]
       const a = run(week1, snaps).get('sweatin_it_out')!
       expect(a.teamId).toBe(6)
       expect(a.metricValue).toBe('25.0')
@@ -722,8 +729,8 @@ describe('matchup-shape awards', () => {
 
     it('is omitted when every winner led wire to wire', () => {
       const snaps = [
-        { matchupId: 1, homeScore: 30, awayScore: 5 },
-        { matchupId: 1, homeScore: 150, awayScore: 60 },
+        { matchupId: 1, homeScore: 30, awayScore: 5, capturedAt: SUN_AFTERNOON },
+        { matchupId: 1, homeScore: 150, awayScore: 60, capturedAt: SUN_AFTERNOON },
       ]
       expect(run(week1, snaps).has('sweatin_it_out')).toBe(false)
     })
@@ -953,5 +960,44 @@ describe('The Control Group reads cleanly with a signed metric', () => {
       managerFirst: 'Bree', teamName: 'X', value: '−4.3',
     }).map((s) => s.text).join('')
     expect(text).toMatch(/within 4\.3 of/)
+  })
+})
+
+describe('slatePhase says when, from the clock rather than from a guess', () => {
+  const at = (iso: string) => slatePhase(new Date(iso))
+
+  it('reads the real week 1 low as Sunday afternoon, not Monday night', () => {
+    // Chenell's 46.7-point deficit bottomed out at 6:14 PM Eastern on Sunday.
+    // "Down going into Monday night" is the phrase everybody reaches for and
+    // it would have been false — by Monday she was ahead by 21.
+    expect(at('2026-09-13T22:14:00Z')).toBe('during the Sunday afternoon games')
+  })
+
+  it('names each slate of the week', () => {
+    expect(at('2026-09-13T15:00:00Z')).toBe('before Sunday kickoff')        // Sun 11am ET
+    expect(at('2026-09-13T18:30:00Z')).toBe('during the Sunday early games') // Sun 2:30pm
+    expect(at('2026-09-14T01:00:00Z')).toBe('during Sunday night football')  // Sun 9pm
+    expect(at('2026-09-14T18:00:00Z')).toBe('heading into Monday night football') // Mon 2pm
+    expect(at('2026-09-15T01:00:00Z')).toBe('during Monday night football')  // Mon 9pm
+    expect(at('2026-09-11T01:00:00Z')).toBe('during Thursday night football') // Thu 9pm
+  })
+
+  it('handles Monday night running past Eastern midnight', () => {
+    expect(at('2026-09-15T05:00:00Z')).toBe('in the last minutes of Monday night') // Tue 1am
+  })
+
+  it('returns null rather than naming a slate it cannot place', () => {
+    // A Saturday in September has no reliable slate, and inventing one puts a
+    // false specific in a caption.
+    expect(at('2026-09-12T18:00:00Z')).toBeNull()
+  })
+
+  it('drops the phrase from the caption when it cannot be derived', () => {
+    const text = buildCommentary('sweatin_it_out', {
+      managerFirst: 'Chenell', teamName: 'Da Reigning Champ',
+      opponentTeam: 'X', value: '46.7',
+    }).map((s) => s.text).join('')
+    expect(text).toMatch(/won anyway/)
+    expect(text).not.toMatch(/undefined/)
   })
 })

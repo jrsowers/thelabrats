@@ -20,6 +20,7 @@ export interface DecidedAward {
   opponentId: number | null
   metricValue: string
   metricTone?: 'live' | 'loss'
+  commentaryExtras?: Record<string, string>
   headline: string
   supporting: { label: string; value: string }[]
   player?: { espnPlayerId: number; name: string; position: string; nflTeam: string } | null
@@ -66,7 +67,10 @@ export function buildAwardCards(
         // Every supporting stat, keyed by its label, so a builder can react to
         // the detail rather than just restate the headline number. The Waiver
         // Wire Wizard uses it to notice that the pickup never left the bench.
-        extra: Object.fromEntries(computed.supporting.map((x) => [x.label, x.value])),
+        extra: {
+          ...Object.fromEntries(computed.supporting.map((x) => [x.label, x.value])),
+          ...computed.commentaryExtras,
+        },
       }),
       supporting: computed.supporting,
       placeholder: false,

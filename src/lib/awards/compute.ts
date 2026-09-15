@@ -59,6 +59,42 @@ export interface AwardSnapshot {
   matchupId: number
   homeScore: number
   awayScore: number
+  /** ISO instant. Lets an award say WHEN, not just how much. */
+  capturedAt: string
+}
+
+/**
+ * Which part of the NFL week an instant falls in, in US Eastern.
+ *
+ * ⚠️ DERIVED, NEVER ASSUMED. The obvious phrase for a comeback is "down going
+ * into Monday night", and in week 1 that would have been false: Chenell's
+ * 46.7-point deficit was at 6:14 PM on SUNDAY, and by Monday she was already
+ * ahead by 21. A specific claim about when something happened has to come from
+ * the timestamp.
+ *
+ * Returns null outside the windows it can name, so the caption drops the
+ * phrase rather than guessing at one.
+ */
+export function slatePhase(at: Date): string | null {
+  const parts = new Intl.DateTimeFormat('en-US', {
+    timeZone: 'America/New_York', weekday: 'short', hour: 'numeric', hour12: false,
+  }).formatToParts(at)
+  const day = parts.find((p) => p.type === 'weekday')?.value ?? ''
+  const hour = Number(parts.find((p) => p.type === 'hour')?.value ?? -1) % 24
+
+  if (day === 'Thu' && hour >= 20) return 'during Thursday night football'
+  if (day === 'Sun') {
+    if (hour < 13) return 'before Sunday kickoff'
+    if (hour < 16) return 'during the Sunday early games'
+    if (hour < 20) return 'during the Sunday afternoon games'
+    return 'during Sunday night football'
+  }
+  if (day === 'Mon') {
+    return hour < 20 ? 'heading into Monday night football' : 'during Monday night football'
+  }
+  // Monday night runs past midnight Eastern.
+  if (day === 'Tue' && hour < 3) return 'in the last minutes of Monday night'
+  return null
 }
 
 /** One player's line for the week, from player_week_scores. */
@@ -130,6 +166,11 @@ export interface ComputedAward {
    * it they landed on.
    */
   metricTone?: 'live' | 'loss'
+  /**
+   * Detail the CAPTION can use that does not belong on the card as a stat.
+   * Merged into the commentary context alongside the supporting stats.
+   */
+  commentaryExtras?: Record<string, string>
   /** The player the award is evidence of, for player-driven awards. */
   player?: { espnPlayerId: number; name: string; position: string; nflTeam: string }
 }
@@ -435,29 +476,37 @@ export function computeWeeklyAwards(
   const comebacks = winners
     .map((side) => {
       const isHome = matchups.find((m) => m.matchupId === side.matchupId)?.homeTeamId === side.teamId
-      const worst = (byMatchup.get(side.matchupId) ?? []).reduce((deepest, snap) => {
+      let worst = 0
+      let worstAt: string | null = null
+      for (const snap of byMatchup.get(side.matchupId) ?? []) {
         const deficit = isHome
           ? snap.awayScore - snap.homeScore
           : snap.homeScore - snap.awayScore
-        return Math.max(deepest, deficit)
-      }, 0)
-      return { side, deficit: worst }
+        // FIRST time it got this bad, not the last. A frozen scoreboard holds
+        // the same deficit for hours, and the moment it reached the low is the
+        // honest answer to "when were they down that far".
+        if (deficit > worst) { worst = deficit; worstAt = snap.capturedAt }
+      }
+      return { side, deficit: worst, worstAt }
     })
     .filter((c) => c.deficit > 0)
     .sort((a, b) => b.deficit - a.deficit)
 
   const comeback = comebacks[0]
   if (comeback) {
+    const when = comeback.worstAt ? slatePhase(new Date(comeback.worstAt)) : null
     awards.push({
       key: 'sweatin_it_out',
       teamId: comeback.side.teamId,
       opponentId: comeback.side.opponentId,
       metricValue: f1(comeback.deficit),
-      headline: `Trailed by ${f1(comeback.deficit)} at the worst of it. Won by ${f1(comeback.side.score - comeback.side.against)}.`,
+      headline: `Trailed by ${f1(comeback.deficit)}${when ? ` ${when}` : ''}. Won by ${f1(comeback.side.score - comeback.side.against)}.`,
+      // The deficit is already the headline number; repeating it as a stat
+      // wasted the only other slot the card renders.
       supporting: [
-        { label: 'Biggest deficit', value: f1(comeback.deficit) },
-        { label: 'Final', value: `${f1(comeback.side.score)}–${f1(comeback.side.against)}` },
+        { label: 'Final score', value: `${f1(comeback.side.score)}–${f1(comeback.side.against)}` },
       ],
+      ...(when ? { commentaryExtras: { when } } : {}),
     })
   }
 
@@ -588,10 +637,11 @@ function computeRosterShapeAwards(
       metricValue: pct(carried.share),
       scoreValue: carried.share,
       headline: `${carried.top.name} was ${pct(carried.share)} of the score that won it.`,
+      // "Next best" was a lie: this figure is every OTHER starter added
+      // together, which read as one implausible 81-point team-mate.
       supporting: [
         { label: 'Player points', value: f1(carried.top.actualPoints as number) },
-        { label: 'Next best', value: f1(carried.total - (carried.top.actualPoints as number)) },
-        { label: 'Team total', value: f1(carried.total) },
+        { label: 'Everyone else', value: f1(carried.total - (carried.top.actualPoints as number)) },
       ],
       player: evidence(carried.top),
     })
@@ -660,7 +710,7 @@ function computeRosterShapeAwards(
       opponentId: null,
       metricValue: String(slayed.over),
       headline: `${slayed.over} starters beat their projection.`,
-      supporting: [{ label: 'Combined over', value: f1(slayed.overBy) }],
+      supporting: [{ label: 'Combined points over', value: f1(slayed.overBy) }],
     })
   }
 

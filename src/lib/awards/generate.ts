@@ -102,6 +102,7 @@ export async function generateWeeklyAwards(
         opponentId: a.opponentId,
         metricValue: a.metricValue,
         metricTone: a.metricTone ?? null,
+        commentaryExtras: a.commentaryExtras ?? null,
         supporting: a.supporting,
         player: a.player ?? null,
       },

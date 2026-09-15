@@ -147,10 +147,18 @@ const BUILDERS: Record<string, Builder> = {
     t(' clear their projection. Not one weak link in the whole lineup. '),
     t('Absolutely no notes.'),
   ],
-  sweatin_it_out: (c) => [
-    b(c.managerFirst), t(' was down '), b(c.value), t(' to '), ...opponent(c),
-    t(' and won anyway. Somewhere a remote control did not survive.'),
-  ],
+  // `when` is derived from the snapshot timestamp, never assumed — see
+  // slatePhase. Absent for a week captured before continuous snapshots existed.
+  sweatin_it_out: (c) => (c.extra?.when
+    ? [
+        b(c.managerFirst), t(' was down '), b(c.value), t(' to '), ...opponent(c),
+        t(` ${c.extra.when} and still walked away with the win. `),
+        t('Somewhere a remote control did not survive.'),
+      ]
+    : [
+        b(c.managerFirst), t(' was down '), b(c.value), t(' to '), ...opponent(c),
+        t(' and won anyway. Somewhere a remote control did not survive.'),
+      ]),
   prime_specimen: (c) => [
     b(c.managerFirst), t(' started '), ...player(c), t(' and watched him drop '),
     b(`${c.value} pts`), t(' — the best performance in the league this week.'),

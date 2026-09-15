@@ -154,9 +154,9 @@ export async function publishDueAwards(
         for (let from = 0; ; from += PAGE) {
           const { data, error } = await db
             .from('matchup_snapshots')
-            .select('matchup_id, home_score, away_score')
+            .select('matchup_id, home_score, away_score, captured_at')
             .in('matchup_id', weekMatchupIds)
-            .order('id')
+            .order('captured_at')
             .range(from, from + PAGE - 1)
           if (error) throw new Error(`matchup_snapshots read failed: ${error.message}`)
           if (!data || data.length === 0) break
@@ -165,6 +165,7 @@ export async function publishDueAwards(
               matchupId: r.matchup_id,
               homeScore: Number(r.home_score),
               awayScore: Number(r.away_score),
+              capturedAt: r.captured_at as string,
             })
           }
           if (data.length < PAGE) break
