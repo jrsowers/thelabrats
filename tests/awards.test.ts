@@ -548,31 +548,38 @@ describe('roster-shape awards', () => {
     expect(a).toBeUndefined()
   })
 
-  it('gives The Socialist to the highest FLOOR, not the flattest percentage', () => {
-    // Team 2's worst starter scored 25; team 1's scored 3.
+  it('gives The Socialist to the tightest spread, best starter to worst', () => {
+    // Team 2 runs 25/25/25/25, a spread of zero. Team 1 runs 80 down to 3.
     const a = run([...carried, ...shared]).get('socialist')!
     expect(a.teamId).toBe(2)
-    expect(a.metricValue).toBe('25.0')
+    expect(a.metricValue).toBe('0.0')
+    expect(a.supporting[0].label).toBe('Strongest starter')
+    expect(a.supporting[1].label).toBe('Weakest starter')
   })
 
-  it('is not decided by how much a team scored', () => {
-    // Team 3 scores twice as much as team 2 with a WORSE floor, and still
-    // loses the award. Share of team total got this backwards: it correlated
-    // -0.64 with the total, so the Socialist went to whoever scored most.
-    const richButHollow = [
-      sh(3, 31, 'Big A', 90, 40), sh(3, 32, 'Big B', 90, 40),
-      sh(3, 33, 'Quiet One', 4, 12),
+  it('measures distribution, never quality', () => {
+    // The failure that forced this rewrite. An earlier version scored the
+    // highest FLOOR and crowned a lineup whose weakest starter was Matthew
+    // Stafford on 5.1 against a 22.2 projection, captioned "not one bad start
+    // in the whole lineup".
+    //
+    // Team 7 is uniformly terrible and SHOULD win: everyone did the same
+    // amount of work, and whether that amount was any good is another award's
+    // business.
+    const flatAndAwful = [
+      sh(7, 71, 'Bad A', 4, 18), sh(7, 72, 'Bad B', 4, 17), sh(7, 73, 'Bad C', 4, 16),
     ]
-    const a = run([...shared, ...richButHollow]).get('socialist')!
-    expect(a.teamId).toBe(2)
+    const a = run([...carried, ...flatAndAwful]).get('socialist')!
+    expect(a.teamId).toBe(7)
+    expect(a.metricValue).toBe('0.0')
   })
 
-  it('is omitted when every roster had somebody score nothing', () => {
-    const allHoles = [
-      sh(4, 41, 'Fine', 30, 20), sh(4, 42, 'Zero', 0, 11),
-      sh(5, 51, 'Fine Too', 28, 20), sh(5, 52, 'Also Zero', 0, 9),
-    ]
-    expect(run(allHoles).has('socialist')).toBe(false)
+  it('does not claim the lineup was any good', () => {
+    const text = buildCommentary('socialist', {
+      managerFirst: 'Keshia', teamName: 'All Bark, All Bite', value: '19.4',
+    }).map((x) => x.text).join('')
+    expect(text).not.toMatch(/bad start|no holes|no passengers/i)
+    expect(text).toMatch(/for better or for worse/)
   })
 
   it('never gives one manager both awards', () => {
@@ -597,7 +604,19 @@ describe('roster-shape awards', () => {
       ]
       const a = run([...carried, ...shared, ...precise]).get('control_group')!
       expect(a.teamId).toBe(4)
-      expect(a.metricValue).toBe('2.0')
+      // Won on the ABSOLUTE gap, displayed signed so the reader can tell which
+      // side of the projection they landed on.
+      expect(a.metricValue).toBe('\u22122.0')
+      expect(a.metricTone).toBe('loss')
+      expect(a.scoreValue).toBeCloseTo(2, 5)
+    })
+
+    it('shows a team that beat its projection in green, with a plus', () => {
+      const beatIt = [sh(8, 81, 'Over A', 26, 25), sh(8, 82, 'Over B', 26, 25)]
+      const a = run([...carried, ...beatIt]).get('control_group')!
+      expect(a.teamId).toBe(8)
+      expect(a.metricValue).toBe('+2.0')
+      expect(a.metricTone).toBe('live')
     })
 
     it('does not care which side of the projection a team landed on', () => {
@@ -782,7 +801,7 @@ describe('commentary never assumes a manager’s gender', () => {
     const text = buildCommentary('nostradamus', {
       ...context, playerName: 'Caleb Williams', playerMeta: 'QB · CHI',
     }).map((s) => s.text).join('')
-    expect(text).toMatch(/started him anyway/)
+    expect(text).toMatch(/who started him/)
   })
 
   it('falls back to a neutral phrase when there is no player or opponent', () => {
@@ -889,5 +908,30 @@ describe('The Waiver Wire Wizard notices a benched pickup', () => {
     // An older published week has no `Lineup` in its stored supporting stats.
     // Silence is not evidence he benched the guy.
     expect(render()).toMatch(/Slay, king/)
+  })
+})
+
+describe('Fantasy Nostradamus states the projection, not the market', () => {
+  it('never claims anything about who wanted a player', () => {
+    // The engine has no ADP and no news. "Nobody else wanted Caleb Williams"
+    // was a guess, and a wrong one in a week the league was high on the Bears.
+    const text = buildCommentary('nostradamus', {
+      managerFirst: 'Jesse', teamName: 'Mr. Anderson',
+      playerName: 'Caleb Williams', playerMeta: 'QB · CHI', value: '21.4',
+      extra: { Projected: '19.8', Actual: '41.3' },
+    }).map((s) => s.text).join('')
+
+    expect(text).not.toMatch(/nobody else wanted|no one wanted|unwanted/i)
+    expect(text).toMatch(/19\.8/)
+    expect(text).toMatch(/41\.3/)
+  })
+
+  it('still reads when the stored week has no projection recorded', () => {
+    const text = buildCommentary('nostradamus', {
+      managerFirst: 'Jesse', teamName: 'Mr. Anderson',
+      playerName: 'Caleb Williams', playerMeta: 'QB · CHI', value: '21.4',
+    }).map((s) => s.text).join('')
+    expect(text).toMatch(/clear his projection by/)
+    expect(text).not.toMatch(/undefined/)
   })
 })

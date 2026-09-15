@@ -123,6 +123,13 @@ export interface ComputedAward {
   scoreValue?: number
   headline: string
   supporting: { label: string; value: string }[]
+  /**
+   * Colours the headline number when its DIRECTION carries meaning. The
+   * Control Group is scored on distance from projection, so the winner is
+   * decided by the absolute gap while the card still has to say which side of
+   * it they landed on.
+   */
+  metricTone?: 'live' | 'loss'
   /** The player the award is evidence of, for player-driven awards. */
   player?: { espnPlayerId: number; name: string; position: string; nflTeam: string }
 }
@@ -516,12 +523,16 @@ function computeRosterShapeAwards(
   interface Shape {
     teamId: number
     top: AwardPlayer
-    /** The lowest-scoring starter. The Socialist's measure. */
+    /** The lowest-scoring starter. */
     floor: AwardPlayer
+    /** Best starter minus worst. The Socialist's measure. */
+    spread: number
     share: number
     total: number
     over: number
     overBy: number
+    /** Signed: positive means the team beat its projection. */
+    projectionGap: number
     offProjection: number
   }
 
@@ -546,10 +557,12 @@ function computeRosterShapeAwards(
       teamId,
       top,
       floor,
+      spread: (top.actualPoints as number) - (floor.actualPoints as number),
       share: (top.actualPoints as number) / total,
       total,
       over: beat.length,
       overBy: beat.reduce((n, p) => n + ((p.actualPoints as number) - (p.projectedPoints as number)), 0),
+      projectionGap: total - projected.reduce((n, p) => n + (p.projectedPoints as number), 0),
       offProjection: Math.abs(
         total - projected.reduce((n, p) => n + (p.projectedPoints as number), 0),
       ),
@@ -584,39 +597,56 @@ function computeRosterShapeAwards(
     })
   }
 
-  // ---- The Socialist: nobody on the roster had a bad day ----
-  // The highest FLOOR in the league, not the flattest percentage. A lineup
-  // where the worst starter still cleared five points is a real thing to have
-  // done; being 20% rather than 21% concentrated is not.
+  // ---- The Socialist: the tightest spread between best and worst starter ----
+  //
+  // ⚠️ THIS IS ABOUT DISTRIBUTION, NOT QUALITY, and the copy has to say so.
+  // Two earlier versions both claimed something they could not measure:
+  //
+  //   share of team total — five of twelve teams landed inside one percentage
+  //     point of each other, so the winner was a coin flip
+  //   the highest FLOOR — crowned a lineup whose weakest starter was Matthew
+  //     Stafford on 5.1 against a 22.2 projection, under the words "not one
+  //     bad start in the whole lineup". A floor cannot tell a good five-point
+  //     game from a catastrophic one.
+  //
+  // The margin from best starter to worst says only what it measures: everyone
+  // did roughly the same amount of work. Whether that amount was any good is
+  // The Dumpster Fire's business.
   const shared = [...shapes]
-    .sort((a, b) =>
-      (b.floor.actualPoints as number) - (a.floor.actualPoints as number) || a.teamId - b.teamId)[0]
+    .sort((a, b) => a.spread - b.spread || a.teamId - b.teamId)[0]
 
-  // A week where somebody's weakest starter scored nothing has no Socialist.
-  // Every roster had a bad day, and saying so beats crowning the least bad.
-  if (shared && (shared.floor.actualPoints as number) > 0 && shared.teamId !== carried?.teamId) {
+  if (shared && shared.teamId !== carried?.teamId) {
     awards.push({
       key: 'socialist',
       teamId: shared.teamId,
       opponentId: null,
-      metricValue: f1(shared.floor.actualPoints as number),
-      headline: `Their worst starter still put up ${f1(shared.floor.actualPoints as number)}.`,
+      metricValue: f1(shared.spread),
+      headline: `Just ${f1(shared.spread)} between their best starter and their worst.`,
       supporting: [
+        { label: 'Strongest starter', value: `${shared.top.name} · ${f1(shared.top.actualPoints as number)}` },
         { label: 'Weakest starter', value: `${shared.floor.name} · ${f1(shared.floor.actualPoints as number)}` },
-        { label: 'Team total', value: f1(shared.total) },
       ],
     })
   }
 
   // ---- The Control Group: closest to its own projection ----
+  // Won on the ABSOLUTE distance from projection — landing either side of it
+  // is equally uncanny — but displayed signed, because "4.3 off" leaves the
+  // reader unable to tell whether they beat it or missed it.
   const calm = [...shapes].sort((a, b) => a.offProjection - b.offProjection || a.teamId - b.teamId)[0]
+  const over = calm.projectionGap >= 0
   awards.push({
     key: 'control_group',
     teamId: calm.teamId,
     opponentId: null,
-    metricValue: f1(calm.offProjection),
+    metricValue: `${over ? '+' : '\u2212'}${f1(Math.abs(calm.projectionGap))}`,
+    scoreValue: calm.offProjection,
+    metricTone: over ? 'live' : 'loss',
     headline: `Finished ${f1(calm.offProjection)} from their projection. Nothing to see here.`,
-    supporting: [{ label: 'Scored', value: f1(calm.total) }],
+    supporting: [
+      { label: 'Projected', value: f1(calm.total - calm.projectionGap) },
+      { label: 'Scored', value: f1(calm.total) },
+    ],
   })
 
   // ---- Slay Girl Slay: most starters over their projection ----
@@ -862,9 +892,11 @@ function computePlayerAwards(players: AwardPlayer[]): ComputedAward[] {
       opponentId: null,
       metricValue: f1(seer.over),
       headline: `${seer.p.name} cleared his projection by ${f1(seer.over)}.`,
+      // Projection first: it is the number the result is being measured
+      // against, and only the first two supporting stats fit on a card.
       supporting: [
-        { label: 'Actual', value: f1(seer.p.actualPoints as number) },
         { label: 'Projected', value: f1(seer.p.projectedPoints as number) },
+        { label: 'Actual', value: f1(seer.p.actualPoints as number) },
       ],
       player: evidence(seer.p),
     })

@@ -68,6 +68,8 @@ export interface AwardDef {
   needs: DataNeed[]
   /** Label for the card's headline number. */
   metricLabel: string
+  /** The headline number carries a sign and a colour. See ComputedAward.metricTone. */
+  signedMetric?: boolean
   /** Heaviest capture cadence this award depends on. */
   capture: CaptureCadence
   /**
@@ -139,6 +141,7 @@ export const AWARDS: AwardDef[] = [
     formula: 'Smallest gap between a team\'s starter points and the sum of those starters\' projections, in either direction.',
     needs: ['PLAYER_SCORES', 'PROJECTIONS'], capture: 'WEEKLY_BOXSCORE',
     metricLabel: 'Off projection',
+    signedMetric: true,
   },
   {
     key: 'photo_finish', name: 'The Photo Finish', section: 'STUDS', category: 'MATCHUP',
@@ -149,14 +152,14 @@ export const AWARDS: AwardDef[] = [
   },
   {
     key: 'socialist', name: 'The Socialist', section: 'STUDS', category: 'MANAGER',
-    blurb: 'Not one bad start in the whole lineup.',
+    blurb: 'The most evenly spread lineup in the league.',
     // Measured on the FLOOR, not on how flat the distribution was. Share of
     // team total put five of twelve managers inside a single percentage point
     // of each other and handed the award to whoever happened to score most —
     // see the note in compute.ts.
-    formula: 'Highest-scoring WEAKEST starter in the league: the manager whose worst start was still better than anyone else\'s worst start.',
+    formula: 'Smallest margin between a team\'s best-scoring starter and its worst. Measures how EVENLY a lineup scored, not how well — a flat bad week qualifies, which is The Dumpster Fire\'s business rather than this award\'s.',
     needs: ['PLAYER_SCORES'], capture: 'WEEKLY_BOXSCORE',
-    metricLabel: 'Weakest starter',
+    metricLabel: 'Best-to-worst margin',
   },
   {
     key: 'one_man_army', name: 'The One Man Army', section: 'STUDS', category: 'MANAGER',

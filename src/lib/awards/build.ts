@@ -19,6 +19,7 @@ export interface DecidedAward {
   teamId: number
   opponentId: number | null
   metricValue: string
+  metricTone?: 'live' | 'loss'
   headline: string
   supporting: { label: string; value: string }[]
   player?: { espnPlayerId: number; name: string; position: string; nflTeam: string } | null
@@ -47,6 +48,7 @@ export function buildAwardCards(
         ? `${computed.player.position} · ${computed.player.nflTeam}`
         : null,
       metricValue: computed.metricValue,
+      metricTone: computed.metricTone,
       // Real and sample awards share one commentary builder, so the voice
       // cannot diverge between before and after week 1.
       commentary: buildCommentary(def.key, {

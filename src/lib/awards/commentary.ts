@@ -87,10 +87,23 @@ const BUILDERS: Record<string, Builder> = {
         b(c.managerFirst), t(' picked up '), ...player(c),
         t(' off the wire and he went off for '), b(`${c.value} pts`), t('. Slay, king!'),
       ]),
-  nostradamus: (c) => [
-    t('Nobody else wanted '), ...player(c), t('. '), b(c.managerFirst),
-    t(' started him anyway and cleared projection by '), b(c.value), t('. Seer behavior.'),
-  ],
+  // ⚠️ DO NOT CLAIM ANYTHING ABOUT WHO WANTED A PLAYER. The engine has no ADP
+  // and no news, so "nobody else wanted Caleb Williams" was a guess — and a
+  // wrong one, in a week half the league was high on the Bears offence. What
+  // IS known is the projection, and the gap between it and the result is the
+  // whole story anyway.
+  nostradamus: (c) => (c.extra?.Projected
+    ? [
+        t('The projections had '), ...player(c), t(' down for '),
+        b(c.extra.Projected), t('. '), b(c.managerFirst), t(' got '),
+        b(c.extra.Actual ?? '\u2014'),
+        t('. Nobody saw that coming, except the one person who started him.'),
+      ]
+    : [
+        b(c.managerFirst), t(' started '), ...player(c),
+        t(' and watched him clear his projection by '), b(c.value),
+        t('. Nobody saw that coming, except the one person who started him.'),
+      ]),
   cat_burglar: (c) => [
     b(c.managerFirst), t(' won with just '), b(`${c.value} points`),
     t(' — the lowest winning score of the week. Took it from '), ...opponent(c),
@@ -109,10 +122,12 @@ const BUILDERS: Record<string, Builder> = {
     b(c.managerFirst), t(' beat '), ...opponent(c), t(' by '), b(c.value),
     t('. Any closer and they would have needed a steward\'s inquiry.'),
   ],
+  // Distribution, not quality. The award cannot tell a good week from a bad
+  // one — only a flat one — so the copy must not imply the lineup was strong.
   socialist: (c) => [
-    t('The worst starter '), b(c.managerFirst), t(' put out still scored '),
-    b(c.value), t('. No holes, no passengers, nobody having a quiet one. '),
-    t('From each according to their ability, and all that.'),
+    t('Just '), b(`${c.value} points`), t(' separated '), b(c.managerFirst),
+    t('\u2019s best starter from their worst. Everybody did the same amount of '),
+    t('work, for better or for worse. From each according to their ability.'),
   ],
   one_man_army: (c) => [
     ...player(c), t(' was '), b(c.value), t(' of the score that won it for '),

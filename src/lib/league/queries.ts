@@ -657,6 +657,7 @@ export interface StoredAward {
   teamId: number
   opponentId: number | null
   metricValue: string
+  metricTone?: 'live' | 'loss'
   headline: string
   supporting: { label: string; value: string }[]
   player: { espnPlayerId: number; name: string; position: string; nflTeam: string } | null
@@ -665,6 +666,7 @@ export interface StoredAward {
 type AwardExtras = {
   opponentId?: number | null
   metricValue?: string
+  metricTone?: 'live' | 'loss' | null
   supporting?: { label: string; value: string }[]
   player?: StoredAward['player']
 }
@@ -704,6 +706,7 @@ export async function getPublishedAwards(
         // The formatted string is what the card shows; `score` is the numeric
         // column, kept for sorting and the season leaderboard.
         metricValue: extras.metricValue ?? String(r.score ?? ''),
+        metricTone: extras.metricTone ?? undefined,
         headline: r.headline ?? '',
         supporting: extras.supporting ?? [],
         player: extras.player ?? null,

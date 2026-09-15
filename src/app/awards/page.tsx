@@ -78,7 +78,12 @@ function CardBody({
       <div className="mt-auto flex items-end justify-between gap-4 border-t border-border pt-3">
         <div>
           <Eyebrow>{card.def.metricLabel}</Eyebrow>
-          <div className="display mt-0.5 text-[28px] tnum" style={{ color: accent }}>
+          {/* A card may override the section accent when the SIGN of its
+              number carries meaning — green over projection, red under. */}
+          <div
+            className="display mt-0.5 text-[28px] tnum"
+            style={{ color: card.metricTone ? `var(--${card.metricTone})` : accent }}
+          >
             {card.metricValue}
           </div>
         </div>

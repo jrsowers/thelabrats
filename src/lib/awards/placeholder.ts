@@ -29,6 +29,8 @@ export interface AwardCard {
   espnPlayerId: number | null
   playerMeta: string | null
   metricValue: string
+  /** Colours the headline number where its direction means something. */
+  metricTone?: 'live' | 'loss'
   /** Bolded sentence naming the manager, the player or opponent, and the number. */
   commentary: Segment[]
   supporting: { label: string; value: string }[]
@@ -141,9 +143,12 @@ export function placeholderAward(
       }
     },
     giant_killer: () => {
+      // A DEFICIT, so the magnitude is the number. The leading minus made the
+      // sample card read "projected to lose by -30.0", which looks like a bug
+      // rather than a placeholder.
       const deficit = between(r, 18, 34)
       return {
-        value: `-${f1(deficit)}`,
+        value: f1(deficit),
         supporting: [{ label: 'Result', value: 'Win' }],
       }
     },
