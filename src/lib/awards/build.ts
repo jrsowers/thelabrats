@@ -61,6 +61,10 @@ export function buildAwardCards(
         playerMeta: computed.player
           ? `${computed.player.position} · ${computed.player.nflTeam}`
           : null,
+        // Every supporting stat, keyed by its label, so a builder can react to
+        // the detail rather than just restate the headline number. The Waiver
+        // Wire Wizard uses it to notice that the pickup never left the bench.
+        extra: Object.fromEntries(computed.supporting.map((x) => [x.label, x.value])),
       }),
       supporting: computed.supporting,
       placeholder: false,

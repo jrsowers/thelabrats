@@ -73,10 +73,20 @@ const BUILDERS: Record<string, Builder> = {
         b(c.managerFirst), t(' came closest to their optimal lineup this week, leaving just '),
         b(`${c.value} additional points`), t(' on the bench. Surgical.'),
       ]),
-  waiver_wire_wizard: (c) => [
-    b(c.managerFirst), t(' picked up '), ...player(c),
-    t(' off the wire and he went off for '), b(`${c.value} pts`), t('. Slay, king!'),
-  ],
+  // Finding the best free agent on the wire and then leaving him on the bench
+  // is a different story from finding him and starting him, and the second
+  // half is the funnier one. `Lineup` comes from the award's own supporting
+  // stats, so this stays true for whoever does it next.
+  waiver_wire_wizard: (c) => (c.extra?.Lineup === 'Benched'
+    ? [
+        b(c.managerFirst), t(' found '), ...player(c),
+        t(' on the wire and he went off for '), b(`${c.value} pts`),
+        t(' \u2014 every one of them from the bench. Great eye. Shame about the lineup.'),
+      ]
+    : [
+        b(c.managerFirst), t(' picked up '), ...player(c),
+        t(' off the wire and he went off for '), b(`${c.value} pts`), t('. Slay, king!'),
+      ]),
   nostradamus: (c) => [
     t('Nobody else wanted '), ...player(c), t('. '), b(c.managerFirst),
     t(' started him anyway and cleared projection by '), b(c.value), t('. Seer behavior.'),

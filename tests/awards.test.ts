@@ -863,3 +863,31 @@ describe('The Mastermind is not about bench points', () => {
     expect(a.supporting[1].label).toBe('Actual lineup')
   })
 })
+
+describe('The Waiver Wire Wizard notices a benched pickup', () => {
+  const ctx = {
+    managerFirst: 'Colin', teamName: 'Nix Pix a Puka Six',
+    playerName: 'Stefon Diggs', playerMeta: 'WR · WSH', value: '13.5',
+  }
+  const render = (extra?: Record<string, string>) =>
+    buildCommentary('waiver_wire_wizard', { ...ctx, extra }).map((s) => s.text).join('')
+
+  it('needles a manager who found him and then sat him', () => {
+    // The award is won for the acquisition, so it does not require a start —
+    // but claiming a manager "went off for 13.5" reads as a compliment he did
+    // not earn when the points happened without him.
+    const text = render({ Lineup: 'Benched' })
+    expect(text).toMatch(/from the bench/)
+    expect(text).not.toMatch(/Slay, king/)
+  })
+
+  it('leaves the compliment intact when he actually started him', () => {
+    expect(render({ Lineup: 'Started' })).toMatch(/Slay, king/)
+  })
+
+  it('falls back to the compliment when the detail is missing', () => {
+    // An older published week has no `Lineup` in its stored supporting stats.
+    // Silence is not evidence he benched the guy.
+    expect(render()).toMatch(/Slay, king/)
+  })
+})
