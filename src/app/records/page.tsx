@@ -24,15 +24,19 @@ const f2 = (n: number) => n.toFixed(2)
  * which is a wall rather than a record book.
  *
  * The split is by WHO OR WHAT IS RESPONSIBLE, which is the question a reader is
- * actually asking: did the team play well, did the manager decide well, or did
- * one player have a day? A team record measured over a season and one measured
- * over a week belong together — hence the scope chip on each card rather than a
- * fourth section.
+ * actually asking: did one player have a day, did the team play well, or did
+ * the manager decide well? A team record measured over a season and one
+ * measured over a week belong together — hence the scope chip on each card
+ * rather than a fourth section.
+ *
+ * Player first, directly under the by-position strip it continues. The two
+ * sections are the same subject at different resolutions, and splitting them
+ * with Team Records in between made the reader change topic and change back.
  */
 const GROUPS: { key: RecordGroup; title: string; blurb: string }[] = [
+  { key: 'player', title: 'Player Records', blurb: 'Individual performances' },
   { key: 'team', title: 'Team Records', blurb: 'Scores, margins, streaks' },
   { key: 'manager', title: 'Manager Records', blurb: 'Decisions, not scores' },
-  { key: 'player', title: 'Player Records', blurb: 'Individual performances' },
 ]
 
 type TeamLookup = Map<number, Awaited<ReturnType<typeof getSeasonTeams>>[number]>
