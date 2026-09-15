@@ -231,7 +231,7 @@ export const RECAPS: Recap[] = [
       },
       {
         type: 'paragraph',
-        text: 'There is a version of this league in which Colin is genuinely frightening. It requires Colin to take Colin’s advice. Until then we have a manager who does the reading, shows the work, reaches the correct answer, and puts it behind glass to admire.',
+        text: 'There is a version of this league in which Colin is genuinely frightening. It requires Colin to take Colin’s advice. Until then we have a manager who does the reading, shows the work, reaches the correct answer, and then forgets to turn in the assignment. Gonna need more follow through, Colin.',
       },
       { type: 'heading', text: 'The Champ Was Down 46.7 And Did Not Break A Sweat' },
       {
@@ -240,7 +240,7 @@ export const RECAPS: Recap[] = [
       },
       {
         type: 'paragraph',
-        text: 'The comeback had a postmark on it. Isaiah Likely — who plays for the Giants now, a fact I recommend the rest of you commit to memory — posted 23.8 against a 7.6 projection. Dak Prescott added 19.4 for Dallas. Chenell owned both ends of the same Sunday night football game and billed it for 43.2 points.',
+        text: 'The comeback had a postmark on it. Isaiah Likely — who plays for the Giants now, a fact I recommend the rest of you commit to memory — posted 23.8 against a 7.6 projection, and Dak Prescott added 19.4 for Dallas. Chenell owned both ends of the same Sunday night game and billed it for 43.2 points.',
       },
       { type: 'paragraph', text: 'Final: 166.0 to 153.3.' },
       {
@@ -289,7 +289,7 @@ export const RECAPS: Recap[] = [
       { type: 'heading', text: 'The Rest Of The Petri Dish' },
       {
         type: 'paragraph',
-        text: 'Mike won the closest game of the week, by 2.6, with the week’s lowest winning score, 114.0 — of which Jaxson Dart was 32.6. Twenty-nine percent of a victory from one rookie quarterback, and three awards for an afternoon of bare minimum executed with surgical precision. The Cat Burglar takes only what the job requires and is out the window before the lights come on. It is not pretty and it is 1-0.',
+        text: 'Mike won the closest game of the week, by 2.6, with the week’s lowest winning score of 114.0 — of which Jaxson Dart was 32.6. Twenty-nine percent of a victory from one rookie quarterback, and three awards for an afternoon of bare minimum executed with surgical precision. The Cat Burglar takes only what the job requires and is out the window before the lights come on. It is not pretty and it is 1-0.',
       },
       {
         type: 'paragraph',
@@ -301,7 +301,7 @@ export const RECAPS: Recap[] = [
       },
       {
         type: 'paragraph',
-        text: 'Jay made six roster moves — three free agents, one lineup change, two trips to injured reserve — and posted 148.9, a number that beats seven of the other eleven teams. Jay drew the 197.4. There is no lesson here. Sometimes you do everything right and the experiment kills you anyway.',
+        text: 'Jay made six roster moves — three free agents, one lineup change, two trips to injured reserve — and posted 148.9, beating seven of the other eleven teams. Jay drew the 197.4. There is no lesson here. Sometimes you do everything right and the experiment kills you anyway.',
       },
       {
         type: 'paragraph',
@@ -330,7 +330,7 @@ export const RECAPS: Recap[] = [
       },
       {
         type: 'paragraph',
-        text: 'Check your lineups. Play your quarterbacks. Somebody please tell Colin that a bench is not a display case.',
+        text: 'Check your lineups. Play your quarterbacks. Somebody stand over Colin until the assignment is handed in.',
       },
       {
         type: 'paragraph',
