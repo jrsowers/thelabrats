@@ -122,7 +122,7 @@ export const RECAPS: Recap[] = [
       },
       {
         type: 'paragraph',
-        text: 'The reigning champion did not draft a fantasy football team. The reigning champion acquired commercial real estate in Maryland and is collecting rent on it every Sunday. Henry and Jackson combined for 61.8 of a 166.0 — the Baltimore backfield and the man handing it the ball, on one roster, in a game Baltimore led from the opening minutes to the end. Eleven of you drafted players. Chenell drafted a municipality.',
+        text: 'The reigning champion did not draft a fantasy football team. The reigning champion acquired commercial real estate in Maryland and collects rent on it every Sunday. Henry and Jackson combined for 61.8 of a 166.0 — the Baltimore backfield and the man handing it the ball, on one roster, in a game Baltimore led from the opening minutes to the end. Eleven of you drafted players. Chenell drafted a municipality.',
       },
       { type: 'heading', text: 'SEAHAWKS 13, PATRIOTS 10 — Five Snaps' },
       {
@@ -144,7 +144,7 @@ export const RECAPS: Recap[] = [
       { type: 'heading', text: 'BENGALS 33, BUCCANEERS 27 — Two Catches' },
       {
         type: 'paragraph',
-        text: 'Cincinnati won a shootout. Ja’Marr Chase, the best wide receiver currently drawing breath, was targeted four times, caught two, and finished with twelve receiving yards — his quietest afternoon since November of 2023. Tampa Bay bracketed him for sixty minutes and dared anybody else to beat them. Anybody else beat them.',
+        text: 'Cincinnati won a shootout. Ja’Marr Chase, the best wide receiver currently drawing breath, was targeted four times, caught two, and finished with twelve yards — his quietest afternoon since November of 2023. Tampa Bay bracketed him for sixty minutes and dared anybody else to beat them. Anybody else beat them.',
       },
       { type: 'paragraph', text: 'James started Ja’Marr Chase.' },
       { type: 'paragraph', text: 'James received 2.2 points.' },
@@ -200,7 +200,7 @@ export const RECAPS: Recap[] = [
       { type: 'heading', text: 'Tyler Scored 153.3 One Man Short And Lost Anyway' },
       {
         type: 'paragraph',
-        text: 'Here is the thought I asked you to hold. Tyler’s Talented Team scored 153.3, the second-highest total in the entire league. Drop that number into four of the six matchups this week and Tyler wins comfortably, opens 1-0, and none of us discusses it again.',
+        text: 'Here is the thought I asked you to hold. Tyler’s Talented Team scored 153.3, the second-highest total in the league. Drop that number into four of the six matchups this week and Tyler wins comfortably, opens 1-0, and none of us discusses it again.',
       },
       { type: 'paragraph', text: 'Tyler drew the champion. Tyler lost by 12.7. Tyler also did all of that while one of ten starting slots returned half a point.' },
       {
@@ -222,7 +222,7 @@ export const RECAPS: Recap[] = [
       { type: 'heading', text: 'Colin Did All The Work And Then Refused To Collect' },
       {
         type: 'paragraph',
-        text: 'Full credit, sincerely, no notes: Colin identified Stefon Diggs as the best available free agent, spent the claim, cut Travis Hunter for the spot, and watched Diggs deliver 13.5 against a 7.5 projection. The whole waiver process executed flawlessly, by a manager doing homework on a Tuesday night while the rest of you slept.',
+        text: 'Full credit, sincerely, no notes: Colin identified Stefon Diggs as the best available free agent, spent the claim, cut Travis Hunter for the spot, and watched Diggs deliver 13.5 against a 7.5 projection. The whole waiver process executed flawlessly, by a manager doing homework on a Tuesday night while you slept.',
       },
       { type: 'paragraph', text: 'Colin then benched him.' },
       {
@@ -258,7 +258,7 @@ export const RECAPS: Recap[] = [
       { type: 'heading', text: 'Doug Played A Perfect Game Against Somebody Who Was Asleep' },
       {
         type: 'paragraph',
-        text: 'Nobody Knows scored 150.7. The best lineup Doug’s roster could legally field also scored 150.7. Not a point misplaced. Not a start to revisit. Justin Jefferson 27.2, Ashton Jeanty 29.7, and every last decision correct on the first attempt.',
+        text: 'Nobody Knows scored 150.7. The best lineup Doug’s roster could legally field also scored 150.7. Not a point misplaced. Justin Jefferson 27.2, Ashton Jeanty 29.7, and every last decision correct on the first attempt.',
       },
       { type: 'paragraph', text: 'Doug won by 69.5.' },
       {
@@ -289,7 +289,7 @@ export const RECAPS: Recap[] = [
       { type: 'heading', text: 'The Rest Of The Petri Dish' },
       {
         type: 'paragraph',
-        text: 'Mike won the closest game of the week, by 2.6, with the week’s lowest winning score of 114.0 — of which Jaxson Dart was 32.6. Twenty-nine percent of a victory from one rookie quarterback, and three awards for an afternoon of bare minimum executed with surgical precision. The Cat Burglar takes only what the job requires and is out the window before the lights come on. It is not pretty and it is 1-0.',
+        text: 'Mike won the closest game of the week, by 2.6, with the week’s lowest winning score of 114.0 — of which Jaxson Dart was 32.6. Twenty-nine percent of a victory from one rookie quarterback, and three awards for an afternoon of bare minimum executed with surgical precision. The Cat Burglar takes only what the job requires and is out the window before the lights come on. Not pretty. 1-0.',
       },
       {
         type: 'paragraph',
@@ -305,12 +305,12 @@ export const RECAPS: Recap[] = [
       },
       {
         type: 'paragraph',
-        text: 'And Evan, whose quarterback’s Minnesota debut ended early and took the afternoon with it, posted 102.4 and lost by 15.7. Some variables are not yours to control. Cleaner sample next week.',
+        text: 'Prayers up for Evan and Kyler Murray, whose Minnesota debut ended early and took the rest of Evan’s team down with him. Evan posted a total score of 102.4 and lost by 15.7. Some variables are not yours to control. We’ll all hope for a cleaner sample next week.',
       },
       { type: 'heading', text: 'THE FINDINGS' },
       {
         type: 'paragraph',
-        text: 'One week. Twelve subjects. A scoring environment that broke a record older than most of this room, and a table in which the highest scorer left forty points in a folding chair, the second-highest scorer lost, and the perfect lineup won by a margin that made perfection pointless.',
+        text: 'One week. Twelve subjects. A scoring environment that broke a record older than most of this room, and a table in which the highest scorer left forty points on the bench, the second-highest scorer lost, and the perfect lineup won by a margin that made perfection pointless.',
       },
       {
         type: 'paragraph',
@@ -318,7 +318,7 @@ export const RECAPS: Recap[] = [
       },
       {
         type: 'paragraph',
-        text: 'Chenell does not lose in September. Print it. Pin it to something. Bring it back to me in three weeks when I am wrong and I will eat the page on camera.',
+        text: 'Chenell does not lose in September. Print it. Bring it back to me in three weeks when I am wrong and I will eat the page on camera.',
       },
       {
         type: 'paragraph',
