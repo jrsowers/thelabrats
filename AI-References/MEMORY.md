@@ -435,3 +435,30 @@ from `publishedRecaps()[0]`.
 cover's "Week 1" wrapped at 375px and landed on the ghost numeral. Nothing
 overflowed, so nothing failed. Not every layout failure is an overflow — look
 at the page.
+
+## Session 10 — 2026-09-22 (week 2)
+
+**Week 2 recap published** at `/recaps/week-2-the-bill-arrives`, 2,061 words.
+Awards for week 2 had already generated on their own (24 of them, Tuesday
+release window) and the record book recomputes at render time, so the only
+hand-written artefact was the recap. That is the pipeline working as designed —
+confirm before assuming there is work to do.
+
+**Two injuries drove the week's worst fantasy lines** and neither is roastable:
+Jaxson Dart (sprained MCL, opening drive, Mike's OP slot, 0.8) and Malik Nabers
+(shoulder, Doug's flex, 0.6). Reported flat, with the recap saying on the page
+that it would not be made funny. Mike's 55.4 was roasted only on the parts that
+were not injury — a 9.0 quarterback, a 2.0 kicker, a minus-one defence.
+
+**Five of my own numbers were wrong in the first draft** and the gather/awards
+data caught all five: Bree's 144.4 is the 2nd-best score of the week not the
+4th, it beat 5 of 6 winning scores not 4, Colin's 81.4 is 3rd-lowest not 2nd,
+only 2 of the 3 benched-star managers lost, and James had not won back-to-back
+Cat Burglars. **Check every comparative claim against the data, not against the
+shape of the sentence.** "Carted off" also got written about Dart, who was not
+carted off — invented detail, caught on review.
+
+**Open bug, task spawned:** `/standings` shows ESPN's seed with our engine's
+movement arrow, so Doug renders as "rank 6, down 6" while Free Fallin' says he
+went 3 → 9. Two pages, two ranks, same week. The recap deliberately avoids
+naming Doug's rank.
