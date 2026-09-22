@@ -38,7 +38,7 @@ export async function getAllTimeRecordInputs(): Promise<RecordInputs> {
     db.from('matchups')
       .select('id, season_id, week, home_team_id, away_team_id, home_score, away_score, status'),
     db.from('player_week_scores')
-      .select('season_id, week, season_team_id, is_starter, lineup_slot_id, eligible_slots, actual_points, projected_points, players ( espn_player_id, full_name, position, nfl_team )'),
+      .select('season_id, week, season_team_id, is_starter, lineup_slot_id, eligible_slots, actual_points, projected_points, game_status, players ( espn_player_id, full_name, position, nfl_team )'),
     db.from('transactions')
       .select('season_id, week, season_team_id, transaction_type, status, transaction_items ( action, to_team_id, players ( espn_player_id ) )')
       .eq('status', 'EXECUTED'),
@@ -73,6 +73,7 @@ export async function getAllTimeRecordInputs(): Promise<RecordInputs> {
     season_id: number; week: number; season_team_id: number
     is_starter: boolean; lineup_slot_id: number; eligible_slots: number[] | null
     actual_points: number | null; projected_points: number | null
+    game_status: string | null
     players: { espn_player_id: number | null; full_name: string | null; position: string | null; nfl_team: string | null } | null
   }
   const players = (playerRes.data as unknown as PRow[] ?? [])
@@ -90,6 +91,7 @@ export async function getAllTimeRecordInputs(): Promise<RecordInputs> {
       eligibleSlots: r.eligible_slots ?? [],
       actualPoints: r.actual_points == null ? null : Number(r.actual_points),
       projectedPoints: r.projected_points == null ? null : Number(r.projected_points),
+      gameStatus: r.game_status,
     }))
 
   type TRow = {

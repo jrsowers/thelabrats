@@ -9,6 +9,7 @@
  * ⚠️ `actualPoints` NULL MEANS "HAS NOT PLAYED", NOT ZERO. Treating null as 0
  * would hand every "worst performance" record to whoever is on a bye.
  */
+import { injuryOverrideFor } from '@/content/injury-overrides'
 import {
   bestOf, HIGH, LOW,
   type LeagueRecord, type RecordHolder, type RecordTone,
@@ -30,6 +31,38 @@ export interface RecordPlayerWeek {
   eligibleSlots: number[]
   actualPoints: number | null
   projectedPoints: number | null
+  /**
+   * ESPN injury designation for the week: ACTIVE, QUESTIONABLE, DOUBTFUL, OUT,
+   * INJURY_RESERVE, DAY_TO_DAY. Null for weeks recorded before we captured it.
+   */
+  gameStatus?: string | null
+}
+
+/**
+ * Was this player carrying an injury that week?
+ *
+ * ⚠️ USED ONLY TO WITHHOLD THE TWO "PILING ON" RECORDS, never to award one.
+ * James, on Jaxson Dart holding Biggest Under-Performance after a knee injury
+ * on the opening drive: "That's like piling on someone who is already having a
+ * really bad day."
+ *
+ * Anything other than ACTIVE counts. That deliberately includes QUESTIONABLE,
+ * which is the designation Dart and Malik Nabers both carried — a stricter
+ * rule would not have excluded the two cases that prompted this. The error it
+ * risks is dropping a genuine bust who happened to be on the injury report,
+ * and that is the right direction to fail: a missing Dud is a non-event, a Dud
+ * awarded to somebody who got hurt is a rule this project does not break.
+ *
+ * A NULL status is treated as healthy, because null means "we never captured
+ * it" — every row written before mRoster was added reads null, and excluding
+ * those would empty both records for weeks 1 and 2 entirely.
+ */
+export function wasInjured(r: RecordPlayerWeek): boolean {
+  // A curated override wins over the stored status, because for weeks played
+  // before we captured anything the stored value is today's injury report
+  // rather than that week's. See src/content/injury-overrides.ts.
+  const status = injuryOverrideFor(r.year, r.week, r.espnPlayerId) ?? r.gameStatus
+  return status != null && status !== 'ACTIVE'
 }
 
 const f = (n: number) => n.toFixed(2)
@@ -82,8 +115,9 @@ export function computePlayerRecords(rows: RecordPlayerWeek[]): LeagueRecord[] {
   // The worst STARTED performance. Restricted to players who were actually
   // expected to do something — otherwise this is permanently held by a kicker
   // projected for 0.4 who scored 0.3, which is not a story.
+  // Healthy players only — see wasInjured.
   add('worst_player_game', 'Worst Started Performance', 'bad',
-    withProj.filter((r) => proj(r) >= 8)
+    withProj.filter((r) => proj(r) >= 8 && !wasInjured(r))
       .map((r) => entry(r, `${r.position} · ${r.nflTeam} · projected ${f(proj(r))}`)),
     pts, LOW)
 
@@ -93,8 +127,11 @@ export function computePlayerRecords(rows: RecordPlayerWeek[]): LeagueRecord[] {
     withProj.map((r) => entry(r, `${f(proj(r))} projected, ${f(pts(r))} scored`)),
     (r) => pts(r) - proj(r), HIGH, '+')
 
+  // Healthy players only. An injury is not an under-performance, it is an
+  // absence, and the manager who started him could not have known.
   add('biggest_underperformance', 'Biggest Under-Performance', 'bad',
-    withProj.map((r) => entry(r, `${f(proj(r))} projected, ${f(pts(r))} scored`)),
+    withProj.filter((r) => !wasInjured(r))
+      .map((r) => entry(r, `${f(proj(r))} projected, ${f(pts(r))} scored`)),
     (r) => proj(r) - pts(r), HIGH, '-')
 
   // The best game nobody got to count. IR is excluded — a player who could not

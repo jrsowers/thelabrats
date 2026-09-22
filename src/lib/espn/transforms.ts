@@ -304,7 +304,10 @@ export function toPlayerWeekScores(
           actualPoints: typeof actual === 'number' ? actual : null,
           projectedPoints: typeof projected === 'number' ? projected : null,
           eligibleSlots: player?.eligibleSlots ?? [],
-          injuryStatus: player?.injuryStatus ?? null,
+          // ⚠️ ALWAYS NULL HERE. The boxscore player object has no
+          // injuryStatus — only mRoster does. Filled in by the caller from
+          // toInjuryStatuses(); left on the row so the shape stays stable.
+          injuryStatus: null,
         })
       }
     }
@@ -437,4 +440,30 @@ export function proTeamAbbrev(id: number): string {
 }
 export function positionLabel(id: number): string {
   return POSITION_LABEL[id] ?? 'UNK'
+}
+
+
+/**
+ * espnPlayerId -> ESPN injury status, from `view=mRoster`.
+ *
+ * ⚠️ THIS IS STATUS AT FETCH TIME, NOT STATUS DURING THE GAME. ESPN reports a
+ * player's CURRENT designation, so a roster fetched in December describes
+ * December. Stamp it onto a week when that week settles and then leave it
+ * alone — re-deriving a past week's injuries from a later fetch would silently
+ * rewrite history, and the records that read it are meant to be settled.
+ *
+ * Values seen in this league: ACTIVE, QUESTIONABLE, DOUBTFUL, OUT,
+ * INJURY_RESERVE, DAY_TO_DAY.
+ */
+export function toInjuryStatuses(res: LeagueResponse): Map<number, string> {
+  const out = new Map<number, string>()
+  for (const team of res.teams ?? []) {
+    for (const entry of team.roster?.entries ?? []) {
+      const player = entry.playerPoolEntry?.player
+      const id = player?.id ?? entry.playerId
+      if (id == null || !player?.injuryStatus) continue
+      out.set(id, player.injuryStatus)
+    }
+  }
+  return out
 }

@@ -19,7 +19,7 @@
  */
 import { EspnClient } from '@/lib/espn/client'
 import { VIEWS } from '@/lib/espn/constants'
-import { toPlayerWeekScores } from '@/lib/espn/transforms'
+import { toPlayerWeekScores, toInjuryStatuses } from '@/lib/espn/transforms'
 import { createServiceClient } from '@/lib/supabase/server'
 
 export interface RosterSyncResult {
@@ -40,13 +40,17 @@ export async function syncRosters(
   const db = createServiceClient()
 
   try {
-    // BOTH views, one request. mMatchupScore has the rosters and live totals;
-    // mBoxscore has the rosters and eligibleSlots. See toPlayerWeekScores.
-    const res = await espn.getViews([VIEWS.MATCHUP_SCORE, VIEWS.BOXSCORE], {
-      scoringPeriodId: week,
-    })
+    // THREE views, one request. mMatchupScore has the rosters and live totals;
+    // mBoxscore has the rosters and eligibleSlots; mRoster is the only one that
+    // carries injuryStatus — the boxscore player object simply does not have
+    // the field, which is why game_status was null on every row ever written.
+    const res = await espn.getViews(
+      [VIEWS.MATCHUP_SCORE, VIEWS.BOXSCORE, VIEWS.ROSTER],
+      { scoringPeriodId: week },
+    )
 
     const scores = toPlayerWeekScores(res, week)
+    const injuries = toInjuryStatuses(res)
     if (scores.length === 0) {
       // Before week 1 ESPN returns rosters with no entries. Not an error —
       // there is simply nothing to record yet.
@@ -99,7 +103,11 @@ export async function syncRosters(
         // The lineup optimizer's constraint set. NOT derivable from position —
         // a QB lists the superflex OP slot too.
         eligible_slots: s.eligibleSlots,
-        game_status: s.injuryStatus,
+        // ⚠️ STATUS AT SYNC TIME, not status during the game — see
+        // toInjuryStatuses. Records treat anything other than ACTIVE as
+        // "was carrying something", which is why this must only ever be
+        // written for a week while that week is current.
+        game_status: injuries.get(s.espnPlayerId) ?? s.injuryStatus,
         last_synced_at: new Date().toISOString(),
       }))
 

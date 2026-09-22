@@ -53,6 +53,10 @@ export const VIEWS = {
   STATUS: 'mStatus',
   SETTINGS: 'mSettings',
   TEAM: 'mTeam',
+  /**
+   * ⚠️ The ONLY view that returns `injuryStatus`. mBoxscore and mMatchupScore
+   * return a stripped player object without it.
+   */
   ROSTER: 'mRoster',
   STANDINGS: 'mStandings',
   SCOREBOARD: 'mScoreboard',

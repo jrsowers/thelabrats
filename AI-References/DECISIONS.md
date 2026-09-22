@@ -1302,3 +1302,46 @@ order is an accident of how a file happens to be written.
 **Best Performances Ever, By Position moved to the top.** It is the most
 scannable thing on the page: one row per position, six different names, no
 reading required. It earns the first screen where a wall of cards does not.
+
+## 2026-09-22 — Injuries do not win Duds, and ESPN made that harder than it sounds
+
+James, on Jaxson Dart holding Biggest Under-Performance after a knee injury on
+the opening drive: **"That's like piling on someone who is already having a
+really bad day."** Correct, and it is the same line the recaps already draw.
+
+**`game_status` was null on all 389 rows, and always would have been.** The
+transform read `player.injuryStatus` from the boxscore, and the boxscore player
+object does not have that field — `mBoxscore` and `mMatchupScore` return only
+`id, fullName, defaultPositionId, proTeamId, eligibleSlots, stats`. **Only
+`view=mRoster` carries `injuryStatus`**, and `teamSchema` had no `roster` field,
+so the client stripped it even when asked. Three separate layers each quietly
+returning nothing. Now documented in ESPN-API.md and in the VIEWS constant.
+
+**Anything other than ACTIVE counts as hurt, QUESTIONABLE included.** Dart and
+Malik Nabers both carried QUESTIONABLE; a stricter rule would not have excluded
+either of the cases that prompted this. The error it risks is dropping a real
+bust who happened to be on the injury report, and that is the right direction to
+fail — a missing Dud is a non-event, a Dud awarded to somebody who got hurt is a
+rule this project does not break.
+
+**Null means "never captured", not "confirmed fit".** Every row written before
+this reads null; excluding nulls would empty both records outright.
+
+**The exclusion only ever WITHHOLDS a record, never grants one.** A player on
+the injury report who goes off anyway keeps everything he earned. Tested.
+
+**ESPN has no historical injury endpoint, so past weeks are approximate.** The
+API reports status TODAY. `syncRosters` now stamps the current week as it is
+played, which is accurate going forward; weeks 1–2 were backfilled from the
+week 3 injury report, which is close for week 2 and unreliable for week 1.
+
+That gap has teeth. **Kyler Murray reads ACTIVE** — he has cleared the
+concussion protocol that ended his week 1 after a quarter — so the backfill
+would have handed him Biggest Under-Performance, the exact pile-on the rule
+exists to prevent. Hence `src/content/injury-overrides.ts`, a curated list for
+weeks that predate capture, with a checkable reason on every entry. It is a
+historical patch and nothing should be added to it for a week the sync covered;
+a silent exclusion list is a way to quietly reshape the record book.
+
+**Result:** Biggest Under-Performance is now Matthew Stafford, −17.14 in week 1
+— a quarterback who was fit and simply bad, which is what the award is for.

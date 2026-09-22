@@ -308,3 +308,83 @@ describe('manager records judge the decision, not the outcome', () => {
     expect(out.find((x) => x.key === 'draft_bust')).toBeUndefined()
   })
 })
+
+describe('injured players are never handed a piling-on record', () => {
+  const pw = (
+    espnPlayerId: number, name: string, actual: number, projected: number,
+    gameStatus: string | null = 'ACTIVE',
+  ) => ({
+    year: 2026, week: 2, seasonTeamId: 1, espnPlayerId, name,
+    position: 'QB', nflTeam: 'NYG', isStarter: true, lineupSlotId: 0,
+    eligibleSlots: [0], actualPoints: actual, projectedPoints: projected, gameStatus,
+  })
+
+  const run = (players: ReturnType<typeof pw>[]) =>
+    new Map(
+      computeRecords({ matchups: [g(1, 1, 2, 100, 90), g(2, 1, 2, 100, 90)], players })
+        .map((r) => [r.key, r]),
+    )
+
+  it('skips the biggest miss when that player was hurt', () => {
+    // The case that prompted the rule: a knee injury on the opening drive is
+    // not an under-performance, it is an absence, and the manager who started
+    // him could not have known.
+    const r = run([
+      pw(1, 'Hurt Early', 0.8, 21.5, 'QUESTIONABLE'),
+      pw(2, 'Simply Bad', 4.0, 20.0, 'ACTIVE'),
+    ])
+    const under = r.get('biggest_underperformance')
+    expect(under?.holders[0].player?.name).toBe('Simply Bad')
+    expect(under?.value).toBeCloseTo(16)
+  })
+
+  it('treats every non-ACTIVE designation as hurt, QUESTIONABLE included', () => {
+    // A stricter rule would not have excluded Jaxson Dart or Malik Nabers,
+    // who both carried QUESTIONABLE.
+    for (const status of ['QUESTIONABLE', 'DOUBTFUL', 'OUT', 'INJURY_RESERVE', 'DAY_TO_DAY']) {
+      const r = run([pw(1, 'Hurt', 0, 25, status), pw(2, 'Fine', 10, 20, 'ACTIVE')])
+      expect(r.get('biggest_underperformance')?.holders[0].player?.name, status).toBe('Fine')
+    }
+  })
+
+  it('treats an unrecorded status as healthy', () => {
+    // Null means "never captured", not "confirmed fit". Excluding nulls would
+    // empty both records for every week played before mRoster was wired in.
+    const r = run([pw(1, 'No Status', 1, 25, null), pw(2, 'Fine', 10, 20, 'ACTIVE')])
+    expect(r.get('biggest_underperformance')?.holders[0].player?.name).toBe('No Status')
+  })
+
+  it('withholds the worst started performance too', () => {
+    const r = run([
+      pw(1, 'Hurt', 0, 20, 'OUT'),
+      pw(2, 'Merely Awful', 1.5, 18, 'ACTIVE'),
+    ])
+    expect(r.get('worst_player_game')?.holders[0].player?.name).toBe('Merely Awful')
+  })
+
+  it('never lets an injury withhold a GOOD record', () => {
+    // The rule exists to stop piling on. A player who was on the injury report
+    // and went off anyway keeps everything he earned.
+    const r = run([pw(1, 'Hurt But Great', 40, 15, 'QUESTIONABLE')])
+    expect(r.get('best_player_game')?.holders[0].player?.name).toBe('Hurt But Great')
+    expect(r.get('biggest_overperformance')?.holders[0].player?.name).toBe('Hurt But Great')
+  })
+
+  it('applies the curated override for weeks recorded before capture existed', () => {
+    // ESPN has no historical injury endpoint, so week 1 carries today's report.
+    // Kyler Murray has cleared concussion protocol and now reads ACTIVE; the
+    // override is what stops him inheriting the record he was hurt into.
+    const murray = {
+      year: 2026, week: 1, seasonTeamId: 1, espnPlayerId: 3917315,
+      name: 'Kyler Murray', position: 'QB', nflTeam: 'ARI', isStarter: true,
+      lineupSlotId: 0, eligibleSlots: [0],
+      actualPoints: 0.62, projectedPoints: 19.62, gameStatus: 'ACTIVE',
+    }
+    const other = { ...murray, espnPlayerId: 999, name: 'Real Bust', actualPoints: 5, projectedPoints: 20 }
+    const r = new Map(
+      computeRecords({ matchups: [g(1, 1, 2, 100, 90)], players: [murray, other] })
+        .map((x) => [x.key, x]),
+    )
+    expect(r.get('biggest_underperformance')?.holders[0].player?.name).toBe('Real Bust')
+  })
+})

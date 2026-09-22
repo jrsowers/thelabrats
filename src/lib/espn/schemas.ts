@@ -67,6 +67,21 @@ export const teamSchema = z.object({
     playoffClinchType: z.string().nullish(),
     modeRecord: recordSplitSchema.nullish(),
   }).nullish(),
+
+  /**
+   * The team's roster (view=mRoster ONLY).
+   *
+   * ⚠️ THIS IS THE ONLY PLACE ESPN RETURNS `injuryStatus`. The player object
+   * inside mBoxscore and mMatchupScore is minimal — id, fullName,
+   * defaultPositionId, proTeamId, eligibleSlots, stats, and nothing else — so
+   * `player_week_scores.game_status` sat null for every row ever written while
+   * the transform dutifully read a field that was never present.
+   *
+   * Declared lazily because `rosterEntrySchema` is defined further down.
+   */
+  roster: z.object({
+    entries: z.array(z.lazy(() => rosterEntrySchema)).nullish(),
+  }).nullish(),
 })
 
 export const settingsSchema = z.object({
