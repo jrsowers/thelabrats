@@ -123,6 +123,22 @@ async function captureStandingsSnapshot(seasonId: number): Promise<number> {
     .map(([teamId, t]) => ({ teamId, ...t, pct: (t.wins + t.ties * 0.5) / Math.max(1, t.wins + t.losses + t.ties) }))
     .sort((x, y) => y.pct - x.pct || y.pf - x.pf)
 
+  // ESPN's seed for the SAME moment. espn_team_standings is current-state and
+  // is overwritten on every sync, so this capture — taken once, when the week
+  // goes final — is the only record of where ESPN had each team that week.
+  // Without it the standings page has nothing to diff its own displayed ranks
+  // against, which is how its movement arrows came to be measured against a
+  // different table (see the 20260922 migration).
+  const { data: espnSeeds } = await db
+    .from('espn_team_standings')
+    .select('season_team_id, playoff_seed')
+    .eq('season_id', seasonId)
+  const espnSeed = new Map(
+    (espnSeeds ?? [])
+      .filter((e) => e.playoff_seed != null)
+      .map((e) => [e.season_team_id as number, e.playoff_seed as number]),
+  )
+
   const { data } = await db.from('standings_snapshots').insert(
     ranked.map((r, i) => ({
       season_id: seasonId,
@@ -133,7 +149,12 @@ async function captureStandingsSnapshot(seasonId: number): Promise<number> {
       ties: r.ties,
       points_for: r.pf,
       points_against: r.pa,
+      // LOCAL ordering: win% then points-for. Kept for continuity; it is NOT
+      // the rank the site displays.
       seed: i + 1,
+      // The authoritative rank. Null if ESPN has not been synced yet, which
+      // callers must read as "no comparable table" rather than falling back.
+      espn_seed: espnSeed.get(r.teamId) ?? null,
     })),
   ).select('id')
 

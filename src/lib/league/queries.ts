@@ -786,3 +786,38 @@ export async function getPublishedAwardWeeks(seasonId: number): Promise<number[]
   return [...new Set(data.map((r) => r.week).filter((w): w is number => w != null))]
     .sort((a, b) => a - b)
 }
+
+/**
+ * ESPN's playoff seed for every team, week by week, from `standings_snapshots`.
+ *
+ * This is the only record of what the table looked like in a PAST week —
+ * `espn_team_standings` is current-state and is overwritten on every sync, so
+ * it cannot answer "where did this team sit a week ago". Without it the
+ * standings page had nothing to diff ESPN's seeds against and fell back to
+ * diffing our own engine, which is how the arrows came to disagree with the
+ * ranks they sat beside.
+ */
+export async function getSeedHistory(
+  seasonId: number,
+): Promise<Map<number, Map<number, number>>> {
+  const out = new Map<number, Map<number, number>>()
+  if (!isSupabaseConfigured()) return out
+
+  const supabase = createPublicClient()
+  const { data, error } = await supabase
+    .from('standings_snapshots')
+    .select('week, season_team_id, espn_seed')
+    .eq('season_id', seasonId)
+  if (error || !data) return out
+
+  for (const row of data) {
+    const week = row.week as number
+    // espn_seed, NOT seed — the latter is a local points-for ordering that
+    // disagrees with the ranks this site displays.
+    const seed = row.espn_seed as number | null
+    if (seed == null) continue
+    if (!out.has(week)) out.set(week, new Map())
+    out.get(week)!.set(row.season_team_id as number, seed)
+  }
+  return out
+}

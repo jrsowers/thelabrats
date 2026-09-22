@@ -3,10 +3,11 @@ import { Fragment } from 'react'
 import Link from 'next/link'
 import {
   getLeagueOverview, getSeasonTeams, getSeasonResults, getReigningChampion, getLastSync,
-  hasActiveGames, getEspnStandings,
+  hasActiveGames, getEspnStandings, getSeedHistory,
 } from '@/lib/league/queries'
 import {
-  computeStandings, computeMovement, latestCompletedWeek, computePlayoffStatus,
+  computeStandings, computeMovement, rankMovementFor,
+  latestCompletedWeek, computePlayoffStatus,
   reconcileWithEspn,
 } from '@/lib/standings/compute'
 import { simulateSeason } from '@/lib/league/preview'
@@ -47,12 +48,13 @@ export default async function StandingsPage({
   const isPreview = params.preview === 'live'
 
   const champion = await getReigningChampion()
-  const [teams, rawResults, lastSync, gamesActive, espnStandings] = await Promise.all([
+  const [teams, rawResults, lastSync, gamesActive, espnStandings, seedHistory] = await Promise.all([
     getSeasonTeams(overview.seasonId, champion),
     getSeasonResults(overview.seasonId),
     getLastSync(),
     hasActiveGames(overview.currentWeek),
     getEspnStandings(overview.seasonId),
+    getSeedHistory(overview.seasonId),
   ])
 
   // Preview simulates the season to a given week so every state can be seen:
@@ -75,7 +77,29 @@ export default async function StandingsPage({
   const { rows, usedEspnSeeds, recordMismatches } = reconcileWithEspn(computed, espn, throughWeek)
   const espnById = new Map(espn.map((e) => [e.seasonTeamId, e]))
 
-  const movement = computeMovement(results, metas, throughWeek)
+  // ⚠️ THE ARROWS MUST COME FROM THE TABLE BEING DISPLAYED. Previously this
+  // diffed our own engine while the rows above showed ESPN's seeds, which put
+  // Doug at rank 6 with a "down 6" arrow after week 2 — a delta measured
+  // against a table nobody could see. Six of twelve arrows were wrong.
+  //
+  // Preview invents a season, so there are no real seeds to diff and the
+  // computed movement is the only honest answer there.
+  // ⚠️ THE ARROWS MUST COME FROM THE TABLE BEING DISPLAYED. This used to diff
+  // our own engine while the rows above showed ESPN's seeds, which rendered
+  // Doug at rank 6 with a "down 6" arrow after week 2 — a delta measured
+  // against a table nobody could see. Six of twelve arrows were wrong.
+  //
+  // rankMovementFor returns null when the two weeks would be ranked by
+  // different rulebooks, and no arrow is the correct output there. ESPN seeds
+  // have only been captured since 2026-09-22, so week 2 has no comparable
+  // predecessor and shows none.
+  //
+  // Preview invents a season, so no real seed exists or should; its own
+  // computed movement is the only honest answer.
+  const movement = isPreview
+    ? computeMovement(results, metas, throughWeek)
+    : rankMovementFor(results, metas, throughWeek, seedHistory)?.movement
+      ?? new Map<number, number>()
   const playoffStatus = computePlayoffStatus(
     rows, overview.regularSeasonWeeks, throughWeek, overview.playoffTeamCount,
   )

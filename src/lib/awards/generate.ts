@@ -134,6 +134,23 @@ export async function generateWeeklyAwards(
     }))
 
     const all = [...rows, ...kingRows]
+
+    // ⚠️ A REGENERATION MUST ALSO DELETE. Upsert alone leaves behind any award
+    // that no longer computes, which is precisely what a formula fix can
+    // cause: week 2 of 2026 stopped producing Free Fallin' once rank movement
+    // required both weeks to come from one rulebook, and without this the
+    // stale card would have survived its own correction.
+    if (regenerate) {
+      const keep = all.map((r) => r.award_type)
+      const { error: pruneError } = await db
+        .from('awards')
+        .delete()
+        .eq('season_id', seasonId)
+        .eq('week', week)
+        .not('award_type', 'in', `(${keep.map((k) => `"${k}"`).join(',')})`)
+      if (pruneError) throw new Error(`awards prune failed: ${pruneError.message}`)
+    }
+
     const { data: written, error } = await db
       .from('awards')
       .upsert(all, { onConflict: 'season_id,week,award_type' })

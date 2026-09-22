@@ -1092,6 +1092,7 @@ export type Database = {
           all_play_losses: number | null
           all_play_wins: number | null
           captured_at: string
+          espn_seed: number | null
           expected_wins: number | null
           id: number
           losses: number
@@ -1108,6 +1109,7 @@ export type Database = {
           all_play_losses?: number | null
           all_play_wins?: number | null
           captured_at?: string
+          espn_seed?: number | null
           expected_wins?: number | null
           id?: never
           losses?: number
@@ -1124,6 +1126,7 @@ export type Database = {
           all_play_losses?: number | null
           all_play_wins?: number | null
           captured_at?: string
+          espn_seed?: number | null
           expected_wins?: number | null
           id?: never
           losses?: number

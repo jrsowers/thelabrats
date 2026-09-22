@@ -5,8 +5,9 @@
 import { describe, it, expect } from 'vitest'
 import {
   computeStandings, computeMovement, latestCompletedWeek, computePlayoffStatus,
-  reconcileWithEspn,
-  type StandingsInput, type TeamMeta, type EspnSeedInput,
+  reconcileWithEspn, rankedForWeek, movementBetween, rankChangeBetween,
+  rankMovementFor,
+  type StandingsInput, type TeamMeta, type EspnSeedInput, type SeedHistory,
 } from '@/lib/standings/compute'
 
 const teams: TeamMeta[] = [1, 2, 3, 4].map((id) => ({ seasonTeamId: id, name: `Team ${id}` }))
@@ -297,5 +298,163 @@ describe('reconcileWithEspn', () => {
     const out = reconcileWithEspn(rows, espn({ 2: { losses: 7 } }), 1)
     expect(out.recordMismatches).toEqual([2])
     expect(out.usedEspnSeeds).toBe(true)
+  })
+})
+
+describe('the table and its arrows come from one source', () => {
+  // The bug this guards: /standings displayed ESPN's playoff seeds while the
+  // movement arrows diffed our own engine's ranks. After week 2 of 2026 that
+  // rendered Doug Rotman at rank 6 with a "down 6" arrow — a delta measured
+  // against a table nobody could see — and six of twelve arrows were wrong.
+  // The Free Fallin' award, reading the same computed ranks, named the
+  // third-biggest faller as the biggest.
+  const four: TeamMeta[] = Array.from({ length: 4 }, (_, i) => ({
+    seasonTeamId: i + 1, name: `T${i + 1}`,
+  }))
+
+  // Week 1: 1 beats 2, 3 beats 4. Week 2: 2 beats 1, 4 beats 3.
+  const matchups: StandingsInput[] = [
+    { week: 1, homeTeamId: 1, awayTeamId: 2, homeScore: 120, awayScore: 100, status: 'FINAL' },
+    { week: 1, homeTeamId: 3, awayTeamId: 4, homeScore: 110, awayScore: 90, status: 'FINAL' },
+    { week: 2, homeTeamId: 2, awayTeamId: 1, homeScore: 130, awayScore: 100, status: 'FINAL' },
+    { week: 2, homeTeamId: 4, awayTeamId: 3, homeScore: 140, awayScore: 100, status: 'FINAL' },
+  ]
+
+  // ESPN seeds that deliberately DISAGREE with what our engine would compute,
+  // which is the only condition under which the old bug was visible.
+  const seeds: SeedHistory = new Map([
+    [1, new Map([[1, 4], [2, 3], [3, 2], [4, 1]])],
+    [2, new Map([[1, 1], [2, 2], [3, 3], [4, 4]])],
+  ])
+
+  it('prefers ESPN seeds when the week has a complete set', () => {
+    const { rows, source } = rankedForWeek(matchups, four, 2, seeds)
+    expect(source).toBe('espn')
+    expect(rows.map((r) => r.seasonTeamId)).toEqual([1, 2, 3, 4])
+  })
+
+  it('falls back to the computed table when seeds are missing', () => {
+    const { source } = rankedForWeek(matchups, four, 2, new Map())
+    expect(source).toBe('computed')
+  })
+
+  it('refuses a partial seed set rather than mixing two rulebooks', () => {
+    // Half a table from each source is the exact failure mode being guarded.
+    const partial: SeedHistory = new Map([[2, new Map([[1, 1], [2, 2]])]])
+    expect(rankedForWeek(matchups, four, 2, partial).source).toBe('computed')
+  })
+
+  it('refuses duplicate seeds, which cannot be a real table', () => {
+    const dupes: SeedHistory = new Map([
+      [2, new Map([[1, 1], [2, 1], [3, 3], [4, 4]])],
+    ])
+    expect(rankedForWeek(matchups, four, 2, dupes).source).toBe('computed')
+  })
+
+  it('THE INVARIANT: every arrow reconciles against the displayed ranks', () => {
+    // For each source in turn, the delta must equal prior rank minus displayed
+    // rank IN THAT SAME TABLE. Under the old code this failed for ESPN seeds,
+    // because the deltas were computed elsewhere.
+    for (const history of [seeds, new Map() as SeedHistory]) {
+      const prev = rankedForWeek(matchups, four, 1, history)
+      const now = rankedForWeek(matchups, four, 2, history)
+      expect(prev.source).toBe(now.source)
+
+      const movement = movementBetween(prev.rows, now.rows)
+      const priorRank = new Map(prev.rows.map((r) => [r.seasonTeamId, r.rank]))
+
+      for (const row of now.rows) {
+        expect(movement.get(row.seasonTeamId)).toBe(
+          priorRank.get(row.seasonTeamId)! - row.rank,
+        )
+      }
+    }
+  })
+
+  it('rankChangeBetween names the same two ranks the arrows imply', () => {
+    // Free Fallin' prints "from X to Y". Those have to be the ranks the
+    // standings page shows, or the two pages contradict each other in public.
+    const prev = rankedForWeek(matchups, four, 1, seeds)
+    const now = rankedForWeek(matchups, four, 2, seeds)
+    const movement = movementBetween(prev.rows, now.rows)
+
+    for (const change of rankChangeBetween(prev.rows, now.rows)) {
+      expect(change.from - change.to).toBe(movement.get(change.seasonTeamId))
+      expect(change.to).toBe(
+        now.rows.find((r) => r.seasonTeamId === change.seasonTeamId)!.rank,
+      )
+    }
+  })
+
+  it('reports no movement into a week with no prior table', () => {
+    // Week 0 is not a table, it is an empty list — so no team appears on both
+    // sides and nothing is reported as having moved. Returning a ZEROED table
+    // instead would be worse: every team would render an arrow claiming it
+    // held a rank in a week that was never played.
+    const prev = rankedForWeek(matchups, four, 0, seeds)
+    expect(prev.rows).toEqual([])
+    const now = rankedForWeek(matchups, four, 1, seeds)
+    expect(movementBetween(prev.rows, now.rows).size).toBe(0)
+  })
+})
+
+describe('movement is withheld when two weeks cannot share a rulebook', () => {
+  const four: TeamMeta[] = Array.from({ length: 4 }, (_, i) => ({
+    seasonTeamId: i + 1, name: `T${i + 1}`,
+  }))
+  const matchups: StandingsInput[] = [
+    { week: 1, homeTeamId: 1, awayTeamId: 2, homeScore: 120, awayScore: 100, status: 'FINAL' },
+    { week: 1, homeTeamId: 3, awayTeamId: 4, homeScore: 110, awayScore: 90, status: 'FINAL' },
+    { week: 2, homeTeamId: 2, awayTeamId: 1, homeScore: 130, awayScore: 100, status: 'FINAL' },
+    { week: 2, homeTeamId: 4, awayTeamId: 3, homeScore: 140, awayScore: 100, status: 'FINAL' },
+  ]
+
+  it('returns null when only the LATER week has ESPN seeds', () => {
+    // The real 2026 situation: ESPN seeds were first captured on 2026-09-22,
+    // so week 2 has a table and week 1 never will. Diffing across them would
+    // measure an ESPN rank against a computed one — the original bug, with the
+    // sign flipped. No arrow is the correct output.
+    const onlyWeek2: SeedHistory = new Map([
+      [2, new Map([[1, 1], [2, 2], [3, 3], [4, 4]])],
+    ])
+    expect(rankMovementFor(matchups, four, 2, onlyWeek2)).toBeNull()
+  })
+
+  it('returns null when only the EARLIER week has ESPN seeds', () => {
+    const onlyWeek1: SeedHistory = new Map([
+      [1, new Map([[1, 1], [2, 2], [3, 3], [4, 4]])],
+    ])
+    expect(rankMovementFor(matchups, four, 2, onlyWeek1)).toBeNull()
+  })
+
+  it('reports movement when both weeks have ESPN seeds', () => {
+    const both: SeedHistory = new Map([
+      [1, new Map([[1, 4], [2, 3], [3, 2], [4, 1]])],
+      [2, new Map([[1, 1], [2, 2], [3, 3], [4, 4]])],
+    ])
+    const out = rankMovementFor(matchups, four, 2, both)
+    expect(out?.source).toBe('espn')
+    expect(out?.movement.get(1)).toBe(3)
+    expect(out?.movement.get(4)).toBe(-3)
+  })
+
+  it('reports movement when NEITHER week has ESPN seeds', () => {
+    // Both computed is also one rulebook, and perfectly valid.
+    const out = rankMovementFor(matchups, four, 2, new Map())
+    expect(out?.source).toBe('computed')
+    expect(out?.movement.size).toBe(4)
+  })
+
+  it('returns null for week 1, which has no prior table at all', () => {
+    expect(rankMovementFor(matchups, four, 1, new Map())).toBeNull()
+  })
+
+  it('the changes it reports agree with the movement it reports', () => {
+    // Free Fallin' prints "from X to Y" off `changes`; the arrows use
+    // `movement`. They come from one call so they cannot drift apart.
+    const out = rankMovementFor(matchups, four, 2, new Map())!
+    for (const c of out.changes) {
+      expect(c.from - c.to).toBe(out.movement.get(c.seasonTeamId))
+    }
   })
 })

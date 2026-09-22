@@ -307,7 +307,7 @@ export const RECAPS: Recap[] = [
       },
       {
         type: 'paragraph',
-        text: 'Doug dropped his first game and became the first manager to claim Free Fallin’, an award that could not be issued in week 1 because there was no table to fall down. Congratulations on the milestone, Doug. It is not the kind you frame.',
+        text: 'Doug dropped his first game of the season, scoring 103.1 — his lowest of the year — in a week where 103.1 was never going to be enough. Free Fallin’ stays unclaimed for a second week, for a reason I find genuinely annoying: the laboratory cannot yet compare this week’s table to last week’s on the same terms, so the instrument is withheld rather than guessed at. Doug gets a reprieve he did nothing to earn.',
       },
       {
         type: 'paragraph',

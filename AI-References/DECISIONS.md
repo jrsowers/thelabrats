@@ -1345,3 +1345,49 @@ a silent exclusion list is a way to quietly reshape the record book.
 
 **Result:** Biggest Under-Performance is now Matthew Stafford, −17.14 in week 1
 — a quarterback who was fit and simply bad, which is what the award is for.
+
+## 2026-09-22 — The table and its arrows, from one rulebook
+
+**The bug.** `/standings` displayed ESPN's playoff seeds while `computeMovement`
+diffed our own engine's ranks. After week 2 that rendered Doug at rank 6 with a
+"down 6" arrow — a delta measured against a table the reader could not see.
+**Six of twelve arrows were wrong**, and Free Fallin', reading the same computed
+ranks, named the third-biggest faller as the biggest.
+
+`computeRankChange`'s own doc comment had promised that re-deriving a rank
+elsewhere "would risk disagreeing with the table the league is reading". It did
+exactly that. **A warning in a comment does not hold an invariant.**
+
+**`standings_snapshots.seed` is not ESPN's seed.** This nearly caused a second
+wrong fix. The column is `i + 1` from a local sort on win percentage then
+points-for — no head-to-head, no ESPN — and it disagreed with ESPN's real
+seeding for four of twelve teams after week 2. The name is a trap. `espn_seed`
+was added alongside it, and both columns now carry SQL comments saying which is
+which.
+
+**Neither table retained a historical ESPN seed.** `espn_team_standings` is
+current-state and is overwritten every sync. The weekly snapshot now captures
+ESPN's seed at the moment a week goes final, which is the only point at which
+it is still true.
+
+**The fix is structural, not a convention.** `rankedForWeek` is the only way to
+ask where a team sat, and `rankMovementFor` is the only way to get an arrow. It
+**returns null when the two weeks would be ranked by different rulebooks**, and
+both callers treat that as "no arrow". A missing arrow is correct; a computed
+one beside an ESPN rank is a lie.
+
+**Week 2 shows no arrows and awards no Free Fallin', and that is the right
+answer.** ESPN seeds were first captured on 2026-09-22, so week 2 has a table
+and week 1 never will — ESPN keeps no history. The award falls back to the same
+"Nobody qualified" card week 1 used. Arrows return in week 3.
+
+**The settled week 2 row was rebuilt rather than preserved.** Awards are
+generated once so a screenshotted card does not drift (§22.8), but immutability
+protects against drift, not against a formula being wrong. A card that is
+knowably false is worse than one that changed. `publishDueAwards` gained a
+`regenerateWeeks` option for exactly this, and `generateWeeklyAwards` now PRUNES
+on regenerate — upsert alone would have left the stale Free Fallin' row alive
+through its own correction.
+
+**The week 2 recap referenced the award** and was rewritten to match. Prose
+follows the data, never the reverse.

@@ -264,6 +264,15 @@ export function computePlayoffStatus(
  * Positive = moved up the table. Returns 0 when there is no prior week to
  * compare against, rather than inventing movement out of nothing.
  */
+/**
+ * @deprecated Diffs the COMPUTED table only, with no idea what the caller is
+ * displaying. That mismatch is the bug: the standings page showed ESPN seeds
+ * beside these deltas and got six of twelve arrows wrong. Use
+ * `rankedForWeek` + `movementBetween`, which make the caller supply the table.
+ *
+ * Kept for the preview mode, where the season is simulated and no ESPN seed
+ * exists or should.
+ */
 export function computeMovement(
   matchups: StandingsInput[],
   teams: TeamMeta[],
@@ -358,6 +367,154 @@ export function reconcileWithEspn(
   return { rows: ordered, usedEspnSeeds: true, recordMismatches }
 }
 
+/* ============================================================
+   Rank movement — ONE source for the table and its arrows
+   ============================================================ */
+
+/** A team's position in the table for one week. */
+export interface RankedWeek {
+  seasonTeamId: number
+  rank: number
+}
+
+/**
+ * week -> (seasonTeamId -> ESPN playoff seed), from
+ * `standings_snapshots.espn_seed`.
+ *
+ * ⚠️ NOT `standings_snapshots.seed`. That column is a local ordering on win
+ * percentage then points-for — no head-to-head, no ESPN — and after week 2 of
+ * 2026 it disagreed with ESPN's real seeding for four of twelve teams. The
+ * name is a trap; `espn_seed` is the authoritative one.
+ */
+export type SeedHistory = Map<number, Map<number, number>>
+
+/**
+ * The authoritative table for one week.
+ *
+ * ⚠️ THE ONLY WAY TO ASK "WHERE DID THIS TEAM SIT". Every caller goes through
+ * here so that a rank and the arrow beside it can never come from different
+ * rulebooks.
+ *
+ * That is not hypothetical. The standings page displayed ESPN's seeds while
+ * `computeMovement` diffed OUR engine's ranks, so after week 2 it rendered Doug
+ * at rank 6 with a "down 6" arrow — a delta from a table the reader could not
+ * see, since our engine had him 9th. Six of twelve arrows were wrong, and the
+ * Free Fallin' award named a manager who was only the third-biggest faller by
+ * ESPN's reckoning.
+ *
+ * ESPN owns the tiebreak rulebook (CLAUDE.md), so its seed wins whenever we
+ * have a complete set for that week. We fall back to the computed table only
+ * when we do not — an incomplete seed set cannot be mixed with computed ranks,
+ * because half a table from each rulebook is the bug this function exists to
+ * prevent.
+ */
+export function rankedForWeek(
+  matchups: StandingsInput[],
+  teams: TeamMeta[],
+  week: number,
+  seeds?: SeedHistory,
+): { rows: RankedWeek[]; source: 'espn' | 'computed' } {
+  // No table exists before the first week, so there is nothing to have moved
+  // within. Returning an EMPTY table rather than a zeroed one is what stops
+  // `movementBetween` inventing arrows in week 1 — it only reports a team it
+  // can find on both sides.
+  if (week < 1) return { rows: [], source: 'computed' }
+
+  const forWeek = seeds?.get(week)
+  if (forWeek && forWeek.size === teams.length) {
+    const values = [...forWeek.values()]
+    const complete = values.every((n) => Number.isFinite(n) && n > 0)
+      && new Set(values).size === teams.length
+    if (complete) {
+      return {
+        rows: teams
+          .map((t) => ({ seasonTeamId: t.seasonTeamId, rank: forWeek.get(t.seasonTeamId)! }))
+          .sort((a, b) => a.rank - b.rank),
+        source: 'espn',
+      }
+    }
+  }
+
+  const computed = computeStandings(matchups, teams, week)
+  // A week in which nobody has played is not a ranking, it is an alphabetical
+  // list. Treat it as no table at all.
+  if (computed.every((r) => r.gamesPlayed === 0)) return { rows: [], source: 'computed' }
+
+  return {
+    rows: computed.map((r) => ({ seasonTeamId: r.seasonTeamId, rank: r.rank })),
+    source: 'computed',
+  }
+}
+
+/**
+ * Movement for a week, or NOTHING when the two weeks cannot be compared.
+ *
+ * ⚠️ THE ONLY SUPPORTED WAY TO GET AN ARROW. Both the standings page and the
+ * Free Fallin' award go through here, so neither can diff one rulebook against
+ * another — the bug this whole module was reshaped around.
+ *
+ * Returns null when the previous week and this week would be ranked by
+ * different rulebooks. That happens for real: ESPN seeds were only captured
+ * from 2026-09-22, so week 2 has an ESPN table and week 1 does not. **A missing
+ * arrow is correct there and a computed one would be a lie** — it would be
+ * measured against a table the reader is not being shown.
+ */
+export function rankMovementFor(
+  matchups: StandingsInput[],
+  teams: TeamMeta[],
+  week: number,
+  seeds?: SeedHistory,
+): { movement: Map<number, number>; changes: RankChange[]; source: 'espn' | 'computed' } | null {
+  if (week <= 1) return null
+
+  const previous = rankedForWeek(matchups, teams, week - 1, seeds)
+  const current = rankedForWeek(matchups, teams, week, seeds)
+  if (previous.rows.length === 0 || current.rows.length === 0) return null
+
+  // Mixing sources is the entire failure mode. Refuse rather than approximate.
+  if (previous.source !== current.source) return null
+
+  return {
+    movement: movementBetween(previous.rows, current.rows),
+    changes: rankChangeBetween(previous.rows, current.rows),
+    source: current.source,
+  }
+}
+
+/**
+ * How far each team moved between two tables.
+ *
+ * Positive = up. Takes the tables rather than recomputing them, so the caller
+ * is forced to hand over the same rows it is about to display.
+ */
+export function movementBetween(
+  previous: RankedWeek[],
+  current: RankedWeek[],
+): Map<number, number> {
+  const before = new Map(previous.map((r) => [r.seasonTeamId, r.rank]))
+  const out = new Map<number, number>()
+  for (const row of current) {
+    const prior = before.get(row.seasonTeamId)
+    if (prior != null) out.set(row.seasonTeamId, prior - row.rank)
+  }
+  return out
+}
+
+/** Both ends of the move, for awards that have to show where a team fell from. */
+export function rankChangeBetween(
+  previous: RankedWeek[],
+  current: RankedWeek[],
+): RankChange[] {
+  const before = new Map(previous.map((r) => [r.seasonTeamId, r.rank]))
+  return current
+    .filter((r) => before.has(r.seasonTeamId))
+    .map((r) => ({
+      seasonTeamId: r.seasonTeamId,
+      from: before.get(r.seasonTeamId)!,
+      to: r.rank,
+    }))
+}
+
 export interface RankChange {
   seasonTeamId: number
   /** Position after last week. */
@@ -369,12 +526,17 @@ export interface RankChange {
 /**
  * Where each team sat before this week and where they sit now.
  *
- * `computeMovement` returns only the delta, which is all the standings page
- * needs. The Free Fallin' award has to SHOW both ends of the slide, and
- * re-deriving a rank anywhere else would risk disagreeing with the table the
- * league is reading.
+ * ⚠️ This comment used to claim that re-deriving a rank elsewhere "would risk
+ * disagreeing with the table the league is reading". It did exactly that: the
+ * table moved to ESPN's seeds and this did not follow, so the award named the
+ * third-biggest faller as the biggest. The lesson is that a warning in a
+ * comment does not hold an invariant — `rankedForWeek` does.
  *
  * Empty before week 2, which has no prior table to have moved within.
+ */
+/**
+ * @deprecated Same flaw as `computeMovement` — see its note. Use
+ * `rankedForWeek` + `rankChangeBetween`.
  */
 export function computeRankChange(
   matchups: StandingsInput[],
