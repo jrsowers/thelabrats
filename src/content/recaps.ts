@@ -21,11 +21,14 @@ export type RecapBlock =
   | { type: 'stat'; label: string; value: string; note?: string }
   | { type: 'quote'; text: string; attribution?: string }
   /**
-   * The week's results. A real block rather than prose, because six scores
+   * A week's matchups. A real block rather than prose, because six scores
    * written as sentences is a wall of numbers nobody parses — week 1 shipped
-   * them that way and they were unreadable. Winner first in each row.
+   * them that way and they were unreadable. Higher score first in each row.
+   *
+   * `live` marks a week still being PLAYED: the rows are leading and trailing,
+   * not winner and loser, and the block labels itself accordingly.
    */
-  | { type: 'scoreboard'; rows: ScoreboardRow[] }
+  | { type: 'scoreboard'; rows: ScoreboardRow[]; live?: boolean }
 
 /**
  * A call Burner made on the record.
@@ -50,15 +53,42 @@ export interface RecapPrediction {
 }
 
 export interface ScoreboardRow {
-  winner: string
-  winnerScore: number
-  loser: string
-  loserScore: number
+  /**
+   * The higher score. Named `top`/`bottom` rather than `winner`/`loser`
+   * because on a Monday board nobody has won anything yet, and a type that
+   * lies is a bug waiting for somebody to trust it.
+   */
+  top: string
+  topScore: number
+  bottom: string
+  bottomScore: number
+  /** Shown after the margin. On a live board: what is still to come. */
+  note?: string
+}
+
+/**
+ * Which series a post belongs to.
+ *
+ * `recap` runs on Tuesday and looks BACKWARD at a settled week. `miracles`
+ * runs on Monday morning and looks FORWARD at a week still in flight, when
+ * three matchups are undecided and the only thing left is one football game.
+ * They share a byline, a cover treatment and a publishing pipeline; they do
+ * not share a tense, and almost every mistake available here is a tense
+ * mistake — a Monday post that says "won" instead of "leads" is wrong by
+ * Tuesday and cannot be unpublished from anybody's memory.
+ */
+export type Series = 'recap' | 'miracles'
+
+export const SERIES_LABEL: Record<Series, string> = {
+  recap: 'Weekly Recap',
+  miracles: 'Monday Night Miracles',
 }
 
 export interface Recap {
   /** URL segment: /recaps/<slug> */
   slug: string
+  /** Defaults to 'recap' for everything written before the series split. */
+  series?: Series
   week: number
   /** Headline. Written like a broadcast, not a report (SOUL.md). */
   title: string
@@ -86,6 +116,151 @@ export interface Recap {
 }
 
 export const RECAPS: Recap[] = [
+  {
+    slug: 'week-3-everything-you-have-left-is-in-chicago',
+    series: 'miracles',
+    week: 3,
+    title: 'Everything Any Of You Has Left Is In Chicago',
+    summary:
+      'Three matchups are still alive, both undefeated teams are losing, and every single unplayed player in this entire league is in one football game at Soldier Field. Evan is ahead by 3.3 and has nothing left but hope.',
+    publishedAt: '2026-09-28',
+    published: true,
+    coverImage: '/recaps/week-3-miracles.jpg',
+    coverAlt:
+      'A lone football player kneeling in silhouette on the sideline under stadium floodlights.',
+    author: BURNER,
+    body: [
+      {
+        type: 'paragraph',
+        text: 'Subjects. It is Monday morning and I have been standing in front of the board since roughly four.',
+      },
+      {
+        type: 'paragraph',
+        text: 'Here is the finding. Every unplayed player in this entire league — all eight of them, across six of your rosters — is in the same football game. Eagles at Bears, Soldier Field, 8:15. One stadium. Twelve managers. Three matchups that are genuinely still alive and three that are already in the ground.',
+      },
+      {
+        type: 'paragraph',
+        text: 'I did not design this. If I had designed this I would be applying for funding.',
+      },
+      { type: 'paragraph', text: 'Both undefeated teams are currently losing, which I will come back to.' },
+      { type: 'heading', text: 'THE BOARD, AS OF THIS MORNING' },
+      {
+        type: 'paragraph',
+        text: 'Nothing below is final. Read every number as a thing that is still happening.',
+      },
+      {
+        type: 'scoreboard',
+        live: true,
+        rows: [
+          { top: 'Tyler’s Talented Team', topScore: 169.0, bottom: 'Substation Superstars', bottomScore: 106.2, note: 'Tyler still has D’Andre Swift' },
+          { top: 'Dad Bod', topScore: 136.5, bottom: 'Nobody Knows', bottomScore: 101.7, note: 'over — nobody left' },
+          { top: 'Nix Pix a Puka Six', topScore: 143.3, bottom: 'PKM Playmakers', bottomScore: 92.3, note: 'over — nobody left' },
+          { top: 'All Bark, All Bite', topScore: 118.7, bottom: 'Mr. Anderson', bottomScore: 105.5, note: 'Saquon Barkley vs one defence' },
+          { top: 'Burrow My Burden', topScore: 115.1, bottom: 'Bree’s Badass Boys', bottomScore: 111.8, note: 'Evan has nobody. Bree has Jalen Hurts.' },
+          { top: 'Soft Tissue Issues', topScore: 112.5, bottom: 'Da Reigning Champ', bottomScore: 107.5, note: 'four players still on the field' },
+        ],
+      },
+      { type: 'heading', text: 'THE MIRACLE: Evan Needs Jalen Hurts To Be Held Under 3.3 Points' },
+      {
+        type: 'paragraph',
+        text: 'Burrow My Burden leads Bree’s Badass Boys by 3.3 points. Evan’s roster is finished. Every man he owns has played, showered, and gone home. He cannot score another point this week if he sets fire to the building.',
+      },
+      {
+        type: 'paragraph',
+        text: 'Bree has Jalen Hurts.',
+      },
+      {
+        type: 'paragraph',
+        text: 'Hurts is projected for 23.6. He has thrown five touchdowns in two games. Bree needs 3.4 of those 23.6 to win the matchup, which is to say she needs Jalen Hurts to complete roughly one pass to a man who is running forwards.',
+      },
+      {
+        type: 'paragraph',
+        text: 'So let us be precise about what Evan is praying for tonight, because it deserves to be said out loud. He needs a healthy starting quarterback, on a 2-0 team, in prime time, to finish an entire football game with under three and a half fantasy points. That is not a bad game. That is a filing error. That is the quarterback getting on the wrong bus.',
+      },
+      {
+        type: 'paragraph',
+        text: 'Evan, I want you to know that the laboratory is with you. The laboratory is also aware of the odds, and the laboratory has seen you check ESPN four times since you read this sentence.',
+      },
+      { type: 'heading', text: 'THE UPSET: The Winless Team Is Beating The Best Team In The League' },
+      {
+        type: 'paragraph',
+        text: 'Keshia is 0-2. Keshia has the fourth-most points in this league and absolutely nothing to show for it, which I described a fortnight ago as the most unfair record in the building and have not been given any reason to revise.',
+      },
+      { type: 'paragraph', text: 'Keshia leads Mr. Anderson by 13.2.' },
+      {
+        type: 'paragraph',
+        text: 'Jesse is 2-0. Jesse has scored 337.8 points, more than anybody. Jesse is the man I called the most dangerous roster in the league and its second-most dangerous manager, a description that has aged like a fine wine and is about to be poured over his head.',
+      },
+      {
+        type: 'paragraph',
+        text: 'Because here is what Jesse has left: the Philadelphia Eagles defence. That is the entire remaining inventory. One defence, projected for 9.8.',
+      },
+      {
+        type: 'paragraph',
+        text: 'And here is what Keshia has left: Saquon Barkley, projected 16.1, who rushed for over a thousand yards last season and who was a full participant on Friday and said he was good to go.',
+      },
+      {
+        type: 'paragraph',
+        text: 'Read those two sentences again and appreciate the shape of the thing. Jesse’s only surviving asset plays for the same team as Keshia’s. He needs the Eagles to be magnificent and the Eagles’ best offensive player to be invisible. He needs Philadelphia to win the game entirely with takeaways, ideally three of them, ideally returned for scores, while Saquon Barkley gains somewhere between four and nine yards over sixty minutes.',
+      },
+      {
+        type: 'paragraph',
+        text: 'Run the arithmetic and it is worse than it sounds. If Barkley simply hits his projection, Jesse needs roughly twenty-nine points from a defence. Twenty-nine. That is not a good night for a defence, that is a defence having the night people still talk about in that city thirty years later.',
+      },
+      {
+        type: 'paragraph',
+        text: 'The Bears, for their part, lead the NFL in rushing at 212.5 yards a game and are starting a third-string quarterback, Caleb Williams being out with a hamstring. Philadelphia has given up more than 120 on the ground in each of its first two games. I am not saying that is good news for Jesse. I am saying that if Chicago runs it forty times, nothing good happens for anybody holding an Eagles defence.',
+      },
+      { type: 'heading', text: 'THE KNIFE EDGE: James Is Five Points Up And Trusting A Rookie Tight End' },
+      {
+        type: 'paragraph',
+        text: 'Soft Tissue Issues leads Da Reigning Champ 112.5 to 107.5, and this is the only matchup tonight where both managers still have a pulse and a player.',
+      },
+      {
+        type: 'paragraph',
+        text: 'Chenell has DeVonta Smith, projected 12.7, who caught ten balls for a hundred and seventeen yards and a touchdown eight days ago. That is one asset and it is a very good one.',
+      },
+      {
+        type: 'paragraph',
+        text: 'James has three: Dontayvion Wicks, Colston Loveland and Cairo Santos. Twenty-three and a half points of projection between them, which sounds comfortable until you notice that two of the three are Chicago Bears — a rookie tight end and a kicker — on a night Chicago is starting its third quarterback of the season.',
+      },
+      {
+        type: 'paragraph',
+        text: 'So Chenell is holding the best receiver on the field, and James is holding a portfolio. Diversified. Sensible. Entirely dependent on Case Keenum finding a tight end he has been throwing to since Wednesday.',
+      },
+      {
+        type: 'paragraph',
+        text: 'James, in fairness, is the man who ran a mathematically perfect lineup in week 2 and won The Mastermind for it. He does not guess. He also does not control who plays quarterback for the Chicago Bears, and tonight neither of those facts is worth more than the other.',
+      },
+      { type: 'heading', text: 'THE FORMALITIES' },
+      {
+        type: 'paragraph',
+        text: 'Jay has beaten Doug 136.5 to 101.7 and both rosters are empty, so that one is over in everything but the database. Colin has put 143.3 on Mike and won by 51.1, which is Colin’s second demolition in three weeks and a genuinely confusing development for a man who spent all of September benching Stefon Diggs.',
+      },
+      {
+        type: 'paragraph',
+        text: 'And Tyler leads Justin 169.0 to 106.2 with D’Andre Swift still to play. Justin is 0-2 going on 0-3 and has now been beaten by 69.5, then 12.9, now this. Tyler does not need Swift. Tyler is going to get Swift anyway. There is no mercy rule in this laboratory and I have checked twice.',
+      },
+      { type: 'heading', text: 'WHAT I THINK HAPPENS' },
+      {
+        type: 'paragraph',
+        text: 'With the confidence of a man who will be held to this in roughly thirty hours:',
+      },
+      {
+        type: 'paragraph',
+        text: 'Bree wins. Jalen Hurts is not going to score three points, and Evan is going to spend the evening watching a football game he has no rooting interest in except catastrophe. It is the cruellest position on the board and it is also, I am sorry to say, the funniest.',
+      },
+      {
+        type: 'paragraph',
+        text: 'Keshia wins, and the league leader takes his first loss to the team with no wins, which is the single best thing that could happen to this season for reasons that are entirely selfish on my part.',
+      },
+      {
+        type: 'paragraph',
+        text: 'And James holds on, narrowly, by less than a touchdown, with the whole thing resting on a Chicago kicker. Chenell does not lose in September — that is on the record from week 1 and it has survived two weeks — and tonight is the night it finally goes in the bin. September has one Monday left in it and I have picked the wrong hill.',
+      },
+      { type: 'paragraph', text: 'Kickoff is 8:15. Six of you cannot look away. Three of you should probably eat something first.' },
+    ],
+  },
   {
     slug: 'week-2-the-bill-arrives',
     week: 2,
@@ -205,12 +380,12 @@ export const RECAPS: Recap[] = [
       {
         type: 'scoreboard',
         rows: [
-          { winner: 'Tyler’s Talented Team', winnerScore: 166.8, loser: 'Bree’s Badass Boys', loserScore: 144.4 },
-          { winner: 'Mr. Anderson', winnerScore: 140.3, loser: 'Nix Pix a Puka Six', loserScore: 81.4 },
-          { winner: 'Da Reigning Champ', winnerScore: 135.8, loser: 'Substation Superstars', loserScore: 122.9 },
-          { winner: 'Burrow My Burden', winnerScore: 133.0, loser: 'All Bark, All Bite', loserScore: 121.7 },
-          { winner: 'Dad Bod', winnerScore: 132.3, loser: 'PKM Playmakers', loserScore: 55.4 },
-          { winner: 'Soft Tissue Issues', winnerScore: 121.2, loser: 'Nobody Knows', loserScore: 103.1 },
+          { top: 'Tyler’s Talented Team', topScore: 166.8, bottom: 'Bree’s Badass Boys', bottomScore: 144.4 },
+          { top: 'Mr. Anderson', topScore: 140.3, bottom: 'Nix Pix a Puka Six', bottomScore: 81.4 },
+          { top: 'Da Reigning Champ', topScore: 135.8, bottom: 'Substation Superstars', bottomScore: 122.9 },
+          { top: 'Burrow My Burden', topScore: 133.0, bottom: 'All Bark, All Bite', bottomScore: 121.7 },
+          { top: 'Dad Bod', topScore: 132.3, bottom: 'PKM Playmakers', bottomScore: 55.4 },
+          { top: 'Soft Tissue Issues', topScore: 121.2, bottom: 'Nobody Knows', bottomScore: 103.1 },
         ],
       },
       { type: 'heading', text: 'Bree Made Thirteen Roster Moves And Benched The Best Story In Football' },
@@ -452,12 +627,12 @@ export const RECAPS: Recap[] = [
       {
         type: 'scoreboard',
         rows: [
-          { winner: 'Mr. Anderson', winnerScore: 197.4, loser: 'Dad Bod', loserScore: 148.9 },
-          { winner: 'Da Reigning Champ', winnerScore: 166.0, loser: 'Tyler’s Talented Team', loserScore: 153.3 },
-          { winner: 'Nobody Knows', winnerScore: 150.7, loser: 'Substation Superstars', loserScore: 81.2 },
-          { winner: 'Bree’s Badass Boys', winnerScore: 124.4, loser: 'All Bark, All Bite', loserScore: 119.9 },
-          { winner: 'Nix Pix a Puka Six', winnerScore: 118.1, loser: 'Burrow My Burden', loserScore: 102.4 },
-          { winner: 'PKM Playmakers', winnerScore: 114.0, loser: 'Soft Tissue Issues', loserScore: 111.5 },
+          { top: 'Mr. Anderson', topScore: 197.4, bottom: 'Dad Bod', bottomScore: 148.9 },
+          { top: 'Da Reigning Champ', topScore: 166.0, bottom: 'Tyler’s Talented Team', bottomScore: 153.3 },
+          { top: 'Nobody Knows', topScore: 150.7, bottom: 'Substation Superstars', bottomScore: 81.2 },
+          { top: 'Bree’s Badass Boys', topScore: 124.4, bottom: 'All Bark, All Bite', bottomScore: 119.9 },
+          { top: 'Nix Pix a Puka Six', topScore: 118.1, bottom: 'Burrow My Burden', bottomScore: 102.4 },
+          { top: 'PKM Playmakers', topScore: 114.0, bottom: 'Soft Tissue Issues', bottomScore: 111.5 },
         ],
       },
       {
@@ -679,8 +854,12 @@ export const RECAPS: Recap[] = [
   },
 ]
 
+/** Newest first. Within a week, Monday's preview sorts BELOW Tuesday's recap. */
 export const publishedRecaps = (): Recap[] =>
-  RECAPS.filter((r) => r.published).sort((a, b) => b.week - a.week)
+  RECAPS.filter((r) => r.published).sort((a, b) =>
+    b.week - a.week || seriesOf(a) .localeCompare(seriesOf(b)))
+
+export const seriesOf = (r: Recap): Series => r.series ?? 'recap'
 
 export const recapBySlug = (slug: string): Recap | null =>
   RECAPS.find((r) => r.slug === slug && r.published) ?? null

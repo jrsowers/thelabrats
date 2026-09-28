@@ -2,7 +2,9 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { getLeagueOverview } from '@/lib/league/queries'
-import { recapBySlug, publishedRecaps, type RecapBlock } from '@/content/recaps'
+import {
+  recapBySlug, publishedRecaps, seriesOf, SERIES_LABEL, type RecapBlock,
+} from '@/content/recaps'
 import { AppShell } from '@/components/navigation/app-shell'
 import { RecapCover } from '@/components/ui/recap-cover'
 import { Byline } from '@/components/ui/byline'
@@ -45,29 +47,33 @@ function Block({ block }: { block: RecapBlock }) {
       return (
         <div className="my-6 overflow-hidden rounded-lg border border-border">
           {block.rows.map((r, i) => {
-            const margin = r.winnerScore - r.loserScore
+            const margin = r.topScore - r.bottomScore
             return (
               <div
                 key={i}
                 className={`bg-surface px-4 py-3 ${i > 0 ? 'border-t border-border' : ''}`}
               >
-                {/* Winner then loser, one per line. Names truncate and the
-                    scores hold a fixed column, so a long team name can never
-                    push a number off a 320px screen. */}
+                {/* Higher score then lower, one per line. Names truncate and
+                    the scores hold a fixed column, so a long team name can
+                    never push a number off a 320px screen. On a live board
+                    these are leading and trailing, NOT winner and loser. */}
                 <div className="flex items-baseline gap-3">
-                  <span className="display min-w-0 flex-1 truncate text-[15px]">{r.winner}</span>
+                  <span className="display min-w-0 flex-1 truncate text-[15px]">{r.top}</span>
                   <span className="display shrink-0 text-[17px] tnum">
-                    {r.winnerScore.toFixed(1)}
+                    {r.topScore.toFixed(1)}
                   </span>
                 </div>
                 <div className="mt-0.5 flex items-baseline gap-3 text-muted">
-                  <span className="min-w-0 flex-1 truncate text-[14px]">{r.loser}</span>
+                  <span className="min-w-0 flex-1 truncate text-[14px]">{r.bottom}</span>
                   <span className="shrink-0 font-mono text-[14px] tnum">
-                    {r.loserScore.toFixed(1)}
+                    {r.bottomScore.toFixed(1)}
                   </span>
                 </div>
-                <div className="mt-1.5 font-mono text-[10px] uppercase tracking-wider text-dim tnum">
-                  by {margin.toFixed(1)}
+                <div className="mt-1.5 font-mono text-[10px] uppercase tracking-wider text-dim">
+                  <span className="tnum">
+                    {block.live ? `leads by ${margin.toFixed(1)}` : `by ${margin.toFixed(1)}`}
+                  </span>
+                  {r.note && <span className="normal-case tracking-normal"> · {r.note}</span>}
                 </div>
               </div>
             )
@@ -117,6 +123,7 @@ export default async function RecapPage({
           week={recap.week}
           src={recap.coverImage}
           alt={recap.coverAlt}
+          eyebrow={SERIES_LABEL[seriesOf(recap)]}
           size="hero"
           priority
           className="mb-6 h-44 rounded-lg sm:h-56"
@@ -124,7 +131,10 @@ export default async function RecapPage({
 
         <header className="mb-7 border-b border-border pb-5">
           <div className="flex items-center gap-2.5">
-            <Eyebrow>{recap.week === 0 ? 'Preseason' : `Week ${recap.week}`}</Eyebrow>
+            <Eyebrow>{SERIES_LABEL[seriesOf(recap)]}</Eyebrow>
+            <span className="font-mono text-[10.5px] text-dim">
+              {recap.week === 0 ? 'Preseason' : `Week ${recap.week}`}
+            </span>
             <span className="font-mono text-[10.5px] text-dim">{fmtDate(recap.publishedAt)}</span>
           </div>
           <h1 className="display mt-2 text-[38px] leading-none sm:text-[48px]">{recap.title}</h1>

@@ -1391,3 +1391,46 @@ through its own correction.
 
 **The week 2 recap referenced the award** and was rewritten to match. Prose
 follows the data, never the reverse.
+
+## 2026-09-28 — Monday Night Miracles, a second series
+
+A Monday-morning dispatch on a week **still in flight**: who needs a miracle to
+come back, who needs one to hold on, whose season pivots on tonight's game.
+Published alongside the recap under `series: 'miracles'`, same byline, same
+pipeline, different tense.
+
+**The tense IS the feature, and it is the only thing that can really go wrong.**
+The recap describes a settled week and can be confident. Nothing here is
+settled. A Monday post that says "won" instead of "leads" is wrong by Tuesday
+night in the most embarrassing way available — it called a result that had not
+happened. The skill's test: read every sentence and ask whether it still makes
+sense if the opposite happens.
+
+**`ScoreboardRow` was renamed `winner`/`loser` → `top`/`bottom`.** On a Monday
+board nobody has won anything, and a type that lies is a bug waiting for
+somebody to trust it. The block takes `live` and labels itself "leads by".
+
+**Two data traps, both found by running the script rather than reasoning about
+it.** `actual_points IS NULL` means "no stat line", not zero — a player who
+suited up and did nothing scores 0.00, and conflating them credits managers
+with points that have already failed to happen. But null alone is not enough:
+a backup QB who never took the field reads null too, after his team has played.
+The first run gave one manager 24.1 points still to come when the true figure
+was 16.1, and handed three managers defences whose games had finished hours
+earlier. **A player is pending only if his NFL TEAM has not kicked off**, which
+also lets the Monday game identify itself without a hard-coded schedule.
+
+**`matchups.home_projected_score` is NOT "points left".** ESPN's live team
+projection does not equal current score plus the remaining players'
+projections — for one manager in week 3 the two differed by exactly his
+kicker's projection. The per-player sum is computed from rows anybody can
+check, and that is the version that goes in print.
+
+**Humour is calibrated to 8/10**, at James's request, with a dial table in
+`voice.md` giving anchors at 3, 5, 7, 8, 9 and 10. An 8 is not *more* jokes, it
+is braver ones — the failure mode at 5 is blandness, the failure mode at 8 is a
+line that is merely rude rather than funny.
+
+**Runs every Monday at 9am local** via a scheduled task, which invokes the
+skill rather than restating it. It stops without publishing if the week is
+already over.

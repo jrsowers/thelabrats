@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { getLeagueOverview } from '@/lib/league/queries'
-import { publishedRecaps } from '@/content/recaps'
+import { publishedRecaps, seriesOf, SERIES_LABEL } from '@/content/recaps'
 import { AppShell } from '@/components/navigation/app-shell'
 import { FieldBackdrop } from '@/components/ui/field-backdrop'
 import { RecapCover } from '@/components/ui/recap-cover'
@@ -30,9 +30,11 @@ export default async function RecapsPage() {
         <div className="relative">
           <Eyebrow>Weekly Recaps</Eyebrow>
           <h1 className="display mt-1.5 text-[40px] sm:text-[52px]">The Post-Game</h1>
+          {/* Covers BOTH series. The old line promised "what actually
+              happened", which sat above a Monday preview of what has not. */}
           <p className="mt-2 max-w-xl text-sm text-muted">
-            What actually happened, who deserves credit, and who is going to hear
-            about it in the group chat.
+            Monday, who needs a miracle. Tuesday, who deserves the credit and who
+            is going to hear about it in the group chat. Both from Dr. Bunsen Burner.
           </p>
         </div>
       </header>
@@ -53,13 +55,17 @@ export default async function RecapsPage() {
                 week={lead.week}
                 src={lead.coverImage}
                 alt={lead.coverAlt}
+                eyebrow={SERIES_LABEL[seriesOf(lead)]}
                 size="hero"
                 priority
                 className="h-48 sm:h-64"
               />
               <div className="p-5 sm:p-6">
                 <div className="flex items-center gap-2.5">
-                  <Eyebrow>{lead.week === 0 ? 'Preseason' : `Week ${lead.week}`}</Eyebrow>
+                  <Eyebrow>{SERIES_LABEL[seriesOf(lead)]}</Eyebrow>
+                  <span className="font-mono text-[10.5px] text-dim">
+                    {lead.week === 0 ? 'Preseason' : `Week ${lead.week}`}
+                  </span>
                   <span className="font-mono text-[10.5px] text-dim">{fmtDate(lead.publishedAt)}</span>
                 </div>
                 <h2 className="display mt-2 text-[30px] leading-tight sm:text-[38px]">
@@ -77,7 +83,7 @@ export default async function RecapsPage() {
                   </div>
                 )}
                 <span className="mt-4 inline-flex items-center gap-1.5 rounded-md bg-brand px-3.5 py-2 text-[13px] font-semibold text-brand-ink transition-colors group-hover:bg-brand-hover">
-                  Read the recap
+                  {seriesOf(lead) === 'miracles' ? 'Read the preview' : 'Read the recap'}
                   <span aria-hidden>→</span>
                 </span>
               </div>
@@ -96,10 +102,17 @@ export default async function RecapsPage() {
                     className="flex flex-col overflow-hidden rounded-lg border border-border bg-surface"
                   >
                     <Link href={`/recaps/${r.slug}`} className="group flex flex-1 flex-col">
-                      <RecapCover week={r.week} src={r.coverImage} alt={r.coverAlt} className="h-32" />
+                      <RecapCover
+                        week={r.week}
+                        src={r.coverImage}
+                        alt={r.coverAlt}
+                        eyebrow={SERIES_LABEL[seriesOf(r)]}
+                        className="h-32"
+                      />
                       <div className="flex flex-1 flex-col p-4">
                         <div className="flex items-center gap-2">
-                          <Eyebrow>Week {r.week}</Eyebrow>
+                          <Eyebrow>{SERIES_LABEL[seriesOf(r)]}</Eyebrow>
+                          <span className="font-mono text-[10px] text-dim">W{r.week}</span>
                           <span className="font-mono text-[10px] text-dim">{fmtDate(r.publishedAt)}</span>
                         </div>
                         <h3 className="display mt-1.5 text-[19px] leading-tight">{r.title}</h3>
@@ -114,7 +127,7 @@ export default async function RecapsPage() {
                         <span
                           className={`${r.author ? 'pt-3' : 'mt-auto pt-3.5'} font-mono text-[10.5px] uppercase tracking-wider text-brand group-hover:underline`}
                         >
-                          Read the recap →
+                          {seriesOf(r) === 'miracles' ? 'Read the preview' : 'Read the recap'} →
                         </span>
                       </div>
                     </Link>

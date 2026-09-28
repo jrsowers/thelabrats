@@ -12,8 +12,11 @@
  */
 export function RecapCover({
   week, src, alt, className = '', size = 'card', priority = false,
+  eyebrow,
 }: {
   week: number
+  /** Series name across the top. Defaults to the weekly recap's own label. */
+  eyebrow?: string
   /** Path under /public. Omit for the generated fallback. */
   src?: string
   alt?: string
@@ -22,7 +25,7 @@ export function RecapCover({
   priority?: boolean
 }) {
   const isHero = size === 'hero'
-  const label = week === 0 ? 'Preseason' : 'Weekly Recap'
+  const label = eyebrow ?? (week === 0 ? 'Preseason' : 'Weekly Recap')
   const title = week === 0 ? 'Kickoff' : `Week ${week}`
 
   return (
