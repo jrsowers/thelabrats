@@ -15,11 +15,17 @@
  * The transform writes null only when ESPN has no actual stat line for the
  * player, which is exactly the condition we want.
  *
- * ⚠️ DO NOT USE `matchups.home_projected_score` AS "POINTS LEFT". It is ESPN's
- * own live projection and it does not equal current score plus the remaining
- * players' projections — for one manager in week 3 the two differed by 7.6,
- * the exact projection of his kicker. The per-player sum below is computed
- * from rows anybody can check, which is the version that goes in print.
+ * ⚠️ WHEN ESPN'S TEAM PROJECTION DISAGREES WITH THE PLAYER SUM, WE ARE STALE.
+ * This was first written up as "ESPN's projection is unreliable, trust the
+ * players". That was backwards and it shipped a false statement to the league.
+ * ESPN said James had 16.0 to come; our rows said 23.6. ESPN was right. The
+ * extra 7.6 was Cairo Santos, a kicker James had dropped five days earlier
+ * whose row the roster sync had never deleted.
+ *
+ * So the gap is not noise, it is an ALARM — the one signal available that the
+ * stored roster no longer matches reality. It is checked below and printed
+ * loudly, because a Monday post is built entirely on who is left, and being
+ * wrong about that is being wrong about everything.
  */
 import { createClient } from '@supabase/supabase-js'
 
@@ -104,8 +110,34 @@ async function main() {
     .sort((a, b) => b.projected - a.projected)
 
   const { data: matchups } = await db.from('matchups')
-    .select('home_team_id, away_team_id, home_score, away_score, status')
+    .select('home_team_id, away_team_id, home_score, away_score, status, home_projected_score, away_projected_score')
     .eq('season_id', seasonId).eq('week', week).order('espn_matchup_id')
+
+  // ---- staleness alarm ----
+  // ESPN's live team projection should equal current score plus what its own
+  // roster still has to play. If ours disagrees, our roster is out of date —
+  // almost always a dropped player whose row was never pruned. Loud on purpose.
+  const drift: string[] = []
+  for (const m of matchups ?? []) {
+    for (const [id, score, projected] of [
+      [m.home_team_id, m.home_score, m.home_projected_score],
+      [m.away_team_id, m.away_score, m.away_projected_score],
+    ] as [number | null, number, number | null][]) {
+      if (id == null || projected == null) continue
+      const espnLeft = Number(projected) - Number(score)
+      const ourLeft = remainingFor(id).reduce((n, p) => n + p.projected, 0)
+      if (Math.abs(espnLeft - ourLeft) > 1) {
+        drift.push(
+          `  ${(meta.get(id)?.manager ?? '?').padEnd(9)} ESPN says ${f(espnLeft)} to come, our rows say ${f(ourLeft)}`,
+        )
+      }
+    }
+  }
+  if (drift.length > 0) {
+    console.log('\u26a0\ufe0f  ROSTER DATA LOOKS STALE \u2014 DO NOT PUBLISH UNTIL THIS IS EMPTY\n')
+    console.log(drift.join('\n'))
+    console.log('\n  Re-run the roster sync for this week, then run this again.\n')
+  }
 
   console.log(`\n=== WEEK ${week}, IN FLIGHT ===`)
   console.log(`NFL teams yet to play: ${yetToPlay.join(', ') || '(none — the week is over)'}\n`)

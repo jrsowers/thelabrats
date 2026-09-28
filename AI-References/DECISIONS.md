@@ -1420,11 +1420,16 @@ was 16.1, and handed three managers defences whose games had finished hours
 earlier. **A player is pending only if his NFL TEAM has not kicked off**, which
 also lets the Monday game identify itself without a hard-coded schedule.
 
-**`matchups.home_projected_score` is NOT "points left".** ESPN's live team
-projection does not equal current score plus the remaining players'
-projections — for one manager in week 3 the two differed by exactly his
-kicker's projection. The per-player sum is computed from rows anybody can
-check, and that is the version that goes in print.
+**~~`matchups.home_projected_score` is NOT "points left".~~ WRONG, AND THE
+CORRECTION IS THE MORE USEFUL RULE.** This was written up as "ESPN's projection
+is unreliable, trust our player rows". Backwards. ESPN said James had 16.0 to
+come and our rows said 23.6; ESPN was right. The extra 7.6 was a kicker James
+had dropped five days earlier whose row the roster sync had never deleted.
+
+So the gap is not noise, it is **the only available alarm that the stored
+roster no longer matches reality**. `gather.ts` now checks it on every run and
+refuses to be quiet about it, because a Monday post is built entirely on who is
+left, and being wrong about that is being wrong about everything.
 
 **Humour is calibrated to 8/10**, at James's request, with a dial table in
 `voice.md` giving anchors at 3, 5, 7, 8, 9 and 10. An 8 is not *more* jokes, it
@@ -1434,3 +1439,30 @@ line that is merely rude rather than funny.
 **Runs every Monday at 9am local** via a scheduled task, which invokes the
 skill rather than restating it. It stops without publishing if the week is
 already over.
+
+### The roster sync never deleted anybody
+
+`syncRosters` upserted on (season, week, player, team) and stopped there. ESPN's
+roster for a scoring period is the COMPLETE set of who is on each team that
+week — a dropped player simply stops appearing, and nothing in the payload says
+"this one left" — so every player anybody had ever rostered in a given week kept
+his row forever, frozen with whatever lineup slot he last held.
+
+James's stored week 3 lineup therefore had **two starting kickers**: Trey Smack,
+who played, and Cairo Santos, who had been dropped for him. Twenty-one ghost
+rows in week 3 alone, and eleven starters in a ten-man lineup.
+
+It shipped to the league. The Monday post told twelve people James still had a
+kicker to come, and James read it and said he did not.
+
+The sync now PRUNES: after the upsert, it deletes every row for that season and
+week whose id is not among the ones just written. Keyed on the returned ids so
+a half-finished sync can never wipe a week — if the upsert did not run, neither
+does the delete. Weeks 1–3 were re-synced, which is also what surfaced that the
+"ESPN projection is unreliable" note above was exactly backwards.
+
+**The general shape, and it has now bitten three times:** upsert-only ingestion
+silently accumulates. It bit the awards table when a regenerated week kept an
+award that no longer computed, and it bit here. **If a source's payload is a
+complete set, the sync has to delete what is missing from it, or the absence
+never propagates.**

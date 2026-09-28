@@ -52,10 +52,12 @@ any number:
   off. The first run without that filter gave one manager 24.1 points still to
   come when the true figure was 16.1, and handed three managers defenses whose
   games had finished hours earlier.
-- **Never use `matchups.home_projected_score` as "points left".** It is ESPN's
-  own live projection and does not equal current score plus remaining player
-  projections — for one manager in week 3 the two differed by exactly his
-  kicker's projection.
+- **If ESPN's team projection disagrees with the player sum, STOP.** The
+  script checks this and shouts. It means the stored roster is stale — almost
+  always a dropped player whose row was never pruned — and everything this post
+  is about is then wrong. Re-run the roster sync for the week and gather again.
+  Week 3 shipped saying James still had a kicker to come; he had dropped that
+  kicker five days earlier.
 
 ### 2. Research the NFL week so far, and tonight's game
 

@@ -14,8 +14,9 @@
  * week's player line can be re-fetched by asking for its scoringPeriodId. A
  * missed week is a gap to backfill, not a permanent hole.
  *
- * Idempotent: upserts on (season, week, player, team), so re-running a week
- * corrects it rather than duplicating it.
+ * Idempotent: upserts on (season, week, player, team) and then PRUNES anybody
+ * ESPN no longer lists, so re-running a week corrects it rather than
+ * duplicating it — and a dropped player actually disappears.
  */
 import { EspnClient } from '@/lib/espn/client'
 import { VIEWS } from '@/lib/espn/constants'
@@ -125,6 +126,34 @@ export async function syncRosters(
       .upsert(rows, { onConflict: 'season_id,week,player_id,season_team_id' })
       .select('id')
     if (scoreError) throw new Error(`player_week_scores upsert failed: ${scoreError.message}`)
+
+    // ⚠️ UPSERT ALONE LEAVES GHOSTS, AND THEY LOOK LIKE REAL PLAYERS.
+    //
+    // ESPN's roster for a scoring period is the COMPLETE set of who is on each
+    // team that week. A player who is dropped simply stops appearing — nothing
+    // in the payload says "this one left" — so an upsert-only sync keeps his
+    // row forever, frozen with whatever lineup slot he last held.
+    //
+    // In week 3 James dropped Cairo Santos for Trey Smack. Both then sat in the
+    // stored lineup as starting kickers, one of them with a null stat line, and
+    // the Monday post told the league James still had a kicker to come. He did
+    // not. He had not for five days.
+    //
+    // Scoped to this season and week and keyed on the ids just written, so a
+    // half-finished sync can never wipe a week: if the upsert did not run, this
+    // does not either.
+    const keepIds = (writtenScores ?? []).map((r) => r.id as number)
+    if (keepIds.length > 0) {
+      const { error: pruneError } = await db
+        .from('player_week_scores')
+        .delete()
+        .eq('season_id', seasonId)
+        .eq('week', week)
+        .not('id', 'in', `(${keepIds.join(',')})`)
+      if (pruneError) {
+        throw new Error(`player_week_scores prune failed: ${pruneError.message}`)
+      }
+    }
 
     return {
       ok: true,

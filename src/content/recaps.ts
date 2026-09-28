@@ -136,13 +136,13 @@ export const RECAPS: Recap[] = [
       },
       {
         type: 'paragraph',
-        text: 'Here is the finding. Every unplayed player in this entire league — all eight of them, across six of your rosters — is in the same football game. Eagles at Bears, Soldier Field, 8:15. One stadium. Twelve managers. Three matchups that are genuinely still alive and three that are already in the ground.',
+        text: 'Here is the finding, and it is a real one. Both undefeated teams in this league are losing.',
       },
       {
         type: 'paragraph',
-        text: 'I did not design this. If I had designed this I would be applying for funding.',
+        text: 'Jesse is 2-0 and trailing. Chenell is 2-0 and trailing. Between them they have the two best records and the two best point totals in the building, and tonight they are both being held under water by teams that have no business doing it — one of them by a manager who has not won a game all year.',
       },
-      { type: 'paragraph', text: 'Both undefeated teams are currently losing, which I will come back to.' },
+      { type: 'paragraph', text: 'Three matchups are still alive. Everything that decides them happens tonight at Soldier Field, Eagles at Bears, 8:15. Six of you have a player in that game. Two of you have a season in it.' },
       { type: 'heading', text: 'THE BOARD, AS OF THIS MORNING' },
       {
         type: 'paragraph',
@@ -157,7 +157,7 @@ export const RECAPS: Recap[] = [
           { top: 'Nix Pix a Puka Six', topScore: 143.3, bottom: 'PKM Playmakers', bottomScore: 92.3, note: 'over — nobody left' },
           { top: 'All Bark, All Bite', topScore: 118.7, bottom: 'Mr. Anderson', bottomScore: 105.5, note: 'Saquon Barkley vs one defence' },
           { top: 'Burrow My Burden', topScore: 115.1, bottom: 'Bree’s Badass Boys', bottomScore: 111.8, note: 'Evan has nobody. Bree has Jalen Hurts.' },
-          { top: 'Soft Tissue Issues', topScore: 112.5, bottom: 'Da Reigning Champ', bottomScore: 107.5, note: 'four players still on the field' },
+          { top: 'Soft Tissue Issues', topScore: 112.5, bottom: 'Da Reigning Champ', bottomScore: 107.5, note: 'three players still on the field' },
         ],
       },
       { type: 'heading', text: 'THE MIRACLE: Evan Needs Jalen Hurts To Be Held Under 3.3 Points' },
@@ -211,7 +211,7 @@ export const RECAPS: Recap[] = [
         type: 'paragraph',
         text: 'The Bears, for their part, lead the NFL in rushing at 212.5 yards a game and are starting a third-string quarterback, Caleb Williams being out with a hamstring. Philadelphia has given up more than 120 on the ground in each of its first two games. I am not saying that is good news for Jesse. I am saying that if Chicago runs it forty times, nothing good happens for anybody holding an Eagles defence.',
       },
-      { type: 'heading', text: 'THE KNIFE EDGE: James Is Five Points Up And Trusting A Rookie Tight End' },
+      { type: 'heading', text: 'THE KNIFE EDGE: James Is Five Points Up With Two Men Standing' },
       {
         type: 'paragraph',
         text: 'Soft Tissue Issues leads Da Reigning Champ 112.5 to 107.5, and this is the only matchup tonight where both managers still have a pulse and a player.',
@@ -222,15 +222,15 @@ export const RECAPS: Recap[] = [
       },
       {
         type: 'paragraph',
-        text: 'James has three: Dontayvion Wicks, Colston Loveland and Cairo Santos. Twenty-three and a half points of projection between them, which sounds comfortable until you notice that two of the three are Chicago Bears — a rookie tight end and a kicker — on a night Chicago is starting its third quarterback of the season.',
+        text: 'James has two: Dontayvion Wicks and Colston Loveland. Sixteen points of projection between them — a fourth receiver and a rookie tight end — and one of those two is a Chicago Bear on a night Chicago is starting its third quarterback of the season.',
       },
       {
         type: 'paragraph',
-        text: 'So Chenell is holding the best receiver on the field, and James is holding a portfolio. Diversified. Sensible. Entirely dependent on Case Keenum finding a tight end he has been throwing to since Wednesday.',
+        text: 'So Chenell is holding the best receiver on the field, and James is holding two men who are on the field. Sixteen against twelve point seven, with a five-point head start. That is a lead measured in a single busted coverage.',
       },
       {
         type: 'paragraph',
-        text: 'James, in fairness, is the man who ran a mathematically perfect lineup in week 2 and won The Mastermind for it. He does not guess. He also does not control who plays quarterback for the Chicago Bears, and tonight neither of those facts is worth more than the other.',
+        text: 'James, in fairness, is the man who ran a mathematically perfect lineup in week 2 and won The Mastermind for it. He does not guess. He also does not control who is throwing to Colston Loveland tonight, and of those two facts only one of them is going to matter.',
       },
       { type: 'heading', text: 'THE FORMALITIES' },
       {
@@ -256,7 +256,7 @@ export const RECAPS: Recap[] = [
       },
       {
         type: 'paragraph',
-        text: 'And James holds on, narrowly, by less than a touchdown, with the whole thing resting on a Chicago kicker. Chenell does not lose in September — that is on the record from week 1 and it has survived two weeks — and tonight is the night it finally goes in the bin. September has one Monday left in it and I have picked the wrong hill.',
+        text: 'And James holds on, narrowly, by less than a touchdown, which means Chenell loses. That matters to me personally: I went on the record in week 1 saying Chenell does not lose in September, it has survived two weeks, and I am now calling against my own prediction with four days of September left. Do with that what you like.',
       },
       { type: 'paragraph', text: 'Kickoff is 8:15. Six of you cannot look away. Three of you should probably eat something first.' },
     ],
