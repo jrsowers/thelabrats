@@ -1466,3 +1466,31 @@ silently accumulates. It bit the awards table when a regenerated week kept an
 award that no longer computed, and it bit here. **If a source's payload is a
 complete set, the sync has to delete what is missing from it, or the absence
 never propagates.**
+### League notes: the things no query can find
+
+James, supplying the first one: *"Not sure if it will show up in your news
+query."* It did not, and it would not have. Trevor Lawrence took a knee at the
+one-yard line rather than score, up 28-6 with eight minutes left; Bhayshul
+Tuten scored on the very next play. **A box score records that a touchdown was
+not scored and says nothing about the decision not to score it.**
+
+In this league that is a direct transfer — James started Lawrence, Tyler
+started Tuten in his flex — and James is leading his week 3 matchup by 5.0
+points, roughly the value of the touchdown that was declined.
+
+`src/content/league-notes.ts` is where such an observation goes to survive
+until somebody is writing. Both `gather.ts` scripts print the week's notes
+first and loudly, so the writer cannot miss one. Same shape as
+`injury-overrides.ts`: human knowledge the API cannot supply, recorded where
+the pipeline already reads.
+
+Three rules on it, and the first is the important one:
+
+- **Every note carries a `verified` field, and null means NOBODY HAS CHECKED.**
+  These are recollections and recollections are wrong sometimes. An unverified
+  note is a lead to research, not a fact to print. Verifying this one improved
+  it — the kneel was at the one-yard line, New England called a timeout in
+  between, and Lawrence afterwards joked he was "trying to support the Bhayshul
+  Tuten fantasy people", none of which was in the tip.
+- **A note is context, never a number.** Scores still come from the database.
+- **The roast boundary still applies** to anything in one.

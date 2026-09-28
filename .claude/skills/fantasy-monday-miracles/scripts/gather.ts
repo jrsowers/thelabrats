@@ -28,6 +28,7 @@
  * wrong about that is being wrong about everything.
  */
 import { createClient } from '@supabase/supabase-js'
+import { notesForWeek } from '../../../../src/content/league-notes'
 
 const WEEK_ARG = process.argv[2] ? Number(process.argv[2]) : null
 
@@ -137,6 +138,23 @@ async function main() {
     console.log('\u26a0\ufe0f  ROSTER DATA LOOKS STALE \u2014 DO NOT PUBLISH UNTIL THIS IS EMPTY\n')
     console.log(drift.join('\n'))
     console.log('\n  Re-run the roster sync for this week, then run this again.\n')
+  }
+
+
+  // ---- human notes ----
+  // Things no query can find: a quarterback kneeling instead of scoring, a
+  // starter rested at half time. Printed first and loudly, because the whole
+  // reason this file exists is that somebody noticed something the pipeline
+  // structurally cannot.
+  const notes = notesForWeek(season!.year as number, week)
+  if (notes.length > 0) {
+    console.log('\n\u2605 LEAGUE NOTES \u2014 human observations, read before writing\n')
+    for (const n of notes) {
+      console.log(`  [${n.source}] ${n.note.replace(/\n/g, '\n      ')}`)
+      console.log(n.verified
+        ? `      verified: ${n.verified}\n`
+        : '      \u26a0\ufe0f  NOT VERIFIED \u2014 research before using\n')
+    }
   }
 
   console.log(`\n=== WEEK ${week}, IN FLIGHT ===`)

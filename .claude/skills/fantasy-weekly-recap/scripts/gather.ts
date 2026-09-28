@@ -8,12 +8,13 @@
  * never from memory, and never from numbers invented to fit a joke.
  */
 import { createClient } from '@supabase/supabase-js'
+import { notesForWeek } from '../../../../src/content/league-notes'
 
 const WEEK = Number(process.argv[2] ?? 1)
 
 async function main() {
   const db = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.SUPABASE_SECRET_KEY!)
-  const { data: season } = await db.from('seasons').select('id')
+  const { data: season } = await db.from('seasons').select('id, year')
     .order('year', { ascending: false }).limit(1).maybeSingle()
   const seasonId = season!.id
 
@@ -27,6 +28,23 @@ async function main() {
     const f = t.franchises as unknown as { manager_name: string } | null
     return [t.id, (f?.manager_name ?? '').split(' ')[0]]
   }))
+
+
+  // ---- human notes ----
+  // Things no query can find: a quarterback kneeling instead of scoring, a
+  // starter rested at half time. Printed first and loudly, because the whole
+  // reason this file exists is that somebody noticed something the pipeline
+  // structurally cannot.
+  const notes = notesForWeek(season!.year as number, WEEK)
+  if (notes.length > 0) {
+    console.log('\n\u2605 LEAGUE NOTES \u2014 human observations, read before writing\n')
+    for (const n of notes) {
+      console.log(`  [${n.source}] ${n.note.replace(/\n/g, '\n      ')}`)
+      console.log(n.verified
+        ? `      verified: ${n.verified}\n`
+        : '      \u26a0\ufe0f  NOT VERIFIED \u2014 research before using\n')
+    }
+  }
 
   console.log(`=== WEEK ${WEEK} ===\n`)
 

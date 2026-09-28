@@ -77,6 +77,18 @@ collect on.
 
 ### 3. Research the NFL week
 
+**`gather.ts` prints LEAGUE NOTES first when there are any.** Those are human
+observations from `src/content/league-notes.ts` — things a database query and a
+news search both structurally cannot find, because a box score records that a
+touchdown was not scored and says nothing about a quarterback deciding not to
+score it. Week 3's was exactly that: Trevor Lawrence kneeling at the one-yard
+line and handing six points to a rival manager's flex.
+
+Read them before searching, use the verified ones, and **research any note
+marked NOT VERIFIED before it goes anywhere near print** — they are
+recollections, and recollections are wrong sometimes.
+
+
 Search for the week's results, biggest performances, upsets and injuries.
 Then **cross-reference against the roster data from step 2** and keep only what
 touches this league.

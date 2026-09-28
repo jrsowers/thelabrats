@@ -61,6 +61,18 @@ any number:
 
 ### 2. Research the NFL week so far, and tonight's game
 
+**`gather.ts` prints LEAGUE NOTES first when there are any.** Those are human
+observations from `src/content/league-notes.ts` — things a database query and a
+news search both structurally cannot find, because a box score records that a
+touchdown was not scored and says nothing about a quarterback deciding not to
+score it. Week 3's was exactly that: Trevor Lawrence kneeling at the one-yard
+line and handing six points to a rival manager's flex.
+
+Read them before searching, use the verified ones, and **research any note
+marked NOT VERIFIED before it goes anywhere near print** — they are
+recollections, and recollections are wrong sometimes.
+
+
 Search for it. **Never state an NFL fact from memory** — the model's training
 data is behind the season, and this is the same rule the recap skill carries
 for the same reason.

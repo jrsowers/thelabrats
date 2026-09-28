@@ -230,6 +230,26 @@ export const RECAPS: Recap[] = [
       },
       {
         type: 'paragraph',
+        text: 'And now the part that is going to hurt, because it has already happened and nobody can do anything about it.',
+      },
+      {
+        type: 'paragraph',
+        text: 'On Sunday, with Jacksonville leading New England 28-6 and eight minutes left, Trevor Lawrence reached the one-yard line and took a knee. Declined the touchdown. New England called a timeout, and on the very next play Bhayshul Tuten walked in and scored it instead.',
+      },
+      {
+        type: 'paragraph',
+        text: 'Trevor Lawrence is James\u2019s quarterback. Bhayshul Tuten is in Tyler\u2019s flex.',
+      },
+      {
+        type: 'paragraph',
+        text: 'That is not a bad beat. That is a wire transfer. Six points lifted out of one manager\u2019s account and deposited into another\u2019s by a professional athlete demonstrating good sportsmanship, which is the most expensive thing anybody can do to you in this hobby. Asked about it afterwards, Lawrence said he probably should have just scored, and then joked that he was trying to support the Bhayshul Tuten fantasy people.',
+      },
+      {
+        type: 'paragraph',
+        text: 'He was. Tyler is up 62.8 and did not need a single one of those points. James is up 5.0 and needs all of them. If this matchup ends inside a touchdown tonight, the difference will be a man being gracious in a game that was already over, and I want that entered into the record before we find out.',
+      },
+      {
+        type: 'paragraph',
         text: 'James, in fairness, is the man who ran a mathematically perfect lineup in week 2 and won The Mastermind for it. He does not guess. He also does not control who is throwing to Colston Loveland tonight, and of those two facts only one of them is going to matter.',
       },
       { type: 'heading', text: 'THE FORMALITIES' },
