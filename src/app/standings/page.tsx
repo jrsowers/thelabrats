@@ -3,7 +3,7 @@ import { Fragment } from 'react'
 import Link from 'next/link'
 import {
   getLeagueOverview, getSeasonTeams, getSeasonResults, getReigningChampion, getLastSync,
-  hasActiveGames, getEspnStandings, getSeedHistory,
+  hasActiveGames, getEspnStandings, getSeedHistory, getRosterMoves,
 } from '@/lib/league/queries'
 import {
   computeStandings, computeMovement, rankMovementFor,
@@ -48,13 +48,16 @@ export default async function StandingsPage({
   const isPreview = params.preview === 'live'
 
   const champion = await getReigningChampion()
-  const [teams, rawResults, lastSync, gamesActive, espnStandings, seedHistory] = await Promise.all([
+  const [
+    teams, rawResults, lastSync, gamesActive, espnStandings, seedHistory, moves,
+  ] = await Promise.all([
     getSeasonTeams(overview.seasonId, champion),
     getSeasonResults(overview.seasonId),
     getLastSync(),
     hasActiveGames(overview.currentWeek),
     getEspnStandings(overview.seasonId),
     getSeedHistory(overview.seasonId),
+    getRosterMoves(overview.seasonId),
   ])
 
   // Preview simulates the season to a given week so every state can be seen:
@@ -172,7 +175,7 @@ export default async function StandingsPage({
 
       <div className="overflow-hidden rounded-lg border border-border">
         <div className="overflow-x-auto">
-          <table className="w-full border-collapse text-left sm:min-w-[640px]">
+          <table className="w-full border-collapse text-left sm:min-w-[720px]">
             <thead>
               <tr className="border-b border-border bg-surface-2">
                 <th scope="col" className="eyebrow px-3 py-2.5 sm:px-4">Rank</th>
@@ -180,7 +183,17 @@ export default async function StandingsPage({
                 <th scope="col" className="eyebrow px-2 py-2.5 text-right">W-L-T</th>
                 <th scope="col" className="eyebrow px-2 py-2.5 text-right hidden sm:table-cell">PF</th>
                 <th scope="col" className="eyebrow px-2 py-2.5 text-right hidden sm:table-cell">PA</th>
-                <th scope="col" className="eyebrow px-3 py-2.5 text-right sm:px-4 hidden sm:table-cell">Streak</th>
+                <th scope="col" className="eyebrow px-2 py-2.5 text-right hidden sm:table-cell">Streak</th>
+                {/* Hidden below 640px like PF, PA and Streak. At 320px the
+                    table already fits only rank, team and record; a fifth
+                    column there would crush the team names it sits beside. */}
+                <th
+                  scope="col"
+                  className="eyebrow px-3 py-2.5 text-right sm:px-4 hidden sm:table-cell"
+                  title="Free-agent pickups, waiver claims and trades, season to date"
+                >
+                  Moves
+                </th>
               </tr>
             </thead>
             <tbody>
@@ -265,7 +278,7 @@ export default async function StandingsPage({
                     <td className="hidden px-2 py-2.5 text-right font-mono text-[13px] text-muted tnum sm:table-cell">
                       {row.pointsAgainst.toFixed(2)}
                     </td>
-                    <td className="hidden px-3 py-2.5 text-right sm:table-cell sm:px-4">
+                    <td className="hidden px-2 py-2.5 text-right sm:table-cell">
                       {row.streak ? (
                         <span
                           className={`font-mono text-[13px] font-semibold tnum ${
@@ -278,6 +291,9 @@ export default async function StandingsPage({
                       ) : (
                         <span className="font-mono text-[13px] text-dim">—</span>
                       )}
+                    </td>
+                    <td className="hidden px-3 py-2.5 text-right font-mono text-[13px] tnum sm:table-cell sm:px-4">
+                      {moves.get(row.seasonTeamId) ?? 0}
                     </td>
                   </tr>
 
@@ -325,6 +341,10 @@ export default async function StandingsPage({
           <div className="flex items-center gap-1.5">
             <dt className="text-brand" aria-hidden><LockIcon size={12} /></dt>
             <dd>Clinched Playoff Berth</dd>
+          </div>
+          <div className="flex items-center gap-1.5">
+            <dt className="uppercase tracking-wider">Moves</dt>
+            <dd>Pickups, claims and trades — not lineup changes</dd>
           </div>
         </dl>
       </div>

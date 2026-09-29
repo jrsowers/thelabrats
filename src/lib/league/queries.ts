@@ -821,3 +821,81 @@ export async function getSeedHistory(
   }
   return out
 }
+
+/**
+ * Season-to-date roster moves per team: waiver claims, free-agent adds, trades.
+ *
+ * James's definition, and it is the right one: *"the collective sum of free
+ * agent pickups, waiver claims, and trades. I'm not interested in tracking when
+ * players get moved from bench slots to active slots."*
+ *
+ * So `LINEUP` is excluded. Start/sit churn is a different behaviour entirely —
+ * Doug made 45 of them in a single week, which would have swamped the column
+ * and told you nothing about who works the wire. `DRAFT` is excluded because
+ * 180 picks is not a move anybody made in-season, and the IR types are roster
+ * housekeeping rather than acquisition.
+ *
+ * ⚠️ EXECUTED ONLY. A quarter of this season's waiver rows are `CANCELED` or
+ * `FAILED_*` — a claim that lost the priority order, or one for a player
+ * already taken. Those are intentions, not moves, and the transaction log
+ * excludes them on the same grounds: a log records what HAPPENED.
+ *
+ * ⚠️ A TRADE COUNTS FOR BOTH SIDES. `transactions.season_team_id` holds only
+ * the team that PROPOSED it, so attributing on that column alone credits one
+ * manager for a two-manager decision — week 1's Lawrence/Purdy swap would have
+ * counted for Justin and not for James. The participants come from the items'
+ * `from_team_id` and `to_team_id` instead.
+ */
+/** One transaction, as `countRosterMoves` needs it. */
+export interface MoveRow {
+  season_team_id: number | null
+  transaction_type: string
+  transaction_items: { from_team_id: number | null; to_team_id: number | null }[] | null
+}
+
+/**
+ * Pure counting half, extracted so the trade rule can be tested.
+ *
+ * Both sides of a trade get credit; every other type is credited to the team
+ * that made it.
+ */
+export function countRosterMoves(rows: MoveRow[]): Map<number, number> {
+  const counts = new Map<number, number>()
+  const bump = (id: number | null | undefined) => {
+    if (id == null) return
+    counts.set(id, (counts.get(id) ?? 0) + 1)
+  }
+
+  for (const row of rows) {
+    if (row.transaction_type !== 'TRADE') {
+      bump(row.season_team_id)
+      continue
+    }
+    // One trade, one move each, however many players changed hands.
+    const sides = new Set<number>()
+    for (const item of row.transaction_items ?? []) {
+      if (item.from_team_id != null) sides.add(item.from_team_id)
+      if (item.to_team_id != null) sides.add(item.to_team_id)
+    }
+    if (sides.size === 0 && row.season_team_id != null) sides.add(row.season_team_id)
+    for (const id of sides) bump(id)
+  }
+  return counts
+}
+
+export async function getRosterMoves(
+  seasonId: number,
+): Promise<Map<number, number>> {
+  if (!isSupabaseConfigured()) return new Map()
+
+  const supabase = createPublicClient()
+  const { data, error } = await supabase
+    .from('transactions')
+    .select('season_team_id, transaction_type, transaction_items ( from_team_id, to_team_id )')
+    .eq('season_id', seasonId)
+    .eq('status', 'EXECUTED')
+    .in('transaction_type', ['WAIVER', 'FREE_AGENT', 'TRADE'])
+  if (error || !data) return new Map()
+
+  return countRosterMoves(data as unknown as MoveRow[])
+}
