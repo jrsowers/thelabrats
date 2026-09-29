@@ -48,23 +48,23 @@ function Movement({ delta }: { delta: number }) {
  * line now both read from this list, so adding a column moves both.
  */
 const COLUMNS: { label: string; className: string; title?: string }[] = [
-  { label: 'Rank', className: 'px-3 sm:px-4' },
-  { label: 'Team', className: 'px-2' },
-  { label: 'W-L-T', className: 'px-2 text-right' },
-  { label: 'PF', className: 'px-2 text-right hidden sm:table-cell' },
-  { label: 'PA', className: 'px-2 text-right hidden sm:table-cell' },
-  { label: 'Streak', className: 'px-2 text-right hidden sm:table-cell' },
+  { label: 'Rank', className: 'px-3 sm:w-[9%] sm:px-4' },
+  { label: 'Team', className: 'px-2 sm:w-[30%]' },
+  { label: 'W-L-T', className: 'px-2 text-right sm:w-[9%]' },
+  { label: 'PF', className: 'hidden px-2 text-right sm:table-cell sm:w-[10%]' },
+  { label: 'PA', className: 'hidden px-2 text-right sm:table-cell sm:w-[10%]' },
+  { label: 'Streak', className: 'hidden px-2 text-right sm:table-cell sm:w-[10%]' },
   // Both hidden below 640px like PF, PA and Streak. At 320px the table fits
   // only rank, team and record; more columns there would crush the team
   // names beside them.
   {
     label: 'Moves',
-    className: 'px-2 text-right hidden sm:table-cell',
-    title: "ESPN's own counter: waiver claims and free-agent adds, plus trades",
+    className: 'hidden px-2 text-right sm:table-cell sm:w-[10%]',
+    title: "ESPN's own counter: waiver claims and free-agent adds",
   },
   {
     label: 'Playoff %',
-    className: 'px-3 text-right hidden sm:table-cell sm:px-4',
+    className: 'hidden px-3 text-right sm:table-cell sm:w-[12%] sm:px-4',
     title: "ESPN's own playoff probability",
   },
 ]
@@ -205,14 +205,14 @@ export default async function StandingsPage({
 
       <div className="overflow-hidden rounded-lg border border-border">
         <div className="overflow-x-auto">
-          <table className="w-full border-collapse text-left sm:min-w-[820px]">
+          <table className="w-full border-collapse text-left sm:min-w-[820px] sm:table-fixed">
             <thead>
               <tr className="border-b border-border bg-surface-2">
                 {COLUMNS.map((col) => (
                   <th
                     key={col.label}
                     scope="col"
-                    className={`eyebrow py-2.5 ${col.className}`}
+                    className={`eyebrow whitespace-nowrap py-2.5 ${col.className}`}
                     title={col.title}
                   >
                     {col.label}
@@ -318,7 +318,7 @@ export default async function StandingsPage({
                     </td>
                     {/* Both straight from ESPN, in COLUMNS order. */}
                     <td className="hidden px-2 py-2.5 text-right font-mono text-[13px] tnum sm:table-cell">
-                      {(e?.acquisitions ?? 0) + (e?.trades ?? 0)}
+                      {e?.acquisitions ?? 0}
                     </td>
                     {/* playoffOdds is a 0-1 probability; a dash when ESPN has
                         published no simulation, which is honest rather than
@@ -381,7 +381,7 @@ export default async function StandingsPage({
           </div>
           <div className="flex items-center gap-1.5">
             <dt className="uppercase tracking-wider">Moves</dt>
-            <dd>ESPN's counter: pickups, claims and trades</dd>
+            <dd>ESPN's own counter: pickups and claims</dd>
           </div>
         </dl>
       </div>

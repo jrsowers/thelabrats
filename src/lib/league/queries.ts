@@ -540,7 +540,16 @@ export interface EspnStandingRow {
   projectedWins: number | null
   projectedLosses: number | null
   /**
-   * ESPN's own move counter: waiver claims plus free-agent adds, and trades.
+   * ESPN's own move counter, split the way ESPN splits it.
+   *
+   * The standings Moves column shows `acquisitions` ALONE, because that is
+   * what ESPN's own Moves column shows and James asked for a mirror of it:
+   * *"I'd prefer to just mirror what ESPN is displaying."* Adding `trades`
+   * made the number defensible and still made it disagree with the site
+   * everybody cross-checks against, which is the worse failure.
+   *
+   * `trades` is kept because ESPN sends it and it is cheap to store, not
+   * because anything displays it today.
    *
    * ⚠️ NEVER RE-DERIVE THESE FROM `transactions`. A Moves column computed that
    * way shipped reading 9 where ESPN said 6 and 9 where ESPN said 7 — ESPN
@@ -836,38 +845,17 @@ export async function getSeedHistory(
 }
 
 /**
- * Season-to-date roster moves per team: waiver claims, free-agent adds, trades.
- *
- * James's definition, and it is the right one: *"the collective sum of free
- * agent pickups, waiver claims, and trades. I'm not interested in tracking when
- * players get moved from bench slots to active slots."*
- *
- * So `LINEUP` is excluded. Start/sit churn is a different behaviour entirely —
- * Doug made 45 of them in a single week, which would have swamped the column
- * and told you nothing about who works the wire. `DRAFT` is excluded because
- * 180 picks is not a move anybody made in-season, and the IR types are roster
- * housekeeping rather than acquisition.
- *
- * ⚠️ EXECUTED ONLY. A quarter of this season's waiver rows are `CANCELED` or
- * `FAILED_*` — a claim that lost the priority order, or one for a player
- * already taken. Those are intentions, not moves, and the transaction log
- * excludes them on the same grounds: a log records what HAPPENED.
- *
- * ⚠️ A TRADE COUNTS FOR BOTH SIDES. `transactions.season_team_id` holds only
- * the team that PROPOSED it, so attributing on that column alone credits one
- * manager for a two-manager decision — week 1's Lawrence/Purdy swap would have
- * counted for Justin and not for James. The participants come from the items'
- * `from_team_id` and `to_team_id` instead.
- */
-/**
  * ⚠️ REMOVED: `getRosterMoves` / `countRosterMoves`.
  *
- * The Moves column was computed from the `transactions` table and disagreed
- * with ESPN — 9 where ESPN said 6, 9 where ESPN said 7. ESPN maintains its own
- * `transactionCounter` and applies rules the transaction feed does not expose
- * (a re-add of a player you just dropped, moves made before the first kickoff).
- * CLAUDE.md is explicit that ESPN is the system of record, so the number is now
- * read from `espn_team_standings.acquisitions` and `.trades`.
+ * The standings Moves column was once computed from the `transactions` table,
+ * with careful rules — executed transactions only, `LINEUP` churn excluded,
+ * a trade credited to both sides rather than only its proposer. It disagreed
+ * with ESPN anyway: 9 where ESPN said 6, 9 where ESPN said 7. ESPN maintains
+ * its own `transactionCounter` and applies rules its transaction feed does
+ * not expose, and CLAUDE.md makes ESPN the system of record.
+ *
+ * The column now reads `espn_team_standings.acquisitions` and nothing else —
+ * the same field ESPN's own Moves column displays.
  *
  * Do not rebuild the derived version. It looked right and was not.
  */
