@@ -27,7 +27,7 @@ const GENDERED = /\b(he|him|his|she|her|hers|they|them|their)\b/gi
 const blockText = (b: RecapBlock): string => {
   switch (b.type) {
     case 'stat': return `${b.label} ${b.value} ${b.note ?? ''}`
-    case 'scoreboard': return b.rows.map((r) => `${r.winner} ${r.loser}`).join(' ')
+    case 'scoreboard': return b.rows.map((r) => `${r.top} ${r.bottom}`).join(' ')
     case 'paragraph':
     case 'heading':
     case 'quote': return b.text

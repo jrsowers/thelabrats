@@ -117,6 +117,217 @@ export interface Recap {
 
 export const RECAPS: Recap[] = [
   {
+    slug: 'week-3-a-backup-rearranged-your-league',
+    series: 'recap',
+    week: 3,
+    title: 'A Thirty-Eight-Year-Old Backup Rearranged Your Entire League',
+    summary:
+      'Case Keenum decided three matchups from the bench of a manager who did not start him. Jesse needed a defence to save him and got a zero. Seven of you are now 2-1, which is the least useful thing a table has ever told me.',
+    publishedAt: '2026-09-29',
+    published: true,
+    coverImage: '/recaps/week-3.jpg',
+    coverAlt:
+      'A packed line of football players silhouetted shoulder to shoulder under stadium floodlights.',
+    author: BURNER,
+    predictions: [
+      {
+        id: 'seven-way-tie-breaks',
+        claim:
+          'The 2-1 logjam is gone by week 5 and Tyler is alone at the top of it.',
+      },
+      {
+        id: 'justin-wins-one',
+        claim: 'Justin wins a game in week 4. He is too good to be 0-4.',
+      },
+      {
+        id: 'doug-fiddles-again',
+        claim:
+          'Doug makes another forty-plus roster moves in a single week before the season ends.',
+      },
+    ],
+    body: [
+      {
+        type: 'paragraph',
+        text: 'Subjects. I went three for three on Monday morning and I would like everybody to sit with that for a moment.',
+      },
+      {
+        type: 'paragraph',
+        text: 'I said Bree would beat Evan. Bree beat Evan. I said Keshia would take down the league leader. Keshia took down the league leader. I said James would hold on by less than a touchdown, and James held on by four point eight, which is less than a touchdown by one and a bit points.',
+      },
+      {
+        type: 'paragraph',
+        text: 'Twenty-four hours of perfect forecasting. A flawless instrument. And in the very same post I had to shoot my own week 1 prediction in the head, because calling James to win meant calling Chenell to lose, and I had spent a fortnight telling all of you that Chenell does not lose in September.',
+      },
+      { type: 'paragraph', text: 'Chenell lost in September. On the twenty-eighth. With two days left in it.' },
+      {
+        type: 'paragraph',
+        text: 'The science is strong. The scientist is an idiot. Let us proceed.',
+      },
+      { type: 'heading', text: 'BEARS 27, EAGLES 7 — The Third-Stringer Did This To Four Of You' },
+      {
+        type: 'paragraph',
+        text: 'Caleb Williams was out with a hamstring. Tyson Bagent had been concussed the week before. So Chicago started Case Keenum, aged thirty-eight, third on the depth chart, a man whose presence in a Monday night game is normally a sign that something has gone badly wrong — and Chicago beat the undefeated Philadelphia Eagles 27–10 on the ground and 27–7 on the scoreboard.',
+      },
+      {
+        type: 'paragraph',
+        text: 'Jalen Hurts threw a pick in the third that ended the argument. Saquon Barkley started hot and disappeared. Philadelphia never found a rhythm and did not deserve to.',
+      },
+      {
+        type: 'paragraph',
+        text: 'In this laboratory, that one football game settled three matchups, decided who spent the night celebrating, and made an absolute mockery of the word “projection”. It is the most consequential ninety minutes this league has had all season and none of you could do a thing about it.',
+      },
+      { type: 'heading', text: '49ERS 36, CARDINALS 30 — The Best Player In The League Belongs To The Worst Team In It' },
+      {
+        type: 'paragraph',
+        text: 'Brock Purdy went 15 of 27 for 297 and four touchdowns, added 34 yards on the ground, and kept San Francisco undefeated and alone at the top of the NFC West. He scored 39.3 fantasy points, the highest single-player figure anybody in this league has recorded this week.',
+      },
+      {
+        type: 'paragraph',
+        text: 'He plays for Justin. Justin is 0-3.',
+      },
+      {
+        type: 'paragraph',
+        text: 'I want to be careful here, because Justin is having a genuinely wretched season and a man in a hole should be handed a ladder rather than a shovel. But the arithmetic is the arithmetic: Substation Superstars started the best player in the competition and lost by 72.6.',
+      },
+      { type: 'heading', text: 'COMMANDERS 33, SEAHAWKS 31 — Sam Darnold Threw For 379 From Tyler’s Bench' },
+      {
+        type: 'paragraph',
+        text: 'Three weeks ago I wrote up the cruellest line on the page: Tyler started Sam Darnold in the superflex, Darnold lasted five snaps before a hip injury ended his afternoon, and Tyler received half a point and lost by 12.7.',
+      },
+      {
+        type: 'paragraph',
+        text: 'On Sunday, Sam Darnold completed 31 of 45 for 379 yards and threw four scores.',
+      },
+      { type: 'paragraph', text: 'Tyler had him on the bench.' },
+      {
+        type: 'paragraph',
+        text: 'Thirty-seven point seven, in street clothes, for the manager who started him on the one afternoon he got hurt in the first quarter. There is a word for a relationship with that shape and it is not a word I am allowed to use in a family newsletter.',
+      },
+      { type: 'heading', text: 'THE SCOREBOARD' },
+      {
+        type: 'paragraph',
+        text: 'Bookkeeping, then the interesting part.',
+      },
+      {
+        type: 'scoreboard',
+        rows: [
+          { top: 'Tyler’s Talented Team', topScore: 178.8, bottom: 'Substation Superstars', bottomScore: 106.2 },
+          { top: 'Nix Pix a Puka Six', topScore: 143.3, bottom: 'PKM Playmakers', bottomScore: 92.3 },
+          { top: 'Dad Bod', topScore: 136.5, bottom: 'Nobody Knows', bottomScore: 101.7 },
+          { top: 'All Bark, All Bite', topScore: 127.2, bottom: 'Mr. Anderson', bottomScore: 105.5 },
+          { top: 'Bree’s Badass Boys', topScore: 125.4, bottom: 'Burrow My Burden', bottomScore: 115.1 },
+          { top: 'Soft Tissue Issues', topScore: 121.8, bottom: 'Da Reigning Champ', bottomScore: 117.0 },
+        ],
+      },
+      { type: 'heading', text: 'Bree Won A Game She Was Losing By Sixty-Four Points' },
+      {
+        type: 'paragraph',
+        text: 'At some point on Sunday afternoon, Bree’s Badass Boys trailed Burrow My Burden by 64.7 points. Sixty-four point seven. That is not a deficit you come back from, that is a deficit you concede and go outside and look at a tree.',
+      },
+      { type: 'paragraph', text: 'Final: 125.4 to 115.1.' },
+      {
+        type: 'paragraph',
+        text: 'That is the largest comeback in the short history of this league by a distance — Chenell’s 46.7 in week 1 was the record and is now a footnote — and Bree gets Sweatin’ It Out for it, which is the most euphemistic award name in the entire library.',
+      },
+      {
+        type: 'paragraph',
+        text: 'Now the part that makes it art. Bree spent this week claiming Case Keenum off the waiver wire. Case Keenum then went out and put up 28.5, the highest score by any player in the Monday night game, more than double what Jalen Hurts managed.',
+      },
+      { type: 'paragraph', text: 'Bree started Jalen Hurts. Case Keenum watched from the bench.' },
+      {
+        type: 'paragraph',
+        text: 'She won anyway. She won a game she was sixty-four points down in, having correctly identified the single best play available on the wire and then declined to use it, which means the engine gave her The Waiver Wire Wizard for a decision she actively reversed. Bree, you are 2-1 and you are playing this game with your eyes closed and somehow it is working.',
+      },
+      { type: 'heading', text: 'Jesse Needed Twenty-Nine Points From A Defence And Received Nothing' },
+      {
+        type: 'paragraph',
+        text: 'On Monday morning I laid out what Mr. Anderson required: the Philadelphia defence to have the game of its life, roughly twenty-nine points’ worth, while Saquon Barkley did nothing. Three takeaways. Ideally two of them returned. A performance people in that city would still be describing in thirty years.',
+      },
+      { type: 'paragraph', text: 'The Eagles defence scored zero point zero.' },
+      {
+        type: 'paragraph',
+        text: 'Not a low number. Zero. The unit conceded twenty-seven points to a third-string quarterback and finished the evening with precisely nothing to show for it, which is a fantasy outcome so complete that I had to check the row twice to be sure it was not a null.',
+      },
+      {
+        type: 'paragraph',
+        text: 'Keshia wins 127.2 to 105.5. The team that had not won a game all season beat the team that led the league in points, and did it with Matthew Stafford throwing for 26.9 and Jordan Love adding 23.5 on a night when the man she was playing could not get double figures out of an entire professional football defence.',
+      },
+      {
+        type: 'paragraph',
+        text: 'Jesse is now 2-1. He is still second in this league for points scored. He has now lost to the manager with the fewest wins in it, and his last two weeks have featured a quarterback he picked up and benched, and a defence that posted a zero. The roster remains the most dangerous in the building. The man operating it continues to be its most interesting variable.',
+      },
+      { type: 'heading', text: 'James Won By Less Than The Touchdown His Own Quarterback Refused To Score' },
+      {
+        type: 'paragraph',
+        text: 'Soft Tissue Issues beat Da Reigning Champ 121.8 to 117.0. A margin of 4.8, the closest game of the week, The Photo Finish, The Cat Burglar and The Mastermind all landing on the same manager in the same afternoon.',
+      },
+      {
+        type: 'paragraph',
+        text: 'And hanging over all of it: on Sunday, with Jacksonville up 28–6 and eight minutes left, Trevor Lawrence reached the one-yard line and took a knee rather than score. Bhayshul Tuten walked it in on the very next play. Lawrence is James’s quarterback. Tuten is in Tyler’s flex.',
+      },
+      {
+        type: 'paragraph',
+        text: 'A rushing touchdown is six points. James won by 4.8.',
+      },
+      {
+        type: 'paragraph',
+        text: 'Read that twice. The margin of victory was smaller than the points his own quarterback declined to take. Had Lawrence been a slightly worse sportsman, James wins comfortably. Had Chenell found one more catch anywhere on her roster, a man being gracious in a game that was already over would have cost James the week and handed Chenell a result she had no other route to.',
+      },
+      {
+        type: 'paragraph',
+        text: 'Chenell takes The Bad Beat — 117.0 and a loss — and it is the purest one this award has ever been given. She was not outplayed. She was out-sportsmanshipped, by a quarterback on somebody else’s team, in a game she had no stake in whatsoever.',
+      },
+      { type: 'heading', text: 'Doug Made Forty-Nine Roster Moves And Lost By Thirty-Five' },
+      {
+        type: 'paragraph',
+        text: 'Forty-nine. I have checked this number four times and it has not moved.',
+      },
+      {
+        type: 'paragraph',
+        text: 'Forty-four of them were lineup changes. Doug spent week 3 opening the app, moving a player, closing the app, and then doing that forty-three more times. Nobody else in this league broke fifteen. Tyler made three. Justin made one.',
+      },
+      {
+        type: 'paragraph',
+        text: 'Nobody Knows scored 101.7, lost to Jay by 34.8, took The Galaxy Brain, and fell three places down the table. He also won The Socialist — 16.3 between his best starter and his worst, the flattest lineup in the league — which is the engine’s way of observing that all forty-four of those moves produced a roster of perfectly interchangeable men.',
+      },
+      {
+        type: 'paragraph',
+        text: 'Justin Jefferson went for 4.2. Malik Nabers went for 5.1. Marcus Mariota put 26.4 on the bench. Doug, I say this with real affection: the app is not the problem.',
+      },
+      { type: 'heading', text: 'The Rest Of The Petri Dish' },
+      {
+        type: 'paragraph',
+        text: 'Tyler put 178.8 on Justin, the highest score of the week, with seven starters beating their projection and Bijan Robinson clearing his by 17.0. He is now top of the league for points scored and he did it with 37.7 sitting on his bench. Colin beat Mike 143.3 to 92.3 behind Tyler Shough’s 32.8 and Bo Nix’s 29.1, which is two quarterbacks nobody drafted in the first eight rounds doing more than most people’s first-rounders.',
+      },
+      {
+        type: 'paragraph',
+        text: 'Jay beat Doug with Jahmyr Gibbs going for 37.9 — twenty-eight percent of the whole score, The One Man Army — and finished 0.3 from his projection, which is The Control Group and the least eventful good afternoon anybody has had this year. Evan lost despite Jaxon Smith-Njigba’s 30.4, which is the second week running that receiver has been the best thing on his roster, and the second week running it has counted for nothing.',
+      },
+      {
+        type: 'paragraph',
+        text: 'And Mike posted 92.3, the lowest in the league, with Drake Maye managing 5.8 against a 22.6 projection. Two Dumpster Fires in three weeks. I said last week that the 55.4 was a floor and not a trend, and I would like the record to show that 92.3 is a thirty-seven point improvement and I am counting it.',
+      },
+      { type: 'heading', text: 'THE FINDINGS' },
+      {
+        type: 'paragraph',
+        text: 'Seven of you are 2-1. Tyler, Jesse, Chenell, Jay, Bree, James and Colin, separated by nothing except points scored, with four more at 1-2 and Justin alone at the bottom holding the best individual performance of the week. Three weeks of data and the table has told us almost nothing, which is either beautiful parity or twelve people being equally mediocre at the same rate. I have not decided.',
+      },
+      {
+        type: 'paragraph',
+        text: 'The ledger, then. Chenell does not lose in September: wrong, dead, killed by my own Monday prediction, and I take the loss standing up. Bree posts a top-three score and wins one: half right — she won, but 125.4 was fifth, and half marks are the most humiliating grade available. Tyler’s 153.3 as the season’s highest losing score: still standing, with Chenell’s 117.0 the closest anybody came. Jesse’s roster and Mike’s floor: both still alive.',
+      },
+      {
+        type: 'paragraph',
+        text: 'Three new ones, delivered with the swagger of a man who just went three for three and is choosing not to mention the fourth.',
+      },
+      {
+        type: 'paragraph',
+        text: 'The logjam breaks by week 5 and Tyler is alone at the top of it. Justin wins in week 4, because a team that starts the best player in the league and goes 0-3 is not a bad team, it is a haunted one. And Doug makes another forty-plus move week before this season is out, because that is not a strategy, that is a compulsion, and compulsions do not respond to losing.',
+      },
+      { type: 'paragraph', text: 'Week four begins Thursday. Play Case Keenum.' },
+    ],
+  },
+  {
     slug: 'week-3-everything-you-have-left-is-in-chicago',
     series: 'miracles',
     week: 3,
@@ -129,6 +340,37 @@ export const RECAPS: Recap[] = [
     coverAlt:
       'A lone football player kneeling in silhouette on the sideline under stadium floodlights.',
     author: BURNER,
+    // Recorded after the fact. These three calls were made in the prose of this
+    // post and never entered in the ledger, which is exactly the failure the
+    // ledger exists to prevent — a prediction nobody can collect on is just a
+    // sentence. All three landed.
+    predictions: [
+      {
+        id: 'bree-beats-evan',
+        claim: 'Bree wins. Jalen Hurts is not going to score three points.',
+        verdict: 'correct',
+        resolvedWeek: 3,
+        resolution: 'Hurts scored 13.6. Bree won 125.4 to 115.1.',
+      },
+      {
+        id: 'keshia-upsets-jesse',
+        claim: 'Keshia wins, and the league leader takes his first loss to the team with no wins.',
+        verdict: 'correct',
+        resolvedWeek: 3,
+        resolution:
+          'Keshia won 127.2 to 105.5. Jesse\u2019s Eagles defence, the whole of '
+          + 'his remaining inventory, scored 0.0.',
+      },
+      {
+        id: 'james-holds-narrowly',
+        claim: 'James holds on, narrowly, by less than a touchdown, which means Chenell loses.',
+        verdict: 'correct',
+        resolvedWeek: 3,
+        resolution:
+          'James won by 4.8 \u2014 less than a touchdown, and less than the '
+          + 'touchdown his own quarterback declined to score on Sunday.',
+      },
+    ],
     body: [
       {
         type: 'paragraph',
@@ -298,6 +540,12 @@ export const RECAPS: Recap[] = [
         id: 'bree-bounces-back',
         claim:
           'Bree posts a top-three score again before October and finally wins one of these.',
+        verdict: 'partial',
+        resolvedWeek: 3,
+        resolution:
+          'She won, coming back from 64.7 down to beat Evan. But 125.4 was the '
+          + 'fifth-best score of the week, not top three. Half marks, which is '
+          + 'the most humiliating grade available.',
       },
       {
         id: 'mike-not-last',
@@ -548,6 +796,13 @@ export const RECAPS: Recap[] = [
       {
         id: 'chenell-september',
         claim: 'Chenell does not lose in September.',
+        verdict: 'wrong',
+        resolvedWeek: 3,
+        resolution:
+          'Chenell lost to James by 4.8 on 28 September, with two days of the '
+          + 'month left. Killed by my own Monday prediction that James would '
+          + 'hold on, which means I called the death of this one and was right '
+          + 'about that too.',
       },
       {
         id: 'jesse-roster',
