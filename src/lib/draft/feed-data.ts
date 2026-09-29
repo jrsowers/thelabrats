@@ -21,7 +21,7 @@ export interface FeedPick {
   /** Full name, used to resolve the member photo. */
   managerFull: string
   managerPhoto: string | null
-  /** ESPN id. Negative for a team defence, which has a logo not a headshot. */
+  /** ESPN id. Negative for a team defense, which has a logo not a headshot. */
   playerId: number
   player: string
   position: string
@@ -176,6 +176,6 @@ export const memberPhotoFor = (fullName: string): string | null => {
   return slug ? `/members/${slug}.jpg` : null
 }
 
-/** ESPN gives every team defence a negative player id. */
+/** ESPN gives every team defense a negative player id. */
 export const isTeamDefense = (p: FeedPick): boolean =>
   p.position === 'DST' || p.playerId < 0

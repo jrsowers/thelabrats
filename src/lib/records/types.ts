@@ -27,7 +27,7 @@ export type RecordGroup = 'team' | 'manager' | 'player'
 /** What the number measures — NOT which seasons were eligible. */
 export type RecordScope = 'week' | 'season'
 
-/** Drives the colour. Green for the good end, red for the bad. */
+/** Drives the color. Green for the good end, red for the bad. */
 export type RecordTone = 'good' | 'bad'
 
 export type RecordFormat = 'points' | 'count' | 'percent' | 'places'

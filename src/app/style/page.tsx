@@ -162,7 +162,7 @@ export default function StyleGuide() {
           </div>
           <p className="mt-2.5 text-[11px] text-dim">
             The crown marks the reigning champion and follows them everywhere their
-            avatar appears. It carries an accessible label, not just a colour.
+            avatar appears. It carries an accessible label, not just a color.
           </p>
         </Row>
 

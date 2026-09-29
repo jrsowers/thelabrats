@@ -134,7 +134,7 @@ export default async function Page({
             would just draw a box around a set of boxes. */}
         <div className="sm:overflow-hidden sm:rounded-lg sm:border sm:border-border">
           {/* Week navigation left, playoff shortcut right. A toolbar on mobile,
-              the card's header bar from sm up. A grey bar on the grey page
+              the card's header bar from sm up. A gray bar on the gray page
               background reads as nothing at all. */}
           <div className="mb-3 flex items-center justify-between gap-4 px-1 py-1 sm:mb-0 sm:border-b sm:border-border sm:bg-surface-2 sm:px-4 sm:py-2.5">
             <nav className="flex items-center gap-1 sm:gap-2" aria-label="Week selection">

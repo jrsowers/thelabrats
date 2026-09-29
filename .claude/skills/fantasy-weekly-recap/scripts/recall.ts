@@ -82,7 +82,7 @@ const prior = RECAPS
   .sort((a, b) => a.week - b.week)
 
 if (prior.length === 0) {
-  console.log(`\nNothing published before week ${WEEK} — no continuity to honour yet.\n`)
+  console.log(`\nNothing published before week ${WEEK} — no continuity to honor yet.\n`)
   process.exit(0)
 }
 

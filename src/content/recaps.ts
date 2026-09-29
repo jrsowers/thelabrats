@@ -122,7 +122,7 @@ export const RECAPS: Recap[] = [
     week: 3,
     title: 'A Thirty-Eight-Year-Old Backup Rearranged Your Entire League',
     summary:
-      'Case Keenum decided three matchups from the bench of a manager who did not start him. Jesse needed a defence to save him and got a zero. Seven of you are now 2-1, which is the least useful thing a table has ever told me.',
+      'Case Keenum decided three matchups from the bench of a manager who did not start him. Jesse needed a defense to save him and got a zero. Seven of you are now 2-1, which is the least useful thing a table has ever told me.',
     publishedAt: '2026-09-29',
     published: true,
     coverImage: '/recaps/week-3.jpg',
@@ -238,23 +238,23 @@ export const RECAPS: Recap[] = [
         type: 'paragraph',
         text: 'She won anyway. She won a game she was sixty-four points down in, having correctly identified the single best play available on the wire and then declined to use it, which means the engine gave her The Waiver Wire Wizard for a decision she actively reversed. Bree, you are 2-1 and you are playing this game with your eyes closed and somehow it is working.',
       },
-      { type: 'heading', text: 'Jesse Needed Twenty-Nine Points From A Defence And Received Nothing' },
+      { type: 'heading', text: 'Jesse Needed Twenty-Nine Points From A Defense And Received Nothing' },
       {
         type: 'paragraph',
-        text: 'On Monday morning I laid out what Mr. Anderson required: the Philadelphia defence to have the game of its life, roughly twenty-nine points’ worth, while Saquon Barkley did nothing. Three takeaways. Ideally two of them returned. A performance people in that city would still be describing in thirty years.',
+        text: 'On Monday morning I laid out what Mr. Anderson required: the Philadelphia defense to have the game of its life, roughly twenty-nine points’ worth, while Saquon Barkley did nothing. Three takeaways. Ideally two of them returned. A performance people in that city would still be describing in thirty years.',
       },
-      { type: 'paragraph', text: 'The Eagles defence scored zero point zero.' },
+      { type: 'paragraph', text: 'The Eagles defense scored zero point zero.' },
       {
         type: 'paragraph',
         text: 'Not a low number. Zero. The unit conceded twenty-seven points to a third-string quarterback and finished the evening with precisely nothing to show for it, which is a fantasy outcome so complete that I had to check the row twice to be sure it was not a null.',
       },
       {
         type: 'paragraph',
-        text: 'Keshia wins 127.2 to 105.5. The team that had not won a game all season beat the team that led the league in points, and did it with Matthew Stafford throwing for 26.9 and Jordan Love adding 23.5 on a night when the man she was playing could not get double figures out of an entire professional football defence.',
+        text: 'Keshia wins 127.2 to 105.5. The team that had not won a game all season beat the team that led the league in points, and did it with Matthew Stafford throwing for 26.9 and Jordan Love adding 23.5 on a night when the man she was playing could not get double figures out of an entire professional football defense.',
       },
       {
         type: 'paragraph',
-        text: 'Jesse is now 2-1. He is still second in this league for points scored. He has now lost to the manager with the fewest wins in it, and his last two weeks have featured a quarterback he picked up and benched, and a defence that posted a zero. The roster remains the most dangerous in the building. The man operating it continues to be its most interesting variable.',
+        text: 'Jesse is now 2-1. He is still second in this league for points scored. He has now lost to the manager with the fewest wins in it, and his last two weeks have featured a quarterback he picked up and benched, and a defense that posted a zero. The roster remains the most dangerous in the building. The man operating it continues to be its most interesting variable.',
       },
       { type: 'heading', text: 'James Won By Less Than The Touchdown His Own Quarterback Refused To Score' },
       {
@@ -358,7 +358,7 @@ export const RECAPS: Recap[] = [
         verdict: 'correct',
         resolvedWeek: 3,
         resolution:
-          'Keshia won 127.2 to 105.5. Jesse\u2019s Eagles defence, the whole of '
+          'Keshia won 127.2 to 105.5. Jesse\u2019s Eagles defense, the whole of '
           + 'his remaining inventory, scored 0.0.',
       },
       {
@@ -397,7 +397,7 @@ export const RECAPS: Recap[] = [
           { top: 'Tyler’s Talented Team', topScore: 169.0, bottom: 'Substation Superstars', bottomScore: 106.2, note: 'Tyler still has D’Andre Swift' },
           { top: 'Dad Bod', topScore: 136.5, bottom: 'Nobody Knows', bottomScore: 101.7, note: 'over — nobody left' },
           { top: 'Nix Pix a Puka Six', topScore: 143.3, bottom: 'PKM Playmakers', bottomScore: 92.3, note: 'over — nobody left' },
-          { top: 'All Bark, All Bite', topScore: 118.7, bottom: 'Mr. Anderson', bottomScore: 105.5, note: 'Saquon Barkley vs one defence' },
+          { top: 'All Bark, All Bite', topScore: 118.7, bottom: 'Mr. Anderson', bottomScore: 105.5, note: 'Saquon Barkley vs one defense' },
           { top: 'Burrow My Burden', topScore: 115.1, bottom: 'Bree’s Badass Boys', bottomScore: 111.8, note: 'Evan has nobody. Bree has Jalen Hurts.' },
           { top: 'Soft Tissue Issues', topScore: 112.5, bottom: 'Da Reigning Champ', bottomScore: 107.5, note: 'three players still on the field' },
         ],
@@ -435,7 +435,7 @@ export const RECAPS: Recap[] = [
       },
       {
         type: 'paragraph',
-        text: 'Because here is what Jesse has left: the Philadelphia Eagles defence. That is the entire remaining inventory. One defence, projected for 9.8.',
+        text: 'Because here is what Jesse has left: the Philadelphia Eagles defense. That is the entire remaining inventory. One defense, projected for 9.8.',
       },
       {
         type: 'paragraph',
@@ -447,11 +447,11 @@ export const RECAPS: Recap[] = [
       },
       {
         type: 'paragraph',
-        text: 'Run the arithmetic and it is worse than it sounds. If Barkley simply hits his projection, Jesse needs roughly twenty-nine points from a defence. Twenty-nine. That is not a good night for a defence, that is a defence having the night people still talk about in that city thirty years later.',
+        text: 'Run the arithmetic and it is worse than it sounds. If Barkley simply hits his projection, Jesse needs roughly twenty-nine points from a defense. Twenty-nine. That is not a good night for a defense, that is a defense having the night people still talk about in that city thirty years later.',
       },
       {
         type: 'paragraph',
-        text: 'The Bears, for their part, lead the NFL in rushing at 212.5 yards a game and are starting a third-string quarterback, Caleb Williams being out with a hamstring. Philadelphia has given up more than 120 on the ground in each of its first two games. I am not saying that is good news for Jesse. I am saying that if Chicago runs it forty times, nothing good happens for anybody holding an Eagles defence.',
+        text: 'The Bears, for their part, lead the NFL in rushing at 212.5 yards a game and are starting a third-string quarterback, Caleb Williams being out with a hamstring. Philadelphia has given up more than 120 on the ground in each of its first two games. I am not saying that is good news for Jesse. I am saying that if Chicago runs it forty times, nothing good happens for anybody holding an Eagles defense.',
       },
       { type: 'heading', text: 'THE KNIFE EDGE: James Is Five Points Up With Two Men Standing' },
       {
@@ -703,7 +703,7 @@ export const RECAPS: Recap[] = [
       },
       {
         type: 'paragraph',
-        text: 'Colin, I am begging you. The button is right there. It is a different colour from the other buttons.',
+        text: 'Colin, I am begging you. The button is right there. It is a different color from the other buttons.',
       },
       { type: 'heading', text: 'PKM Playmakers Scored 55.4 And Won An Award For Consistency' },
       {
@@ -1129,10 +1129,23 @@ export const RECAPS: Recap[] = [
   },
 ]
 
-/** Newest first. Within a week, Monday's preview sorts BELOW Tuesday's recap. */
+/**
+ * Newest first, by the date it was actually published.
+ *
+ * ⚠️ SORT ON `publishedAt`, NOT ON WEEK AND SERIES. The first version ordered
+ * by week and then broke ties alphabetically on the series name, with a comment
+ * claiming Monday's preview would sort BELOW Tuesday's recap. It does the
+ * opposite: `'miracles'.localeCompare('recap')` is negative, so the Monday
+ * preview led the archive and the lead-story slot showed the older piece.
+ *
+ * A date is the only thing that actually means "most recent", and it keeps
+ * meaning that for any series added later without anybody having to remember a
+ * rule about alphabetical order. `week` is the tiebreak for two posts sharing a
+ * date; beyond that, declaration order wins, and new entries go on top.
+ */
 export const publishedRecaps = (): Recap[] =>
-  RECAPS.filter((r) => r.published).sort((a, b) =>
-    b.week - a.week || seriesOf(a) .localeCompare(seriesOf(b)))
+  RECAPS.filter((r) => r.published)
+    .sort((a, b) => b.publishedAt.localeCompare(a.publishedAt) || b.week - a.week)
 
 export const seriesOf = (r: Recap): Series => r.series ?? 'recap'
 

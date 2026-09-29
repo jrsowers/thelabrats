@@ -149,7 +149,7 @@ export async function publishDueAwards(
         }))
 
       // ---- the week's roster moves ----
-      // EXECUTED only: a cancelled waiver and a pending trade are not moves
+      // EXECUTED only: a canceled waiver and a pending trade are not moves
       // anybody made. DRAFT is excluded — 180 picks would win every week.
       const { data: txns, error: txnError } = await db
         .from('transactions')

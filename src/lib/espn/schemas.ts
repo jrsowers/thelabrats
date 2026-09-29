@@ -188,7 +188,7 @@ export const matchupSchema = z.object({
  * Transactions (`mTransactions2`).
  *
  * ⚠️ SHAPE UNVERIFIED. This league had zero transactions at capture time, so
- * the fields below come from documented behaviour rather than an observed
+ * the fields below come from documented behavior rather than an observed
  * payload (§60). Capture a real one after the Sept 3 draft and confirm before
  * trusting the Transaction Log.
  */

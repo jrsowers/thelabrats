@@ -293,7 +293,7 @@ ESPN reports `playoffSeedingRule: H2H_RECORD` but does not expose the tiebreak
 chain below record. Points-for is ESPN's usual next tiebreaker and is what the
 engine applies, documented in `compute.ts`. Per §29 this stays unverified until
 James confirms it against the league settings, and any playoff seeding derived
-from it should be labelled unofficial until then.
+from it should be labeled unofficial until then.
 
 ## 2026-08-28 · Columns dropped: Waiver and Moves
 James's call. Waiver priority belongs on the Transaction Log where the moves it
@@ -360,7 +360,7 @@ from preview data.
 built for 1200x630, which every major platform crops toward.
 **How:** `scripts/make-og-image.py` composites the landscape lockup over an
 AI-generated nighttime stadium photograph. The background is cover-cropped
-rather than squashed, then given an overall scrim and a centre vignette — white
+rather than squashed, then given an overall scrim and a center vignette — white
 logo lettering was otherwise competing with stadium floodlights depending on
 where the crop landed.
 **JPEG, not PNG.** As PNG the card was 938KB for a photograph; JPEG at q88 is
@@ -406,7 +406,7 @@ those come from the Studs & Duds awards engine (§54: analytics produces
 structured facts, the writing layer only phrases them). Build awards first, then
 recaps compose facts that already exist instead of growing a parallel copy.
 
-## 2026-08-28 · The playoff cut is a labelled row, not a border
+## 2026-08-28 · The playoff cut is a labeled row, not a border
 Previously a 2px bottom border on the sixth team, which read as a divider
 without saying what it divided. It is now its own table row carrying
 "PROJECTED PLAYOFF CUT" between rules — the projected-cut treatment from a golf
@@ -416,7 +416,7 @@ announces it between the sixth and seventh team where it carries meaning.
 **Suppressed when nothing sits below it** — a cut line at the bottom of the
 table divides nothing.
 **Legend entry removed:** the line now names itself, and a legend explaining a
-labelled element is noise.
+labeled element is noise.
 
 ## 2026-08-28 · Player pool is NOT blocked by the draft
 `kona_player_info` returns ~1,027 players with names, positions, pro teams and
@@ -444,7 +444,7 @@ only when every game in it is final, for standings. Continuous capture would be
 ~600 rows per matchup per Sunday for no added insight (§14.7).
 
 ## 2026-08-28 · Biggest remaining gap is live auto-refresh
-The scoreboard is labelled live and the data behind it now refreshes every
+The scoreboard is labeled live and the data behind it now refreshes every
 minute during games, but the page does not update without a manual reload. That
 is the largest gap between what the app is and what it appears to promise on a
 Sunday. Needs Supabase Realtime or a 30s refetch (§36) before week 1.
@@ -750,7 +750,7 @@ derive from the same games, so a disagreement means one of us is wrong.
 **Playoff odds are mirrored, never modelled.** ESPN runs a Monte Carlo
 simulation over the remaining schedule. Building our own would put a guess on a
 page where everything else is arithmetic over games that happened. The odds get
-their own section labelled as ESPN's projection, and nothing depends on them.
+their own section labeled as ESPN's projection, and nothing depends on them.
 
 **`UNKNOWN` is not `false`.** ESPN's `playoffClinchType` reads `UNKNOWN` until it
 decides. Rendering that as "not clinched" would be inventing a fact; the code
@@ -772,11 +772,11 @@ IR moves are now `IR_PLACE` / `IR_ACTIVATE`, read "To IR" and "From IR", carry
 their own filter, and stay out of Players Added / Players Dropped. All other
 `ROSTER` rows are still ignored — they are ordinary lineup shuffles.
 
-**Every transaction kind gets its own colour**, added at James's request: trade
+**Every transaction kind gets its own color**, added at James's request: trade
 blue, free agent green, waiver amber, drop red, IR violet. IR needed a new
 `--violet` token rather than reusing warn's amber — an injury designation
-sitting in the same colour as a waiver claim was the exact confusion worth
-avoiding. Per §39 the badge always names the kind; colour never carries it alone.
+sitting in the same color as a waiver claim was the exact confusion worth
+avoiding. Per §39 the badge always names the kind; color never carries it alone.
 
 **A swallowed error hid a real trade for two days.** The transaction upsert
 destructured only `data` and ignored `error`, so a failing write reported
@@ -912,7 +912,7 @@ thing being judged. Trades are excluded: winning a trade is a different skill.
 **It does not require that the pickup was started.** The catalog formula is
 "grabbed the highest scoring free agent", and identifying him is the hard part.
 The card reports whether he started instead of the engine silently deciding.
-That is a real judgement call and worth revisiting if the league disagrees.
+That is a real judgment call and worth revisiting if the league disagrees.
 
 **Both omit rather than reach.** No pickups that week means no Wizard; a single
 waiver claim is not a Galaxy Brain. Mocking somebody for managing their team
@@ -921,7 +921,7 @@ once is worse than showing nothing (§22.2).
 **The hypothesised transaction fixture is retired.** That file carried a header
 warning that the parser was verified for internal consistency only, because the
 league had no transactions when it was written. It now runs against a real
-capture: 211 transactions, including the seven lineup swaps and three cancelled
+capture: 211 transactions, including the seven lineup swaps and three canceled
 waivers that the hand-written fixture never had.
 
 ## 2026-09-11 — The lineup optimizer, and why greedy was never an option
@@ -994,10 +994,10 @@ not actually win is the one move that would have made the page dishonest.
 
 **Position Kings is the only section that spreads mechanically.** It partitions
 the player pool instead of ranking managers, so one player cannot be the best
-quarterback and the best tight end. Kicker and defence are the most valuable
+quarterback and the best tight end. Kicker and defense are the most valuable
 rows in it precisely because neither has anything to do with whether a team is
 any good. It renders as a strip rather than six more cards — nineteen cards plus
-six would bury the awards that take judgement under a leaderboard.
+six would bury the awards that take judgment under a leaderboard.
 
 **Result: nine of twelve managers on week 1's page, up from four.**
 
@@ -1182,7 +1182,7 @@ section, which was fixed.
 
 Names and the week's central fact repeat legitimately ("highest scoring" four
 times in a recap about the highest-scoring Sunday ever), so this is a review aid
-like `check-pronouns.ts`, not a gate. The judgement is which repeats are motifs.
+like `check-pronouns.ts`, not a gate. The judgment is which repeats are motifs.
 
 **`textOf` is a function declaration, not a const arrow**, because the
 within-week scan runs above it and needs it hoisted. Worth leaving alone.
@@ -1224,7 +1224,7 @@ correctness. It now builds every playerless award three times, as a he/him
 manager, a she/her manager and an unlisted one, and asserts the pronoun matches
 each. Plus a test that the copy *actually inflects* rather than dodging pronouns
 altogether, because every other assertion would pass on evasive copy — which is
-precisely the behaviour we just moved away from. 350 tests to 382.
+precisely the behavior we just moved away from. 350 tests to 382.
 
 ## 2026-09-15 — The record book, built out
 
@@ -1241,7 +1241,7 @@ a six-way tie on Most Wins, and the card says "Shared by 6".
 **`tone` is good/bad, replacing `polarity: high/low`.** The old field conflated
 "this number is large" with "this is an achievement", and they come apart
 constantly: the largest margin of defeat is a big number and a bad day; the
-lowest winning score is a small number and still a win. Colour is driven by tone
+lowest winning score is a small number and still a win. Color is driven by tone
 alone. A test asserts both pairs, because the failure is invisible — a red card
 on a good record still renders.
 
@@ -1278,7 +1278,7 @@ skipped.
 **Draft steal and bust are measured against PROJECTION, not raw points.** The
 first version needed arbitrary round cutoffs — steals had to come after round
 three, busts had to be first-rounders — which measures draft *position* rather
-than judgement. A fourth-rounder who was always going to be good is not a steal;
+than judgment. A fourth-rounder who was always going to be good is not a steal;
 a first-rounder who got hurt in week 2 is not a bust anybody is responsible for.
 Season points minus season projections asks the right question and needs no
 cutoff, so it works the same in a 10-team league or a 16-round one. A pick with
@@ -1431,7 +1431,7 @@ roster no longer matches reality**. `gather.ts` now checks it on every run and
 refuses to be quiet about it, because a Monday post is built entirely on who is
 left, and being wrong about that is being wrong about everything.
 
-**Humour is calibrated to 8/10**, at James's request, with a dial table in
+**Humor is calibrated to 8/10**, at James's request, with a dial table in
 `voice.md` giving anchors at 3, 5, 7, 8, 9 and 10. An 8 is not *more* jokes, it
 is braver ones — the failure mode at 5 is blandness, the failure mode at 8 is a
 line that is merely rude rather than funny.
@@ -1494,3 +1494,39 @@ Three rules on it, and the first is the important one:
   Tuten fantasy people", none of which was in the tip.
 - **A note is context, never a number.** Scores still come from the database.
 - **The roast boundary still applies** to anything in one.
+
+## 2026-09-29 — Two style defects, both now controls rather than notes
+
+**The archive led with the wrong story.** `publishedRecaps` sorted by week and
+broke ties alphabetically on the series name, under a comment asserting that
+Monday's preview would sort BELOW Tuesday's recap. `'miracles'.localeCompare('recap')`
+is negative, so it did the reverse and the older Monday preview held the
+lead-story slot while the newer recap sat in the grid beneath it.
+
+It now sorts on `publishedAt`, which is the only field that actually means
+"most recent" and keeps meaning it for any series added later without anybody
+remembering a rule about alphabetical order. `tests/content-order.test.ts`
+covers it, including a synthetic case for a future series whose name sorts
+first.
+
+**British spelling reached the league for the second time.** Ten uses of
+"defence" in a draft roast, then five in the week 3 recap including the summary
+on the archive card. James: *"remove UK English from your protocols."*
+
+The draft validator already carried a British-spelling check AND the skill
+already said "this is an American league" in prose — and the model wrote
+"defence" anyway, in a different file the check did not cover. So the word list
+moved to `src/lib/style/american-english.ts`, the draft validator now uses it,
+and `tests/american-english.test.ts` fails the build on any published recap,
+league note or author bio that breaks it.
+
+Thirty files were swept, comments included. James asked for US English "all
+over", and a codebase whose comments read British is what primes the next
+paragraph to. The sweep was audited for CSS tokens and status values before
+committing — `grey` could have been a colour token and `cancelled` a status
+string; neither was.
+
+**The pattern, for the fourth time this project: an instruction is not a
+control.** It held for gendered collectives, for the settled-week rank source,
+for upsert-only ingestion, and now for spelling. If a rule matters, something
+has to fail when it is broken.

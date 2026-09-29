@@ -1,3 +1,4 @@
+import { findBritishSpellings } from '@/lib/style/american-english'
 import type { DossierEntry } from './writer'
 
 /**
@@ -65,7 +66,8 @@ export function validateRoast(text: string, news?: DossierEntry): ValidationResu
  */
 const UNCONTRACTED = /\b(is|was|are|were|does|did|do|has|have|had|will|would|could|should|can) not\b/i
 const ABSTRACTION = /\b(the (?:country|consensus|market|industry|field|public|league average))\b/i
-const BRITISH = /\b(defence|offence|practise|realise|recognise|organise|apologise|favourite|colour|honour|behaviour|whilst|judgement)\b/i
+// The word list lives in src/lib/style/american-english.ts, shared with the
+// recap content test, because the drift is not specific to draft roasts.
 /**
  * Gendered collectives. Four of the twelve managers are women, and a headline
  * reading "Twelve Men Walk Into A Draft Room" shipped before anyone caught it.
@@ -88,9 +90,13 @@ export function checkStyle(text: string): StyleResult {
   if (t) notes.push(`throat-clearing "${t[0]}" — cut it`)
 
   // This document primed the model with British spellings and it copied them:
-  // ten uses of "defence" in one draft, in an American football league.
-  const b = BRITISH.exec(text)
-  if (b) notes.push(`British spelling "${b[0]}" — this is an American league`)
+  // ten uses of "defence" in one draft, in an American football league. It then
+  // did it again in a week 3 recap, which is why the list is now shared and
+  // also enforced by a test over the published content.
+  const [b] = findBritishSpellings(text)
+  if (b) {
+    notes.push(`British spelling "${b.found}" — this is an American league, use "${b.suggest}"`)
+  }
 
   const g = GENDERED_COLLECTIVE.exec(text)
   if (g) notes.push(`gendered collective "${g[0]}" — four of the twelve managers are women`)

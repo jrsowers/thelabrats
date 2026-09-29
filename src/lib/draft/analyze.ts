@@ -45,7 +45,7 @@ export function analyzeDraft({
 }: AnalyzeInput): PickAnalysis[] {
   // An UNMADE pick is exactly -1. It is NOT "any non-positive id": ESPN gives
   // every D/ST a negative playerId (Seahawks D/ST is -16026), so `playerId > 0`
-  // silently drops all twelve defence picks and the early-D/ST flag never fires.
+  // silently drops all twelve defense picks and the early-D/ST flag never fires.
   const made = picks
     .filter((p) => p.playerId !== UNMADE_PICK)
     .sort((a, b) => a.overallPickNumber - b.overallPickNumber)
@@ -117,7 +117,7 @@ export function analyzeDraft({
     if (firstAtPosition && player.pos === 'K') flags.push('FIRST_KICKER')
     if (firstAtPosition && player.pos === 'DST') flags.push('FIRST_DST')
 
-    // A kicker or defence before the last two rounds is a choice.
+    // A kicker or defense before the last two rounds is a choice.
     const lateRoundStart = totalRounds - 1
     if (player.pos === 'K' && pick.roundId < lateRoundStart) flags.push('EARLY_KICKER')
     if (player.pos === 'DST' && pick.roundId < lateRoundStart) flags.push('EARLY_DST')

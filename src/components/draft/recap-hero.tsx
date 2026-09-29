@@ -2,7 +2,7 @@
  * Full-bleed hero for the draft recap.
  *
  * Full-bleed to the very top: the negative top margin cancels AppShell's
- * padding, which otherwise leaves a band of page colour above the photo.
+ * padding, which otherwise leaves a band of page color above the photo.
  *
  * The photograph is a night stadium with no logo in it, so the headline has
  * somewhere to sit. A dark scrim sits between the two: the image has bright

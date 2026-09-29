@@ -9,7 +9,7 @@ const POS_TINT: Record<string, string> = {
 /**
  * One pick in the feed.
  *
- * Three zones: a grey pick-number strip down the left, the player on the left
+ * Three zones: a gray pick-number strip down the left, the player on the left
  * of the body, and the drafting manager in the top right. The roast, when there
  * is one, runs full width beneath.
  *

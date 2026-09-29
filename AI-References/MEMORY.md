@@ -309,13 +309,13 @@ clinched", and `0` in `eliminationMatchupPeriod` / `rankCalculatedFinal` means
 
 **Fixed a factual error on the bracket.** The championship is two weeks (16–17),
 which ESPN reports in `playoffMatchupPeriodLengthByRound`. Every round was
-labelled one week.
+labeled one week.
 
 **Injured reserve was printing as a drop.** ESPN has no IR transaction type — an
 IR move is a `ROSTER` row with an ordinary ADD/DROP item action, visible only in
 the lineup slot crossing 21. Now `IR_PLACE` / `IR_ACTIVATE`, with their own
 filter, kept out of Players Added and Players Dropped. All six transaction kinds
-now carry their own colour; IR got a new `--violet` token so an injury never
+now carry their own color; IR got a new `--violet` token so an injury never
 reads as a waiver claim.
 
 **A swallowed error hid a real trade for two days.** The transaction upsert
@@ -448,7 +448,7 @@ confirm before assuming there is work to do.
 Jaxson Dart (sprained MCL, opening drive, Mike's OP slot, 0.8) and Malik Nabers
 (shoulder, Doug's flex, 0.6). Reported flat, with the recap saying on the page
 that it would not be made funny. Mike's 55.4 was roasted only on the parts that
-were not injury — a 9.0 quarterback, a 2.0 kicker, a minus-one defence.
+were not injury — a 9.0 quarterback, a 2.0 kicker, a minus-one defense.
 
 **Five of my own numbers were wrong in the first draft** and the gather/awards
 data caught all five: Bree's 144.4 is the 2nd-best score of the week not the

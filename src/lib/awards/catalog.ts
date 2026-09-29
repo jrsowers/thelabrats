@@ -16,7 +16,7 @@ export type AwardSection = 'STUDS' | 'DUDS'
 
 /**
  * What kind of thing the award is really about. Drives display order within a
- * section: manager judgement first, then how a matchup went, then individual
+ * section: manager judgment first, then how a matchup went, then individual
  * performances.
  */
 export type AwardCategory = 'MANAGER' | 'MATCHUP' | 'PLAYER'
@@ -68,7 +68,7 @@ export interface AwardDef {
   needs: DataNeed[]
   /** Label for the card's headline number. */
   metricLabel: string
-  /** The headline number carries a sign and a colour. See ComputedAward.metricTone. */
+  /** The headline number carries a sign and a color. See ComputedAward.metricTone. */
   signedMetric?: boolean
   /**
    * Cannot exist in week 1. There is no prior table to have moved within, so

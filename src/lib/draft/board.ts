@@ -99,12 +99,12 @@ export function buildBoard(
 
   // Kickers and defences rank BENEATH every skill player, whatever VOR says.
   //
-  // Raw VOR puts the best defence around pick 57 and the best kicker around 69,
+  // Raw VOR puts the best defense around pick 57 and the best kicker around 69,
   // because a kicker genuinely projects ~165 points. That is arithmetically
   // true and completely wrong as a draft board: those projections are close to
   // random year over year, which is why every mainstream board buries them and
   // why taking one early is a running joke. Ranking them inline would have the
-  // bot treating a round-5 defence as sound.
+  // bot treating a round-5 defense as sound.
   const LATE = new Set(['K', 'DST'])
   const skill = scored.filter((p) => !LATE.has(p.pos)).sort((a, b) => b.vor - a.vor)
   const late = scored.filter((p) => LATE.has(p.pos)).sort((a, b) => b.vor - a.vor)

@@ -6,7 +6,7 @@ import { PlayerHeadshot } from '@/components/ui/player-headshot'
  * The best started player at each position, across the top of Studs & Duds.
  *
  * A STRIP, not seven more cards. The page already carries nineteen; adding a
- * card per position would bury the awards that take judgement under a league
+ * card per position would bury the awards that take judgment under a league
  * leaderboard.
  *
  * It earns the top of the page because it is the only section that spreads

@@ -164,6 +164,10 @@ and `coverImage`, then run the gate: `npm test`, `npx tsc --noEmit`,
 
 ## Hard rules
 
+- **American spelling.** Defense, offense, color, gray, judgment, while. The
+  list is `src/lib/style/american-english.ts` and a test fails the build on any
+  published copy that breaks it. "defence" has reached the league twice.
+
 - **The roast boundary is SOUL.md's, and it is not negotiable.** Managers are
   roasted for *decisions*. NFL players are roasted for *the choice or the
   institution, never the harm*. A concussion, a torn achilles, an arrest, an

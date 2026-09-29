@@ -121,7 +121,7 @@ export function computePlayerRecords(rows: RecordPlayerWeek[]): LeagueRecord[] {
       .map((r) => entry(r, `${r.position} · ${r.nflTeam} · projected ${f(proj(r))}`)),
     pts, LOW)
 
-  // Both are stored as magnitudes and labelled with a sign, because the
+  // Both are stored as magnitudes and labeled with a sign, because the
   // direction IS the record: +21.44 and −19.00 are opposite stories.
   add('biggest_overperformance', 'Biggest Over-Performance', 'good',
     withProj.map((r) => entry(r, `${f(proj(r))} projected, ${f(pts(r))} scored`)),

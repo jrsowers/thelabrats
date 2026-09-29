@@ -68,9 +68,9 @@ const KIND_LABEL: Record<PreviewTxn['kind'], string> = {
   IR_ACTIVATE: 'Activated from IR',
 }
 
-/** Every kind gets its own colour, so the shape of a day's moves is legible
+/** Every kind gets its own color, so the shape of a day's moves is legible
  *  before a single word is read. The label always sits inside the pill —
- *  colour never carries the meaning alone (§39). */
+ *  color never carries the meaning alone (§39). */
 const KIND_TONE: Record<PreviewTxn['kind'], 'brand' | 'live' | 'warn' | 'loss' | 'violet'> = {
   TRADE: 'brand',
   FREE_AGENT: 'live',

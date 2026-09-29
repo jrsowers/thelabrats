@@ -194,7 +194,7 @@ export default async function AwardsPage({
   const weekIsOver = results.some((m) => m.week === week)
     && results.filter((m) => m.week === week).every((m) => m.status === 'FINAL')
 
-  // Catalog order: manager judgement, then matchups, then players.
+  // Catalog order: manager judgment, then matchups, then players.
   const order = new Map(
     (['STUDS', 'DUDS'] as const).flatMap((sec) =>
       awardsBySection(sec).map((def, i) => [def.key, i] as const)),

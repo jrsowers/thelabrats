@@ -415,7 +415,7 @@ export async function getLastSync() {
  * ESPN is concerned, and including them would bury every waiver claim and trade
  * under the draft forever — the picks have their own page.
  *
- * Only EXECUTED moves appear. ESPN also sends cancelled waiver claims and
+ * Only EXECUTED moves appear. ESPN also sends canceled waiver claims and
  * pending trade proposals, and both were rendering as though they had happened.
  */
 export interface LogTxnItem {
@@ -458,7 +458,7 @@ export async function getTransactionLog(seasonId: number, limit = 200): Promise<
     // decision, counted by The Galaxy Brain, but a log of "moved a player to
     // the bench" forty times a week buries the moves people came to read.
     //
-    // A log records what HAPPENED. A cancelled waiver and a pending trade
+    // A log records what HAPPENED. A canceled waiver and a pending trade
     // proposal both showed here as though they had gone through.
     .eq('status', 'EXECUTED')
     .order('processed_at', { ascending: false })

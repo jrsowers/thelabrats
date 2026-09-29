@@ -16,7 +16,7 @@ export interface GridItem {
 /**
  * Owns the reveal state for the whole page, so one switch clears every card.
  * The cards themselves stay server-rendered and arrive as children — only the
- * reveal behaviour is client-side.
+ * reveal behavior is client-side.
  */
 export function AwardGrid({
   toolbar,

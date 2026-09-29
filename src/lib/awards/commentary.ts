@@ -104,7 +104,7 @@ const BUILDERS: Record<string, Builder> = {
       ]),
   // ⚠️ DO NOT CLAIM ANYTHING ABOUT WHO WANTED A PLAYER. The engine has no ADP
   // and no news, so "nobody else wanted Caleb Williams" was a guess — and a
-  // wrong one, in a week half the league was high on the Bears offence. What
+  // wrong one, in a week half the league was high on the Bears offense. What
   // IS known is the projection, and the gap between it and the result is the
   // whole story anyway.
   nostradamus: (c) => (c.extra?.Projected
@@ -128,7 +128,7 @@ const BUILDERS: Record<string, Builder> = {
     b(c.managerFirst), t(' was projected to lose to '), ...opponent(c), t(' by '),
     b(c.value), t('. Won anyway. Somebody check the tape.'),
   ],
-  // The metric carries a sign so the card can colour it. Splicing "+4.3" into
+  // The metric carries a sign so the card can color it. Splicing "+4.3" into
   // a sentence gives "within +4.3 of", so the prose uses the two real numbers
   // instead and lets the direction speak for itself.
   control_group: (c) => (c.extra?.Projected && c.extra?.Scored

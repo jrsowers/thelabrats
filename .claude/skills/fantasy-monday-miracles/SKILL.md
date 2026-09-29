@@ -11,7 +11,7 @@ Burner. Shorter and faster than the Tuesday recap — this one exists to be read
 before kickoff, not after.
 
 **Read `../fantasy-weekly-recap/references/voice.md` first.** Same character,
-same boundaries, same humour calibration. Only the tense changes, and that
+same boundaries, same humor calibration. Only the tense changes, and that
 change is the whole job.
 
 ## The one rule that governs everything
@@ -95,8 +95,8 @@ In rough order of how much anybody cares:
    opponent's remaining player has to stay under.
 2. **An undefeated or top-of-table team losing.** Upset alert. Punch up.
 3. **A knife-edge game where both sides still have players.**
-4. **A team that needs a specific absurd outcome** — a defence to outscore its
-   own offence, a kicker to have the game of his life.
+4. **A team that needs a specific absurd outcome** — a defense to outscore its
+   own offense, a kicker to have the game of his life.
 5. **The already-decided games**, briefly, as contrast and cruelty.
 
 Convert every deficit into **the concrete thing that has to happen**: "Evan
@@ -137,6 +137,10 @@ npm test && npx tsc --noEmit && npm run build && npm run test:responsive
 ```
 
 ## Hard rules
+
+- **American spelling.** Defense, offense, color, gray, judgment, while. The
+  list is `src/lib/style/american-english.ts` and a test fails the build on any
+  published copy that breaks it. "defence" has reached the league twice.
 
 - **Present tense. No result is called.** See above; it is the whole point.
 - **The roast boundary is SOUL.md's.** Managers for decisions, never bodies.

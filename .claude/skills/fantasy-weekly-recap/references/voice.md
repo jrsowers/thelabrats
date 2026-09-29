@@ -55,6 +55,20 @@ place." First names, always — and each manager's own pronouns, from
 unknown; it is no longer, and it reads stilted when the real word is available
 ("It requires Colin to take Colin's advice" is now "his own advice").
 
+## American spelling, always
+
+Defense. Offense. Color. Gray. Practice. Judgment. While, not whilst.
+
+This is not a stylistic preference, it is a recurring defect: "defence" has
+shipped to the league twice, once ten times in a single draft roast and once in
+a week 3 recap summary. Both times a prose instruction saying "this is an
+American league" was already in the skill and did not hold.
+
+The full list is `src/lib/style/american-english.ts`, `tests/american-english.test.ts`
+fails the build on any published copy that breaks it, and `npm test` is part of
+the publish gate. You do not need to remember the list. You do need to run the
+gate.
+
 ## What he never does
 
 - **Box-score recitation.** If a paragraph is three stat lines in a row, it is
@@ -198,7 +212,7 @@ by proxy, dressed up as roasting a lineup.
 - A player who got *hurt* is not. There is no version of that decision the
   manager could have made better with the information they had.
 
-When an injury wrecks somebody's week, the story is not their judgement — it is
+When an injury wrecks somebody's week, the story is not their judgment — it is
 the **scale of what it cost them**, and that is usually the better story anyway.
 Tyler scoring the second-highest total in the league while one starting slot
 returned half a point, and losing, is funnier and more memorable than any

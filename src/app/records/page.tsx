@@ -44,18 +44,18 @@ type TeamLookup = Map<number, Awaited<ReturnType<typeof getSeasonTeams>>[number]
 /**
  * One record.
  *
- * Colour is driven by `tone` (good/bad), never by whether the number is large.
+ * Color is driven by `tone` (good/bad), never by whether the number is large.
  * They come apart constantly — the largest margin of defeat is a big number and
  * a bad day, the lowest winning score is a small number and still a win.
  */
 function RecordCard({ record, teamOf }: { record: LeagueRecord; teamOf: TeamLookup }) {
-  const colour = record.tone === 'good' ? 'var(--live)' : 'var(--loss)'
+  const color = record.tone === 'good' ? 'var(--live)' : 'var(--loss)'
   const [lead, ...rest] = record.holders
 
   return (
     <div
       className="state-bar rounded-lg border border-border bg-surface px-4 py-3.5"
-      style={{ '--state': colour } as React.CSSProperties}
+      style={{ '--state': color } as React.CSSProperties}
     >
       <div className="flex items-baseline justify-between gap-2">
         <Eyebrow>{record.label}</Eyebrow>
@@ -65,7 +65,7 @@ function RecordCard({ record, teamOf }: { record: LeagueRecord; teamOf: TeamLook
       </div>
 
       <div className="mt-1 flex flex-wrap items-baseline gap-x-2">
-        <span className="display text-[32px] leading-none tnum" style={{ color: colour }}>
+        <span className="display text-[32px] leading-none tnum" style={{ color: color }}>
           {fmtRecord(record.value, record.format, record.signed)}
         </span>
         {record.valueSuffix && (

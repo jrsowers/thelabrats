@@ -149,7 +149,7 @@ export default async function PlayoffsPage({
            Mirrored, not modelled. ESPN runs a Monte Carlo simulation over the
            remaining schedule; reproducing it would mean inventing a projection
            and calling it a fact. Everything else on this page is arithmetic on
-           games that actually happened, so the source is labelled. */}
+           games that actually happened, so the source is labeled. */}
       {forecast.length > 0 && (
         <section className="mb-9">
           <div className="mb-6 flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1 border-b border-border pb-1.5">

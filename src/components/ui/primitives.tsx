@@ -142,7 +142,7 @@ export function BracketIcon({
 }
 
 /* ---------- Trophy ----------
-   Place decides the metal: gold, silver, bronze. Colour alone never carries it
+   Place decides the metal: gold, silver, bronze. Color alone never carries it
    — the place number sits beside it (§39). */
 const TROPHY_METAL: Record<number, { from: string; to: string; label: string }> = {
   1: { from: '#ffe89a', to: '#b8790a', label: 'First place' },

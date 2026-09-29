@@ -194,7 +194,7 @@ export function computeManagerRecords(
   //
   // The first version used raw season points with a round filter — steals had
   // to come after round three, busts had to be first-rounders. That measures
-  // draft POSITION, not judgement: a fourth-rounder who was always going to be
+  // draft POSITION, not judgment: a fourth-rounder who was always going to be
   // good is not a steal, and a first-rounder who got hurt in week 2 is not a
   // bust in any sense the drafter is responsible for.
   //
@@ -247,7 +247,7 @@ export function computeManagerRecords(
     records.push({
       key: 'draft_bust', label: 'Biggest Draft Bust', group: 'manager',
       scope: 'season', tone: 'bad', format: 'points',
-      // Stored as a magnitude and labelled, like the other signed records.
+      // Stored as a magnitude and labeled, like the other signed records.
       value: Math.abs(bust.value), signed: '-', valueSuffix: 'vs projection',
       holders: bust.winners.map((w) => w.holder),
     })

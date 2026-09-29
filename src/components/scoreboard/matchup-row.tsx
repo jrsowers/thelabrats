@@ -20,7 +20,7 @@ import { Tag, LiveBadge, TeamAvatar } from '@/components/ui/primitives'
  *    continuous list read as twelve loose scores rather than six games — there
  *    was nothing to say where a matchup started or ended, and a hairline
  *    divider between games looked identical to the gap between two sides of
- *    the same game. White card on the grey page, with air between, does the
+ *    the same game. White card on the gray page, with air between, does the
  *    grouping that the divider could not.
  */
 function Side({

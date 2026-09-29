@@ -19,7 +19,7 @@ import { SyncStatus } from '@/components/ui/sync-status'
 export const dynamic = 'force-dynamic'
 export const metadata: Metadata = { title: 'League Standings' }
 
-/** Green up, red down. Never colour alone — the arrow and number carry it too. */
+/** Green up, red down. Never color alone — the arrow and number carry it too. */
 function Movement({ delta }: { delta: number }) {
   if (!delta) {
     return <span className="w-9 text-center font-mono text-[11px] text-dim" aria-hidden>—</span>
@@ -281,7 +281,7 @@ export default async function StandingsPage({
                     </td>
                   </tr>
 
-                  {/* The cut line, labelled in place — a golf leaderboard's
+                  {/* The cut line, labeled in place — a golf leaderboard's
                       projected cut rather than a bare rule. Rendered as a real
                       row so screen readers announce it between the sixth and
                       seventh team, where it means something. */}
