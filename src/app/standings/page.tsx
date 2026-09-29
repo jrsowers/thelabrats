@@ -38,6 +38,37 @@ function Movement({ delta }: { delta: number }) {
   )
 }
 
+/**
+ * Every column, in display order — and the only place the count lives.
+ *
+ * The cut line below is a real table row spanning the whole width, and it
+ * carried a hand-written `colSpan={6}` while the table quietly grew to eight.
+ * The rule stopped two columns short of Moves and Playoff %, which is exactly
+ * the kind of drift a duplicated number produces. Header cells and the cut
+ * line now both read from this list, so adding a column moves both.
+ */
+const COLUMNS: { label: string; className: string; title?: string }[] = [
+  { label: 'Rank', className: 'px-3 sm:px-4' },
+  { label: 'Team', className: 'px-2' },
+  { label: 'W-L-T', className: 'px-2 text-right' },
+  { label: 'PF', className: 'px-2 text-right hidden sm:table-cell' },
+  { label: 'PA', className: 'px-2 text-right hidden sm:table-cell' },
+  { label: 'Streak', className: 'px-2 text-right hidden sm:table-cell' },
+  // Both hidden below 640px like PF, PA and Streak. At 320px the table fits
+  // only rank, team and record; more columns there would crush the team
+  // names beside them.
+  {
+    label: 'Moves',
+    className: 'px-2 text-right hidden sm:table-cell',
+    title: "ESPN's own counter: waiver claims and free-agent adds, plus trades",
+  },
+  {
+    label: 'Playoff %',
+    className: 'px-3 text-right hidden sm:table-cell sm:px-4',
+    title: "ESPN's own playoff probability",
+  },
+]
+
 export default async function StandingsPage({
   searchParams,
 }: { searchParams: Promise<{ preview?: string; week?: string }> }) {
@@ -177,29 +208,16 @@ export default async function StandingsPage({
           <table className="w-full border-collapse text-left sm:min-w-[820px]">
             <thead>
               <tr className="border-b border-border bg-surface-2">
-                <th scope="col" className="eyebrow px-3 py-2.5 sm:px-4">Rank</th>
-                <th scope="col" className="eyebrow px-2 py-2.5">Team</th>
-                <th scope="col" className="eyebrow px-2 py-2.5 text-right">W-L-T</th>
-                <th scope="col" className="eyebrow px-2 py-2.5 text-right hidden sm:table-cell">PF</th>
-                <th scope="col" className="eyebrow px-2 py-2.5 text-right hidden sm:table-cell">PA</th>
-                <th scope="col" className="eyebrow px-2 py-2.5 text-right hidden sm:table-cell">Streak</th>
-                {/* Both hidden below 640px like PF, PA and Streak. At 320px
-                    the table fits only rank, team and record; more columns
-                    there would crush the team names beside them. */}
-                <th
-                  scope="col"
-                  className="eyebrow px-2 py-2.5 text-right hidden sm:table-cell"
-                  title="ESPN's own playoff probability"
-                >
-                  Playoff %
-                </th>
-                <th
-                  scope="col"
-                  className="eyebrow px-3 py-2.5 text-right sm:px-4 hidden sm:table-cell"
-                  title="ESPN's own counter: waiver claims and free-agent adds, plus trades"
-                >
-                  Moves
-                </th>
+                {COLUMNS.map((col) => (
+                  <th
+                    key={col.label}
+                    scope="col"
+                    className={`eyebrow py-2.5 ${col.className}`}
+                    title={col.title}
+                  >
+                    {col.label}
+                  </th>
+                ))}
               </tr>
             </thead>
             <tbody>
@@ -298,16 +316,17 @@ export default async function StandingsPage({
                         <span className="font-mono text-[13px] text-dim">—</span>
                       )}
                     </td>
-                    {/* Both straight from ESPN. playoffOdds is a 0-1
-                        probability; a dash when ESPN has published no
-                        simulation, which is honest rather than printing 0%. */}
+                    {/* Both straight from ESPN, in COLUMNS order. */}
                     <td className="hidden px-2 py-2.5 text-right font-mono text-[13px] tnum sm:table-cell">
+                      {(e?.acquisitions ?? 0) + (e?.trades ?? 0)}
+                    </td>
+                    {/* playoffOdds is a 0-1 probability; a dash when ESPN has
+                        published no simulation, which is honest rather than
+                        printing 0%. */}
+                    <td className="hidden px-3 py-2.5 text-right font-mono text-[13px] tnum sm:table-cell sm:px-4">
                       {e?.playoffOdds == null
                         ? <span className="text-dim">—</span>
                         : `${(e.playoffOdds * 100).toFixed(1)}%`}
-                    </td>
-                    <td className="hidden px-3 py-2.5 text-right font-mono text-[13px] tnum sm:table-cell sm:px-4">
-                      {(e?.acquisitions ?? 0) + (e?.trades ?? 0)}
                     </td>
                   </tr>
 
@@ -317,7 +336,7 @@ export default async function StandingsPage({
                       seventh team, where it means something. */}
                   {isCutoff && hasTeamsBelow && (
                     <tr className="bg-brand/8">
-                      <td colSpan={6} className="px-3 py-0 sm:px-4">
+                      <td colSpan={COLUMNS.length} className="px-3 py-0 sm:px-4">
                         <div className="flex items-center gap-2.5 py-1.5">
                           <span className="h-[3px] flex-1 rounded-full bg-brand" aria-hidden />
                           <span className="whitespace-nowrap font-mono text-[9.5px] font-bold uppercase tracking-[0.16em] text-brand">
