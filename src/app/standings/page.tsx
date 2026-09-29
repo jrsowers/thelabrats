@@ -1,5 +1,4 @@
 import type { Metadata } from 'next'
-import { Fragment } from 'react'
 import Link from 'next/link'
 import {
   getLeagueOverview, getSeasonTeams, getSeasonResults, getReigningChampion, getLastSync,
@@ -13,61 +12,14 @@ import {
 import { simulateSeason } from '@/lib/league/preview'
 import { AppShell } from '@/components/navigation/app-shell'
 import { FieldBackdrop } from '@/components/ui/field-backdrop'
-import { Eyebrow, TeamAvatar, Tag, EmptyState, LockIcon } from '@/components/ui/primitives'
+import { Eyebrow, Tag, EmptyState, LockIcon } from '@/components/ui/primitives'
 import { SyncStatus } from '@/components/ui/sync-status'
+import {
+  StandingsTable, type StandingsTableRow,
+} from '@/components/standings/standings-table'
 
 export const dynamic = 'force-dynamic'
 export const metadata: Metadata = { title: 'League Standings' }
-
-/** Green up, red down. Never color alone — the arrow and number carry it too. */
-function Movement({ delta }: { delta: number }) {
-  if (!delta) {
-    return <span className="w-9 text-center font-mono text-[11px] text-dim" aria-hidden>—</span>
-  }
-  const up = delta > 0
-  return (
-    <span
-      className={`flex w-9 items-center justify-center gap-0.5 font-mono text-[11px] font-semibold tnum ${
-        up ? 'text-live' : 'text-loss'
-      }`}
-      aria-label={`${up ? 'Up' : 'Down'} ${Math.abs(delta)} ${Math.abs(delta) === 1 ? 'place' : 'places'} since last week`}
-    >
-      <span aria-hidden>{up ? '▲' : '▼'}</span>
-      {Math.abs(delta)}
-    </span>
-  )
-}
-
-/**
- * Every column, in display order — and the only place the count lives.
- *
- * The cut line below is a real table row spanning the whole width, and it
- * carried a hand-written `colSpan={6}` while the table quietly grew to eight.
- * The rule stopped two columns short of Moves and Playoff %, which is exactly
- * the kind of drift a duplicated number produces. Header cells and the cut
- * line now both read from this list, so adding a column moves both.
- */
-const COLUMNS: { label: string; className: string; title?: string }[] = [
-  { label: 'Rank', className: 'px-3 sm:w-[9%] sm:px-4' },
-  { label: 'Team', className: 'px-2 sm:w-[30%]' },
-  { label: 'W-L-T', className: 'px-2 text-right sm:w-[9%]' },
-  { label: 'PF', className: 'hidden px-2 text-right sm:table-cell sm:w-[10%]' },
-  { label: 'PA', className: 'hidden px-2 text-right sm:table-cell sm:w-[10%]' },
-  { label: 'Streak', className: 'hidden px-2 text-right sm:table-cell sm:w-[10%]' },
-  // Both hidden below 640px like PF, PA and Streak. At 320px the table fits
-  // only rank, team and record; more columns there would crush the team
-  // names beside them.
-  {
-    label: 'Moves',
-    className: 'hidden px-2 text-right sm:table-cell sm:w-[10%]',
-    title: "ESPN's own counter: waiver claims and free-agent adds",
-  },
-  {
-    label: 'Playoff %',
-    className: 'hidden px-3 text-right sm:table-cell sm:w-[12%] sm:px-4',
-    title: "ESPN's own playoff probability",
-  },
-]
 
 export default async function StandingsPage({
   searchParams,
@@ -140,9 +92,49 @@ export default async function StandingsPage({
 
   const hasPlayed = throughWeek > 0
   const playoffLine = overview.playoffTeamCount
-  // No divider if nobody is below the line — a cut with nothing under it is a
-  // line at the bottom of the table.
-  const hasTeamsBelow = rows.length > playoffLine
+
+  // One flat object per team, in seed order, carrying every cell that team
+  // renders. The table sorts this array and reads nothing else, so a row
+  // cannot come apart no matter how it is reordered. Seed order is also the
+  // tiebreak the table falls back to, and the order it returns to on reload.
+  const tableRows: StandingsTableRow[] = rows.flatMap((row) => {
+    const team = byId.get(row.seasonTeamId)
+    if (!team) return []
+    const e = espnById.get(row.seasonTeamId)
+    return [{
+      seasonTeamId: row.seasonTeamId,
+      rank: row.rank,
+      movement: movement.get(row.seasonTeamId) ?? 0,
+      name: team.name,
+      manager: team.manager ?? null,
+      abbrev: team.abbrev ?? null,
+      photoUrl: team.photoUrl ?? null,
+      logoUrl: team.logoUrl ?? null,
+      isChampion: Boolean(team.isChampion),
+      championYear: team.championYear ?? null,
+      // Points-for tiebreaks are suppressed: PF is already its own column, so
+      // only a head-to-head note adds anything that is not on screen.
+      tiebreakNote: row.tiebreakKind === 'HEAD_TO_HEAD' ? row.tiebreakNote : null,
+      wins: row.wins,
+      losses: row.losses,
+      ties: row.ties,
+      winPct: row.winPct,
+      pointsFor: row.pointsFor,
+      pointsAgainst: row.pointsAgainst,
+      streak: row.streak,
+      moves: e?.acquisitions ?? 0,
+      playoffOdds: e?.playoffOdds ?? null,
+      // ESPN's call beats ours where ESPN has made one. 'UNKNOWN' is ESPN
+      // saying it has not decided — not "not clinched".
+      clinched: e?.playoffClinch
+        ? e.playoffClinch.startsWith('CLINCHED')
+        : playoffStatus.get(row.seasonTeamId) === 'CLINCHED',
+      eliminated: e
+        ? e.eliminated
+        : playoffStatus.get(row.seasonTeamId) === 'ELIMINATED',
+      inPlayoffs: row.rank <= playoffLine,
+    }]
+  })
 
   return (
     <AppShell leagueName={overview.leagueName}>
@@ -204,155 +196,7 @@ export default async function StandingsPage({
       )}
 
       <div className="overflow-hidden rounded-lg border border-border">
-        <div className="overflow-x-auto">
-          <table className="w-full border-collapse text-left sm:min-w-[820px] sm:table-fixed">
-            <thead>
-              <tr className="border-b border-border bg-surface-2">
-                {COLUMNS.map((col) => (
-                  <th
-                    key={col.label}
-                    scope="col"
-                    className={`eyebrow whitespace-nowrap py-2.5 ${col.className}`}
-                    title={col.title}
-                  >
-                    {col.label}
-                  </th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              {rows.map((row) => {
-                const team = byId.get(row.seasonTeamId)
-                if (!team) return null
-                const delta = movement.get(row.seasonTeamId) ?? 0
-                const e = espnById.get(row.seasonTeamId)
-                // ESPN's call beats ours where ESPN has made one. 'UNKNOWN' is
-                // ESPN saying it has not decided — not "not clinched".
-                const clinched = e?.playoffClinch
-                  ? e.playoffClinch.startsWith('CLINCHED')
-                  : playoffStatus.get(row.seasonTeamId) === 'CLINCHED'
-                const eliminated = e
-                  ? e.eliminated
-                  : playoffStatus.get(row.seasonTeamId) === 'ELIMINATED'
-                const inPlayoffs = row.rank <= playoffLine
-                const isCutoff = row.rank === playoffLine
-
-                return (
-                  <Fragment key={row.seasonTeamId}>
-                  <tr
-                    className={`state-bar border-b border-border bg-surface last:border-0 ${
-                      eliminated ? 'opacity-55' : ''
-                    }`}
-                    style={{ '--state': inPlayoffs ? 'var(--brand)' : 'transparent' } as React.CSSProperties}
-                  >
-                    <td className="px-3 py-2.5 sm:px-4">
-                      <div className="flex items-center gap-1.5">
-                        <span className="display w-5 text-[17px] tnum">{row.rank}</span>
-                        <Movement delta={delta} />
-                      </div>
-                    </td>
-                    <td className="px-2 py-2.5">
-                      <div className="flex items-center gap-2.5">
-                        <TeamAvatar
-                          photoUrl={team.photoUrl}
-                          logoUrl={team.logoUrl}
-                          abbrev={team.abbrev}
-                          size={30}
-                          champion={team.isChampion}
-                          championYear={team.championYear}
-                        />
-                        <div className="min-w-0">
-                          <div className="flex items-center gap-1.5">
-                            <span className="display truncate text-[15.5px] leading-tight">
-                              {team.name}
-                            </span>
-                            {clinched && (
-                              <span
-                                className="shrink-0 text-brand"
-                                title="Clinched playoff berth"
-                                aria-label="Clinched playoff berth"
-                                role="img"
-                              >
-                                <LockIcon />
-                              </span>
-                            )}
-                            {eliminated && (
-                              <span className="shrink-0 font-mono text-[9px] uppercase tracking-wider text-loss">
-                                Out
-                              </span>
-                            )}
-                          </div>
-                          {team.manager && (
-                            <div className="truncate text-[11px] text-muted">{team.manager}</div>
-                          )}
-                          {row.tiebreakKind === 'HEAD_TO_HEAD' && (
-                            <div className="truncate font-mono text-[9.5px] text-dim">
-                              {row.tiebreakNote}
-                            </div>
-                          )}
-                        </div>
-                      </div>
-                    </td>
-                    <td className="px-2 py-2.5 text-right font-mono text-[13px] tnum">
-                      {row.wins}-{row.losses}-{row.ties}
-                    </td>
-                    <td className="hidden px-2 py-2.5 text-right font-mono text-[13px] tnum sm:table-cell">
-                      {row.pointsFor.toFixed(2)}
-                    </td>
-                    <td className="hidden px-2 py-2.5 text-right font-mono text-[13px] text-muted tnum sm:table-cell">
-                      {row.pointsAgainst.toFixed(2)}
-                    </td>
-                    <td className="hidden px-2 py-2.5 text-right sm:table-cell">
-                      {row.streak ? (
-                        <span
-                          className={`font-mono text-[13px] font-semibold tnum ${
-                            row.streak.type === 'W' ? 'text-live'
-                            : row.streak.type === 'L' ? 'text-loss' : 'text-muted'
-                          }`}
-                        >
-                          {row.streak.type}-{row.streak.count}
-                        </span>
-                      ) : (
-                        <span className="font-mono text-[13px] text-dim">—</span>
-                      )}
-                    </td>
-                    {/* Both straight from ESPN, in COLUMNS order. */}
-                    <td className="hidden px-2 py-2.5 text-right font-mono text-[13px] tnum sm:table-cell">
-                      {e?.acquisitions ?? 0}
-                    </td>
-                    {/* playoffOdds is a 0-1 probability; a dash when ESPN has
-                        published no simulation, which is honest rather than
-                        printing 0%. */}
-                    <td className="hidden px-3 py-2.5 text-right font-mono text-[13px] tnum sm:table-cell sm:px-4">
-                      {e?.playoffOdds == null
-                        ? <span className="text-dim">—</span>
-                        : `${(e.playoffOdds * 100).toFixed(1)}%`}
-                    </td>
-                  </tr>
-
-                  {/* The cut line, labeled in place — a golf leaderboard's
-                      projected cut rather than a bare rule. Rendered as a real
-                      row so screen readers announce it between the sixth and
-                      seventh team, where it means something. */}
-                  {isCutoff && hasTeamsBelow && (
-                    <tr className="bg-brand/8">
-                      <td colSpan={COLUMNS.length} className="px-3 py-0 sm:px-4">
-                        <div className="flex items-center gap-2.5 py-1.5">
-                          <span className="h-[3px] flex-1 rounded-full bg-brand" aria-hidden />
-                          <span className="whitespace-nowrap font-mono text-[9.5px] font-bold uppercase tracking-[0.16em] text-brand">
-                            Projected Playoff Cut
-                          </span>
-                          <span className="h-[3px] flex-1 rounded-full bg-brand" aria-hidden />
-                        </div>
-                      </td>
-                    </tr>
-                  )}
-                  </Fragment>
-                )
-              })}
-            </tbody>
-          </table>
-        </div>
+        <StandingsTable rows={tableRows} playoffLine={playoffLine} />
 
         {!hasPlayed && (
           <div className="border-t border-border bg-surface">

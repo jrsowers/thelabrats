@@ -4,6 +4,8 @@ import {
   LabSeal, TeamAvatar, BracketIcon,
 } from '@/components/ui/primitives'
 import { SyncStatus } from '@/components/ui/sync-status'
+import { StandingsTable } from '@/components/standings/standings-table'
+import type { StandingsTableRow } from '@/lib/standings/sort'
 
 export const metadata: Metadata = { title: 'Style Guide' }
 
@@ -14,6 +16,23 @@ const GROUND = ['bg', 'surface', 'surface-2', 'surface-3', 'border', 'border-str
 const INK = ['text', 'text-muted', 'text-dim'] as const
 const SIGNAL = ['brand', 'live', 'win', 'loss', 'warn'] as const
 const SERIES = ['series-1', 'series-2', 'series-3', 'series-4', 'series-5', 'series-6'] as const
+
+/** Four teams for §06. Real shape, invented numbers. */
+const SAMPLE_ROWS: StandingsTableRow[] = ([
+  { rank: 1, name: 'Tyler\u2019s Talented Team', manager: 'Tyler Lindley', wins: 2, losses: 1, pointsFor: 498.82, pointsAgainst: 416.52, streak: { type: 'W', count: 2 }, moves: 4, playoffOdds: 0.682, movement: 2 },
+  { rank: 2, name: 'Mr. Anderson', manager: 'Jesse Anderson', wins: 2, losses: 1, pointsFor: 443.22, pointsAgainst: 357.44, streak: { type: 'L', count: 1 }, moves: 2, playoffOdds: 0.592, movement: -1 },
+  { rank: 3, name: 'Dad Bod', manager: 'Jay Clouse', wins: 2, losses: 1, pointsFor: 417.66, pointsAgainst: 354.56, streak: { type: 'W', count: 2 }, moves: 3, playoffOdds: 0.677, movement: 0 },
+  { rank: 4, name: 'Nobody Knows', manager: 'Doug Rotman', wins: 1, losses: 2, pointsFor: 355.54, pointsAgainst: 338.98, streak: { type: 'L', count: 2 }, moves: 3, playoffOdds: 0.407, movement: -3 },
+] as const).map((r, i) => ({
+  seasonTeamId: i + 1,
+  abbrev: null, photoUrl: null, logoUrl: null,
+  isChampion: false, championYear: null, tiebreakNote: null,
+  ties: 0,
+  winPct: r.wins / (r.wins + r.losses),
+  clinched: false, eliminated: false,
+  inPlayoffs: r.rank <= 2,
+  ...r,
+}))
 
 function Swatch({ token, label }: { token: string; label?: string }) {
   return (
@@ -348,6 +367,46 @@ export default function StyleGuide() {
               appears at <code className="font-mono text-[12px]">lg</code>.
             </p>
           </div>
+        </div>
+      </section>
+
+      {/* ---- SORTABLE TABLES ---- */}
+      <section className="mb-10">
+        <SectionHeader eyebrow="06" title="Sortable tables" />
+
+        <p className="mb-4 max-w-2xl text-[13px] leading-relaxed text-muted">
+          The real component, with four invented teams — so this section cannot
+          describe behavior the table does not have. Click any header. The rules
+          live in{' '}
+          <code className="font-mono text-[12px] text-text">src/lib/standings/sort.ts</code>{' '}
+          and are unit-tested, because &ldquo;a row stays together&rdquo; is a
+          promise that should fail a build rather than a Sunday.
+        </p>
+
+        <div className="mb-6 overflow-hidden rounded-lg border border-border">
+          <StandingsTable rows={SAMPLE_ROWS} playoffLine={2} />
+        </div>
+
+        <div className="grid gap-3 sm:grid-cols-2">
+          {[
+            ['A row is one object',
+             'Sorting reorders whole rows. No cell is fetched by index and no second array runs alongside, so no sequence of clicks can hand one team\u2019s record to another team\u2019s name.'],
+            ['One sort at a time',
+             'State is a single { id, dir }. A new column replaces the old one rather than layering under it \u2014 two columns claiming the same table is a question with no honest answer.'],
+            ['Ties fall back to the seeding',
+             'Equal on the sorted column means ranked as ESPN ranks them, in both directions. Explicit, not inherited from Array.sort stability.'],
+            ['Missing sorts last, both ways',
+             'A team ESPN has not simulated is absent from the ranking, not at the bottom of it. Reversing must not float it to the top.'],
+            ['The default is the standings',
+             'Held in component state with no persistence, so a reload returns to seed order. A sort that survived a refresh would let somebody read a table ordered by moves as the standings.'],
+            ['Headers are buttons, and tap targets',
+             'The button fills the cell so the whole header is clickable, carries tap-target for the 44px touch floor, and the \u25bc reserves its space always so the column never resizes when the active column changes.'],
+          ].map(([title, body]) => (
+            <div key={title} className="rounded-lg border border-border bg-surface p-4">
+              <div className="display text-[17px]">{title}</div>
+              <p className="mt-1.5 text-[13px] leading-relaxed text-muted">{body}</p>
+            </div>
+          ))}
         </div>
       </section>
 
