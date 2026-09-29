@@ -82,6 +82,20 @@ export interface EspnTeamStanding {
   projectedWins: number | null
   projectedLosses: number | null
   waiverRank: number | null
+  /**
+   * ESPN's own move counter. Waiver claims plus free-agent adds — the figure
+   * ESPN shows the manager, and the authority on it.
+   *
+   * ⚠️ DO NOT RE-DERIVE THIS FROM `transactions`. A Moves column computed that
+   * way shipped reading 9 where ESPN said 6, because ESPN applies counting
+   * rules the transaction feed does not expose.
+   */
+  acquisitions: number | null
+  drops: number | null
+  trades: number | null
+  /** Lineup and IR housekeeping. Deliberately not part of "moves". */
+  moveToActive: number | null
+  moveToIR: number | null
 }
 
 export type MatchupStatus = 'SCHEDULED' | 'LIVE' | 'FINAL'

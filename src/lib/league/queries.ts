@@ -539,6 +539,16 @@ export interface EspnStandingRow {
   projectedRank: number | null
   projectedWins: number | null
   projectedLosses: number | null
+  /**
+   * ESPN's own move counter: waiver claims plus free-agent adds, and trades.
+   *
+   * ⚠️ NEVER RE-DERIVE THESE FROM `transactions`. A Moves column computed that
+   * way shipped reading 9 where ESPN said 6 and 9 where ESPN said 7 — ESPN
+   * applies counting rules the transaction feed does not expose, and CLAUDE.md
+   * makes ESPN the system of record.
+   */
+  acquisitions: number | null
+  trades: number | null
 }
 
 /**
@@ -556,7 +566,8 @@ export async function getEspnStandings(seasonId: number): Promise<EspnStandingRo
     .from('espn_team_standings')
     .select(`season_team_id, wins, losses, ties, points_for, points_against,
              streak_type, streak_length, playoff_seed, playoff_clinch, eliminated,
-             elimination_week, playoff_odds, projected_rank, projected_wins, projected_losses`)
+             elimination_week, playoff_odds, projected_rank, projected_wins, projected_losses,
+             acquisitions, trades`)
     .eq('season_id', seasonId)
 
   if (error || !data) return []
@@ -575,6 +586,8 @@ export async function getEspnStandings(seasonId: number): Promise<EspnStandingRo
     eliminated: r.eliminated,
     eliminationWeek: r.elimination_week,
     playoffOdds: r.playoff_odds == null ? null : Number(r.playoff_odds),
+    acquisitions: r.acquisitions == null ? null : Number(r.acquisitions),
+    trades: r.trades == null ? null : Number(r.trades),
     projectedRank: r.projected_rank,
     projectedWins: r.projected_wins,
     projectedLosses: r.projected_losses,
@@ -846,56 +859,15 @@ export async function getSeedHistory(
  * counted for Justin and not for James. The participants come from the items'
  * `from_team_id` and `to_team_id` instead.
  */
-/** One transaction, as `countRosterMoves` needs it. */
-export interface MoveRow {
-  season_team_id: number | null
-  transaction_type: string
-  transaction_items: { from_team_id: number | null; to_team_id: number | null }[] | null
-}
-
 /**
- * Pure counting half, extracted so the trade rule can be tested.
+ * ⚠️ REMOVED: `getRosterMoves` / `countRosterMoves`.
  *
- * Both sides of a trade get credit; every other type is credited to the team
- * that made it.
+ * The Moves column was computed from the `transactions` table and disagreed
+ * with ESPN — 9 where ESPN said 6, 9 where ESPN said 7. ESPN maintains its own
+ * `transactionCounter` and applies rules the transaction feed does not expose
+ * (a re-add of a player you just dropped, moves made before the first kickoff).
+ * CLAUDE.md is explicit that ESPN is the system of record, so the number is now
+ * read from `espn_team_standings.acquisitions` and `.trades`.
+ *
+ * Do not rebuild the derived version. It looked right and was not.
  */
-export function countRosterMoves(rows: MoveRow[]): Map<number, number> {
-  const counts = new Map<number, number>()
-  const bump = (id: number | null | undefined) => {
-    if (id == null) return
-    counts.set(id, (counts.get(id) ?? 0) + 1)
-  }
-
-  for (const row of rows) {
-    if (row.transaction_type !== 'TRADE') {
-      bump(row.season_team_id)
-      continue
-    }
-    // One trade, one move each, however many players changed hands.
-    const sides = new Set<number>()
-    for (const item of row.transaction_items ?? []) {
-      if (item.from_team_id != null) sides.add(item.from_team_id)
-      if (item.to_team_id != null) sides.add(item.to_team_id)
-    }
-    if (sides.size === 0 && row.season_team_id != null) sides.add(row.season_team_id)
-    for (const id of sides) bump(id)
-  }
-  return counts
-}
-
-export async function getRosterMoves(
-  seasonId: number,
-): Promise<Map<number, number>> {
-  if (!isSupabaseConfigured()) return new Map()
-
-  const supabase = createPublicClient()
-  const { data, error } = await supabase
-    .from('transactions')
-    .select('season_team_id, transaction_type, transaction_items ( from_team_id, to_team_id )')
-    .eq('season_id', seasonId)
-    .eq('status', 'EXECUTED')
-    .in('transaction_type', ['WAIVER', 'FREE_AGENT', 'TRADE'])
-  if (error || !data) return new Map()
-
-  return countRosterMoves(data as unknown as MoveRow[])
-}

@@ -3,7 +3,7 @@ import { Fragment } from 'react'
 import Link from 'next/link'
 import {
   getLeagueOverview, getSeasonTeams, getSeasonResults, getReigningChampion, getLastSync,
-  hasActiveGames, getEspnStandings, getSeedHistory, getRosterMoves,
+  hasActiveGames, getEspnStandings, getSeedHistory,
 } from '@/lib/league/queries'
 import {
   computeStandings, computeMovement, rankMovementFor,
@@ -49,7 +49,7 @@ export default async function StandingsPage({
 
   const champion = await getReigningChampion()
   const [
-    teams, rawResults, lastSync, gamesActive, espnStandings, seedHistory, moves,
+    teams, rawResults, lastSync, gamesActive, espnStandings, seedHistory,
   ] = await Promise.all([
     getSeasonTeams(overview.seasonId, champion),
     getSeasonResults(overview.seasonId),
@@ -57,7 +57,6 @@ export default async function StandingsPage({
     hasActiveGames(overview.currentWeek),
     getEspnStandings(overview.seasonId),
     getSeedHistory(overview.seasonId),
-    getRosterMoves(overview.seasonId),
   ])
 
   // Preview simulates the season to a given week so every state can be seen:
@@ -175,7 +174,7 @@ export default async function StandingsPage({
 
       <div className="overflow-hidden rounded-lg border border-border">
         <div className="overflow-x-auto">
-          <table className="w-full border-collapse text-left sm:min-w-[720px]">
+          <table className="w-full border-collapse text-left sm:min-w-[820px]">
             <thead>
               <tr className="border-b border-border bg-surface-2">
                 <th scope="col" className="eyebrow px-3 py-2.5 sm:px-4">Rank</th>
@@ -184,13 +183,20 @@ export default async function StandingsPage({
                 <th scope="col" className="eyebrow px-2 py-2.5 text-right hidden sm:table-cell">PF</th>
                 <th scope="col" className="eyebrow px-2 py-2.5 text-right hidden sm:table-cell">PA</th>
                 <th scope="col" className="eyebrow px-2 py-2.5 text-right hidden sm:table-cell">Streak</th>
-                {/* Hidden below 640px like PF, PA and Streak. At 320px the
-                    table already fits only rank, team and record; a fifth
-                    column there would crush the team names it sits beside. */}
+                {/* Both hidden below 640px like PF, PA and Streak. At 320px
+                    the table fits only rank, team and record; more columns
+                    there would crush the team names beside them. */}
+                <th
+                  scope="col"
+                  className="eyebrow px-2 py-2.5 text-right hidden sm:table-cell"
+                  title="ESPN's own playoff probability"
+                >
+                  Playoff %
+                </th>
                 <th
                   scope="col"
                   className="eyebrow px-3 py-2.5 text-right sm:px-4 hidden sm:table-cell"
-                  title="Free-agent pickups, waiver claims and trades, season to date"
+                  title="ESPN's own counter: waiver claims and free-agent adds, plus trades"
                 >
                   Moves
                 </th>
@@ -292,8 +298,16 @@ export default async function StandingsPage({
                         <span className="font-mono text-[13px] text-dim">—</span>
                       )}
                     </td>
+                    {/* Both straight from ESPN. playoffOdds is a 0-1
+                        probability; a dash when ESPN has published no
+                        simulation, which is honest rather than printing 0%. */}
+                    <td className="hidden px-2 py-2.5 text-right font-mono text-[13px] tnum sm:table-cell">
+                      {e?.playoffOdds == null
+                        ? <span className="text-dim">—</span>
+                        : `${(e.playoffOdds * 100).toFixed(1)}%`}
+                    </td>
                     <td className="hidden px-3 py-2.5 text-right font-mono text-[13px] tnum sm:table-cell sm:px-4">
-                      {moves.get(row.seasonTeamId) ?? 0}
+                      {(e?.acquisitions ?? 0) + (e?.trades ?? 0)}
                     </td>
                   </tr>
 
@@ -343,8 +357,12 @@ export default async function StandingsPage({
             <dd>Clinched Playoff Berth</dd>
           </div>
           <div className="flex items-center gap-1.5">
+            <dt className="uppercase tracking-wider">Playoff %</dt>
+            <dd>ESPN's simulation</dd>
+          </div>
+          <div className="flex items-center gap-1.5">
             <dt className="uppercase tracking-wider">Moves</dt>
-            <dd>Pickups, claims and trades — not lineup changes</dd>
+            <dd>ESPN's counter: pickups, claims and trades</dd>
           </div>
         </dl>
       </div>

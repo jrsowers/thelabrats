@@ -48,6 +48,25 @@ export const teamSchema = z.object({
     away: recordSplitSchema.nullish(),
     division: recordSplitSchema.nullish(),
   }).nullish(),
+  /**
+   * ESPN's OWN move counter (view=mTeam). The authority on this number.
+   *
+   * `acquisitions` is waiver claims plus free-agent adds, and it is the figure
+   * ESPN shows managers in its own UI. Deriving it from our `transactions` rows
+   * instead gave 8 where ESPN said 6, because ESPN applies counting rules we do
+   * not see — re-adding a player you just dropped, moves made before the first
+   * kickoff, and so on. ESPN is the system of record; do not re-derive this.
+   *
+   * `moveToActive` / `moveToIR` are lineup and IR housekeeping, deliberately
+   * NOT part of the Moves column.
+   */
+  transactionCounter: z.object({
+    acquisitions: maybeNum,
+    drops: maybeNum,
+    trades: maybeNum,
+    moveToActive: maybeNum,
+    moveToIR: maybeNum,
+  }).nullish(),
   playoffSeed: maybeNum,
   eliminated: z.boolean().nullish(),
   eliminationMatchupPeriod: maybeNum,

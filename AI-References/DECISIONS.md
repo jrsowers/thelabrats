@@ -1530,3 +1530,42 @@ string; neither was.
 control.** It held for gendered collectives, for the settled-week rank source,
 for upsert-only ingestion, and now for spelling. If a rule matters, something
 has to fail when it is broken.
+
+## 2026-09-29 — Moves comes from ESPN, because our version was wrong
+
+**James: "ESPN says I've made 6 moves, but you're saying 9."** He was right. The
+Moves column was DERIVED from our `transactions` table — waiver claims plus
+free-agent adds plus trades, EXECUTED only — and it read 9 for James where ESPN
+said 6, and 9 for Evan where ESPN said 7.
+
+**ESPN publishes the number itself.** `view=mTeam` returns a
+`transactionCounter` per team: `acquisitions`, `drops`, `trades`,
+`moveToActive`, `moveToIR`. `acquisitions` is exactly the figure ESPN shows the
+manager — 6 for James, 7 for Evan. We had never parsed it.
+
+ESPN applies counting rules the transaction feed does not expose. James's own
+rows show eight acquisitions where ESPN counts six, with the gap entirely in
+week 1: three rows for us, one for ESPN. Re-adding a player you just dropped,
+moves made before the first kickoff — whatever the rule is, **we cannot see it
+from the feed, and reverse-engineering it would be guessing.** CLAUDE.md already
+settles this: ESPN is the system of record.
+
+So `getRosterMoves`/`countRosterMoves` are deleted, with a note in their place
+saying not to rebuild them. The number is stored on `espn_team_standings` and
+read from there.
+
+**The column shows `acquisitions + trades`, so James reads 7 where ESPN's UI
+reads 6.** That is deliberate: James asked for trades included, and ESPN counts
+them in a separate field. The legend says "ESPN's counter: pickups, claims and
+trades" so the difference is visible rather than mysterious.
+
+**Playoff % was already plumbed and never displayed.** `currentSimulationResults.playoffPct`
+was being transformed to `playoffOdds` and written to `espn_team_standings.playoff_odds`
+since the ESPN standings work, and nothing rendered it. Now a column, formatted
+from its 0-1 form, with an em dash when ESPN has published no simulation rather
+than a misleading 0%.
+
+**The general lesson, and it is the same one as the standings seeds:** when
+ESPN publishes a number the league can see in ESPN's own UI, display THAT
+number. A locally derived equivalent will differ, and the league will trust
+ESPN — correctly.

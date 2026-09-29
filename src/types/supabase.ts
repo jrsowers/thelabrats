@@ -234,11 +234,15 @@ export type Database = {
       }
       espn_team_standings: {
         Row: {
+          acquisitions: number | null
+          drops: number | null
           eliminated: boolean
           elimination_week: number | null
           final_rank: number | null
           games_back: number | null
           losses: number
+          move_to_active: number | null
+          move_to_ir: number | null
           playoff_clinch: string | null
           playoff_odds: number | null
           playoff_seed: number | null
@@ -253,15 +257,20 @@ export type Database = {
           streak_type: string | null
           synced_at: string
           ties: number
+          trades: number | null
           waiver_rank: number | null
           wins: number
         }
         Insert: {
+          acquisitions?: number | null
+          drops?: number | null
           eliminated?: boolean
           elimination_week?: number | null
           final_rank?: number | null
           games_back?: number | null
           losses?: number
+          move_to_active?: number | null
+          move_to_ir?: number | null
           playoff_clinch?: string | null
           playoff_odds?: number | null
           playoff_seed?: number | null
@@ -276,15 +285,20 @@ export type Database = {
           streak_type?: string | null
           synced_at?: string
           ties?: number
+          trades?: number | null
           waiver_rank?: number | null
           wins?: number
         }
         Update: {
+          acquisitions?: number | null
+          drops?: number | null
           eliminated?: boolean
           elimination_week?: number | null
           final_rank?: number | null
           games_back?: number | null
           losses?: number
+          move_to_active?: number | null
+          move_to_ir?: number | null
           playoff_clinch?: string | null
           playoff_odds?: number | null
           playoff_seed?: number | null
@@ -299,6 +313,7 @@ export type Database = {
           streak_type?: string | null
           synced_at?: string
           ties?: number
+          trades?: number | null
           waiver_rank?: number | null
           wins?: number
         }

@@ -121,6 +121,7 @@ export function toEspnStandings(res: LeagueResponse): EspnTeamStanding[] {
     const o = t.record?.overall ?? {}
     const sim = t.currentSimulationResults ?? {}
     const mode = sim.modeRecord ?? {}
+    const tx = t.transactionCounter ?? {}
     return {
       espnTeamId: t.id,
       wins: o.wins ?? 0,
@@ -143,6 +144,11 @@ export function toEspnStandings(res: LeagueResponse): EspnTeamStanding[] {
       projectedWins: mode.wins ?? null,
       projectedLosses: mode.losses ?? null,
       waiverRank: t.waiverRank ?? null,
+      acquisitions: tx.acquisitions ?? null,
+      drops: tx.drops ?? null,
+      trades: tx.trades ?? null,
+      moveToActive: tx.moveToActive ?? null,
+      moveToIR: tx.moveToIR ?? null,
     }
   })
 }
