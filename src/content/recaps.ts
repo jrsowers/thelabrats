@@ -117,6 +117,163 @@ export interface Recap {
 
 export const RECAPS: Recap[] = [
   {
+    slug: 'week-4-evan-has-nobody-left-again',
+    series: 'miracles',
+    week: 4,
+    title: 'Evan Has Nobody Left. Again.',
+    summary:
+      'For the second Monday running, Evan leads with an empty roster and a stranger holds the matches. He is up 29.0 on Tyler, and Tyler has Bijan Robinson and Drake London in New Orleans tonight. Everything still alive in this league is in one dome.',
+    publishedAt: '2026-10-05',
+    published: true,
+    coverImage: '/recaps/week-4-miracles.jpg',
+    coverAlt:
+      'A lone figure silhouetted in empty stadium seats under floodlights, head bowed, waiting.',
+    author: BURNER,
+    predictions: [
+      {
+        id: 'tyler-catches-evan',
+        claim: 'Tyler wins. Bijan Robinson and Drake London find the 29.1 points between them.',
+      },
+      {
+        id: 'colin-week-high',
+        claim: 'Colin finishes with the highest score of week 4. Tyler Shough clears the 15.6 he needs to pass Jay.',
+      },
+      {
+        id: 'doug-week-low',
+        claim: 'Doug finishes week 4 with the lowest score in the league, Penix or no Penix.',
+      },
+    ],
+    body: [
+      {
+        type: 'paragraph',
+        text: 'Subjects. I have seen this experiment before.',
+      },
+      {
+        type: 'paragraph',
+        text: 'Last Monday, Evan led by 3.3 with nobody left to play and spent the evening watching another man’s quarterback decide his week. This Monday, Evan leads by 29.0. With nobody left to play. And another man’s running back and wide receiver deciding his week.',
+      },
+      {
+        type: 'paragraph',
+        text: 'The lead is nearly nine times bigger. The situation is identical. In science we call that replication, and it is the most exciting word in the discipline. Evan is going to call it something else.',
+      },
+      {
+        type: 'paragraph',
+        text: 'Three matchups are still alive. All three are being settled tonight in New Orleans, Falcons at Saints, 8:15 Eastern on ESPN. Both teams are 1-2, the Saints are favored by a point and a half, and five of you have at least one man in that building.',
+      },
+      { type: 'heading', text: 'THE BOARD, AS OF THIS MORNING' },
+      {
+        type: 'paragraph',
+        text: 'I am obliged to be organized for one moment. Nothing in the bottom three rows is final.',
+      },
+      {
+        type: 'scoreboard',
+        live: true,
+        rows: [
+          { top: 'Dad Bod', topScore: 155.1, bottom: 'Da Reigning Champ', bottomScore: 126.1, note: 'over — nobody left' },
+          { top: 'PKM Playmakers', topScore: 141.6, bottom: 'All Bark, All Bite', bottomScore: 103.0, note: 'over — nobody left' },
+          { top: 'Substation Superstars', topScore: 121.1, bottom: 'Soft Tissue Issues', bottomScore: 112.4, note: 'over — nobody left' },
+          { top: 'Burrow My Burden', topScore: 130.9, bottom: 'Tyler’s Talented Team', bottomScore: 101.9, note: 'Evan has nobody. Tyler has Bijan and Drake London.' },
+          { top: 'Bree’s Badass Boys', topScore: 142.1, bottom: 'Mr. Anderson', bottomScore: 96.2, note: 'Kamara vs Olave' },
+          { top: 'Nix Pix a Puka Six', topScore: 139.6, bottom: 'Nobody Knows', bottomScore: 75.8, note: 'Shough vs Penix and Juwan Johnson' },
+        ],
+      },
+      { type: 'heading', text: 'THE MIRACLE: Evan Needs Bijan Robinson And Drake London Held Under 29.1, Combined' },
+      {
+        type: 'paragraph',
+        text: 'Burrow My Burden 130.9, Tyler’s Talented Team 101.9. Evan’s roster has finished. Every specimen he owns has been weighed, measured and returned to the freezer. He cannot add a decimal.',
+      },
+      {
+        type: 'paragraph',
+        text: 'Tyler has two men left, and they are the two best things the Atlanta Falcons own. Bijan Robinson, projected 19.5. Drake London, projected 13.7. That is 33.2 of projection chasing a 29.0 deficit, which means ESPN currently believes Tyler wins this by about four points, and that Evan’s 130.9 is about to become the most elaborate losing score in the building.',
+      },
+      {
+        type: 'paragraph',
+        text: 'Here is what makes it worse. The last time these two men played a football game, on Thursday night against Green Bay, Bijan ran for 194 yards and two touchdowns and Drake London caught nine of ten targets for another 194. That is 407 yards from scrimmage between them in one evening. Tyler needs roughly a third of that.',
+      },
+      {
+        type: 'paragraph',
+        text: 'And the Saints are thin in exactly the wrong places for Evan. Kaden Elliss is out. Carl Granderson and Anfernee Jennings are out. Pete Werner is questionable with a shoulder. New Orleans is walking into this game short a starting linebacker and two edge rushers, against a man who just ran for nearly two hundred yards. I am not a defensive coordinator. I do not need to be one to read that.',
+      },
+      {
+        type: 'paragraph',
+        text: 'So let us state precisely what Evan is rooting for. He needs the Saints to bottle up a running back coming off 194 rushing yards with half a linebacker room, and he needs Michael Penix Jr. to look at Drake London all night and decide, for reasons of his own, to throw it somewhere else. Twenty-nine points. That is the ceiling on two players who cleared it comfortably last time they took the field.',
+      },
+      {
+        type: 'paragraph',
+        text: 'Evan, the laboratory notes that you have now built a lead and then handed the stopwatch to someone else in consecutive weeks. That is not bad luck. That is a methodology. You are the only man in this league who finishes his Sunday early and then has to watch a Monday he has no players in like it is a hostage video.',
+      },
+      {
+        type: 'paragraph',
+        text: 'And Tyler, I would remind you, is the man I said would be alone at the top of this table by week 5. That prediction lives or dies in this game. I have a personal interest and I am declaring it.',
+      },
+      { type: 'heading', text: 'THE DUET: Doug Needs His Tight End To Score Off Colin’s Quarterback' },
+      {
+        type: 'paragraph',
+        text: 'Colin leads Doug 139.6 to 75.8. That is a gap of almost sixty-four points, and I would normally file it under formalities, except for the shape of what is left.',
+      },
+      {
+        type: 'paragraph',
+        text: 'Colin has Tyler Shough, projected 23.1, who is third in the NFL in passing yards and passing touchdowns through three games and threw four of them last week. Doug has Michael Penix Jr., projected 17.9, the man throwing to Tyler’s guys. And Doug has Juwan Johnson, projected 8.6.',
+      },
+      {
+        type: 'paragraph',
+        text: 'Juwan Johnson is a New Orleans Saint. Juwan Johnson catches passes from Tyler Shough.',
+      },
+      {
+        type: 'paragraph',
+        text: 'Sit with that. Every time Doug’s tight end catches the ball, Colin’s quarterback gets paid for throwing it. Doug’s offense tonight is, in part, a subsidy program for the man beating him. He cannot root for his own player without also rooting for his opponent. This is the fantasy football equivalent of a man paying his own ransom.',
+      },
+      {
+        type: 'paragraph',
+        text: 'Doug needs Penix and Johnson to outscore Shough by about sixty-four. With Noah Fant questionable, Johnson may see more of the ball than usual, and that is the most hope I can responsibly offer, and it comes with Shough attached.',
+      },
+      { type: 'heading', text: 'THE SIDE BET: Colin Is Chasing The Week’s Top Score' },
+      {
+        type: 'paragraph',
+        text: 'Here is the subplot nobody is watching. The highest score of the week right now is Jay’s 155.1. Colin sits at 139.6 with Shough still to come. He needs 15.6 from a quarterback projected for 23.1.',
+      },
+      {
+        type: 'paragraph',
+        text: 'Bree is the other contender. She is at 142.1 and needs 13.1 from Alvin Kamara, projected 9.2, who is about to carry the Saints backfield with Travis Etienne on injured reserve. Less likely. Not impossible. Kamara has never needed an invitation to a workload.',
+      },
+      { type: 'heading', text: 'THE LONG SHOT: Jesse Needs Chris Olave To Do Something Historically Interesting' },
+      {
+        type: 'paragraph',
+        text: 'Bree leads Jesse 142.1 to 96.2. Jesse has Chris Olave, projected 15.1. Bree has Kamara, projected 9.2. Jesse needs Olave to outscore Kamara by forty-six points, which is not a stat line, it is a career. A loss puts the man I once called the most dangerous roster in the league at 2-2, and I am going to need a moment with that column.',
+      },
+      { type: 'heading', text: 'THE FORMALITIES' },
+      {
+        type: 'paragraph',
+        text: 'Justin leads James 121.1 to 112.4 and both rosters are empty, so it is over in everything but the database. Last Tuesday I wrote that Justin wins a game in week 4 because a team that starts the best player in the league and goes 0-3 is not bad, it is haunted. The exorcism is scheduled for when ESPN closes the week, and I will be collecting on it.',
+      },
+      {
+        type: 'paragraph',
+        text: 'Jay has put 155.1 on Chenell’s 126.1, the highest score of the week so far. Mike has 141.6 against Keshia’s 103.0, and Mike, who walked into this week with the fewest points in the league by nearly fifty, is sitting on the third-highest score of the week. I said the 55.4 was a floor. I am saying it louder now.',
+      },
+      { type: 'heading', text: 'WHAT I THINK HAPPENS' },
+      {
+        type: 'paragraph',
+        text: 'On the record, to be quoted back at me in roughly thirty hours:',
+      },
+      {
+        type: 'paragraph',
+        text: 'Tyler wins. Bijan and London find twenty-nine points between them before the fourth quarter starts, and Evan spends a second consecutive Monday night as a spectator at his own experiment.',
+      },
+      {
+        type: 'paragraph',
+        text: 'Colin takes the week’s top score. Shough clears 15.6 and passes Jay, and some of it comes on throws to Juwan Johnson, which Doug will have to watch.',
+      },
+      {
+        type: 'paragraph',
+        text: 'And Doug finishes with the lowest score of the week. Penix may have a lovely night. It will not be lovely enough.',
+      },
+      {
+        type: 'paragraph',
+        text: 'Kickoff is 8:15. Evan, put the phone in another room. It will not help, but the readings will be cleaner.',
+      },
+    ],
+  },
+  {
     slug: 'week-3-a-backup-rearranged-your-league',
     series: 'recap',
     week: 3,
