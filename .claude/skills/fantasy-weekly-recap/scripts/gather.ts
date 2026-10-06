@@ -98,6 +98,50 @@ async function main() {
     .sort((a, b) => Number(b.actual_points) - Number(a.actual_points))
     .forEach((r) => console.log('  ' + line(r)))
 
+  // ---------------------------------------------------------------- byes
+  // ⚠️ READ THIS BEFORE WRITING A PREDICTION. Week 4 predicted that a kicker
+  // "does not survive the week" while his team was on bye — a 0.00 projection
+  // before a ball was kicked, down from 8.35. He was leaving that lineup no
+  // matter what he had done. It would have been collected as a hit.
+  //
+  // A rostered player with a 0.00 projection for the week AHEAD is on bye.
+  // Absence from the table is not the signal; the projection is, because the
+  // roster row exists either way.
+  const { data: next } = await db.from('player_week_scores')
+    .select('season_team_id, is_starter, projected_points, players ( full_name, position, nfl_team )')
+    .eq('season_id', seasonId).eq('week', WEEK + 1)
+  //
+  // A 0.00 projection alone is not enough — a deep bench player or a free agent
+  // can carry one on a normal week. An NFL team is on bye when EVERY rostered
+  // player of theirs projects zero, which no ordinary week produces.
+  const nextRows = (next ?? []) as unknown as R[]
+  const byTeam = new Map<string, { n: number; zero: number }>()
+  for (const r of nextRows) {
+    const k = r.players.nfl_team
+    const acc = byTeam.get(k) ?? { n: 0, zero: 0 }
+    acc.n += 1
+    if (Number(r.projected_points ?? 0) === 0) acc.zero += 1
+    byTeam.set(k, acc)
+  }
+  const onBye = new Set(
+    [...byTeam.entries()]
+      .filter(([team, a]) => team !== 'FA' && a.n > 0 && a.n === a.zero)
+      .map(([team]) => team),
+  )
+  const byes = nextRows.filter((r) => onBye.has(r.players.nfl_team))
+  if (byes.length > 0) {
+    console.log(`\nON BYE IN WEEK ${WEEK + 1}: ${[...onBye].sort().join(', ')}`)
+    console.log('  Anything you predict about these is forced by the schedule, not predicted.')
+    for (const r of byes.sort((a, b) =>
+      a.players.nfl_team.localeCompare(b.players.nfl_team)
+      || Number(b.is_starter) - Number(a.is_starter))) {
+      console.log(
+        `  ${r.players.full_name.padEnd(22)} ${r.players.position.padEnd(5)} ` +
+        `${r.players.nfl_team.padEnd(4)} ${r.is_starter ? 'STARTING' : 'bench   '} ` +
+        `${first.get(r.season_team_id)}`)
+    }
+  }
+
   const { data: t } = await db.from('transactions')
     .select('transaction_type, season_team_id, transaction_items ( action, from_team_id, to_team_id, players ( full_name ) )')
     .eq('season_id', seasonId).eq('week', WEEK).eq('status', 'EXECUTED')

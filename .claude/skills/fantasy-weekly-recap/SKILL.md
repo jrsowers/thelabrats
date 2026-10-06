@@ -75,6 +75,23 @@ Then make **new** calls. Every recap ends with predictions, and every one of
 them goes into `predictions` on the entry, or the next week has nothing to
 collect on.
 
+⚠️ **A CALL THE SCHEDULE HAS ALREADY MADE IS NOT A CALL.** Week 4 predicted
+that Ryan Fitzgerald "does not survive the week" after two missed extra points.
+Carolina was on bye in week 5 — he carried a 0.00 projection before a ball was
+kicked, and was leaving that lineup whatever he had done. It reads like a bold
+read on a manager and it was a read of the calendar, and the following week
+would have collected it as a hit.
+
+`gather.ts` prints **ON BYE IN WEEK N+1** for exactly this reason. Read it
+before writing a prediction about anybody's lineup. The same applies to
+anything else already forced — a team mathematically eliminated, a roster rule,
+a player on IR.
+
+Burner is allowed to be confidently wrong. He is not allowed to take credit for
+a certainty: being wrong is the bit, and this is just claiming a win. If one
+gets through, set `verdict: 'void'` with a `resolution` that says why, and own
+it out loud in the next recap rather than quietly deleting it.
+
 ### 3. Research the NFL week
 
 **`gather.ts` prints LEAGUE NOTES first when there are any.** Those are human

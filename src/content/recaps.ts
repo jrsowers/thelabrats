@@ -44,8 +44,15 @@ export interface RecapPrediction {
   id: string
   /** The claim, in one line. */
   claim: string
-  /** Left unset while the prediction is still live. */
-  verdict?: 'correct' | 'wrong' | 'partial'
+  /**
+   * Left unset while the prediction is still live.
+   *
+   * `void` means it was never a prediction: the outcome was already forced
+   * when it was written, by a bye, an elimination or a rule. It is settled
+   * without being scored, because collecting on a certainty is worse than
+   * being wrong — being wrong is the bit, and this is just taking credit.
+   */
+  verdict?: 'correct' | 'wrong' | 'partial' | 'void'
   /** Week the verdict was rendered. */
   resolvedWeek?: number
   /** The line he actually used to settle it, so it is never re-litigated. */
@@ -133,6 +140,19 @@ export const RECAPS: Recap[] = [
       {
         id: 'james-new-kicker',
         claim: 'James is starting a different kicker in week 5. Ryan Fitzgerald does not survive the week.',
+        // ⚠️ NOT A PREDICTION, and it would have scored as a hit. Carolina was
+        // on bye in week 5: Fitzgerald carried a 0.00 projection before a ball
+        // was kicked, down from 8.35 the week before, so he was coming out of
+        // that lineup whether or not he had missed two extra points. The
+        // schedule had already decided it.
+        verdict: 'void',
+        resolvedWeek: 5,
+        resolution:
+          'Void, and not because it was wrong. Carolina was on bye in week 5. '
+          + 'Fitzgerald was projected 0.00 before a ball was kicked, so he was '
+          + 'leaving that lineup whatever his extra points had done. I wrote '
+          + 'down a certainty and presented it as a call. The instrument was '
+          + 'reading the calendar.',
       },
       {
         id: 'mike-above-500',

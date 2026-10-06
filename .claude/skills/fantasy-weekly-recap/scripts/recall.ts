@@ -112,8 +112,24 @@ if (open.length === 0) {
   console.log('  say so in the recap — taking the loss out loud is the whole bit.')
 }
 
+// A call the schedule had already made is not a call. Week 4 predicted that a
+// kicker would not survive week 5 while his team was on bye — he carried a 0.00
+// projection before a ball was kicked. It would have been collected as a hit.
+const voided = prior.flatMap((r) =>
+  (r.predictions ?? []).filter((p) => p.verdict === 'void').map((p) => ({ ...p, week: r.week })),
+)
+if (voided.length > 0) {
+  console.log('\n─── VOID — own these, never collect on them ───\n')
+  for (const p of voided) {
+    console.log(`  [week ${p.week}] "${p.claim}"`)
+    console.log(`     ${p.resolution ?? 'forced by the schedule, not predicted'}\n`)
+  }
+}
+
 const settled = prior.flatMap((r) =>
-  (r.predictions ?? []).filter((p) => p.verdict).map((p) => ({ ...p, week: r.week })),
+  (r.predictions ?? [])
+    .filter((p) => p.verdict && p.verdict !== 'void')
+    .map((p) => ({ ...p, week: r.week })),
 )
 if (settled.length > 0) {
   console.log('\n─── already settled (callback material, do not re-litigate) ───\n')
