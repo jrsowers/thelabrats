@@ -221,6 +221,7 @@ export function placeholderAward(
       ? `${player.position} · ${player.nflTeam}` : null,
     metricValue: built.value,
     commentary: buildCommentary(def.key, {
+      week,
       managerFirst: firstName(winner?.manager),
       teamName: winner?.name ?? 'TBD',
       opponentTeam: foe?.name ?? null,

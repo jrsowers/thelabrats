@@ -585,12 +585,17 @@ describe('roster-shape awards', () => {
     expect(a.metricValue).toBe('0.0')
   })
 
-  it('does not claim the lineup was any good', () => {
-    const text = buildCommentary('socialist', {
-      managerFirst: 'Keshia', teamName: 'All Bark, All Bite', value: '19.4',
-    }).map((x) => x.text).join('')
-    expect(text).not.toMatch(/bad start|no holes|no passengers/i)
-    expect(text).toMatch(/for better or for worse/)
+  it('does not claim the lineup was any good, in any phrasing', () => {
+    // The award measures how EVENLY a lineup scored, not how well — a flat
+    // bad week qualifies. Checked across every variant, because the one that
+    // slips is the one nobody read.
+    for (let week = 1; week <= 12; week++) {
+      const text = buildCommentary('socialist', {
+        managerFirst: 'Keshia', teamName: 'All Bark, All Bite', value: '19.4', week,
+      }).map((x) => x.text).join('')
+      expect(text, `week ${week}`).not.toMatch(/bad start|no holes|no passengers/i)
+      expect(text, `week ${week}`).toMatch(/19\.4/)
+    }
   })
 
   it('never gives one manager both awards', () => {
@@ -967,15 +972,30 @@ describe('The Mastermind is not about bench points', () => {
     expect(out.get('bench_bum')!.metricValue).toBe('26.0')
   })
 
-  it('says "additional" rather than claiming the bench total', () => {
-    const zero = buildCommentary('mastermind', { managerFirst: 'Doug', teamName: 'X', value: '0.0' })
-      .map((s) => s.text).join('')
-    expect(zero).toMatch(/optimal lineup outright/)
-    expect(zero).not.toMatch(/left just 0\.0 points on the bench/)
+  it('never claims the bench total, in any phrasing', () => {
+    // The number is the gap to the best LEGAL lineup. A manager whose bench
+    // scored 20 can still sit at zero, so any sentence that mentions the bench
+    // has to qualify what it is counting — "additional", "reachable",
+    // "unclaimed" — or it asserts the bench scored nothing.
+    const render = (value: string, week: number) =>
+      buildCommentary('mastermind', { managerFirst: 'Doug', teamName: 'X', value, week })
+        .map((x) => x.text).join('')
 
-    const some = buildCommentary('mastermind', { managerFirst: 'Doug', teamName: 'X', value: '1.9' })
-      .map((s) => s.text).join('')
-    expect(some).toMatch(/1\.9 additional points/)
+    for (let week = 1; week <= 12; week++) {
+      const zero = render('0.0', week)
+      expect(zero, `zero, week ${week}`).not.toMatch(/0\.0 points on the bench/)
+      if (/bench/i.test(zero)) {
+        expect(zero, `zero, week ${week} mentions the bench unqualified`)
+          .toMatch(/additional|reachable|unclaimed|available anywhere/i)
+      }
+
+      const some = render('1.9', week)
+      expect(some, `1.9, week ${week}`).toMatch(/1\.9/)
+      if (/bench/i.test(some)) {
+        expect(some, `1.9, week ${week} mentions the bench unqualified`)
+          .toMatch(/additional|reachable|unclaimed/i)
+      }
+    }
   })
 
   it('shows the best possible lineup above the actual one', () => {
@@ -997,26 +1017,33 @@ describe('The Waiver Wire Wizard notices a benched pickup', () => {
     managerFirst: 'Colin', teamName: 'Nix Pix a Puka Six',
     playerName: 'Stefon Diggs', playerMeta: 'WR · WSH', value: '13.5',
   }
-  const render = (extra?: Record<string, string>) =>
-    buildCommentary('waiver_wire_wizard', { ...ctx, extra }).map((s) => s.text).join('')
+  const render = (extra?: Record<string, string>, week = 1) =>
+    buildCommentary('waiver_wire_wizard', { ...ctx, extra, week }).map((s) => s.text).join('')
 
   it('needles a manager who found him and then sat him', () => {
     // The award is won for the acquisition, so it does not require a start —
     // but claiming a manager "went off for 13.5" reads as a compliment he did
-    // not earn when the points happened without him.
-    const text = render({ Lineup: 'Benched' })
-    expect(text).toMatch(/from the bench/)
-    expect(text).not.toMatch(/Slay, king/)
+    // not earn when the points happened without him. Every benched phrasing
+    // has to carry that, not just the first one.
+    for (let week = 1; week <= 12; week++) {
+      expect(render({ Lineup: 'Benched' }, week), `week ${week}`).toMatch(/bench/i)
+    }
   })
 
   it('leaves the compliment intact when he actually started him', () => {
-    expect(render({ Lineup: 'Started' })).toMatch(/Slay, king/)
+    // No started phrasing may mention the bench — that is the other branch's
+    // whole joke, and borrowing it here accuses somebody of nothing.
+    for (let week = 1; week <= 12; week++) {
+      expect(render({ Lineup: 'Started' }, week), `week ${week}`).not.toMatch(/bench/i)
+    }
   })
 
   it('falls back to the compliment when the detail is missing', () => {
     // An older published week has no `Lineup` in its stored supporting stats.
     // Silence is not evidence he benched the guy.
-    expect(render()).toMatch(/Slay, king/)
+    for (let week = 1; week <= 12; week++) {
+      expect(render(undefined, week), `week ${week}`).not.toMatch(/bench/i)
+    }
   })
 })
 
@@ -1095,12 +1122,21 @@ describe('slatePhase says when, from the clock rather than from a guess', () => 
   })
 
   it('drops the phrase from the caption when it cannot be derived', () => {
-    const text = buildCommentary('sweatin_it_out', {
-      managerFirst: 'Chenell', teamName: 'Da Reigning Champ',
-      opponentTeam: 'X', value: '46.7',
-    }).map((s) => s.text).join('')
-    expect(text).toMatch(/won anyway/)
-    expect(text).not.toMatch(/undefined/)
+    const render = (extra: Record<string, string> | undefined, week: number) =>
+      buildCommentary('sweatin_it_out', {
+        managerFirst: 'Chenell', teamName: 'Da Reigning Champ',
+        opponentTeam: 'X', value: '46.7', extra, week,
+      }).map((s) => s.text).join('')
+
+    for (let week = 1; week <= 12; week++) {
+      const without = render(undefined, week)
+      expect(without, `week ${week}`).not.toMatch(/undefined/)
+      // No phrasing may invent a time it cannot derive from the snapshots.
+      expect(without, `week ${week}`).not.toMatch(/Monday night|halftime|going into/i)
+
+      const with_ = render({ when: 'going into Monday night' }, week)
+      expect(with_, `week ${week}`).toMatch(/going into Monday night/)
+    }
   })
 })
 
@@ -1115,8 +1151,14 @@ describe('sample cards preview the real caption', () => {
       { teams: [{ seasonTeamId: 1, name: 'Nobody Knows', manager: 'Doug Rotman' }], players: [] },
     )
     const text = card.commentary.map((s) => s.text).join('')
-    expect(text).toMatch(/slid from \d+ to \d+/)
-    expect(text).toMatch(/Tom Petty/)
+    // The branch that uses the ranks was taken, rather than the fallback that
+    // only knows how many places were lost. Asserted on the ranks themselves,
+    // since which of the five phrasings carries them depends on the week.
+    const rank = (label: string) =>
+      card.supporting.find((x) => x.label === label)?.value
+    expect(rank('Starting rank')).toBeTruthy()
+    expect(text).toContain(rank('Starting rank')!)
+    expect(text).toContain(rank('Ending rank')!)
   })
 
   it('keeps a sample rank slide inside what a twelve-team league allows', () => {

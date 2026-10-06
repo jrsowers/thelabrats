@@ -89,6 +89,10 @@ export function buildAwardCards(
       // Real and sample awards share one commentary builder, so the voice
       // cannot diverge between before and after week 1.
       commentary: buildCommentary(def.key, {
+        // Picks the phrasing. Every award owns five, and the week advances by
+        // one, so a card reads differently each Tuesday and identically on
+        // every render of the same Tuesday.
+        week,
         managerFirst: firstName(byId.get(computed.teamId)?.manager),
         teamName: byId.get(computed.teamId)?.name ?? 'TBD',
         opponentTeam: computed.opponentId != null
