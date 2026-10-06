@@ -88,6 +88,18 @@ Read them before searching, use the verified ones, and **research any note
 marked NOT VERIFIED before it goes anywhere near print** — they are
 recollections, and recollections are wrong sometimes.
 
+⚠️ **NEVER NAME THE SOURCE OF A NOTE IN THE COPY.** A note's `source` field is
+provenance for the writer, not a line in the recap. Week 4 shipped "James tells
+me he was trailing by less than half a point" and "There is a wrinkle, and
+James raised it himself", which turns a lab journal into an interview and makes
+a manager look like he is briefing his own coverage. James: *"I don't want it
+to sound like I'm telling you what to write. These recaps are supposed to be
+your observations, like a Lab Journal."*
+
+Verify the note, then state the fact in Burner's own voice, as something
+observed. If a note cannot be stated without crediting whoever supplied it, it
+is not verified enough to print.
+
 
 Search for the week's results, biggest performances, upsets and injuries.
 Then **cross-reference against the roster data from step 2** and keep only what

@@ -29,6 +29,10 @@
  *   replace one.
  * - **The roast boundary still applies.** A note about somebody's injury,
  *   health or private life is not material, however true it is.
+ * - **The source never appears in the copy.** `source` is provenance for the
+ *   writer. Week 4 printed "James tells me he was trailing by less than half a
+ *   point", which reads as a manager briefing his own coverage. State the fact
+ *   as an observation, in Burner's voice, or do not state it.
  */
 export interface LeagueNote {
   year: number

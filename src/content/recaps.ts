@@ -122,7 +122,7 @@ export const RECAPS: Recap[] = [
     week: 4,
     title: 'James Lost To Two Kickers In The Same Football Game',
     summary:
-      'Ryan Fitzgerald missed two extra points. Jake Bates made everything he looked at. James lost by 8.7 to the man on the other side of the field, then found out the trade he was blaming had actually kept it close. Bree put up 162.4, Tyler came back from 90 down, and Mike owned the best quarterback and the best receiver in football for one afternoon.',
+      'Ryan Fitzgerald missed two extra points. Jake Bates made everything he looked at. James lost by 8.7 to the man on the other side of the field, then found out the trade that looked like the culprit had actually kept it close. Bree put up 162.4, Tyler came back from 90 down, and Mike owned the best quarterback and the best receiver in football for one afternoon.',
     publishedAt: '2026-10-06',
     published: true,
     coverImage: '/recaps/week-4.jpg',
@@ -179,7 +179,7 @@ export const RECAPS: Recap[] = [
       },
       {
         type: 'paragraph',
-        text: 'Which brings us to 3:38 left. James tells me he was trailing by less than half a point as Detroit drove. I checked his account against the scoring settings, because a scientist does not take testimony from an interested party on faith, and it holds. Goff found Sam LaPorta in the seam from eight yards out, which is 7.3 points for a tight end in this league, and Bates added the extra point. Justin’s lead went from 0.4 to 8.7 on one snap and one kick, and those are the final numbers.',
+        text: 'Which brings us to 3:38 left, with Justin ahead by four tenths of a point and Detroit driving. Goff found Sam LaPorta in the seam from eight yards out, which is 7.3 points for a tight end in this league, and Bates added the extra point. Justin’s lead went from 0.4 to 8.7 on one snap and one kick, and those are the final numbers.',
       },
       {
         type: 'paragraph',
@@ -220,10 +220,10 @@ export const RECAPS: Recap[] = [
           { top: 'Substation Superstars', topScore: 121.1, bottom: 'Soft Tissue Issues', bottomScore: 112.4, note: 'decided on Sunday night' },
         ],
       },
-      { type: 'heading', text: 'James Blamed The Trade. The Trade Was The Only Thing Holding It Up.' },
+      { type: 'heading', text: 'The Trade Looks Like The Culprit. It Was The Only Thing Keeping It Close.' },
       {
         type: 'paragraph',
-        text: 'There is a wrinkle, and James raised it himself. Midweek he sent Rome Odunze and Colston Loveland to Justin for Brock Bowers. Then he lost to Justin. Odunze started for Justin and scored 12.4. So the natural theory, the one any of us would have at one in the morning, is that James traded away the margin.',
+        text: 'There is a wrinkle, and it is the first place anybody would look. Midweek James sent Rome Odunze and Colston Loveland to Justin for Brock Bowers. Then he lost to Justin. Odunze started for Justin and scored 12.4. So the natural theory, the one any of us would have at one in the morning, is that James traded away the margin.',
       },
       {
         type: 'paragraph',
