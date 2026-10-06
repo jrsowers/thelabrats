@@ -117,6 +117,189 @@ export interface Recap {
 
 export const RECAPS: Recap[] = [
   {
+    slug: 'week-4-two-kickers-one-game',
+    series: 'recap',
+    week: 4,
+    title: 'James Lost To Two Kickers In The Same Football Game',
+    summary:
+      'Ryan Fitzgerald missed two extra points. Jake Bates made everything he looked at. James lost by 8.7 to the man on the other side of the field, then found out the trade he was blaming had actually kept it close. Bree put up 162.4, Tyler came back from 90 down, and Mike owned the best quarterback and the best receiver in football for one afternoon.',
+    publishedAt: '2026-10-06',
+    published: true,
+    coverImage: '/recaps/week-4.jpg',
+    coverAlt:
+      'A placekicker silhouetted at the end of his follow-through as the ball sails wide of an upright under floodlights.',
+    author: BURNER,
+    predictions: [
+      {
+        id: 'james-new-kicker',
+        claim: 'James is starting a different kicker in week 5. Ryan Fitzgerald does not survive the week.',
+      },
+      {
+        id: 'mike-above-500',
+        claim: 'Mike wins in week 5 and is above .500 for the first time all season.',
+      },
+      {
+        id: 'evan-bad-beat-again',
+        claim: 'Evan scores 130 or more and loses again before the season is out.',
+      },
+    ],
+    body: [
+      {
+        type: 'paragraph',
+        text: 'Subjects. This week a fantasy matchup was decided by two kickers standing on opposite sidelines of the same football game.',
+      },
+      {
+        type: 'paragraph',
+        text: 'One of them made everything. The other one missed two extra points. James owned the wrong one.',
+      },
+      {
+        type: 'paragraph',
+        text: 'The kicker gap was 10.0. The margin was 8.7. I have run the numbers through the centrifuge three times and they keep coming out the same shape, which is the shape of a man staring at a ceiling at one in the morning.',
+      },
+      { type: 'heading', text: 'PANTHERS 32, LIONS 26 — The Sunday Night Ledger' },
+      {
+        type: 'paragraph',
+        text: 'Three managers in this league had a stake in Sunday Night Football, and every one of them got a different movie.',
+      },
+      {
+        type: 'paragraph',
+        text: 'Mike got Tetairoa McMillan: 14 catches, 192 yards, two touchdowns, 38.2 fantasy points against a 13.5 projection. The best player in the league this week and The Prime Specimen, The One Man Army and Fantasy Nostradamus all at once, which is three awards for one receiver and the most decorated afternoon any human has had in this building.',
+      },
+      {
+        type: 'paragraph',
+        text: 'James got Ryan Fitzgerald, who lined up for the extra point after McMillan’s first touchdown and missed it, then lined up for the extra point after McMillan’s second touchdown and missed that too. In this league a missed extra point is not a zero. It is a minus one. So every time Mike’s receiver scored, James’s kicker walked out and took a point off James’s total.',
+      },
+      {
+        type: 'paragraph',
+        text: 'And Justin got Jake Bates. Four field goals from 54, 43, 41 and 26 yards, both extra points, nothing missed, 16.0 points. That is more than Trevor Lawrence scored for James. It is more than Christian McCaffrey scored for James. It is nearly four times what Ja’Marr Chase scored for James. A kicker on the losing team outscored James’s quarterback, his running back and his best receiver, from forty yards behind the play.',
+      },
+      {
+        type: 'paragraph',
+        text: 'Then there was the fourth quarter. With 8:59 left Carolina faced fourth-and-4 at the Detroit 37, which is about a 54-yard field goal, and a field goal of fifty-plus pays five points in this league. Carolina had watched its kicker all evening. Carolina went for it. They converted, and James received nothing for the trouble.',
+      },
+      {
+        type: 'paragraph',
+        text: 'Which brings us to 3:38 left. James tells me he was trailing by less than half a point as Detroit drove. I checked his account against the scoring settings, because a scientist does not take testimony from an interested party on faith, and it holds. Goff found Sam LaPorta in the seam from eight yards out, which is 7.3 points for a tight end in this league, and Bates added the extra point. Justin’s lead went from 0.4 to 8.7 on one snap and one kick, and those are the final numbers.',
+      },
+      {
+        type: 'paragraph',
+        text: 'For the NFL that touchdown pulled Detroit within six. For James it was the end. Detroit got the ball back, failed on fourth-and-13 with two minutes left, and Carolina knelt it out while James did the arithmetic on two missed extra points. Fitzgerald made both his field goals and finished with 6.0. Bates finished with 16.0.',
+      },
+      { type: 'heading', text: 'CHIEFS 30, RAIDERS 27 — Bree Had Both Halves Of The Box Score' },
+      {
+        type: 'paragraph',
+        text: 'Kansas City is 4-0 and Las Vegas has its first loss, and Bree finished the afternoon having been right twice. Kenneth Walker III ran for 175 yards and two scores, including a 76-yarder, worth 30.4 points. Kirk Cousins, on the other side, put up 27.6. Bree had the running back who beat the Raiders and the quarterback who lost to him, and she collected on both. That is not picking a side. That is owning the casino.',
+      },
+      {
+        type: 'paragraph',
+        text: 'And Cousins threw a touchdown pass to Brock Bowers, who as of this week belongs to James. Hold that thought.',
+      },
+      { type: 'heading', text: 'COWBOYS 34, TEXANS 30 — Seventeen Catches' },
+      {
+        type: 'paragraph',
+        text: 'CeeDee Lamb caught 17 passes for 189 yards and a touchdown on 21 targets, the last of them the go-ahead score with 43 seconds left, and Jay’s 32.8 from him was the third-best performance in the league. Chenell got 28.8 from Javonte Williams in the same game and lost anyway, which is the theme of Chenell’s week. Bree’s C.J. Stroud threw for 347 and two scores on the losing side, and Colin’s Nico Collins, back off IR, put up 27.3 for Houston. Four managers, one shootout, and the only one who lost was the one who had a Cowboy.',
+      },
+      { type: 'heading', text: 'PATRIOTS 29, BILLS 26 — The Other Half Of Mike’s Day' },
+      {
+        type: 'paragraph',
+        text: 'New England upset Buffalo and Drake Maye put up 33.2 for Mike, the best quarterback score in the league. Add McMillan and Mike owned the QB King and the WR King in the same week. Two weeks ago this man scored 55.4 and I told you it was a floor. I would like the laboratory to note that the floor now has two crowns on it.',
+      },
+      { type: 'heading', text: 'THE SCOREBOARD' },
+      {
+        type: 'paragraph',
+        text: 'Everything is final. I can say that this week, and you have no idea how good it feels.',
+      },
+      {
+        type: 'scoreboard',
+        rows: [
+          { top: 'Bree’s Badass Boys', topScore: 162.4, bottom: 'Mr. Anderson', bottomScore: 111.8, note: 'week high' },
+          { top: 'Nix Pix a Puka Six', topScore: 157.5, bottom: 'Nobody Knows', bottomScore: 99.5 },
+          { top: 'Dad Bod', topScore: 155.1, bottom: 'Da Reigning Champ', bottomScore: 126.1 },
+          { top: 'PKM Playmakers', topScore: 141.6, bottom: 'All Bark, All Bite', bottomScore: 103.0 },
+          { top: 'Tyler’s Talented Team', topScore: 141.2, bottom: 'Burrow My Burden', bottomScore: 130.9 },
+          { top: 'Substation Superstars', topScore: 121.1, bottom: 'Soft Tissue Issues', bottomScore: 112.4, note: 'decided on Sunday night' },
+        ],
+      },
+      { type: 'heading', text: 'James Blamed The Trade. The Trade Was The Only Thing Holding It Up.' },
+      {
+        type: 'paragraph',
+        text: 'There is a wrinkle, and James raised it himself. Midweek he sent Rome Odunze and Colston Loveland to Justin for Brock Bowers. Then he lost to Justin. Odunze started for Justin and scored 12.4. So the natural theory, the one any of us would have at one in the morning, is that James traded away the margin.',
+      },
+      {
+        type: 'paragraph',
+        text: 'I tested it. Bowers scored 17.6 for James, touchdown from Bree’s quarterback included. Undo the trade and James’s tight end is Loveland, who scored 8.7 on Justin’s bench. Give James the most generous version possible and let him start Odunze over Dontayvion Wicks too. He finishes with about 112.6, essentially what he scored. Meanwhile Justin gets Bowers back in place of Odunze, which is worth 5.2 more. Without the trade, James loses by roughly 13.7.',
+      },
+      {
+        type: 'paragraph',
+        text: 'The trade did not lose James this game. The trade is the reason it was close enough to hurt. The hypothesis was sound. The specimen simply did not do it.',
+      },
+      {
+        type: 'paragraph',
+        text: 'And here is the part I enjoy. Last week Justin benched Brock Bowers while he scored 22.6, started Mark Andrews for 3.9 instead, and then traded Bowers away. This week Justin won with the lowest winning score of the week, The Cat Burglar, and the closest game of the week, The Photo Finish, and his tight end won the TE crown. It was not Bowers. It was LaPorta. Justin did not need to be right about Bowers. He only needed to be right about which kicker to own.',
+      },
+      {
+        type: 'paragraph',
+        text: 'If James wants to know where the 8.7 actually went, it is on his bench, and I say this gently, because the Sunday morning numbers backed him. Jameis Winston scored 26.0 there against Lawrence’s 15.1. Tyler Allgeier scored 11.9 there against Wicks’s 3.3. Swap Allgeier in alone and James loses by 0.1. Swap Winston in alone and he wins. Both calls followed the projections and both were reasonable, which is the cruelest sentence I can write about either of them.',
+      },
+      { type: 'heading', text: 'Tyler Was Down 90.4 And Never Looked Worried' },
+      {
+        type: 'paragraph',
+        text: 'Monday I said Tyler wins, and he did. Bijan Robinson put up 27.2 on his own, nearly the whole 29.1 Tyler needed, and Tyler beat Evan 141.2 to 130.9. During Sunday afternoon Tyler trailed by 90.4, which earned him Sweatin’ It Out. He also left Aaron Rodgers on his bench for 30.0, which earned him The Understudy, and he won anyway. That is the most expensive comfortable win I have recorded in this laboratory.',
+      },
+      {
+        type: 'paragraph',
+        text: 'Evan, meanwhile, is now the most consistent man in science. The Bad Beat for scoring 130.9 and losing. The Bench Bum for leaving 22.8 behind, with Cam Ward, Carnell Tate and Jalon Daniels all over fifteen on the shelf. And The Control Group, for finishing 1.8 from his projection. He did exactly what the model said he would, and the model said he would lose. Two Mondays running he has sat with a finished roster and watched someone else’s players decide his week. This time he lost by 10.3.',
+      },
+      { type: 'heading', text: 'Bree Put Up 162.4 And Took My Prediction With It' },
+      {
+        type: 'paragraph',
+        text: 'Slay Girl Slay: seven of Bree’s starters beat their projection. Then on Monday night Alvin Kamara put up 20.3 on a 9.2 projection, the week’s top score went to Bree, and I owe her an apology.',
+      },
+      {
+        type: 'paragraph',
+        text: 'I said on Monday that Colin would finish with the week’s top score. Tyler Shough did exactly what I asked: 17.9, more than the 15.6 Colin needed to pass Jay. Colin got to 157.5, won The Mastermind for finishing 1.9 off his best possible lineup, and still came second, because I wrote off Bree as “less likely.” Bree beat Jesse by 50.5 and moved to 3-1. I wrote her off. That is the second time this season she has made me mark my own paper down, and I am starting to suspect she reads this.',
+      },
+      { type: 'heading', text: 'The Rest Of The Lab' },
+      {
+        type: 'paragraph',
+        text: 'Jay beat Chenell 155.1 to 126.1 behind Kyren Williams’ 31.7, the RB crown, and won The Waiver Wire Wizard for Ollie Gordon II’s 17.0. Ollie Gordon scored that 17.0 on Jay’s bench. The award is for picking him up, which Jay did beautifully. Starting him was a separate exam. Chenell slides from third to sixth, Free Fallin’, with Kyle Monangai’s 27.5 sitting on her bench, the second-biggest bench score in the league.',
+      },
+      {
+        type: 'paragraph',
+        text: 'Keshia lost to Mike 141.6 to 103.0 and won The Socialist, with only 16.6 between her best starter and her worst. Total equality, achieved by having nobody break out. Saquon Barkley gave her 1.5 on a 13.4 projection, and Will Reichard won the kicker crown with 17.0 for her, which this week makes Keshia an authority on kickers and James a cautionary tale.',
+      },
+      {
+        type: 'paragraph',
+        text: 'Doug had the lowest score in the league at 99.5, The Dumpster Fire, lost by 58.0 for The Public Execution, and made nine roster moves for The Galaxy Brain. His week started with two quarterbacks going to IR, which is not material and I will not make it material. What I will say is that nine moves is not forty, and I am watching.',
+      },
+      {
+        type: 'paragraph',
+        text: 'Jesse lost by 50.5 and is 2-2. His Chris Olave did his job, 15.6 on Monday against a 15.1 projection. It was just never going to be enough.',
+      },
+      { type: 'heading', text: 'THE FINDINGS' },
+      {
+        type: 'paragraph',
+        text: 'Four of you are 3-1: Tyler, Jay, Bree and Colin. Four are 2-2. Four are 1-3, and one of them, Justin, finally has a win to show for having the best player in the league.',
+      },
+      {
+        type: 'paragraph',
+        text: 'The ledger. Justin wins in week 4: correct, and I am going to be insufferable about it. Tyler beats Evan: correct. Doug posts the week’s lowest score: correct, though I take no pleasure in that one. Colin takes the top score: wrong, Bree, see above. Jesse leaves twenty on the bench and wins anyway: wrong, he lost both weeks it had to happen in, and that call is dead. Tyler alone at the top by week 5: still alive, sharing first with three people and one week left. Mike not finishing last: aging beautifully.',
+      },
+      {
+        type: 'paragraph',
+        text: 'Three new ones, said with the confidence of a man who went three for five this week and is choosing to round up.',
+      },
+      {
+        type: 'paragraph',
+        text: 'James starts a different kicker in week 5. Ryan Fitzgerald does not survive the week. Mike wins in week 5 and goes above .500 for the first time all year. And Evan scores 130 again and loses again before this is over, because with Evan that is not bad luck, it is a pattern.',
+      },
+      {
+        type: 'paragraph',
+        text: 'Week five begins Thursday. Make your extra points.',
+      },
+    ],
+  },
+  {
     slug: 'week-4-evan-has-nobody-left-again',
     series: 'miracles',
     week: 4,
@@ -133,14 +316,23 @@ export const RECAPS: Recap[] = [
       {
         id: 'tyler-catches-evan',
         claim: 'Tyler wins. Bijan Robinson and Drake London find the 29.1 points between them.',
+        verdict: 'correct',
+        resolvedWeek: 4,
+        resolution: 'Bijan Robinson scored 27.2 on his own. Tyler won 141.2 to 130.9.',
       },
       {
         id: 'colin-week-high',
         claim: 'Colin finishes with the highest score of week 4. Tyler Shough clears the 15.6 he needs to pass Jay.',
+        verdict: 'wrong',
+        resolvedWeek: 4,
+        resolution: 'Shough scored 17.9 and Colin passed Jay with 157.5, but Kamara put up 20.3 and Bree finished on 162.4.',
       },
       {
         id: 'doug-week-low',
         claim: 'Doug finishes week 4 with the lowest score in the league, Penix or no Penix.',
+        verdict: 'correct',
+        resolvedWeek: 4,
+        resolution: 'Doug finished on 99.5, the lowest score of the week.',
       },
     ],
     body: [
@@ -295,6 +487,9 @@ export const RECAPS: Recap[] = [
       {
         id: 'justin-wins-one',
         claim: 'Justin wins a game in week 4. He is too good to be 0-4.',
+        verdict: 'correct',
+        resolvedWeek: 4,
+        resolution: 'Justin beat James 121.1 to 112.4, decided by a LaPorta touchdown and a Jake Bates extra point.',
       },
       {
         id: 'doug-fiddles-again',
@@ -712,6 +907,9 @@ export const RECAPS: Recap[] = [
         id: 'jesse-bench-again',
         claim:
           'Jesse leaves another twenty-plus on the bench before week 5, and wins that week anyway.',
+        verdict: 'wrong',
+        resolvedWeek: 4,
+        resolution: 'Jesse lost in week 3 and again in week 4, by 50.5 to Bree. The window closed without a win.',
       },
     ],
     body: [
