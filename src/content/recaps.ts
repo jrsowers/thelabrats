@@ -124,6 +124,170 @@ export interface Recap {
 
 export const RECAPS: Recap[] = [
   {
+    slug: 'week-5-one-running-back-holds-the-table',
+    series: 'miracles',
+    week: 5,
+    title: 'One Running Back Is Holding Up The Entire Table',
+    summary:
+      'Jay trails Justin by sixteen and has one man left: Kyren Williams, projected for exactly enough. If he gets there, Jay is alone at 4-1. If not, as many as eight of you are 3-2. Doug has the week’s high score and needs Matthew Stafford held under 13.8 to keep it worth anything.',
+    publishedAt: '2026-10-12',
+    published: true,
+    coverImage: '/recaps/week-5-miracles.jpg',
+    coverAlt:
+      'A lone football player silhouetted at the mouth of a stadium tunnel, waiting to walk out onto an empty floodlit field.',
+    author: BURNER,
+    predictions: [
+      {
+        id: 'jay-alone-at-4-1',
+        claim: 'Kyren Williams clears the gap. Jay beats Justin and is alone at the top at 4-1.',
+      },
+      {
+        id: 'keshia-beats-doug',
+        claim: 'Keshia wins. Matthew Stafford clears 13.8 and Doug goes to 1-4 with 171.8 on the board.',
+      },
+      {
+        id: 'jesse-catches-evan',
+        claim: 'Jesse wins. Josh Allen and Dalton Kincaid find the 24.7, and Evan loses a third straight Monday.',
+      },
+    ],
+    body: [
+      {
+        type: 'paragraph',
+        text: 'Subjects. Four of you started this week at 3-1.',
+      },
+      {
+        type: 'paragraph',
+        text: 'Tyler’s game is finished and he is on the wrong end of it. Bree trails by 46.6. Colin trails by 54.7. Jay trails by sixteen and has exactly one running back left.',
+      },
+      {
+        type: 'paragraph',
+        text: 'So here is the state of the experiment on Monday morning. The top of the table, the bottom of the table and the highest score of the week are all sitting in one stadium in Inglewood, and not one of the people who care can do a thing about any of it.',
+      },
+      {
+        type: 'paragraph',
+        text: 'Bills at Rams, 8:15 Eastern on ESPN and ABC, SoFi Stadium. Buffalo is 3-1, Los Angeles is 2-2 and favored by three and a half, and the total is 54.5, which is the sportsbooks’ way of saying they expect a great deal of screaming. Six of you have a player in it. Ten of you have something riding on it.',
+      },
+      { type: 'heading', text: 'THE BOARD, AS OF THIS MORNING' },
+      {
+        type: 'paragraph',
+        text: 'I am required to be organized for one paragraph and I resent it. Exactly one row on this board is finished.',
+      },
+      {
+        type: 'scoreboard',
+        live: true,
+        rows: [
+          { top: 'Nobody Knows', topScore: 171.8, bottom: 'All Bark, All Bite', bottomScore: 158.0, note: 'Doug has nobody. Keshia has Stafford.' },
+          { top: 'Soft Tissue Issues', topScore: 146.0, bottom: 'Tyler’s Talented Team', bottomScore: 130.5, note: 'over — nobody left' },
+          { top: 'Da Reigning Champ', topScore: 134.2, bottom: 'Nix Pix a Puka Six', bottomScore: 79.5, note: 'Colin has Puka Nacua and James Cook' },
+          { top: 'PKM Playmakers', topScore: 122.1, bottom: 'Bree’s Badass Boys', bottomScore: 75.5, note: 'Bree has Davante Adams' },
+          { top: 'Burrow My Burden', topScore: 116.9, bottom: 'Mr. Anderson', bottomScore: 92.2, note: 'Coleman and Higbee vs Allen and Kincaid' },
+          { top: 'Substation Superstars', topScore: 112.7, bottom: 'Dad Bod', bottomScore: 96.6, note: 'Justin has nobody. Jay has Kyren Williams.' },
+        ],
+      },
+      { type: 'heading', text: 'THE MIRACLE: Jay Needs Kyren Williams To Hit His Projection. Exactly His Projection.' },
+      {
+        type: 'paragraph',
+        text: 'Substation Superstars 112.7, Dad Bod 96.6. Justin’s roster is finished. Jay has one man left, Kyren Williams, projected 16.1. The gap is sixteen and change. ESPN has run every model it owns and has Jay winning this by one tenth of a point.',
+      },
+      {
+        type: 'paragraph',
+        text: 'One tenth. That is not a forecast. That is a coin balanced on its edge wearing a lab coat.',
+      },
+      {
+        type: 'paragraph',
+        text: 'Now here is why the whole league should be watching a single running back. Tyler cannot win. Bree needs Davante Adams to score 46.7 on his own. Colin needs 54.8 between two men. If Kyren clears sixteen, Jay is 4-1 and alone at the top of this league. If he does not, as many as eight of you are 3-2, and the standings stop being a table and become a group photo.',
+      },
+      {
+        type: 'paragraph',
+        text: 'Last week Kyren put up 31.7 and took the running back crown. Jay needs about half of that. Half. I have seen this man do the whole thing in one game and Jay is asking for a cutting.',
+      },
+      {
+        type: 'paragraph',
+        text: 'And Justin. Justin spent three weeks starting the best player in the league and losing. Tonight he gets to sit with a finished roster and watch somebody else’s running back decide whether his second win is real. Justin, welcome to the observation deck. Evan can show you where the bad coffee is. He has been up here two Mondays running.',
+      },
+      {
+        type: 'paragraph',
+        text: 'One more thing, for the record. Two weeks ago I said Tyler would be alone at the top of this table by week 5. Tyler trails James 146.0 to 130.5 and neither of them has a player left. If anybody is alone up there on Wednesday, it is Jay, and the only man who can put him there plays for the Rams.',
+      },
+      { type: 'heading', text: 'THE BAD BEAT IN WAITING: Doug Needs Matthew Stafford Held Under 13.8' },
+      {
+        type: 'paragraph',
+        text: 'Doug has 171.8. It is the highest score in the league this week by a distance. Last week Doug had the lowest. The man has gone from the bottom of the instrument to the top of it in seven days, which in my field is called a calibration error and in his is called Sunday.',
+      },
+      {
+        type: 'paragraph',
+        text: 'Doug’s roster is finished. Keshia has 158.0, the second-best score in the league, and one man left: Matthew Stafford, projected 23.5. Doug needs the Rams’ quarterback held under 13.8 points. ESPN has Keshia winning by 9.7.',
+      },
+      {
+        type: 'paragraph',
+        text: 'Both of them are 1-3. The two highest-scoring rosters of the week are playing each other, and one of them leaves this building 1-4 having outscored ten other people. That is not a fantasy matchup. That is two people setting the lab on fire and only one of them being allowed out of the building.',
+      },
+      {
+        type: 'paragraph',
+        text: 'Here is what Doug is rooting for, because it is strange. He needs the Rams to move the ball without throwing it. He needs Kyren Williams to carry the whole night, which is precisely what Jay needs, so for three hours Doug and Jay are lab partners. Keshia needs the opposite: Stafford to Puka Nacua, Stafford to Davante Adams, every one of them paying her and helping Colin and Bree in a way that has stopped mattering.',
+      },
+      {
+        type: 'paragraph',
+        text: 'If Stafford finds 13.8, Doug posts 171.8 and goes 1-4. I want everyone to understand that I will not be letting that go on Tuesday.',
+      },
+      { type: 'heading', text: 'THE ONE WITH PLAYERS ON BOTH SIDES: Evan Has Somebody Left. Finally.' },
+      {
+        type: 'paragraph',
+        text: 'Burrow My Burden 116.9, Mr. Anderson 92.2. Evan leads by 24.7, and for the first Monday in three he is not merely a spectator at his own experiment. He has Keon Coleman, projected 7.3, and Tyler Higbee, projected 2.7. Jesse has Josh Allen, projected 23.3, and Dalton Kincaid, projected 7.0.',
+      },
+      {
+        type: 'paragraph',
+        text: 'Run the arithmetic and the projections leave Evan ahead by 4.4. That is one Josh Allen rushing touchdown. That is one Josh Allen afternoon jog.',
+      },
+      {
+        type: 'paragraph',
+        text: 'And Buffalo is short at receiver. Joshua Palmer is out with a shoulder, DJ Moore is questionable after missing Thursday and Friday, and rookie Skyler Bell is active because there is nobody else to activate. That should mean more targets for Keon Coleman, who belongs to Evan. Every one of them is thrown by Josh Allen, who belongs to Jesse. Evan’s best hope tonight is a supply line that runs straight through the enemy’s warehouse.',
+      },
+      {
+        type: 'paragraph',
+        text: 'Jesse started this season as the roster I called the most dangerous in the league. He is 2-2. A win puts him back at .500 and drags one more name into the 3-2 pileup. A loss and Jesse is 2-3 and I owe that column an apology.',
+      },
+      {
+        type: 'paragraph',
+        text: 'There is also a debt of mine riding on this. I said last Tuesday that Evan would score 130 and lose again before the season is out. Coleman and Higbee need 13.1 between them to get him there. If they find it and Allen finds more, I collect early, and Evan collects nothing at all.',
+      },
+      { type: 'heading', text: 'THE FORMALITIES' },
+      {
+        type: 'paragraph',
+        text: 'James leads Tyler 146.0 to 130.5 and both rosters are empty. Last week James lost to two kickers. This week he is beating the man I had penciled in at the top of the league, and I would like to formally hand that prediction to the coroner.',
+      },
+      {
+        type: 'paragraph',
+        text: 'Mike leads Bree 122.1 to 75.5. Bree needs 46.7 from Davante Adams, projected 13.3. Last Tuesday I said Mike wins in week 5 and climbs above .500 for the first time all year. Davante Adams is the last thing standing between me and that receipt, and he needs the game of his life to stop it.',
+      },
+      {
+        type: 'paragraph',
+        text: 'Chenell leads Colin 134.2 to 79.5. Colin has Puka Nacua, off the injury report and coming off nine catches for 125 yards in his return last week, and James Cook. He needs 54.8 from the pair. Colin’s team is called Nix Pix a Puka Six. Tonight he needs roughly nine of them.',
+      },
+      { type: 'heading', text: 'WHAT I THINK HAPPENS' },
+      {
+        type: 'paragraph',
+        text: 'On the record, to be read back to me in about thirty hours:',
+      },
+      {
+        type: 'paragraph',
+        text: 'Kyren Williams clears sixteen. Jay beats Justin and is alone at 4-1, and the group photo never gets taken.',
+      },
+      {
+        type: 'paragraph',
+        text: 'Keshia wins. Stafford finds 13.8 before the fourth quarter, and Doug goes 1-4 holding 171.8 points, which is a sentence I have been waiting all morning to write in the future tense.',
+      },
+      {
+        type: 'paragraph',
+        text: 'And Jesse catches Evan. I am going against the model on this one. Josh Allen in a game with a total of 54.5 does not stop at 23, and Evan spends a third straight Monday night learning that having players left is not the same as having enough.',
+      },
+      {
+        type: 'paragraph',
+        text: 'Kickoff is 8:15. Doug and Jay, root for the run. Keshia, root for the pass. Evan and Jesse, you both need Josh Allen tonight for completely opposite reasons, so I would recommend separate rooms.',
+      },
+    ],
+  },
+  {
     slug: 'week-4-two-kickers-one-game',
     series: 'recap',
     week: 4,
