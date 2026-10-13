@@ -152,68 +152,100 @@ export const RECAPS: Recap[] = [
     body: [
       {
         type: 'paragraph',
-        text: 'Subjects. I want to tell you about my record book, because I suspect it explains something about me that a professional would charge money to unpack. It lives in a drawer in this laboratory, it is written in pen, and the entire appeal of it is that it does not change very often — a record falls once a month, maybe twice if the month is feeling theatrical, and the rest of the time it sits there being correct, which is all I have ever asked of anything.',
+        text: 'Subjects. I want to tell you about my record book, because I suspect it explains something about me that a professional would charge money to unpack. It lives in a drawer in this laboratory and it’s written in pen.',
       },
       {
         type: 'paragraph',
-        text: 'Twelve of its entries are now wrong, all twelve on the same Sunday afternoon, and I have spent the days since standing over an open drawer with a pen in my mouth like a man who has come home to a burglary. One of you set an all-time league record by losing a football game, which I did not think was structurally possible. I will not be gentle about it, because what he did does not deserve gentle. It deserves a plaque.',
+        text: 'The whole appeal of the thing is that it doesn’t change very often. A record falls once a month, maybe twice if the month’s feeling theatrical, and the rest of the time it just sits there being correct — which is all I’ve ever asked of anything.',
+      },
+      {
+        type: 'paragraph',
+        text: 'Twelve of its entries are now wrong. All twelve went wrong on the same Sunday afternoon, and I’ve spent the days since standing over an open drawer with a pen in my mouth like a man who’s come home to a burglary.',
+      },
+      {
+        type: 'paragraph',
+        text: 'One of you set an all-time league record by losing a football game. I didn’t think that was structurally possible, and I’m not going to be gentle about it, because what he did doesn’t deserve gentle. It deserves a plaque.',
       },
       { type: 'heading', text: 'PATRIOTS 45, RAIDERS 17 — Mike Now Owns The Best Thing That Has Ever Happened Here' },
       {
         type: 'paragraph',
-        text: 'Drake Maye completed 26 of 34 for 374 yards and four touchdowns, then ran a fifth in from three yards out purely to be rude about it, and New England removed Las Vegas from the premises 45 to 17. The projection on him that morning was 22.69. He finished on 47.46, the highest score any started player has ever produced in this league, taking down Josh Allen’s 46.82 from week 2 — a figure I stood here and called untouchable, which is a thing I keep doing and keep not learning from.',
+        text: 'Drake Maye completed 26 of 34 for 374 yards and four touchdowns, then ran a fifth in from three yards out purely to be rude about it, and New England removed Las Vegas from the premises 45 to 17.',
       },
       {
         type: 'paragraph',
-        text: 'He also cleared his own projection by 24.77, a separate record, filed in a separate place, in the same drawer, on the same afternoon. Mike pulled The Prime Specimen, Fantasy Nostradamus and The One Man Army out of one quarterback, and 39 percent of his entire team output arrived from a man he drafted and then, I would wager heavily, did not think about again until a fortnight ago.',
+        text: 'The projection on him that morning was 22.69. He finished on 47.46, the highest score any started player has ever produced in this league, taking down Josh Allen’s 46.82 from week 2 — a figure I stood here and called untouchable, which is a thing I keep doing and keep not learning from.',
       },
       {
         type: 'paragraph',
-        text: 'I would remind the room that in week 2 this same manager scored 55.4 with a full roster of professional athletes, and that I stood here and called it a floor rather than a trend. I was being generous the specific way one is generous to a nephew. That floor now holds the best individual performance in the history of this experiment, and I need everybody to sit quietly with how annoying that is.',
+        text: 'He also cleared his own projection by 24.77, which is a separate record, filed in a separate place, in the same drawer, on the same afternoon. Mike pulled The Prime Specimen, Fantasy Nostradamus and The One Man Army out of a single quarterback, and 39 percent of his entire team output arrived from a man he drafted and then, I’d wager heavily, didn’t think about again until a fortnight ago.',
+      },
+      {
+        type: 'paragraph',
+        text: 'I’d remind the room that in week 2 this same manager scored 55.4 with a full roster of professional athletes, and that I stood here and called it a floor rather than a trend. I was being generous the specific way you’re generous to a nephew. That floor now holds the best individual performance in the history of this experiment.',
       },
       { type: 'heading', text: 'STEELERS 34, COLTS 22 — Three Of You Were In This Game And Exactly One Of You Enjoyed It' },
       {
         type: 'paragraph',
-        text: 'Pittsburgh beat Indianapolis 34 to 22 on the back of Jaylen Warren, who put up 188 total yards and scored from 80 yards out as a receiver in the first quarter and from 50 as a runner in the third, which is an unusual way to spend an evening. Keshia had him in her lineup for 33.8 against a projection of 15.88, so she is the one who enjoyed it, and she is going to come up again later under considerably less pleasant circumstances.',
+        text: 'Pittsburgh beat Indianapolis 34 to 22 behind Jaylen Warren, who put up 188 total yards and scored from 80 out as a receiver in the first quarter and from 50 as a runner in the third. That’s an unusual way to spend an evening.',
       },
       {
         type: 'paragraph',
-        text: 'Aaron Rodgers threw 22 of 31 for 235 yards and three touchdowns in that same football game, and Tyler watched the entire thing happen from behind the blast glass, because Rodgers was on his bench. Twenty-eight points, fully visible, doing nothing whatsoever. Meanwhile Spencer Shrader matched a franchise record with five field goals, which accounts for fifteen of the twenty-two points Indianapolis managed all night, meaning Evan’s kicker outscored most of Evan’s actual football players and collected the kicker crown while he was at it.',
+        text: 'Keshia had him in her lineup for 33.8 against a projection of 15.88, so she’s the one who enjoyed it — and she’s going to come up again later under considerably less pleasant circumstances.',
+      },
+      {
+        type: 'paragraph',
+        text: 'Aaron Rodgers threw 22 of 31 for 235 yards and three touchdowns in that same football game, and Tyler watched the entire thing from behind the blast glass, because Rodgers was on his bench. Twenty-eight points, fully visible, doing nothing whatsoever.',
+      },
+      {
+        type: 'paragraph',
+        text: 'Meanwhile Spencer Shrader matched a franchise record with five field goals, which accounts for fifteen of the twenty-two points Indianapolis managed all night. Evan’s kicker outscored most of Evan’s actual football players and collected the kicker crown on the way past.',
       },
       { type: 'heading', text: 'RAVENS 30, FALCONS 23 (OT) — Chenell Bought The Understudy On Wednesday' },
       {
         type: 'paragraph',
-        text: 'Lamar Jackson did not play. Ankle. He watched from the sideline in street clothes, that is the entire medical report, there is nothing funny anywhere in it and I am not going to go looking for any.',
+        text: 'Lamar Jackson didn’t play. Ankle. He watched from the sideline in street clothes, that’s the entire medical report, and there’s nothing funny anywhere in it.',
       },
       {
         type: 'paragraph',
-        text: 'What is funny, and what is frankly the most instructive thing that happened in this league all week, is what Chenell did about it. Because Chenell owns Lamar Jackson. A normal, emotionally healthy person in that position absorbs the zero, says something philosophical about variance, and plays the week with a hole in the middle of the lineup. Chenell went to the waiver wire on Wednesday and bought the man standing directly behind him, with the brisk and faintly unsettling efficiency of a woman replacing a dead houseplant twenty minutes before guests arrive.',
+        text: 'What’s funny, and frankly the most instructive thing that happened in this league all week, is what Chenell did about it. Because Chenell owns Lamar Jackson.',
       },
       {
         type: 'paragraph',
-        text: 'Tyler Huntley went 24 of 32 for 201 yards and two touchdowns. He threw the tying score to Devontez Walker with forty seconds left in regulation, Derrick Henry — also Chenell’s, because obviously — took the direct snap for the conversion that forced overtime, and then Huntley went and walked in the winner himself. That is 28.04 out of the superflex slot from a quarterback who was unemployed on Tuesday, and it is the best waiver pickup in the history of this league by eight full points.',
+        text: 'A normal, emotionally healthy person in that position absorbs the zero, says something philosophical about variance, and plays the week with a hole in the middle of the lineup. Chenell went to the waiver wire on Wednesday and bought the man standing directly behind him, with the brisk and faintly unsettling efficiency of a woman replacing a dead houseplant twenty minutes before guests arrive.',
       },
       {
         type: 'paragraph',
-        text: 'Isaiah Likely added 26.9 and the tight end crown out of New York, which is another record, and she started the best lineup her roster permitted with nothing left behind anywhere on it, which is The Mastermind. Five weeks into this season it is the most complete piece of work anybody has turned in, and she assembled it in a week when her starting quarterback was standing on a sideline in a tracksuit.',
+        text: 'Tyler Huntley went 24 of 32 for 201 yards and two touchdowns. He threw the tying score to Devontez Walker with forty seconds left in regulation, Derrick Henry — also Chenell’s, because obviously — took the direct snap for the conversion that forced overtime, and then Huntley went and walked in the winner himself.',
+      },
+      {
+        type: 'paragraph',
+        text: 'That’s 28.04 out of the superflex slot from a quarterback who was unemployed on Tuesday, and it’s the best waiver pickup in the history of this league by eight full points.',
+      },
+      {
+        type: 'paragraph',
+        text: 'Isaiah Likely added 26.9 and the tight end crown out of New York, which is another record. She started the best lineup her roster permitted with nothing left behind anywhere on it — that’s The Mastermind — and she assembled the whole thing in a week when her starting quarterback was standing on a sideline in a tracksuit.',
       },
       { type: 'heading', text: 'VIKINGS 23, SAINTS 13 — Colin Was Rewarded With Ninety-Six Yards And Two Interceptions' },
       {
         type: 'paragraph',
-        text: 'Minnesota beat New Orleans 23 to 13 in a game where the Saints generated 142 yards of total offense, which is not really a football game so much as an incident that took place on a field. Tyler Shough completed 16 of 25 for 96 yards and threw two interceptions. The projection said 20.21. The scoreboard said 1.84. That is the largest gap between expectation and reality any healthy starter has ever produced in this league, and it is now written in my book, in my handwriting, in pen.',
+        text: 'Minnesota beat New Orleans 23 to 13 in a game where the Saints generated 142 yards of total offense, which isn’t really a football game so much as an incident that took place on a field.',
       },
       {
         type: 'paragraph',
-        text: 'Colin lost by 3.2. To Chenell. The woman who had spent her Wednesday shopping.',
+        text: 'Tyler Shough completed 16 of 25 for 96 yards and threw two interceptions. The projection said 20.21. The scoreboard said 1.84. That’s the largest gap between expectation and reality any healthy starter has ever produced in this league, and it’s now in my book, in my handwriting, in pen.',
       },
       {
         type: 'paragraph',
-        text: 'I want to be careful here, because Colin did not do anything stupid — he started his quarterback, and starting your quarterback is what quarterbacks are structurally for. But there is a version of loyalty that is a virtue and there is a version that is simply not having looked recently, and on Sunday the distance between those two versions was 3.2 points and one waiver claim that somebody else thought to make.',
+        text: 'Colin lost by 3.2. To Chenell. The woman who’d spent her Wednesday shopping.',
+      },
+      {
+        type: 'paragraph',
+        text: 'I want to be careful here, because Colin didn’t do anything stupid — he started his quarterback, and starting your quarterback is what quarterbacks are structurally for. But there’s a version of loyalty that’s a virtue and a version that’s simply not having looked recently, and on Sunday the distance between those two was 3.2 points and one waiver claim somebody else thought to make.',
       },
       { type: 'heading', text: 'THE SCOREBOARD' },
       {
         type: 'paragraph',
-        text: 'I am contractually obliged to be organized for one paragraph a week and I resent it every single time, though less than usual today, because the top row of this thing is a historical document and I would quite like it framed.',
+        text: 'I’m contractually obliged to be organized for one paragraph a week and I resent it every single time. Less than usual today, though, because the top row of this thing is a historical document and I’d quite like it framed.',
       },
       {
         type: 'scoreboard',
@@ -229,80 +261,144 @@ export const RECAPS: Recap[] = [
       { type: 'heading', text: 'Keshia And Doug Played The Biggest Game In League History And One Of Them Had To Lose It' },
       {
         type: 'paragraph',
-        text: '191.3 against 172.8. That is three hundred and sixty-four points inside a single matchup, clearing the old combined record by eighteen and making every other row on that board look like a warm-up act performed in an empty room. Two people went out on a Sunday and staged the highest-scoring game this league has ever hosted, and because of how any of this works, one of them had to come home with a loss.',
+        text: '191.3 against 172.8. That’s three hundred and sixty-four points inside a single matchup, clearing the old combined record by eighteen and making every other row on that board look like a warm-up act performed in an empty room.',
       },
       {
         type: 'paragraph',
-        text: 'It was Doug. Doug scored 172.8 and lost by 18.5, which makes him the highest losing score in league history and therefore the answer to a trivia question nobody has ever wanted to be the answer to. Jayden Daniels gave him 32.26, and Bucky Irving gave him 30.5 against a 13.99 projection, the sort of overperformance that wins an ordinary week outright. He did every single thing the job asks of a man, he is 1-4, and in five weeks I have never been less able to explain something to a room.',
+        text: 'Two people went out on a Sunday and staged the highest-scoring game this league has ever hosted. Because of how any of this works, one of them had to come home with a loss.',
       },
       {
         type: 'paragraph',
-        text: 'Keshia was trailing by 56.3 before Sunday had so much as kicked off, which is less a deficit than a diagnosis, and then won by 18.5 with seven starters beating their projections. She took Sweatin’ It Out and Slay Girl Slay, and in the same motion left Jordan Love on the bench for 29.28 and picked up The Understudy — impressive multitasking, when two of those are compliments and one is an accusation. Three trophies, a league-record shootout, and a 2-3 record to show for it. I am merely the man who has to write it down.',
+        text: 'It was Doug. He scored 172.8 and lost by 18.5, which makes him the highest losing score in league history and therefore the answer to a trivia question nobody’s ever wanted to be the answer to.',
+      },
+      {
+        type: 'paragraph',
+        text: 'Jayden Daniels gave him 32.26. Bucky Irving gave him 30.5 against a 13.99 projection, the sort of overperformance that wins an ordinary week outright. He did every single thing the job asks of a man, he’s 1-4, and in five weeks I’ve never been less able to explain something to a room.',
+      },
+      {
+        type: 'paragraph',
+        text: 'Keshia was trailing by 56.3 before Sunday had so much as kicked off, which is less a deficit than a diagnosis, and then won by 18.5 with seven starters beating their projections.',
+      },
+      {
+        type: 'paragraph',
+        text: 'She took Sweatin’ It Out and Slay Girl Slay, and in the same motion left Jordan Love on the bench for 29.28 and picked up The Understudy. That’s impressive multitasking when two of those are compliments and one’s an accusation.',
+      },
+      {
+        type: 'paragraph',
+        text: 'Three trophies, a league-record shootout, and a 2-3 record to show for it. I’m merely the man who has to write it down.',
       },
       { type: 'heading', text: 'Jay Is Alone In First Place And I Would Like To Formally Object' },
       {
         type: 'paragraph',
-        text: 'Jay beat Justin by 0.58 points. Fifty-eight hundredths of a point. That is the narrowest margin ever recorded in this league, which means it is simultaneously the narrowest defeat ever recorded in this league, so Justin now owns that entry permanently, and it is the sort of thing that gets brought up at weddings. Jay won the game with 113.24, which is the lowest winning score ever recorded here. And he managed all of that while leaving 35.4 points sitting untouched on his bench, which took The Bench Bum.',
+        text: 'Jay beat Justin by 0.58 points. Fifty-eight hundredths of a point. That’s the narrowest margin ever recorded in this league, which means it’s simultaneously the narrowest defeat ever recorded in this league, so Justin owns that entry permanently. It’s the sort of thing that comes up at weddings.',
       },
       {
         type: 'paragraph',
-        text: 'So let us total the week up for the man currently leading this league: the worst winning score in recorded history, the smallest margin in recorded history, the largest pile of unused points on the board, and first place. Four and one. He had Jahmyr Gibbs for 35.2 and the running back crown and he also started CeeDee Lamb for 1.9 against a 15.48 projection, so the afternoon was not smooth either. He simply kept winning, which I am beginning to think is a personality trait rather than a result.',
+        text: 'Jay won the game with 113.24, the lowest winning score ever recorded here, and he managed it while leaving 35.4 points sitting untouched on his bench. That took The Bench Bum.',
       },
       {
         type: 'paragraph',
-        text: 'On Monday morning I wrote that Kyren Williams was the only man standing between Jay and the top of this table, and that he was projected for almost exactly enough. Williams went for 16.6 against a projection of 16.07. He cleared it by half a point and Jay won by half a point. I have never in my professional life been so precisely correct about something so profoundly stupid, and I would like that entered into the record now, before we arrive at the portion of the broadcast where I am wrong four separate times.',
+        text: 'So let’s total the week up for the man currently leading this league. Worst winning score in recorded history. Smallest margin in recorded history. Largest pile of unused points on the board. First place.',
+      },
+      {
+        type: 'paragraph',
+        text: 'Four and one. He had Jahmyr Gibbs for 35.2 and the running back crown, and he also started CeeDee Lamb for 1.9 against a 15.48 projection, so the afternoon wasn’t smooth for him either. He just kept winning, which I’m beginning to think is a personality trait rather than a result.',
+      },
+      {
+        type: 'paragraph',
+        text: 'On Monday morning I wrote that Kyren Williams was the only man standing between Jay and the top of this table, and that he was projected for almost exactly enough. Williams went for 16.6 against a projection of 16.07.',
+      },
+      {
+        type: 'paragraph',
+        text: 'He cleared it by half a point and Jay won by half a point. I’ve never in my professional life been so precisely correct about something so profoundly stupid, and I’d like that on the record before we arrive at the portion of the broadcast where I’m wrong four separate times.',
       },
       { type: 'heading', text: 'James Read The Last Report, Which Is More Than I Can Say For Most Of You' },
       {
         type: 'paragraph',
-        text: 'Last week I pointed out, at some length and with real enthusiasm, that Jameis Winston had put up 26.0 on James’s bench while his starting quarterback managed 15.1, and that swapping those two men alone would have flipped the result. I said it to be cruel. I did not expect it to be actionable.',
+        text: 'Last week I pointed out, at some length and with real enthusiasm, that Jameis Winston had put up 26.0 on James’s bench while his starting quarterback managed 15.1, and that swapping those two men alone would have flipped the result. I said it to be cruel. I didn’t expect it to be actionable.',
       },
       {
         type: 'paragraph',
-        text: 'This week Winston started, scored 31.74 against a 17.14 projection, and James beat Tyler 146.0 to 130.5 to climb to 3-2. Somebody in this league reads the findings and then goes and acts on them, and I intend to be completely insufferable about this for the remainder of the season.',
+        text: 'This week Winston started, scored 31.74 against a 17.14 projection, and James beat Tyler 146.0 to 130.5 to climb to 3-2. Somebody in this league reads the findings and then goes and acts on them, and I intend to be completely insufferable about it for the rest of the season.',
       },
       {
         type: 'paragraph',
-        text: 'Tyler has now scored 770.6 points this year, which is eighty-six more than anybody else in this league, and that haul has purchased him a 3-2 record and second place. That is the second time in this report I have had to bring up his bench and we are only in week 5. The most talented roster in this experiment continues to be driven like a rental car: quickly, carelessly, and with no visible concern for what any of it costs.',
+        text: 'Tyler’s now scored 770.6 points this year. That’s eighty-six more than anybody else in the league, and it has purchased him a 3-2 record and second place.',
+      },
+      {
+        type: 'paragraph',
+        text: 'That’s the second time in this report I’ve had to bring up his bench and we’re only in week 5. The most talented roster in this experiment continues to be driven like a rental car: quickly, carelessly, and with no visible concern for what any of it costs.',
       },
       { type: 'heading', text: 'THE INVOICE' },
       {
         type: 'paragraph',
-        text: 'Which brings us to the portion of the broadcast where I pay for my own opinions, and this week the bill is substantial.',
+        text: 'Which brings us to the portion of the broadcast where I pay for my own opinions. This week the bill is substantial.',
       },
       {
         type: 'paragraph',
-        text: 'In week 1 I said Tyler’s 153.3 would finish the season as the highest losing score anybody posts, and Doug cleared it by 19.5 on Sunday. In week 3 I said the 2-1 logjam would be gone by week 5 and that Tyler would be standing alone at the top of it, and I draw your attention to the fact that the logjam did not clear, it grew — six of you are 3-2 — and the man alone at the top is Jay. Wrong in both halves of one sentence, which takes a certain commitment.',
+        text: 'In week 1 I said Tyler’s 153.3 would finish the season as the highest losing score anybody posts. Doug cleared it by 19.5 on Sunday, so that one’s gone.',
       },
       {
         type: 'paragraph',
-        text: 'In week 4 I said Mike wins in week 5 and goes above .500 for the first time all season. He beat Bree 122.1 to 95.1 and he is 3-2. Correct, and I would like that one carved into something.',
+        text: 'In week 3 I said the 2-1 logjam would be gone by week 5 and that Tyler would be standing alone at the top of it. The logjam didn’t clear, it grew — six of you are 3-2 — and the man alone at the top is Jay. Wrong in both halves of one sentence, which takes a certain commitment.',
       },
       {
         type: 'paragraph',
-        text: 'And one more, which I am voiding rather than collecting, because it turns out I have standards. I predicted James would start a different kicker, and he did — Cam Little, eight points. But Carolina was on bye and Ryan Fitzgerald was projected for nothing before a ball was kicked, so he was leaving that lineup regardless of what he had done the week before. That was not a prediction. That was me reading a calendar out loud in an authoritative voice, and I would ask that none of you let me take the credit.',
+        text: 'In week 4 I said Mike wins in week 5 and goes above .500 for the first time all season. He beat Bree 122.1 to 95.1 and he’s 3-2. Correct, and I’d like that one carved into something.',
+      },
+      {
+        type: 'paragraph',
+        text: 'And there’s one more, which I’m voiding rather than collecting, because it turns out I have standards. I predicted James would start a different kicker this week, and he did — Cam Little, eight points, perfectly adequate.',
+      },
+      {
+        type: 'paragraph',
+        text: 'But Carolina was on bye. Fitzgerald was projected for nothing before a ball had been kicked, so he was leaving that lineup regardless of what he’d done to James the week before. That wasn’t a prediction. That was me reading a calendar out loud in an authoritative voice, and I am not taking the credit for it.',
       },
       { type: 'heading', text: 'The Rest Of The Carnage' },
       {
         type: 'paragraph',
-        text: 'Bree scored 95.1, the lowest total anybody posted this week, and lost by 27.0, and both of those come with awards attached that I am not going to stand here and dwell on, because three weeks ago she was 3-1 and holding a top-three seed, and this is not a trend, it is a Sunday. Michael Wilson gave her 5.28 on a 14.02 projection. Sometimes an entire roster simply declines at the same time and there is nothing in the methodology to blame for it.',
+        text: 'Bree scored 95.1, the lowest total anybody posted this week, and lost by 27.0. Both of those come with awards attached that I’m not going to stand here and dwell on, because three weeks ago she was 3-1 and holding a top-three seed.',
       },
       {
         type: 'paragraph',
-        text: 'Jesse fell five places, fifth to tenth, which is Free Fallin’ and a brutal way to spend seven days. He got 29.3 and the receiver crown out of Christian Watson against an 11.53 projection and still lost by 6.0, because Tyson Bagent handed him 3.2 on an 18.9 projection and Chase Brown handed him 5.5 on a 15.3. In week 1 I called this the most dangerous roster in the league. It is currently tenth, and I am carrying that prediction into week 6 the way a man carries a houseplant he has already killed.',
+        text: 'Michael Wilson gave her 5.28 on a 14.02 projection. Sometimes an entire roster declines at the same time and there’s nothing in the methodology to blame for it. This isn’t a trend, it’s a Sunday.',
       },
       {
         type: 'paragraph',
-        text: 'Evan is the one who beat him, with 134.9, and sits at 2-3. In week 4 I predicted Evan would score 130 or more and lose again before the season was out, on the grounds that with Evan this is not luck, it is a genre. He scored 134.9 and won. That prediction is technically still breathing and it is already humiliating me in public.',
+        text: 'Jesse fell five places, fifth to tenth, which is Free Fallin’ and a brutal way to spend seven days. He got 29.3 and the receiver crown out of Christian Watson against an 11.53 projection and still lost by 6.0, because Tyson Bagent handed him 3.2 on an 18.9 projection and Chase Brown handed him 5.5 on a 15.3.',
+      },
+      {
+        type: 'paragraph',
+        text: 'In week 1 I called this the most dangerous roster in the league. It’s currently tenth. I’m carrying that prediction into week 6 the way a man carries a houseplant he’s already killed.',
+      },
+      {
+        type: 'paragraph',
+        text: 'Evan’s the one who beat him, with 134.9, and sits at 2-3. In week 4 I predicted he’d score 130 or more and lose again before the season was out, on the grounds that with Evan this isn’t luck, it’s a genre. He scored 134.9 and won. That prediction’s technically still breathing and it’s already humiliating me in public.',
       },
       { type: 'heading', text: 'FINDINGS' },
       {
         type: 'paragraph',
-        text: 'So here is where the experiment stands. Twelve records fell in a single afternoon: the best player performance, the biggest overshoot, the biggest shortfall, the highest combined score, the highest losing score, the lowest winning score, the narrowest win, the narrowest defeat, the best waiver pickup, and three position crowns. Five weeks into a season that is supposed to be settling down, my record book is now largely crossings-out and marginalia, and I am going to have to buy a second one, which I resent more than any individual result in it.',
+        text: 'So here’s where the experiment stands. Twelve records fell in a single afternoon: the best player performance, the biggest overshoot, the biggest shortfall, the highest combined score, the highest losing score, the lowest winning score, the narrowest win, the narrowest defeat, the best waiver pickup, and three position crowns.',
       },
       {
         type: 'paragraph',
-        text: 'Three calls for week 6, and I have read the bye schedule first this time, because a scientist is permitted to make a given error precisely once. Colin starts a different quarterback — New Orleans is playing this week, I checked with my own eyes before typing it, which is not something I expected to be proud of. Tyler finishes this regular season with more points than anybody in the league and does not finish first, because he has the roster and does not appear to have the stomach that goes with it. And Keshia’s 191.3 stands as the highest score anybody posts all year, a claim I made in almost identical language in week 1 about a different number, which Doug then drove over on Sunday in front of everybody, so write it down and bring it back to me in January.',
+        text: 'Five weeks into a season that’s supposed to be settling down, my record book is mostly crossings-out and marginalia. I’m going to have to buy a second one, which I resent more than any individual result in it.',
+      },
+      {
+        type: 'paragraph',
+        text: 'Three calls for week 6, and I’ve read the bye schedule first this time, because a scientist is permitted to make a given error precisely once.',
+      },
+      {
+        type: 'paragraph',
+        text: 'Colin starts a different quarterback. New Orleans is playing this week — I checked with my own eyes before typing it, which isn’t something I ever expected to be proud of.',
+      },
+      {
+        type: 'paragraph',
+        text: 'Tyler finishes this regular season with more points than anybody in the league and doesn’t finish first, because he has the roster and doesn’t appear to have the stomach that goes with it.',
+      },
+      {
+        type: 'paragraph',
+        text: 'And Keshia’s 191.3 stands as the highest score anybody posts all year. I made that exact claim in week 1 about a different number, which Doug then drove over on Sunday in front of everybody, so by all means write it down and bring it back to me in January.',
       },
       {
         type: 'paragraph',

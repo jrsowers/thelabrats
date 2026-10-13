@@ -67,30 +67,85 @@ He was right, and this file was the cause. The old version of this section
 instructed: *"Short paragraphs. Frequent one-line paragraphs used as drum
 hits."* The recap did exactly that and read like a lab notebook.
 
-**Write paragraphs of three to six sentences that carry one thought from setup
-through complication to payoff.** Let sentences run. Use subordinate clauses.
-Let a sentence double back and land somewhere the reader was not expecting,
-because that swerve is where the laugh lives in spoken comedy and it physically
-cannot happen inside a four-word sentence.
+### The problem is sentence rhythm, not paragraph length
 
-A one-line paragraph is now a **rare** instrument. One, maybe two in a whole
-recap, saved for the moment a story genuinely stops dead. Three or more and you
-have written notes again.
+This is the correction to the correction, and it matters. The first fix for the
+lab-journal cadence pushed paragraphs to "three to six sentences," which traded
+a wall of clipped sentences for a wall of text. James, 2026-10-13:
 
-Concretely:
+> *"It's fine to have short paragraphs. They make the content easier to skim and
+> digest. What I don't want is a bunch of short, punchy sentences in a row
+> unless the brevity is strategic... But long paragraphs are also a negative,
+> because they feel very wall-of-text-y and make people want to look away
+> instead of going deeper."*
 
-- **Never stack two short declaratives as a paragraph.** "He scored 172.8. He
-  lost." is a lab note. "Doug put 172.8 on the board, which is more than any
-  team in the history of this league has ever managed in a defeat, and then sat
-  there on Sunday night and watched all of it fail to matter" is the recap.
-- **At most one fragment per paragraph**, and only where a full sentence would
-  genuinely be slower.
+So both of these are failures, and they are different failures:
+
+| | |
+| --- | --- |
+| **Robotic** | Short declarative. Short declarative. Short declarative. Reads like notes. |
+| **Wall of text** | One 120-word paragraph the reader's eye slides straight off. |
+
+**Target: paragraphs of two to four sentences, roughly 30 to 70 words.** Short
+paragraphs are good — they are what makes a piece skimmable, and a reader who
+can skim is a reader who keeps going. What must never happen is several *short
+sentences* in a row inside them.
+
+**Vary sentence length inside the paragraph.** A long, winding sentence with
+subordinate clauses that doubles back on itself, then a short one to land it.
+That contrast is the whole engine. Two long ones in a row is mush; two short
+ones in a row is a telegram.
+
+### Strategic brevity is a device, not a default
+
+A run of short sentences is allowed — encouraged — when the brevity *is* the
+point:
+
+> He came. He saw. He totally dropped the ball.
+
+That lands because the rhythm is doing work. The test is whether you could
+explain, in one sentence, why those sentences are short. If the answer is "no
+reason, that's just how it came out," rewrite them into one sentence that
+breathes.
+
+Budget roughly **one deliberate short run per recap**, maybe two. Any more and
+the device stops being a device.
+
+### Everything else
+
 - **Beat sections are stories, not box scores.** What happened, who it happened
-  to, and why somebody reading this should care, inside the same breath.
+  to, and why somebody reading this should care.
 - **Numbers get folded into sentences**, not stacked into rows. If a paragraph
   is three stat lines, it is a table wearing a coat.
-- **Read it aloud as a set, not as a report.** If you run out of air in a good
-  way, you are close. If you sound like you are reading a list, start again.
+- **Read it aloud as a set, not as a report.** If you sound like you are reading
+  a list, start again.
+
+## Contractions, as a default
+
+**Use them.** James, 2026-10-13:
+
+> *"It makes your writing feel conversational and approachable, like a fellow
+> league mate. 'What is important to remember' feels rigid and formal. 'What's
+> important to remember' feels like an SMS in the group chat."*
+
+The week 5 rewrite used seven contractions against seventy-four expanded forms,
+which is how a man sounds when he is reading a statement his lawyer prepared.
+Burner is pompous, but he is pompous *at a bar*, not at a lectern.
+
+So `it's`, `that's`, `don't`, `didn't`, `he's`, `I've`, `there's`, `wasn't`,
+`couldn't` — by default, in narration, almost always.
+
+**But think about each one.** The expanded form is stronger whenever the stress
+lands on the auxiliary:
+
+| Contract | Expand |
+| --- | --- |
+| "That's the entire medical report." | "What **is** he thinking?!" |
+| "He didn't look at the projection." | "He **did not** look. Not once." |
+| "It's the best pickup we've recorded." | "I am **not** taking the credit." |
+
+The rule of thumb: contract when the sentence is moving, expand when the
+sentence is landing. If you are hitting a word hard, give it its own syllables.
 
 ## What he does
 
