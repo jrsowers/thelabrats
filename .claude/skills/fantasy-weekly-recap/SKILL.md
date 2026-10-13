@@ -1,11 +1,11 @@
 ---
 name: fantasy-weekly-recap
-description: Write and publish the Lab Rats weekly recap — a Chris Berman-style rundown of the NFL week tied back to the league's own carnage, bylined by Dr. Bunsen Burner, with a generated featured image. Use after a week's awards publish (Tuesday morning), or when asked for "the recap", "this week's recap", or "the newsletter".
+description: Write and publish the Lab Rats weekly recap — a Shane Gillis-style set about the NFL week tied back to the league's own carnage, bylined by Dr. Bunsen Burner, with a generated featured image. Use after a week's awards publish (Tuesday morning), or when asked for "the recap", "this week's recap", or "the newsletter".
 ---
 
 # The Weekly Recap
 
-A 7–10 minute read that gives twelve managers the NFL week that mattered and
+A 9–12 minute read that gives twelve managers the NFL week that mattered and
 then makes it personal. Published to `/recaps`, bylined by Dr. Bunsen Burner.
 
 **Read `references/voice.md` before writing a word.** It is the craft spec;
@@ -149,7 +149,8 @@ moment to trust the draft-night version of the roster in your head.
 Structure — borrowed from James's own newsletters, not copied:
 
 ```
-Cold open          2–4 short lines. The week's thesis, stated with violence.
+Cold open          1–2 full paragraphs. Walk in sideways on one person or one
+                   number; let the week's thesis land at the end.
 2–4 NFL beats      Bold headline per beat. Score, what happened, who in the
                    league it hit. NOT every game — only the ones that matter here.
 THE SCOREBOARD     All six matchups, results and margins.
@@ -158,8 +159,23 @@ Sign-off           Burner's send-off. The page renders his byline card
                    automatically, so end on prose — do not type a signature.
 ```
 
-Target **1,500–2,200 words**. Under 1,500 reads thin; over 2,200 stops being a
-7–10 minute read and starts being homework.
+⚠️ **Write it as a set, not as a report.** Paragraphs of three to six sentences
+that carry a thought from setup to payoff; one-line paragraphs are rare and
+deliberate. Week 5 shipped in clipped declaratives and came back at 6.5/10:
+*"almost like notes left behind in a lab journal... a weekly recap should flow
+more like narrative storytelling or a journalistic feature."* The cadence
+section of `references/voice.md` is the spec and it is the first thing to get
+right.
+
+Target **1,900–2,600 words**. Under 1,900 reads thin; over 2,600 stops being a
+read and starts being homework.
+
+⚠️ This band was **1,500–2,200 and was raised deliberately** when the voice
+changed from clipped declaratives to narrative paragraphs. The same facts cost
+more words when they are told rather than listed — week 5 was 1,739 words as a
+report and 2,549 as a set, with nothing added and three passes of trimming in
+between. Do not hit the old number by going back to the old cadence; that trade
+is exactly what the rewrite was undoing.
 
 ### 5. Generate the featured image
 
