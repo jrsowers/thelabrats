@@ -124,6 +124,151 @@ export interface Recap {
 
 export const RECAPS: Recap[] = [
   {
+    slug: 'week-6-the-whole-table-is-about-to-be-4-2',
+    series: 'miracles',
+    week: 6,
+    title: 'The Whole Table Is About To Be 4-2',
+    summary:
+      'Jay is the only 4-1 team in the league, trails James by 27.7 and has nobody left. Five of you are headed for 4-2 whatever happens in Santa Clara, and seven if Bree and Colin hold. Doug needs Jayden Daniels to outscore George Kittle and a kicker by 22.5. Justin needs Brock Purdy to outscore his own best receiver by 41.5.',
+    publishedAt: '2026-10-19',
+    published: true,
+    author: BURNER,
+    predictions: [
+      {
+        id: 'bree-holds-doug-1-5',
+        claim: 'Bree holds. Jayden Daniels does not outscore Kittle and Pineiro by 22.5, and Doug is 1-5.',
+      },
+      {
+        id: 'colin-holds-justin-1-5',
+        claim: 'Colin holds. Purdy does not outscore Mike Evans by 41.5, and Justin is 1-5 alongside Doug.',
+      },
+      {
+        id: 'niners-dst-beats-daniels',
+        claim: 'The 49ers D/ST outscores Jayden Daniels on Monday night.',
+      },
+    ],
+    body: [
+      {
+        type: 'paragraph',
+        text: 'Subjects. Last Monday I told you one running back was holding up the entire table, and Kyren Williams held it by half a point, and Jay walked into this week as the only 4-1 team in the league. I want you to keep that picture in your head for a moment, because this morning the table is on the floor.',
+      },
+      {
+        type: 'paragraph',
+        text: 'Jay has 90.9 points and nobody left to add to them. James has 118.5 and Christian McCaffrey still to come. The man at the top of this league trails by 27.7 and spends tonight on the observation deck with a pencil, checking arithmetic that has stopped taking questions.',
+      },
+      {
+        type: 'paragraph',
+        text: 'So here is the state of the experiment. Five of you are headed for 4-2 no matter what happens in Santa Clara tonight, and if Bree and Colin hold their leads, it’s seven. Seven people at 4-2 isn’t a standings table. It’s a waiting room, and somebody has taken all the magazines.',
+      },
+      {
+        type: 'paragraph',
+        text: 'Commanders at 49ers, 8:15 Eastern on ESPN and ABC, Levi’s Stadium. San Francisco is 5-0 and favored by seven and a half. Washington is 1-3-1, coming off an overtime loss to the Giants in which it had a field goal available and nobody on the sideline apparently in charge of the clock. The total is 52.5, six of you have somebody in it, and only two of those games can still change hands.',
+      },
+      { type: 'heading', text: 'THE BOARD, AS OF THIS MORNING' },
+      {
+        type: 'paragraph',
+        text: 'I’m required to be organized for exactly one paragraph and I resent it the way a cat resents a bath. Two rows on this board have nobody left on either side, and two more have nobody left on one.',
+      },
+      {
+        type: 'scoreboard',
+        live: true,
+        rows: [
+          { top: 'Bree’s Badass Boys', topScore: 117.9, bottom: 'Nobody Knows', bottomScore: 95.4, note: 'Kittle and Pineiro vs Jayden Daniels' },
+          { top: 'Nix Pix a Puka Six', topScore: 124.6, bottom: 'Substation Superstars', bottomScore: 83.1, note: 'Mike Evans vs Brock Purdy' },
+          { top: 'Soft Tissue Issues', topScore: 118.5, bottom: 'Dad Bod', bottomScore: 90.9, note: 'Jay has nobody. James has McCaffrey.' },
+          { top: 'PKM Playmakers', topScore: 106.5, bottom: 'Burrow My Burden', bottomScore: 91.5, note: 'Evan has nobody. Mike has the 49ers D/ST.' },
+          { top: 'Tyler’s Talented Team', topScore: 132.3, bottom: 'Mr. Anderson', bottomScore: 127.2, note: 'nobody left on either side' },
+          { top: 'Da Reigning Champ', topScore: 117.1, bottom: 'All Bark, All Bite', bottomScore: 112.6, note: 'nobody left on either side' },
+        ],
+      },
+      { type: 'heading', text: 'THE MIRACLE: Doug Needs Jayden Daniels To Outscore George Kittle And A Kicker By 22.5' },
+      {
+        type: 'paragraph',
+        text: 'Bree’s Badass Boys 117.9, Nobody Knows 95.4. Doug has one man left, Jayden Daniels, projected 22.7. Bree has two, George Kittle at 12.4 and Eddy Pineiro at 8.7, and ESPN has her holding by 20.9. Put plainly, Doug needs his quarterback to outscore Bree’s tight end and kicker combined by 22.5, and if those two simply hit their numbers, that means Daniels needs something north of 43.',
+      },
+      {
+        type: 'paragraph',
+        text: 'Daniels came back last week after missing two games with a dislocated elbow. That is the full medical report and I’m not adding to it. In that return he went 17 of 25 for 199 yards and ran in two touchdowns, which was a good afternoon. Doug needs roughly two of those afternoons, stacked, inside one evening, against a defense that allows the third-fewest points in the league.',
+      },
+      {
+        type: 'paragraph',
+        text: 'Here’s what I find beautiful about Doug. Last week he put up 172.8 points and lost. This week he needs a 43-point quarterback night to avoid 1-5. Doug isn’t a fantasy manager, he’s a man who keeps lighting the Bunsen burner under the wrong flask and then filing a complaint about the temperature of the room.',
+      },
+      {
+        type: 'paragraph',
+        text: 'And look at who’s rooting against him. Every 49ers drive that stalls in the red zone pays Bree three points through Pineiro. Every Daniels sack pays Mike, whose matchup is finished in every sense except the clerical, and who therefore has the 49ers defense as a pure hobby tonight. Mike has nothing to play for and is the one person in the league who can personally ruin Doug’s evening, which is the most dangerous kind of scientist there is.',
+      },
+      {
+        type: 'paragraph',
+        text: 'For what it’s worth on that front, Washington’s line is allowing pressure on more than 38 percent of dropbacks. San Francisco will be without Nick Bosa. Those two facts are about to have a long argument on national television, and Doug watches every snap.',
+      },
+      { type: 'heading', text: 'THE LONG SHOT: Justin Needs Brock Purdy To Outscore Mike Evans By 41.5' },
+      {
+        type: 'paragraph',
+        text: 'Nix Pix a Puka Six 124.6, Substation Superstars 83.1. Colin has Mike Evans left, projected 12.6 and listed questionable while playing through a rib injury, which I report flat and leave there. Justin has Brock Purdy, projected 26.6, and the projections have Colin holding by 27.5.',
+      },
+      {
+        type: 'paragraph',
+        text: 'Now the geometry, because it’s cruel. Purdy leads the NFL with 13 touchdown passes, and Evans is one of his favorite targets. Every time Purdy finds Evans in the end zone, both managers get paid, and Justin nets roughly nothing. What Justin needs is a monumental night from his quarterback with the ball going to literally anybody except the receiver who plays for Colin. Kittle, ideally. That helps Bree, which helps Justin not at all, but it does spread the joy around the building.',
+      },
+      {
+        type: 'paragraph',
+        text: 'The single most optimistic preview I could find this morning has Purdy throwing for 300 yards and three touchdowns and San Francisco winning 44-7. That’s a fantastic night for a quarterback. It isn’t within shouting distance of 41.5 more than Mike Evans, and that’s the best case anybody in America is willing to put in writing.',
+      },
+      {
+        type: 'paragraph',
+        text: 'There’s also a housekeeping matter. Jacory Croskey-Merritt has been ruled out after missing practice all week, and as of this morning he is still sitting in Justin’s lineup, projected 0.0, holding the seat like a coat left on a bar stool. Lineups stay open until kickoff. If there’s anybody on that bench who plays for either of these two teams, now would be the moment, Justin.',
+      },
+      { type: 'heading', text: 'THE ONE NOBODY CAN FIX: Jay Is 4-1, Trails By 27.7, And Has Nobody Left' },
+      {
+        type: 'paragraph',
+        text: 'Soft Tissue Issues 118.5, Dad Bod 90.9. Jay’s roster is finished. James has McCaffrey, projected 19.2, and doesn’t need a single one of those points. For Jay to stay alone at the top, McCaffrey would have to finish tonight at minus 27.8, which would require him to spend the evening handing the football to the Commanders on purpose.',
+      },
+      {
+        type: 'paragraph',
+        text: 'I’d like the league to appreciate the symmetry here. Jay is 4-1 because of the narrowest margin this league has ever recorded, 0.58 points. He is about to be 4-2 because of something in the region of thirty. The universe gave him half a point last Monday and is now sending the invoice with interest.',
+      },
+      {
+        type: 'paragraph',
+        text: 'As for James, two weeks ago he lost to a pair of kickers in the same football game. Last week he beat the man I had penciled in at the top of the table. This week he is about to take down the actual top of the table, while his running back shares the backfield with Kaelon Black more than he has in past seasons. James doesn’t need him tonight. He would simply like the points for his self-esteem.',
+      },
+      { type: 'heading', text: 'THE FORMALITIES' },
+      {
+        type: 'paragraph',
+        text: 'Tyler leads Jesse 132.3 to 127.2 and neither of them has anybody left, so that’s the number they carry into Tuesday. Tyler walked in with more points than anyone in the league and is about to be one of as many as seven people at 4-2, which is the most Tyler outcome I can imagine. Jesse, the roster I once called the most dangerous in the league, is headed to 2-4.',
+      },
+      {
+        type: 'paragraph',
+        text: 'Chenell leads Keshia 117.1 to 112.6, both rosters empty. Four and a half points between them, the reigning champion edging toward 4-2 and Keshia headed to 2-4 with nothing left to do about it but watch.',
+      },
+      {
+        type: 'paragraph',
+        text: 'Mike leads Evan 106.5 to 91.5, and Evan has nobody left. Evan, welcome back to the observation deck. You had one week off. The coffee hasn’t improved and neither has the view.',
+      },
+      { type: 'heading', text: 'WHAT I THINK HAPPENS' },
+      {
+        type: 'paragraph',
+        text: 'On the record, to be read back to me in about thirty hours, by people who will enjoy it.',
+      },
+      {
+        type: 'paragraph',
+        text: 'Bree holds. Daniels plays well and plays nowhere near well enough, and Doug is 1-5, which is the record of a man who scored 172.8 last week, and I will be bringing that up.',
+      },
+      {
+        type: 'paragraph',
+        text: 'Colin holds too, and Justin joins Doug at 1-5. The basement gets bunk beds, and seven of you are 4-2 on Tuesday morning, which means the tiebreaker does all the work this week and I have to read the tiebreaker, which I resent.',
+      },
+      {
+        type: 'paragraph',
+        text: 'And the loud one. The 49ers defense, owned by a man with nothing left to play for, outscores Jayden Daniels tonight. ESPN has it at 7.1 against 22.7. I don’t care. Undefeated home team, an offensive line across the field that gives up pressure on more than a third of its dropbacks, and Mike has never once in his life needed a thing to happen and gotten it, so the moment he stops needing it, it arrives.',
+      },
+      {
+        type: 'paragraph',
+        text: 'Kickoff is 8:15. Doug, root for your quarterback. Justin, root for yours and against his best receiver. Bree, root for field goals, which is a sentence no human being has ever wanted to hear. The lab reopens Tuesday with the answers.',
+      },
+    ],
+  },
+  {
     slug: 'week-5-twelve-records-fell',
     week: 5,
     title: 'Twelve Records Fell And Doug Set One Of Them By Losing',
