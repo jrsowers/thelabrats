@@ -124,6 +124,223 @@ export interface Recap {
 
 export const RECAPS: Recap[] = [
   {
+    slug: 'week-6-objection-sustained',
+    week: 6,
+    title: 'I Filed An Objection About Jay And Somebody Processed It',
+    summary:
+      'Last week Jay was alone in first place with the worst winning score ever recorded. This week he posted the worst score in the league, lost by 53.9, and fell to fourth. James swept four awards and got 36.3 from the quarterback who once took a knee rather than win him a game. And Colin ignored me completely, started Tyler Shough again, and was paid 33.0 for it.',
+    publishedAt: '2026-10-20',
+    published: true,
+    coverImage: '/recaps/week-6.jpg',
+    coverAlt:
+      'A football player silhouetted on hands and knees on the turf under stadium floodlights, head down, light flaring behind him.',
+    author: BURNER,
+    predictions: [
+      {
+        id: 'jay-back-in-two',
+        claim: 'Jay is back in the top two by the end of week 8.',
+      },
+      {
+        id: 'colin-keeps-shough',
+        claim: 'Colin starts Tyler Shough again in week 7, and I have nothing further to say on the matter.',
+      },
+      {
+        id: 'evan-moves-most',
+        claim: 'Evan finishes the season having made more roster moves than anybody in this league, and finishes below .500 anyway.',
+      },
+    ],
+    body: [
+      {
+        type: 'paragraph',
+        text: 'Subjects. Last Tuesday I stood here and filed a formal objection to Jay being in first place, on the grounds that he’d got there with the worst winning score in the history of this league, by the narrowest margin in the history of this league, while sitting on 35.4 points he never used.',
+      },
+      {
+        type: 'paragraph',
+        text: 'I’d like to thank whoever processed that paperwork, because the response was extremely thorough.',
+      },
+      {
+        type: 'paragraph',
+        text: 'Jay scored 90.9 on Sunday. That’s the lowest total anybody in this league posted, which is The Dumpster Fire. He lost by 53.9, which is the largest beating of the week and The Public Execution. He fell three places, which is Free Fallin’. Four awards, none of them the good kind.',
+      },
+      {
+        type: 'paragraph',
+        text: 'He also took The Socialist, for having only 19.2 points between his best starter and his worst — total equality, achieved by having nobody turn up at all. The man was in first place seven days ago. I don’t want to say I caused this, but I would like it on the record that I asked.',
+      },
+      { type: 'heading', text: 'TEXANS 34, JAGUARS 31 — Two Of You Had Quarterbacks In London And Both Of You Won' },
+      {
+        type: 'paragraph',
+        text: 'At Wembley, of all places, Trevor Lawrence and C.J. Stroud spent three hours one-upping each other in front of a crowd that mostly wanted to see somebody get hit. Stroud threw for 312 yards and three touchdowns. Lawrence answered all afternoon and finished on 36.34, the best quarterback score in this league this week.',
+      },
+      {
+        type: 'paragraph',
+        text: 'James had Lawrence. Bree had Stroud for 29.98. Neither of them had to care who actually won the football game, which is the single greatest luxury this hobby offers.',
+      },
+      {
+        type: 'paragraph',
+        text: 'It got better. Travis Hunter picked Stroud off in the end zone, and Cam Little — James’s kicker, the man he signed in week 5 after the Fitzgerald incident — came on and hit a 60-yard field goal to tie it. Ka’imi Fairbairn won it back from 49 as time expired, which cost Jacksonville the game and cost James nothing whatsoever.',
+      },
+      {
+        type: 'paragraph',
+        text: 'Now. I need to talk about Trevor Lawrence for a moment, because there’s unfinished business.',
+      },
+      {
+        type: 'paragraph',
+        text: 'In week 3 that man reached the one-yard line with his team up 28-6, took a knee rather than score, and handed the touchdown to Bhayshul Tuten on the next play — a running back in Tyler’s flex. James won that week by 4.8. The margin was smaller than the points his own quarterback politely declined to take.',
+      },
+      {
+        type: 'paragraph',
+        text: 'This week Lawrence put 36.34 on the board and James won by 53.9. I’m not saying the ledger is settled. I’m saying it’s been noted, in pen, and that Lawrence may consider the matter closed from my end.',
+      },
+      { type: 'heading', text: 'BILLS 33, RAIDERS 30 — James Picked A Man Up On Tuesday And Was Paid On Sunday' },
+      {
+        type: 'paragraph',
+        text: 'Buffalo led this thing 23-13 going into the fourth and then had to survive a 17-point Raiders quarter to leave with it. Tre Tucker caught a 44-yard touchdown from Kirk Cousins with 1:32 on the clock to bring Las Vegas within three, and that catch is the reason this section exists.',
+      },
+      {
+        type: 'paragraph',
+        text: 'Tucker was a free agent on Tuesday. James picked him up, started him, and watched him clear an 8.6 projection by 15.6 on the way to 24.2 points and the receiver crown. That’s The Waiver Wire Wizard and Fantasy Nostradamus in one transaction.',
+      },
+      {
+        type: 'paragraph',
+        text: 'Kirk Cousins threw that touchdown for 23.52 of Bree’s points, so she was quietly collecting from both ends of the same play, which is becoming a habit with her. Josh Allen went for 255 yards and two scores and gave Jesse 22.3 against a 29.2 projection — a perfectly respectable afternoon that we will return to, because Jesse lost by 5.1 and I want to build to it properly.',
+      },
+      { type: 'heading', text: 'SAINTS 34, GIANTS 27 — The Part Where I Eat My Own Homework' },
+      {
+        type: 'paragraph',
+        text: 'New Orleans snapped a three-game losing streak at MetLife, built a 24-point lead, and then held on while the Giants came back at them. Tyler Shough went 16 of 30 for 144 yards and three touchdown passes, then ran one in himself on a sneak. Four scores. Thirty-two point nine six fantasy points.',
+      },
+      {
+        type: 'paragraph',
+        text: 'Last Tuesday I predicted that Colin would start a different quarterback this week. I checked the bye schedule, I was very pleased with myself about checking the bye schedule, and I wrote it down as a finding.',
+      },
+      {
+        type: 'paragraph',
+        text: 'Colin started Tyler Shough.',
+      },
+      {
+        type: 'paragraph',
+        text: 'I described that loyalty last week as “a version that’s simply not having looked recently.” It paid 33.0 and won him the week by 33.0, which is a coincidence I find personally offensive. Isaiah Likely took 20.9 and the tight end crown out of the losing side for Chenell, who has now had the best tight end in this league in three separate weeks and has never once mentioned it.',
+      },
+      { type: 'heading', text: 'THE SCOREBOARD' },
+      {
+        type: 'paragraph',
+        text: 'One organized paragraph a week, as agreed. Note that five of these six were decided by more than sixteen points, which after last week’s festival of half-point margins feels like the league overcorrecting on purpose.',
+      },
+      {
+        type: 'scoreboard',
+        rows: [
+          { top: 'Soft Tissue Issues', topScore: 144.7, bottom: 'Dad Bod', bottomScore: 90.9, note: 'largest margin of the week' },
+          { top: 'Bree’s Badass Boys', topScore: 137.3, bottom: 'Nobody Knows', bottomScore: 120.4 },
+          { top: 'Nix Pix a Puka Six', topScore: 135.5, bottom: 'Substation Superstars', bottomScore: 102.5 },
+          { top: 'Tyler’s Talented Team', topScore: 132.3, bottom: 'Mr. Anderson', bottomScore: 127.2 },
+          { top: 'Da Reigning Champ', topScore: 117.1, bottom: 'All Bark, All Bite', bottomScore: 112.6, note: 'closest game of the week' },
+          { top: 'PKM Playmakers', topScore: 113.5, bottom: 'Burrow My Burden', bottomScore: 91.5 },
+        ],
+      },
+      { type: 'heading', text: 'James Took Four Awards And Did Not Leave A Single Point Behind' },
+      {
+        type: 'paragraph',
+        text: 'The Mastermind, The Prime Specimen, Fantasy Nostradamus and The Waiver Wire Wizard. One manager, one Sunday, four trophies off the same roster.',
+      },
+      {
+        type: 'paragraph',
+        text: 'The Mastermind is the one that should worry the rest of you. It means that out of everything on his roster, there was no better lineup available — not one point sitting anywhere it shouldn’t have been. Lawrence 36.34, McCaffrey 26.2, Tucker 24.2, and a kicker who hit from sixty.',
+      },
+      {
+        type: 'paragraph',
+        text: 'It wasn’t even a clean week for him. Patrick Mahomes gave him 11.48 against a 23.3 projection and Brock Bowers managed 9.0 on a 16.19. He won by 53.9 anyway, with two of his better players actively working against him, which tells you roughly everything about the afternoon Jay was having.',
+      },
+      { type: 'heading', text: 'Seven Of You Are 4-2 And I Have Stopped Making Predictions About It' },
+      {
+        type: 'paragraph',
+        text: 'Tyler, Chenell, Bree, Jay, Colin, Mike and James. Seven teams, one record, separated by nothing but points scored. In week 3 I predicted the logjam would be gone by week 5. It has instead recruited.',
+      },
+      {
+        type: 'paragraph',
+        text: 'Tyler’s on top of it with 902.9 points for the season, which is ninety-two more than anybody else and still only worth 4-2. Mike is sixth in the same group on 638.9, which is two hundred and sixty-four points fewer. Those two men have the identical record. I want somebody to explain that to me slowly.',
+      },
+      {
+        type: 'paragraph',
+        text: 'Below them it’s thinning out fast. Evan, Keshia and Jesse are 2-4. Doug and Justin are 1-5, and Doug has now scored 748.2 points — more than Mike, who is 4-2 and sixth — on his way to one win. I keep writing variations of this sentence about Doug and it keeps being true.',
+      },
+      { type: 'heading', text: 'The Rest Of The Carnage' },
+      {
+        type: 'paragraph',
+        text: 'Mike won the week’s quietest game and took four awards for it: The Cat Burglar for the lowest winning score, Sweatin’ It Out for a 36.5-point hole he climbed out of during the early games, The One Man Army because Drake Maye was 26 percent of him, and The Understudy for leaving Daniel Jones on the bench for 17.76.',
+      },
+      {
+        type: 'paragraph',
+        text: 'Two weeks ago I called Maye’s 47.46 the best performance in league history. He followed it with 29.8 and that now reads as a quiet week. Mike is 4-2. The week 2 prediction that he wouldn’t finish last is aging like something expensive.',
+      },
+      {
+        type: 'paragraph',
+        text: 'Chenell beat Keshia by 4.5 in the closest game of the week, which is The Photo Finish, and she did it while Derrick Henry gave her 4.5 against a 17.64 projection. Her margin of victory and her running back’s entire afternoon were the same number. I have checked this twice.',
+      },
+      {
+        type: 'paragraph',
+        text: 'Jesse scored 127.2 and lost by 5.1 to Tyler, which is The Bad Beat and the third week running that something structurally unfair has happened to that roster. In week 1 I called it the most dangerous in the league. It’s 2-4 and tenth, and I’m carrying that prediction around like a receipt for something I no longer own.',
+      },
+      {
+        type: 'paragraph',
+        text: 'Evan made 19 roster moves and lost by 22.0, which is The Galaxy Brain and a genuinely impressive ratio of effort to outcome. Bree took The Bench Bum with 23.2 unused and The Control Group by finishing 0.9 off her projection, and she still won by 16.9, because beating Doug this season requires almost nothing of anybody.',
+      },
+      {
+        type: 'paragraph',
+        text: 'Keshia lost by 4.5 and is 2-4 while sitting on the fourth-most points in this league, which is the Doug condition caught at an earlier stage. Justin lost by 33.0 and is 1-5, and Brock Purdy handed him 19.36 against a 26.64 projection on a night he needed a great deal more than that.',
+      },
+      { type: 'heading', text: 'THE INVOICE' },
+      {
+        type: 'paragraph',
+        text: 'One item this week and it’s a big one. I said Colin starts a different quarterback in week 6. He did not. Shough went for 32.96 and won him the game by a margin identical to his own score, and I’d like to be clear that I’m not annoyed about being wrong, I’m annoyed about the arithmetic showing off.',
+      },
+      {
+        type: 'paragraph',
+        text: 'The Monday board treated me better. I said Bree holds and Doug goes to 1-5, which needed Jayden Daniels not to outscore George Kittle and Eddy Pineiro by 22.5. Daniels managed 25.0, the two of them combined for 19.4, and the gap came in at 5.6.',
+      },
+      {
+        type: 'paragraph',
+        text: 'I also said Colin holds and Justin joins Doug in the basement, which needed Brock Purdy not to beat Mike Evans by 41.5. Purdy went 19.36 against Evans’s 10.9. Both held, and the basement has bunk beds exactly as advertised.',
+      },
+      {
+        type: 'paragraph',
+        text: 'Then I got greedy. I predicted the 49ers defense would outscore Jayden Daniels on Monday night, described it in writing as “the loud one,” and invited all of you to read it back to me in thirty hours. The 49ers defense scored 7.0. Daniels scored 25.0.',
+      },
+      {
+        type: 'paragraph',
+        text: 'Everything else is still open. Jesse’s roster is aging badly. Mike not finishing last is aging extremely well. Doug hasn’t made another forty-move week yet, and Evan hasn’t had his second bad beat, though he’s had every other kind of week available.',
+      },
+      {
+        type: 'paragraph',
+        text: 'And Keshia’s 191.3 from week 5 is still standing as the season high. The closest anybody came on Sunday was James at 144.7, which is forty-six points short. That one’s looking better by the week, so naturally I expect to lose it around Thanksgiving.',
+      },
+      { type: 'heading', text: 'FINDINGS' },
+      {
+        type: 'paragraph',
+        text: 'Here’s what we learned. Trevor Lawrence settles his debts eventually. Colin doesn’t read this column, or reads it and does the opposite, and either way he’s 4-2. And an objection filed in this laboratory on a Tuesday can apparently reach the top of the table by the following Sunday.',
+      },
+      {
+        type: 'paragraph',
+        text: 'Three calls for week 7, and the byes are Buffalo, Jacksonville, the Chargers and Washington, so nobody is getting a prediction about a man who isn’t playing. We’ve been through that.',
+      },
+      {
+        type: 'paragraph',
+        text: 'Jay is back in the top two by the end of week 8. He’s 4-2 with the fourth-most points in the league and he just had the worst week of anybody’s season — that’s a floor, not a trend, and I’ve used that line before about somebody who then went and made me look clever.',
+      },
+      {
+        type: 'paragraph',
+        text: 'Colin starts Tyler Shough again in week 7. New Orleans is playing. I have nothing further to say on the matter and I’d appreciate it if nobody brought it up.',
+      },
+      {
+        type: 'paragraph',
+        text: 'And Evan finishes this season having made more roster moves than anybody in this league, and finishes below .500 anyway. Nineteen in one week is not a strategy, it’s a nervous habit with a waiver wire attached.',
+      },
+      {
+        type: 'paragraph',
+        text: 'The laboratory is closed. Somebody go and check on Jay.',
+      },
+    ],
+  },
+  {
     slug: 'week-6-the-whole-table-is-about-to-be-4-2',
     series: 'miracles',
     week: 6,
@@ -137,14 +354,30 @@ export const RECAPS: Recap[] = [
       {
         id: 'bree-holds-doug-1-5',
         claim: 'Bree holds. Jayden Daniels does not outscore Kittle and Pineiro by 22.5, and Doug is 1-5.',
+        verdict: 'correct',
+        resolvedWeek: 6,
+        resolution:
+          'Daniels went for 25.0, Kittle and Pineiro combined for 19.4, and the '
+          + 'gap was 5.6 against the 22.5 Doug needed. Bree held and Doug is 1-5.',
       },
       {
         id: 'colin-holds-justin-1-5',
         claim: 'Colin holds. Purdy does not outscore Mike Evans by 41.5, and Justin is 1-5 alongside Doug.',
+        verdict: 'correct',
+        resolvedWeek: 6,
+        resolution:
+          'Purdy managed 19.36 against Mike Evans’s 10.9 — a gap of 8.5 against '
+          + 'the 41.5 Justin needed. Colin held and Justin is 1-5.',
       },
       {
         id: 'niners-dst-beats-daniels',
         claim: 'The 49ers D/ST outscores Jayden Daniels on Monday night.',
+        verdict: 'wrong',
+        resolvedWeek: 6,
+        resolution:
+          'The 49ers defense scored 7.0. Jayden Daniels scored 25.0. I called '
+          + 'this one “the loud one” and asked to have it read back to me, which '
+          + 'is exactly what happened.',
       },
     ],
     body: [
@@ -284,6 +517,12 @@ export const RECAPS: Recap[] = [
       {
         id: 'colin-new-qb',
         claim: 'Colin starts a different quarterback in week 6. New Orleans is not on bye. I checked this time.',
+        verdict: 'wrong',
+        resolvedWeek: 6,
+        resolution:
+          'Colin started Tyler Shough again. Shough threw three touchdowns and '
+          + 'ran a fourth in for 32.96, and Colin won the week by 33.0 — a margin '
+          + 'identical to his quarterback’s score, which I take personally.',
       },
       {
         id: 'tyler-points-no-crown',
