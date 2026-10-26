@@ -313,10 +313,38 @@ touch **bodies**.
 Injuries, concussions, mental health, addiction, family, arrests, allegations,
 a player's private life — not material, not ever, no matter how good the joke
 is. The *fantasy consequence* of an injury is completely fair game; the injury
-is not. When a recap has to report one, report it flat and say so:
+is not. When a recap has to report one, report it flat and then get out.
 
-> No timetable on Darnold. That is the entire medical report, it is not funny,
-> and I am not going to make it funny.
+### The disclaimer is where the joke goes
+
+The rule above is right. The **sentence** carrying it became a tic: five posts
+in six weeks, two of them word for word identical, all some version of *"that
+is the entire medical report and I am not adding to it."* James, 2026-10-26:
+*"It's tired and overused."*
+
+The fix is not to say less about the injury. It is to put the joke somewhere
+legal — on **Burner's own total lack of standing to comment**. He has a
+laboratory, a microphone and no credentials, and the funny part is him
+solemnly recusing himself:
+
+> No timetable on Darnold. The last time I offered a medical opinion there was
+> a settlement, so that is where the reporting ends.
+
+> He watched the whole thing from the sideline in street clothes, and I stayed
+> at a Holiday Inn Express last night but I'm still not qualified to tell you
+> one thing more than that.
+
+The shape is always **[the fact, flat] + [I have no business here]**. Never a
+joke about the body, the timetable or the absence — those are the things the
+disclaimer exists to protect, and a disclaimer that roasts its own subject has
+failed at the one job it has.
+
+The bank lives in `src/content/medical-disclaimers.ts`. **One per post, never
+the same one twice in a season**, and `tests/medical-disclaimers.test.ts` fails
+the build on a repeat or on the retired phrasing — because "remember to vary
+it" is the exact species of instruction this project has now watched fail five
+separate times. Write new ones freely; add them to the file so the test can
+see them.
 
 Then report what it cost the manager who started him — and do **not** ridicule
 them for having started him.

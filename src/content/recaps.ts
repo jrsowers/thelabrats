@@ -164,7 +164,7 @@ export const RECAPS: Recap[] = [
       },
       {
         type: 'paragraph',
-        text: 'The building is Lincoln Financial Field, Cowboys at Eagles, 8:15 Eastern on ABC. Both teams are 2-4, which makes this less a rivalry game than a support group with a kickoff time. Philadelphia has lost four straight and starts Tanner McKee for the second week running, because Jalen Hurts is on injured reserve with blood clots. That is the full medical report and I’m not adding to it.',
+        text: 'The building is Lincoln Financial Field, Cowboys at Eagles, 8:15 Eastern on ABC. Both teams are 2-4, which makes this less a rivalry game than a support group with a kickoff time. Philadelphia has lost four straight and starts Tanner McKee for the second week running, because Jalen Hurts is on injured reserve with blood clots. I have a lab coat and a microphone. Neither one of those is a medical degree, so that is where I stop.',
       },
       {
         type: 'paragraph',
@@ -564,7 +564,7 @@ export const RECAPS: Recap[] = [
       },
       {
         type: 'paragraph',
-        text: 'Daniels came back last week after missing two games with a dislocated elbow. That is the full medical report and I’m not adding to it. In that return he went 17 of 25 for 199 yards and ran in two touchdowns, which was a good afternoon. Doug needs roughly two of those afternoons, stacked, inside one evening, against a defense that allows the third-fewest points in the league.',
+        text: 'Daniels came back last week after missing two games with a dislocated elbow. My doctorate is in Applied Gridiron Sciences, which the licensing board has been extremely clear is not the same thing. In that return he went 17 of 25 for 199 yards and ran in two touchdowns, which was a good afternoon. Doug needs roughly two of those afternoons, stacked, inside one evening, against a defense that allows the third-fewest points in the league.',
       },
       {
         type: 'paragraph',
@@ -730,7 +730,7 @@ export const RECAPS: Recap[] = [
       { type: 'heading', text: 'RAVENS 30, FALCONS 23 (OT) — Chenell Bought The Understudy On Wednesday' },
       {
         type: 'paragraph',
-        text: 'Lamar Jackson didn’t play. Ankle. He watched from the sideline in street clothes, that’s the entire medical report, and there’s nothing funny anywhere in it.',
+        text: 'Lamar Jackson didn’t play. Ankle. He watched the whole thing from the sideline in street clothes, and I stayed at a Holiday Inn Express last night but I’m still not qualified to tell you one thing more than that.',
       },
       {
         type: 'paragraph',
@@ -2008,7 +2008,7 @@ export const RECAPS: Recap[] = [
       },
       {
         type: 'paragraph',
-        text: 'On the New York side: Jaxson Dart took a hit to his left knee on the opening drive and did not return — initial exams point to a sprained MCL — and Malik Nabers left in the first quarter with a shoulder problem, returned, and finished with one catch for one yard. That is the medical report. It is not funny and I am not going to make it funny.',
+        text: 'On the New York side: Jaxson Dart took a hit to his left knee on the opening drive and did not return — initial exams point to a sprained MCL — and Malik Nabers left in the first quarter with a shoulder problem, returned, and finished with one catch for one yard. Owing to an unresolved matter involving a clinic in Nicaragua, I am not at liberty to share an opinion on either of them.',
       },
       {
         type: 'paragraph',
@@ -2251,7 +2251,7 @@ export const RECAPS: Recap[] = [
       { type: 'heading', text: 'SEAHAWKS 13, PATRIOTS 10 — Five Snaps' },
       {
         type: 'paragraph',
-        text: 'The defending champions opened their title defense, and Sam Darnold’s afternoon lasted five snaps before a hip injury ended it. Drew Lock came in, went 16 of 22 for 187 and a score, and Seattle ground out thirteen unanswered. No timetable on Darnold. That is the entire medical report, it is not funny, and I am not going to make it funny.',
+        text: 'The defending champions opened their title defense, and Sam Darnold’s afternoon lasted five snaps before a hip injury ended it. Drew Lock came in, went 16 of 22 for 187 and a score, and Seattle ground out thirteen unanswered. No timetable on Darnold. The last time I offered a medical opinion there was a settlement, so that is where the reporting ends.',
       },
       {
         type: 'paragraph',
