@@ -124,6 +124,149 @@ export interface Recap {
 
 export const RECAPS: Recap[] = [
   {
+    slug: 'week-7-tonight-splits-the-waiting-room',
+    series: 'miracles',
+    week: 7,
+    title: 'Tonight Splits The Waiting Room In Half',
+    summary:
+      'Seven of you are 4-2, and three of this week’s games are 4-2 against 4-2, so three of you are 4-3 by Tuesday whatever happens in Philadelphia. Chenell needs Dak Prescott and Javonte Williams to find 44.0. Tyler needs the Cowboys defense to outscore CeeDee Lamb and Dallas Goedert by 11.3. Keshia needs Saquon Barkley, questionable, to find 19.8.',
+    publishedAt: '2026-10-26',
+    published: true,
+    author: BURNER,
+    coverImage: '/recaps/week-7-miracles.jpg',
+    coverAlt: 'A lone football player in silhouette kneels in floodlit haze beside an empty bench, his helmet on the turf, waiting.',
+    predictions: [
+      {
+        id: 'bree-holds-chenell',
+        claim: 'Bree holds. Dak Prescott and Javonte Williams do not find the 44.0 Chenell needs, and Chenell is 4-3.',
+      },
+      {
+        id: 'jay-holds-tyler',
+        claim: 'Jay holds. The Cowboys D/ST does not outscore CeeDee Lamb and Dallas Goedert by 11.3, and Tyler is 4-3 with the most points in the league.',
+      },
+      {
+        id: 'barkley-steals-it',
+        claim: 'Saquon Barkley plays, clears 19.8, and Keshia comes from behind on Justin.',
+      },
+      {
+        id: 'cowboys-dst-beats-mckee',
+        claim: 'The Cowboys D/ST outscores Tanner McKee on Monday night.',
+      },
+    ],
+    body: [
+      {
+        type: 'paragraph',
+        text: 'Subjects. Last Monday I told you the whole table was about to be 4-2, and the table obliged, which is the most cooperative thing this league has done for me all year. Seven of you walked into week 7 at 4-2, and I called it a waiting room. Tonight a man comes out with a clipboard and starts reading names.',
+      },
+      {
+        type: 'paragraph',
+        text: 'Here’s the part I’d like to believe the schedule did on purpose. Three of this week’s matchups are 4-2 against 4-2: Jay and Tyler, Colin and James, Bree and Chenell. That means three of you are 4-3 on Tuesday morning no matter what happens in Philadelphia tonight, three of you are 5-2, and the only questions left are which three, and how much screaming is involved.',
+      },
+      {
+        type: 'paragraph',
+        text: 'The building is Lincoln Financial Field, Cowboys at Eagles, 8:15 Eastern on ABC. Both teams are 2-4, which makes this less a rivalry game than a support group with a kickoff time. Philadelphia has lost four straight and starts Tanner McKee for the second week running, because Jalen Hurts is on injured reserve with blood clots. That is the full medical report and I’m not adding to it.',
+      },
+      {
+        type: 'paragraph',
+        text: 'In his first start McKee went 26 of 45 for 215 yards and a touchdown, got sacked three times, and lost 25-14 to Carolina. He does it tonight without DeVonta Smith or Dontayvion Wicks, both ruled out. Saquon Barkley is questionable with a hamstring after missing two games, and the word on him comes about ninety minutes before kickoff. Seven of you have somebody in this game, and four of those matchups are still breathing.',
+      },
+      { type: 'heading', text: 'THE BOARD, AS OF THIS MORNING' },
+      {
+        type: 'paragraph',
+        text: 'One paragraph of organization, as required by a contract I’ve never read. Two rows are finished in every sense but the clerical, and the other four come down to one game.',
+      },
+      {
+        type: 'scoreboard',
+        live: true,
+        rows: [
+          { top: 'Burrow My Burden', topScore: 198.7, bottom: 'Nobody Knows', bottomScore: 113.2, note: 'Evan has nobody. Doug has a kicker.' },
+          { top: 'Dad Bod', topScore: 130.7, bottom: 'Tyler’s Talented Team', bottomScore: 119.4, note: 'Lamb and Goedert vs the Cowboys D/ST' },
+          { top: 'PKM Playmakers', topScore: 125.0, bottom: 'Mr. Anderson', bottomScore: 85.7, note: 'Tanner McKee vs George Pickens' },
+          { top: 'Nix Pix a Puka Six', topScore: 124.2, bottom: 'Soft Tissue Issues', bottomScore: 93.9, note: 'nobody left on either side' },
+          { top: 'Substation Superstars', topScore: 107.9, bottom: 'All Bark, All Bite', bottomScore: 88.2, note: 'Justin has nobody. Keshia has Barkley.' },
+          { top: 'Bree’s Badass Boys', topScore: 105.8, bottom: 'Da Reigning Champ', bottomScore: 61.8, note: 'Bree has nobody. Chenell has Dak and Javonte.' },
+        ],
+      },
+      { type: 'heading', text: 'THE MIRACLE: Chenell Needs Dak Prescott And Javonte Williams To Find 44.0' },
+      {
+        type: 'paragraph',
+        text: 'Bree’s Badass Boys 105.8, Da Reigning Champ 61.8. Bree’s roster is done for the week. Chenell has two men left, Dak Prescott projected 20.7 and Javonte Williams at 15.6, which comes to 36.3 against a deficit of 44.0. So the defending champion needs her quarterback and her running back to beat their combined projection by 7.7, against a defense whose team has lost four in a row and is presumably sick of hearing about it.',
+      },
+      {
+        type: 'paragraph',
+        text: 'I want to talk about Chenell’s temperament, because I’ve been studying it since September. In week 1 she was down 46.7 and didn’t break a sweat. In week 5 she replaced her quarterback on a Wednesday with the man standing directly behind him and never explained herself to anybody. She is the only person in this league who treats a 44-point hole the way the rest of us treat a slow checkout line, and I’ve never once seen evidence that she’s wrong to.',
+      },
+      {
+        type: 'paragraph',
+        text: 'Every Dak touchdown to CeeDee Lamb pays Chenell and Jay and costs Tyler. Every one to George Pickens pays Chenell and Jesse at the same time, which is the closest those two will ever come to a joint venture. Dak Prescott is the most-rooted-for and most-rooted-against man in this league tonight, frequently on the same snap.',
+      },
+      { type: 'heading', text: 'THE ONE THAT DOESN’T MAKE SENSE: Tyler Needs A Defense To Outscore Two Receivers By 11.3' },
+      {
+        type: 'paragraph',
+        text: 'Dad Bod 130.7, Tyler’s Talented Team 119.4. Jay has CeeDee Lamb at 15.1 and Dallas Goedert at 8.8. Tyler has the Cowboys D/ST at 8.5, and ESPN has Jay holding by 26.6. For Tyler to come back, his defense has to outscore Jay’s two pass catchers by 11.3, which in plain English means Dallas has to smother Tanner McKee while Dallas’s own best receiver vanishes.',
+      },
+      {
+        type: 'paragraph',
+        text: 'Tyler has scored 902.9 points this season, more than anybody in this league by a distance, and he’s about to spend Monday night rooting for the Cowboys’ defense and against the Cowboys’ best player. That’s not a fantasy strategy, that’s how every Cowboys fan I’ve ever met already watches football. Lamb leads the NFL in targets by at least one count, so Tyler is asking the most-thrown-to man in the sport to have a quiet evening in a game Dallas badly needs. Jay, meanwhile, needs nothing at all, and is about to get to 5-2 from the couch, which is where Jay does his best work.',
+      },
+      { type: 'heading', text: 'THE ONE THAT DEPENDS ON A HAMSTRING: Keshia Needs Saquon Barkley To Find 19.8' },
+      {
+        type: 'paragraph',
+        text: 'Substation Superstars 107.9, All Bark, All Bite 88.2. Justin’s roster is finished. Keshia has Saquon Barkley, projected 13.9, and needs 19.8 from him. He was limited in practice Thursday and Friday, logged a full session Saturday, and is listed questionable, which I report flat and leave there. If he plays and gets loose against a Dallas defense, this is the one comeback on the board that only needs one man to have a good night rather than a historic one.',
+      },
+      {
+        type: 'paragraph',
+        text: 'If he doesn’t play, the decision lands about ninety minutes before kickoff, and lineups stay open until then. Keshia, whatever you’ve got on that bench, have it warmed up and standing by the door.',
+      },
+      {
+        type: 'paragraph',
+        text: 'As for Justin, he’s 1-5 and leading, which is a sentence he hasn’t been able to say in a while. He’s about to spend three hours rooting against a running back who missed two weeks, from a seat he can’t leave, with no lineup decisions left to make. For a man whose last Monday began with a ruled-out player sitting in his lineup at breakfast like a coat on a bar stool, that’s honestly a step forward.',
+      },
+      { type: 'heading', text: 'THE FORMALITIES' },
+      {
+        type: 'paragraph',
+        text: 'Colin leads James 124.2 to 93.9 and neither of them has anybody left, so that’s the number they take into Tuesday. Colin is about to be 5-2. James, who swept four awards last week and was the most efficient man in the building, is about to be one of the three 4-3s, which is the full arc of a person who read last week’s report and apparently stopped there.',
+      },
+      {
+        type: 'paragraph',
+        text: 'Mike leads Jesse 125.0 to 85.7. Jesse needs George Pickens to outscore Mike’s quarterback, who is Tanner McKee, by 39.3. Mike doesn’t need a single point from McKee tonight and has him anyway, which is the most Mike thing in this entire post: a man holding a lottery ticket after the drawing, just to feel something.',
+      },
+      {
+        type: 'paragraph',
+        text: 'And Evan leads Doug 198.7 to 113.2, with nobody left. Doug has Brandon Aubrey, projected 7.8, and needs 85.5. Aubrey is an excellent kicker. 85.5 isn’t a kicking total, it’s a ransom note.',
+      },
+      {
+        type: 'paragraph',
+        text: 'Evan is a man who has spent half his Mondays this season on the observation deck with nobody left, holding a lead and watching somebody else’s player try to take it from him. Tonight he’s up there again, except his number is 198.7, the highest score anybody in this league has posted this season, and the coffee finally tastes fine. He’s about to be 3-4. The Observation Deck Regular has, at long last, bought a season pass.',
+      },
+      {
+        type: 'paragraph',
+        text: 'Which also means I owe Keshia an apology. I said her 191.3 from week 5 would stand as the season high. Evan has nobody left, so that number isn’t moving, and I’ll take the loss formally tomorrow, out loud, where everybody can watch.',
+      },
+      { type: 'heading', text: 'WHAT I THINK HAPPENS' },
+      {
+        type: 'paragraph',
+        text: 'On the record, to be read back to me in about thirty hours by people who will enjoy it far too much.',
+      },
+      {
+        type: 'paragraph',
+        text: 'Bree holds. Dak and Javonte have a perfectly decent night and come up short of 44.0, and the reigning champion is 4-3 and completely unbothered about it, which will be the most frightening thing in the standings.',
+      },
+      {
+        type: 'paragraph',
+        text: 'Jay holds too. Lamb gets his, the Dallas defense doesn’t get enough, and Tyler finishes the night 4-3 with the most points in the league, which is fast becoming his whole personality and is also an open prediction of mine I’m quietly enjoying.',
+      },
+      {
+        type: 'paragraph',
+        text: 'And the loud ones, plural, because I learn nothing. Barkley plays, finds 19.8, and Keshia comes from behind on Justin. And the Cowboys defense outscores Tanner McKee. Yes, I called a defense over a quarterback last Monday and Jayden Daniels put 25 on it. I don’t care. A backup quarterback with no receivers against a team that needs this game is the same bet with better odds, and a man who stops making the bet after one bad night was never a scientist.',
+      },
+      {
+        type: 'paragraph',
+        text: 'Kickoff is 8:15. Chenell, root for Dak. Tyler, root for the Dallas defense and against Dallas’s best player, which should come naturally. Keshia, refresh the injury report at 6:45 like it owes you money. The lab reopens Tuesday with the answers.',
+      },
+    ],
+  },
+  {
     slug: 'week-6-objection-sustained',
     week: 6,
     title: 'I Filed An Objection About Jay And Somebody Processed It',
