@@ -124,6 +124,220 @@ export interface Recap {
 
 export const RECAPS: Recap[] = [
   {
+    slug: 'week-7-it-took-twelve-days',
+    week: 7,
+    title: 'I Said Bring It Back To Me In January. It Took Twelve Days.',
+    summary:
+      'Evan scored 198.7, the highest total in the history of this league, and killed a prediction I made two weeks ago with a flourish I did not appreciate. James started a defense that scored minus three. Justin won with the lowest winning score ever recorded. And Jay is back on top of the table a week ahead of schedule.',
+    publishedAt: '2026-10-27',
+    published: true,
+    coverImage: '/recaps/week-7.jpg',
+    coverAlt:
+      'A football player silhouetted in mid-air, fully extended and rim-lit in gold against the blown-out glare of stadium floodlights.',
+    author: BURNER,
+    predictions: [
+      {
+        id: 'evan-makes-playoffs',
+        claim: 'Evan makes the playoffs from 3-4.',
+      },
+      {
+        id: 'mike-top-four',
+        claim: 'Mike finishes in the top four with the fewest points of any team in it.',
+      },
+      {
+        id: 'doug-last-not-in-points',
+        claim: 'Doug finishes last in this league and does not finish last in points scored.',
+      },
+    ],
+    body: [
+      {
+        type: 'paragraph',
+        text: 'Subjects. Two weeks ago I told you that Keshia’s 191.3 would stand as the highest score anybody posts this season. I remember being pleased with the line. I signed off by inviting you to write it down and bring it back to me in January.',
+      },
+      {
+        type: 'paragraph',
+        text: 'It took twelve days.',
+      },
+      {
+        type: 'paragraph',
+        text: 'Evan scored 198.7 on Sunday. That’s the highest total any team has ever posted in this league, it beat the old record by 1.2, and it was done by a man who came into the week 2-4 and has spent this entire season being the punchline of a joke about bad luck.',
+      },
+      {
+        type: 'paragraph',
+        text: 'I’d like to move on quickly, but we can’t, because the way he did it is worse.',
+      },
+      { type: 'heading', text: 'BENGALS 35, RAVENS 13 — Cincinnati Scored Thirty-Five Unanswered And Four Of You Were In The Building' },
+      {
+        type: 'paragraph',
+        text: 'Baltimore led 13-0 at halftime. Cincinnati then outscored them 35-0 the rest of the way, which is less a comeback than a change of management. Joe Burrow went 22 of 30 for 292 yards and four touchdowns, and sixteen of those completions came after the break.',
+      },
+      {
+        type: 'paragraph',
+        text: 'Burrow is Evan’s quarterback, on a team called Burrow My Burden, and he delivered 36.88 and the quarterback crown. I’ve been waiting six weeks for that sentence to be available to me and I want you all to know I enjoyed it.',
+      },
+      {
+        type: 'paragraph',
+        text: 'The other side of that game was a demolition of Chenell’s afternoon. Derrick Henry was held to 5.4 against a 17.4 projection. Tyler Huntley — the man Chenell plucked off the wire in week 5 and rode to a league record — was sacked four times and gave her 18.12. Her entire Baltimore operation went down in one evening and she won anyway, which we’ll get to.',
+      },
+      {
+        type: 'paragraph',
+        text: 'Tee Higgins went for 148 yards and a score, worth 23.8 to Jay. Ja’Marr Chase added a touchdown and 14.7 for James. Four managers in one football game, and the two who had Bengals are first and eighth.',
+      },
+      { type: 'heading', text: 'DOLPHINS 28, JETS 25 — The Argument On The Sideline Was About Keshia’s Week' },
+      {
+        type: 'paragraph',
+        text: 'Miami won its first game of the season at MetLife, and New York’s comeback stalled three points short. Geno Smith went 23 of 30 for 287 yards and three touchdowns, hit Taylor from thirteen out with 3:24 left, and converted the two-point try to make it 28-25. That’s 30.48 for Evan, who had a quarterback going off in both of the games I’ve described so far.',
+      },
+      {
+        type: 'paragraph',
+        text: 'On the other sideline, Malik Willis put up 30.02 for Jay in Miami’s first win of the year. Two quarterbacks, thirty points each, one game, and both of the managers holding them won comfortably.',
+      },
+      {
+        type: 'paragraph',
+        text: 'Here’s the part I can’t let go of. Geno Smith threw for 287 yards and three scores, and Garrett Wilson — Keshia’s starting receiver — finished with 3.6 against a 12.3 projection. During the game the two of them were seen having a heated exchange on the sideline, which both men downplayed afterward.',
+      },
+      {
+        type: 'paragraph',
+        text: 'I don’t know what was said. I do know that somewhere in New Jersey on Sunday, two professional athletes had a public disagreement about the exact thing that cost Keshia her week, and she lost by 5.7. Nobody has ever been so well represented and so poorly served at the same time.',
+      },
+      { type: 'heading', text: 'BUCCANEERS 43, PANTHERS 13 — James Started This Defense' },
+      {
+        type: 'paragraph',
+        text: 'Tampa Bay rushed for 258 yards, took five sacks off Carolina, picked them off twice and scored twenty points off turnovers. They led 33-6 at the half. Carolina’s solitary bright spot was a 50-yard touchdown to Darren Waller, and even that went wrong — the extra point was blocked and returned the other way for two.',
+      },
+      {
+        type: 'paragraph',
+        text: 'James started the Carolina defense. It scored minus three.',
+      },
+      {
+        type: 'paragraph',
+        text: 'That is the worst performance by any started player in the history of this league. Not the lowest. Negative. He submitted a lineup containing a roster spot that actively charged him for the privilege, and he did it seven days after turning in a mathematically perfect lineup and taking four awards off it.',
+      },
+      { type: 'heading', text: 'THE SCOREBOARD' },
+      {
+        type: 'paragraph',
+        text: 'The organized paragraph, as required. Both ends of this board are historical: the top row is the highest score anybody has ever posted here and the bottom row is the lowest winning score anybody has ever posted here, and they happened on the same afternoon.',
+      },
+      {
+        type: 'scoreboard',
+        rows: [
+          { top: 'Burrow My Burden', topScore: 198.7, bottom: 'Nobody Knows', bottomScore: 127.2, note: 'highest score in league history' },
+          { top: 'Dad Bod', topScore: 159.9, bottom: 'Tyler’s Talented Team', bottomScore: 123.4 },
+          { top: 'PKM Playmakers', topScore: 138.6, bottom: 'Mr. Anderson', bottomScore: 99.4 },
+          { top: 'Nix Pix a Puka Six', topScore: 124.2, bottom: 'Soft Tissue Issues', bottomScore: 93.9 },
+          { top: 'Da Reigning Champ', topScore: 112.6, bottom: 'Bree’s Badass Boys', bottomScore: 105.8 },
+          { top: 'Substation Superstars', topScore: 107.9, bottom: 'All Bark, All Bite', bottomScore: 102.3, note: 'lowest winning score ever recorded' },
+        ],
+      },
+      { type: 'heading', text: 'Evan Had Six Men Over Twenty And Still Has A Losing Record' },
+      {
+        type: 'paragraph',
+        text: 'Burrow 36.88. Tony Pollard 35.0 against a 12.94 projection, which is the largest overshoot of the week and Fantasy Nostradamus. Geno Smith 30.48. Jaxon Smith-Njigba 26.8. Quinshon Judkins 22.9. Luther Burden III 21.7.',
+      },
+      {
+        type: 'paragraph',
+        text: 'Six players over twenty points, seven starters beating their projection, and three of the six position crowns. He took The Prime Specimen, Fantasy Nostradamus and Slay Girl Slay, and he buried Doug by 71.5.',
+      },
+      {
+        type: 'paragraph',
+        text: 'And he’s 3-4. Eighth. The man who owns the single highest score in the history of this experiment has a losing record and sits outside the playoff line, which in six weeks of writing this column is the most elegant thing the schedule has ever done to anybody.',
+      },
+      {
+        type: 'paragraph',
+        text: 'Spare a thought for Doug, who scored 127.2 — a respectable total in most weeks of most seasons — and lost by 71.5 for it. He took The Bad Beat and The Public Execution out of the same game, which is a bleak sort of doubling up. He’s 1-6. I’ve run out of ways to describe this and I’m not sure he wants me to find more.',
+      },
+      { type: 'heading', text: 'James Went From A Perfect Lineup To The Dumpster Fire In Seven Days' },
+      {
+        type: 'paragraph',
+        text: 'Last week I wrote the sentence “James took four awards and did not leave a single point behind.” This week he scored 93.9, the lowest total in the league, and took The Dumpster Fire. He also made eleven roster moves and lost by 30.3, which is The Galaxy Brain.',
+      },
+      {
+        type: 'paragraph',
+        text: 'Some of it wasn’t his fault. Jacksonville was on bye, so Trevor Lawrence — 36.34 for him in week 6 — sat there at zero and James had to go to Cam Ward, who gave him 6.74, and Patrick Mahomes, who gave him 7.0 against a 18.95 projection.',
+      },
+      {
+        type: 'paragraph',
+        text: 'The defense was his fault. Eleven moves in a week is a man refreshing a page, and one of those moves put a Carolina defense into his starting lineup against a team that would hang 43 on them. You can’t legislate for Mahomes. You can absolutely legislate for that.',
+      },
+      { type: 'heading', text: 'Jay Is Back On Top And I Called It A Week Early' },
+      {
+        type: 'paragraph',
+        text: 'Two weeks ago I objected to Jay being in first. He then had the worst week of anybody’s season and fell to fourth, and I predicted he’d be back in the top two by the end of week 8.',
+      },
+      {
+        type: 'paragraph',
+        text: 'He’s first, with a week in hand. He beat Tyler 159.9 to 123.4 on the back of 30.02 from Malik Willis and 23.8 from Tee Higgins, and he’s 5-2 with the second-most points in the league. I’d like this noted in the same ledger as everything else, where it will be heavily outnumbered.',
+      },
+      {
+        type: 'paragraph',
+        text: 'Tyler, meanwhile, fell four places from first to fifth and collected Free Fallin’ for it. He’s now scored 1,026.3 points this season. He’s the only team in this league over a thousand, he’s ninety points clear of second, and he’s 4-3 and fifth. That prediction of mine about him finishing with the most points and not finishing first is aging like a fine wine in a cellar nobody can find.',
+      },
+      { type: 'heading', text: 'Justin Won The Ugliest Game Ever Played Here And I Mean That As A Compliment' },
+      {
+        type: 'paragraph',
+        text: 'Justin beat Keshia 107.9 to 102.3. That 107.9 is the lowest winning score in the history of this league, taking the record off Jay, who set it in week 5, who took it off somebody else in week 1. The bar is in a basement and we keep finding stairs.',
+      },
+      {
+        type: 'paragraph',
+        text: 'He took four awards for it: The Cat Burglar for the lowest winning score, The Photo Finish for the closest game, The Control Group for finishing 3.5 off his projection, and The Bench Bum for the 19.8 he left behind getting there. That’s the full emotional range of a single football afternoon.',
+      },
+      {
+        type: 'paragraph',
+        text: 'Elsewhere, Chenell trailed by 44.0 during Sunday night football and won by 6.8, which is Sweatin’ It Out, and she started the best lineup her roster allowed getting there, which is The Mastermind. Dak Prescott was 26 percent of her, so that’s The One Man Army too.',
+      },
+      {
+        type: 'paragraph',
+        text: 'She did all of that on the night her entire Baltimore operation was being dismantled in front of her. Three awards out of a week that should have broken her, which is roughly the fourth time this season I’ve had to write some version of that sentence about Chenell.',
+      },
+      {
+        type: 'paragraph',
+        text: 'Mike put 138.6 on Jesse. Colin beat James. Both are 5-2, four teams sit on that record, and the gap between first and seventh in this league is currently one game.',
+      },
+      { type: 'heading', text: 'THE INVOICE' },
+      {
+        type: 'paragraph',
+        text: 'It’s a long one. Seven calls came due and I went three for seven, which for a man who files these in writing isn’t a great look.',
+      },
+      {
+        type: 'paragraph',
+        text: 'Keshia’s 191.3 standing as the season high: wrong, by 7.4, in twelve days. Jay back in the top two by week 8: correct, a week early. Colin starting Tyler Shough again in week 7: correct, 16.82, and I said at the time I’d have nothing further to say about it, which remains the plan.',
+      },
+      {
+        type: 'paragraph',
+        text: 'Then Monday night, where I went one for four. I said Bree holds against Chenell and that Dak Prescott and Javonte Williams wouldn’t find the 44.0 she needed. They found 50.78. I said Saquon Barkley would clear 19.8 and steal it for Keshia; he played, managed 14.1, and Keshia lost by 5.7. I said Jay holds and Tyler finishes 4-3 with the most points in the league, which is the one I got.',
+      },
+      {
+        type: 'paragraph',
+        text: 'And then there’s the other one, which is becoming a genre. I predicted the Cowboys defense would outscore Tanner McKee on Monday night. The Cowboys defense scored 4.0. McKee scored 13.54.',
+      },
+      {
+        type: 'paragraph',
+        text: 'That’s now two weeks running that I’ve picked a defense to outscore a quarterback and been beaten by double digits. Last week it was the 49ers against Jayden Daniels. I have no explanation, no defense of my own, and apparently no ability to stop.',
+      },
+      { type: 'heading', text: 'FINDINGS' },
+      {
+        type: 'paragraph',
+        text: 'Three calls for week 8. The byes are Houston, New Orleans, the Giants and San Francisco, so nobody is getting a prediction about a man who isn’t playing, and I’m specifically not saying anything about Colin’s quarterback, who’s one of them.',
+      },
+      {
+        type: 'paragraph',
+        text: 'Evan makes the playoffs from 3-4. He owns the highest score in league history, the most explosive roster anybody has assembled this year, and a record that says none of it has worked. One of those three things is about to stop being true.',
+      },
+      {
+        type: 'paragraph',
+        text: 'Mike finishes top four with the fewest points of any team in it. He’s 5-2 on 777.5 points, which is two hundred and forty-nine fewer than Tyler, who’s 4-3. Mike is winning this league by being in the right rooms rather than the loudest ones, and I’ve decided to respect it.',
+      },
+      {
+        type: 'paragraph',
+        text: 'And Doug finishes last in this league and does not finish last in points scored. He’s 1-6 with the ninth-most points, which means three teams are scoring less than him and beating him anyway. That is not variance any more, that is a haunting.',
+      },
+      {
+        type: 'paragraph',
+        text: 'The laboratory is closed. Evan, enjoy the record. Everybody else, enjoy the fact that it bought him nothing.',
+      },
+    ],
+  },
+  {
     slug: 'week-7-tonight-splits-the-waiting-room',
     series: 'miracles',
     week: 7,
@@ -139,18 +353,40 @@ export const RECAPS: Recap[] = [
       {
         id: 'bree-holds-chenell',
         claim: 'Bree holds. Dak Prescott and Javonte Williams do not find the 44.0 Chenell needs, and Chenell is 4-3.',
+        verdict: 'wrong',
+        resolvedWeek: 7,
+        resolution:
+          'Prescott and Williams combined for 50.78 against the 44.0 she needed. '
+          + 'Chenell won by 6.8 and is 5-2.',
       },
       {
         id: 'jay-holds-tyler',
         claim: 'Jay holds. The Cowboys D/ST does not outscore CeeDee Lamb and Dallas Goedert by 11.3, and Tyler is 4-3 with the most points in the league.',
+        verdict: 'correct',
+        resolvedWeek: 7,
+        resolution:
+          'The Cowboys defense managed 4.0 against 29.2 from Lamb and Goedert. '
+          + 'Jay held and Tyler is 4-3 on 1,026.3 points, the only team over a '
+          + 'thousand.',
       },
       {
         id: 'barkley-steals-it',
         claim: 'Saquon Barkley plays, clears 19.8, and Keshia comes from behind on Justin.',
+        verdict: 'wrong',
+        resolvedWeek: 7,
+        resolution:
+          'He played and managed 14.1. Keshia lost by 5.7 to the lowest winning '
+          + 'score in league history.',
       },
       {
         id: 'cowboys-dst-beats-mckee',
         claim: 'The Cowboys D/ST outscores Tanner McKee on Monday night.',
+        verdict: 'wrong',
+        resolvedWeek: 7,
+        resolution:
+          'The Cowboys defense scored 4.0 and McKee scored 13.54. That is two '
+          + 'weeks running I have picked a defense over a quarterback and lost '
+          + 'by double digits.',
       },
     ],
     body: [
@@ -282,10 +518,17 @@ export const RECAPS: Recap[] = [
       {
         id: 'jay-back-in-two',
         claim: 'Jay is back in the top two by the end of week 8.',
+        verdict: 'correct',
+        resolvedWeek: 7,
+        resolution:
+          'He is first, with a week to spare, after beating Tyler 159.9 to 123.4.',
       },
       {
         id: 'colin-keeps-shough',
         claim: 'Colin starts Tyler Shough again in week 7, and I have nothing further to say on the matter.',
+        verdict: 'correct',
+        resolvedWeek: 7,
+        resolution: 'He did. Shough went for 16.82 and Colin won by 30.3.',
       },
       {
         id: 'evan-moves-most',
@@ -674,6 +917,12 @@ export const RECAPS: Recap[] = [
       {
         id: 'keshia-191-stands',
         claim: 'Keshia’s 191.3 is the highest score anybody posts this season.',
+        verdict: 'wrong',
+        resolvedWeek: 7,
+        resolution:
+          'Evan posted 198.7 in week 7, beating it by 7.4 and taking the '
+          + 'all-time record. I invited the league to bring this one back to me '
+          + 'in January. It took twelve days.',
       },
     ],
     body: [
