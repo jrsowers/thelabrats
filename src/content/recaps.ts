@@ -124,6 +124,138 @@ export interface Recap {
 
 export const RECAPS: Recap[] = [
   {
+    slug: 'week-8-one-kicker-decides-the-top',
+    series: 'miracles',
+    week: 8,
+    title: 'One Kicker Decides Whether Jay Is Alone At The Top',
+    summary:
+      'Jay is 6-2 whatever happens in Seattle. Mike leads Tyler by 3.1 and ESPN says it flips, so a Seahawks kicker and a Bears defense decide whether Jay has company. Justin needs Colston Loveland and Rome Odunze to find 24.6 against a secondary nobody has thrown on. Doug needs a defense to outscore a quarterback by 39.3, and I am not taking that bet.',
+    publishedAt: '2026-11-02',
+    published: true,
+    author: BURNER,
+    coverImage: '/recaps/week-8-miracles.jpg',
+    coverAlt:
+      'A lone football player in silhouette stands on an empty field in floodlit haze, helmet hanging at his side, waiting.',
+    predictions: [
+      {
+        id: 'tyler-catches-mike',
+        claim: 'Tyler comes back. D’Andre Swift and the Bears D/ST outscore Jason Myers and Emanuel Wilson by more than 3.1, and Jay is alone at the top at 6-2.',
+      },
+      {
+        id: 'bree-holds-justin-2-6',
+        claim: 'Bree holds. Colston Loveland and Rome Odunze do not find the 24.6 Justin needs, and Justin is 2-6.',
+      },
+      {
+        id: 'bears-dst-beats-myers',
+        claim: 'The Bears D/ST outscores Jason Myers on Monday night.',
+      },
+    ],
+    body: [
+      {
+        type: 'paragraph',
+        text: 'Subjects. For two Mondays running I picked a defense to outscore a quarterback, lost both by double digits, and told you I had no ability to stop. Tonight the schedule has handed Doug that exact bet, the Seattle defense against Caleb Williams with 39.3 points riding on it, and I want it on the record before anything else in this post that I am not taking it. This is what growth looks like in a laboratory. It’s small, and it’s humiliating.',
+      },
+      {
+        type: 'paragraph',
+        text: 'One game is finished outright, two are finished in every sense but the paperwork, and three come down to Bears at Seahawks, Lumen Field, 8:15 Eastern on ESPN. Chicago is 5-2 and chasing a third straight win, Seattle is 4-3 and favored by three, and seven of you have somebody in it, which means most of this league is about to spend an evening rooting for the Chicago Bears and against them on alternating snaps.',
+      },
+      {
+        type: 'paragraph',
+        text: 'The building has a thesis of its own. Seattle leads the NFL in yards allowed and hasn’t let anybody throw for more than 176 yards in a game this season. Caleb Williams, meanwhile, has thrown for 300-plus with no interceptions in back-to-back starts. Something in those two sentences stops being true tonight, and three of you have money on which one.',
+      },
+      { type: 'heading', text: 'THE BOARD, AS OF THIS MORNING' },
+      {
+        type: 'paragraph',
+        text: 'The organized paragraph, which I resent, as is tradition. Three rows are done, the bottom three are alive, and the very last one is ESPN’s pick to change hands before midnight.',
+      },
+      {
+        type: 'scoreboard',
+        live: true,
+        rows: [
+          { top: 'Burrow My Burden', topScore: 160.5, bottom: 'Da Reigning Champ', bottomScore: 104.2, note: 'Chenell has nobody. Evan has Smith-Njigba.' },
+          { top: 'Soft Tissue Issues', topScore: 156.7, bottom: 'All Bark, All Bite', bottomScore: 118.8, note: 'Keshia has nobody. James has Burden.' },
+          { top: 'Dad Bod', topScore: 139.5, bottom: 'Nix Pix a Puka Six', bottomScore: 128.5, note: 'nobody left on either side' },
+          { top: 'Mr. Anderson', topScore: 124.8, bottom: 'Nobody Knows', bottomScore: 85.5, note: 'Caleb Williams vs the Seahawks D/ST' },
+          { top: 'Bree’s Badass Boys', topScore: 95.5, bottom: 'Substation Superstars', bottomScore: 70.9, note: 'Bree has nobody. Justin has Loveland and Odunze.' },
+          { top: 'PKM Playmakers', topScore: 87.6, bottom: 'Tyler’s Talented Team', bottomScore: 84.5, note: 'Myers and Wilson vs Swift and the Bears D/ST' },
+        ],
+      },
+      { type: 'heading', text: 'THE ONE FOR FIRST PLACE: Mike Leads Tyler By 3.1, And ESPN Says It Flips' },
+      {
+        type: 'paragraph',
+        text: 'PKM Playmakers 87.6, Tyler’s Talented Team 84.5. Mike has Jason Myers, Seattle’s kicker, projected 9.2, and Emanuel Wilson at 6.4. Tyler has D’Andre Swift at 13.1, carrying the Chicago backfield alone with Kyle Monangai ruled out, and the Bears defense at 8.0, and ESPN has Tyler finishing 2.4 ahead. Mike went to the wire for a Seattle kicker and Tyler for a Chicago defense, so this is two men who bought tickets to the same game and are sitting in opposite end zones refusing to make eye contact.',
+      },
+      {
+        type: 'paragraph',
+        text: 'And it decides the top of the table. Jay finished his week at 139.5 against Colin and is 6-2 whatever happens tonight. If Mike holds, he’s 6-2 right alongside him. If Tyler comes back, Jay is alone in first and as many as six teams are stacked at 5-3 underneath him, so the shape of the entire standings hangs on whether a man who kicks for a living has a nice evening.',
+      },
+      {
+        type: 'paragraph',
+        text: 'The rooting in this one is genuinely deranged. Tyler needs Seattle’s drives to die, and Mike needs them to die about thirty yards from the end zone, which means on every Seahawks third down both men are screaming for the same incompletion and only one of them is happy when the field goal unit jogs out. Sam Darnold has been intercepted in each of his last five games. Tyler, that is the only number in this post you need, so print it out and put it on the fridge.',
+      },
+      {
+        type: 'paragraph',
+        text: 'Now, Tyler’s bench. Tyler Allgeier went for 33.6 on Sunday on a 7.1 projection and never left cold storage. Nobody starts a 7.1, but Tyler walked in with the most points in the league and a 4-3 record, and now trails by 3.1 while sitting on 33.6. I no longer think this is luck. I think Tyler is the guy who’s the funniest person at the dinner party and still somehow goes home alone.',
+      },
+      {
+        type: 'paragraph',
+        text: 'Mike, meanwhile, is the most efficient survivor I’ve ever studied. He is 5-2 on the fewest points of anybody above .500, and tonight his method is laid out in full: a 3.1-point lead, a kicker, and a running back whose backfield gets Charbonnet and Price back on the same night. That’s not a fantasy roster. That’s a man defending his house with a fire extinguisher and a strongly worded letter, and I wouldn’t bet against the letter.',
+      },
+      { type: 'heading', text: 'THE MIRACLE: Justin Needs Two Bears Pass Catchers To Find 24.6 Against A Secondary Nobody Throws On' },
+      {
+        type: 'paragraph',
+        text: 'Bree’s Badass Boys 95.5, Substation Superstars 70.9. Bree is finished for the week, Kirk Cousins handed her 34.2 on Sunday, and she can go to bed whenever she likes. Justin has Colston Loveland projected 9.4 and Rome Odunze at 7.7, which is 17.1 against a deficit of 24.6, so the two of them need to beat their projections by 7.5 combined against a secondary that has not let a single team throw for 177 yards all year. Realistically that means a touchdown apiece, with Luther Burden and the league’s top rushing offense at the same trough.',
+      },
+      {
+        type: 'paragraph',
+        text: 'There’s a case. Loveland has gone for at least 65 yards and a touchdown in each of his last two games, and after a neck issue put him on Friday’s report he practiced in full Saturday and carries no designation. But Justin is 2-5 in large part because Sunday keeps happening to him before Monday gets a chance. Jonathan Taylor went for 4.7 on a 14.3 projection, and Justin now needs Chicago’s passing game to bail him out of an Indianapolis problem, which is a lot to ask of a franchise that has historically struggled to bail out its own.',
+      },
+      { type: 'heading', text: 'THE ONE I’M NOT TOUCHING: Doug Needs The Seattle Defense To Outscore Caleb Williams By 39.3' },
+      {
+        type: 'paragraph',
+        text: 'Mr. Anderson 124.8, Nobody Knows 85.5. Jesse has Caleb Williams projected 18.1. Doug has the Seahawks D/ST at 7.7, and needs that defense to outscore Jesse’s quarterback by 39.3, against a man who hasn’t thrown an interception in his last two starts. For Seattle to do that, its defense would need to start scoring touchdowns at a rate usually reserved for the offense, while Williams spends the evening throwing exclusively to the wrong team.',
+      },
+      {
+        type: 'paragraph',
+        text: 'Two weeks ago this was the exact shape of bet I made in public, with the 49ers against Jayden Daniels. Last week I made it again with the Cowboys against Tanner McKee. Both times the quarterback won by double digits, and both times I signed off promising to learn nothing. Tonight I am declining. Doug, who is 1-6 with more points than three teams above him, has my every good wish, and if Seattle pulls it off I will be forced to examine everything I have ever believed.',
+      },
+      { type: 'heading', text: 'THE FORMALITIES' },
+      {
+        type: 'paragraph',
+        text: 'Jay leads Colin 139.5 to 128.5 with nobody left on either side, so that’s the number they take into Tuesday. Tee Higgins gave Jay 32.5. Colin, with Tyler Shough on bye, started Jacoby Brissett and got 4.5 on a 19.4 projection. Last week I said I would say nothing about Colin’s quarterback this week, and I would like credit for how much restraint the rest of this paragraph is taking.',
+      },
+      {
+        type: 'paragraph',
+        text: 'James leads Keshia 156.7 to 118.8, Keshia has nobody left, and James still has Luther Burden on the field for 10.8 he doesn’t need. Patrick Mahomes gave him 31.4, and he quietly dropped the Carolina defense that charged him three points last week, which is the first of his many, many transactions I’d describe as a mercy. Keshia started the right quarterback, Jordan Love for 28.5, and is about to lose by nearly 38 anyway, which is the most Keshia sentence I’ve written all season.',
+      },
+      {
+        type: 'paragraph',
+        text: 'And Evan leads Chenell 160.5 to 104.2 with Jaxon Smith-Njigba, the NFL’s leading receiver, still to come and not remotely needed. Joe Burrow scored 54.5 in Cincinnati’s 43-36 overtime win over Tennessee, which is more than Drake Maye’s 47.46 from week 4, the figure I called the best performance in league history. Two records in two weeks for a man who was 2-4 coming into last week, and my call that Evan makes the playoffs suddenly looks like the sanest thing I’ve written.',
+      },
+      { type: 'heading', text: 'WHAT I THINK HAPPENS' },
+      {
+        type: 'paragraph',
+        text: 'On the record, to be read back to me tomorrow by people who have clearly been waiting for it.',
+      },
+      {
+        type: 'paragraph',
+        text: 'Tyler comes back. Darnold throws an interception for the sixth game running, Swift grinds out enough against a defense that hasn’t allowed a 100-yard rusher in thirty-six straight games, and Tyler finds the 3.1. Mike and Tyler are both 5-3 by midnight, and Jay is alone at the top, where he will be insufferable.',
+      },
+      {
+        type: 'paragraph',
+        text: 'Bree holds. Loveland and Odunze have perfectly respectable nights, Seattle’s secondary does what it has done all season, and Justin is 2-6.',
+      },
+      {
+        type: 'paragraph',
+        text: 'And the loud one, because I have learned something but not much. The Bears defense outscores Jason Myers. Yes, I’ve gone from picking defenses over quarterbacks to picking a defense over a kicker, which is a man who keeps losing at chess challenging a toddler to checkers. I’m aware, and I’m doing it anyway.',
+      },
+      {
+        type: 'paragraph',
+        text: 'Kickoff is 8:15. Tyler, root for the interception. Mike, root for the drive to stall at exactly the right yard line. Justin, root for Caleb Williams like it’s a family matter. Doug, if a miracle shows up, tell it I said hello. The lab reopens Tuesday with the answers.',
+      },
+    ],
+  },
+  {
     slug: 'week-7-it-took-twelve-days',
     week: 7,
     title: 'I Said Bring It Back To Me In January. It Took Twelve Days.',
