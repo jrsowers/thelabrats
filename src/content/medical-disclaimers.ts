@@ -110,6 +110,11 @@ export const MEDICAL_DISCLAIMERS: MedicalDisclaimer[] = [
     fingerprint: /state authorities/i,
   },
   {
+    id: 'reading',
+    line: 'I got that off the official report, and reading it is the full extent of my medical training.',
+    fingerprint: /full extent of my medical training/i,
+  },
+  {
     id: 'insurer',
     line: 'I am qualified to observe this and nothing else, a distinction my insurer has underlined twice.',
     fingerprint: /my insurer/i,

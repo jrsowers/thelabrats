@@ -124,6 +124,138 @@ export interface Recap {
 
 export const RECAPS: Recap[] = [
   {
+    slug: 'week-9-jay-needs-a-kicker-to-score-33-6',
+    series: 'miracles',
+    week: 9,
+    title: 'Jay Needs His Kicker To Score 33.6, And Everybody Else Needs Josh Allen',
+    summary:
+      'Jay trails Keshia by 33.5 with only Will Reichard left. Tyler leads Colin by 8.8 and has nobody, while James Cook has scored in six straight games. Jesse owns Josh Allen and the Vikings defense on the same night and needs them to beat DJ Moore by 19.0. By midnight there could be four teams sharing first at 6-3.',
+    publishedAt: '2026-11-09',
+    published: true,
+    author: BURNER,
+    coverImage: '/recaps/week-9-miracles.jpg',
+    coverAlt:
+      'A lone kicker in silhouette stands over a ball in an empty, hazy indoor stadium, head bowed, waiting.',
+    predictions: [
+      {
+        id: 'colin-catches-tyler',
+        claim: 'Colin comes back. James Cook scores for a seventh straight game, Cook, Bass and Addison find the 8.8, and Tyler is 5-4.',
+      },
+      {
+        id: 'chenell-holds-jesse',
+        claim: 'Chenell holds. Allen, Kincaid and the Vikings D/ST do not outscore DJ Moore by 19.0, and Jesse is 3-6.',
+      },
+      {
+        id: 'four-at-6-3',
+        claim: 'Will Reichard does not score 33.6, and four teams are tied at 6-3 by midnight: Jay, James, Colin and Chenell.',
+      },
+    ],
+    body: [
+      {
+        type: 'paragraph',
+        text: 'Subjects. Jay has spent the last seven days alone in first place, and tonight his entire defense of that position is Will Reichard. I don’t mean he needs Reichard to have a nice evening. I mean he trails Keshia by 33.5, Reichard is the only player he has left, and the kicking performance that saves him is the kind that gets its own documentary.',
+      },
+      {
+        type: 'paragraph',
+        text: 'Two games are finished, a third is finished in every sense but the paperwork, and three come down to Bills at Vikings, U.S. Bank Stadium, 8:15 Eastern on ESPN and ABC. Both teams are 6-1. Minnesota took its first loss last week against Detroit and starts Carson Wentz tonight because Kyler Murray is out with a hamstring injury. I got that off the official report, and reading it is the full extent of my medical training.',
+      },
+      {
+        type: 'paragraph',
+        text: 'Six of you have somebody in that building, and the rooting interests are knotted so tightly that Jesse is effectively playing against himself. He owns Josh Allen and he owns the Minnesota defense, so every Buffalo touchdown tonight arrives as good news and bad news for the same man at the same moment, which is the closest anybody in this league gets to a religious experience.',
+      },
+      { type: 'heading', text: 'THE BOARD, AS OF THIS MORNING' },
+      {
+        type: 'paragraph',
+        text: 'The organized portion, which I resent. The top three rows are done, and ESPN thinks two of the bottom three change hands before midnight.',
+      },
+      {
+        type: 'scoreboard',
+        live: true,
+        rows: [
+          { top: 'Soft Tissue Issues', topScore: 164.5, bottom: 'Bree’s Badass Boys', bottomScore: 142.4, note: 'nobody left on either side' },
+          { top: 'Burrow My Burden', topScore: 128.6, bottom: 'Substation Superstars', bottomScore: 60.7, note: 'Justin has Rico Dowdle, whose Steelers are on bye' },
+          { top: 'Nobody Knows', topScore: 109.0, bottom: 'PKM Playmakers', bottomScore: 104.9, note: 'Mike has nobody. Doug has Justin Jefferson.' },
+          { top: 'All Bark, All Bite', topScore: 129.9, bottom: 'Dad Bod', bottomScore: 96.4, note: 'Keshia has nobody. Jay has Will Reichard.' },
+          { top: 'Tyler’s Talented Team', topScore: 120.5, bottom: 'Nix Pix a Puka Six', bottomScore: 111.8, note: 'Tyler has nobody. Colin has Cook, Bass and Addison.' },
+          { top: 'Da Reigning Champ', topScore: 112.2, bottom: 'Mr. Anderson', bottomScore: 93.3, note: 'Moore vs Allen, Kincaid and the Vikings D/ST' },
+        ],
+      },
+      { type: 'heading', text: 'THE ONE FOR A SHARE OF FIRST: Tyler Leads Colin By 8.8, And James Cook Has Scored In Six Straight' },
+      {
+        type: 'paragraph',
+        text: 'Tyler is finished for the week with a lead of 8.8. Colin has James Cook projected 17.6, Tyler Bass at 10.1 and Jordan Addison at 9.2, which is 36.9 against a gap of 8.8, and ESPN has Colin finishing 28.2 ahead. Out of the spreadsheet and into English, Tyler needs three players to combine for less than one James Cook touchdown and the yards it took to get there, and Cook has found the end zone in six straight games.',
+      },
+      {
+        type: 'paragraph',
+        text: 'Tyler’s case is the Minnesota defense, which allows 13.3 points a game, and it’s a better case than it sounds until you work through it. Field goals belong to Colin too, so what Tyler actually needs is for Buffalo to march the length of the field, stall at the goal line and then miss the kick, all evening, against a Vikings defense that Tyler doesn’t own and Jesse does.',
+      },
+      {
+        type: 'paragraph',
+        text: 'Last Monday I said Tyler would come back on Mike, and the standings say he did. This week Jared Goff gave him 6.3 on a 24.3 projection, D’Andre Swift gave him 3.1 on 17.2, and he’s still sitting on 120.5 and a lead. That is Tyler’s entire career in one Sunday: two of his best players vanish from the experiment, the rest of the lineup covers for them, and he still ends up needing a miracle anyway. I’ve come to believe Tyler isn’t unlucky. Tyler is a man who wins the raffle and then finds out the prize is a timeshare.',
+      },
+      { type: 'heading', text: 'THE ONE WHERE JESSE ROOTS AGAINST HIMSELF: Chenell Leads By 19.0, And Jesse Owns Both Sides Of The Ball' },
+      {
+        type: 'paragraph',
+        text: 'Chenell leads Jesse 112.2 to 93.3. She has DJ Moore still to come, projected 10.5. Jesse has Josh Allen at 23.2, Dalton Kincaid at 6.9 and the Vikings D/ST at 6.5, so his three need to outscore Moore by 19.0, and ESPN has Jesse winning by 7.1. Allen has thrown multiple touchdowns in every game he’s played this season, which is the whole argument for Jesse and a perfectly good one.',
+      },
+      {
+        type: 'paragraph',
+        text: 'Here is where it falls apart. A fantasy defense is graded partly on points allowed, so every Allen touchdown quietly takes something back from Jesse’s own defense. DJ Moore catches passes from Josh Allen, so every Allen-to-Moore completion pays both managers at once. The only play that is pure profit for Jesse is Allen to Kincaid, and every other snap of this game is a tax form he has to fill out in real time. Jesse has built a roster that cannot have a good night without also having a bad one, and I think he did it on purpose, because he is the kind of man who orders the salad and the fries and calls it balance.',
+      },
+      {
+        type: 'paragraph',
+        text: 'I’ve been here before, specifically. In week 5 I said Allen and Kincaid would find 24.7 for Jesse on a Monday, they didn’t, and I took that loss out loud. Tonight they need 19.0 plus whatever Moore does, with a defense in the same lineup trying to stop them. I am not going back to that well. I have been at the bottom of that well. Chenell, meanwhile, leads despite Gardner Minshew giving her 7.04 on a 14.6 projection, which is how the reigning champion wins: badly, and first.',
+      },
+      { type: 'heading', text: 'THE MIRACLE: Jay Needs Will Reichard To Score 33.6' },
+      {
+        type: 'paragraph',
+        text: 'Keshia leads Jay 129.9 to 96.4 and has nobody left. Jay has Will Reichard, projected 10.3, and needs 33.6 from him, more than three times the projection, from a man whose job is to come on the field when the offense has already failed. For Reichard to get there, Minnesota would need to stop trying to score touchdowns entirely and simply keep wheeling him out like a vending machine that only dispenses three points at a time.',
+      },
+      {
+        type: 'paragraph',
+        text: 'How the league leader ends up here is worth a minute. In a league where you start two quarterbacks, Jay’s pair of J.J. McCarthy and Malik Willis combined for 12.10, with Willis at 4.82 on a 20.9 projection. Justin Herbert scored 13.42 on Jay’s bench by himself, alongside KC Concepcion’s 16.8. The projections backed Jay’s lineup, so I won’t call it reckless. I’ll just note that he’s 6-2 and managing like a man who heard the word “regression” and decided to go meet it in the parking lot.',
+      },
+      {
+        type: 'paragraph',
+        text: 'And it’s Keshia doing it to him. Jordan Love gave her 42.18, which is a number usually reserved for people who are winning the league rather than people at 2-6. In week 3 she handed the league leader his first loss before she’d won a game herself. Tonight she’s one implausible kicker away from doing it again, and I’m starting to think Keshia doesn’t care about the standings at all, only about who sits at the top of them.',
+      },
+      { type: 'heading', text: 'THE FORMALITIES' },
+      {
+        type: 'paragraph',
+        text: 'Doug leads Mike 109.0 to 104.9, Mike has nobody left, and Doug still has Justin Jefferson to come, so this one cannot be caught and Doug is about to have his second win of the season. Mike started Drew Lock, who gave him 14.6, over Shedeur Sanders, who scored 26.68 on the bench. Lock carried the higher projection, so the call made sense on Sunday morning, and it still left 12.1 points in storage in a game he trails by about four. His Patriots defense scored minus one, which is a defense paying admission to its own game.',
+      },
+      {
+        type: 'paragraph',
+        text: 'James leads Bree 164.5 to 142.4 with nobody left on either side. Bree got 46.36 from C.J. Stroud and 34.3 from Kenneth Walker, posted the second-highest score of the week, and is about to lose by 22.1 to the only score above it. That is not a bad week. That is a good week that walked into the wrong room. Ja’Marr Chase gave James 26.5, and James is heading to 6-3.',
+      },
+      {
+        type: 'paragraph',
+        text: 'And Evan leads Justin 128.6 to 60.7. Justin started Deshaun Watson, projected for zero, and Rico Dowdle, whose Steelers are on bye, while Brock Purdy scored 30.28 on his bench. That is two lineup slots that were empty before a ball was snapped. Joe Burrow gave Evan 35.54, and Evan didn’t need him to.',
+      },
+      { type: 'heading', text: 'ON THE RECORD' },
+      {
+        type: 'paragraph',
+        text: 'Calls, stated with total confidence, to be read back to me tomorrow by the people they’re about.',
+      },
+      {
+        type: 'paragraph',
+        text: 'Colin comes back. James Cook scores for the seventh straight game, the 8.8 is gone before halftime, and Tyler is 5-4 while holding the kind of point total that usually wins this league.',
+      },
+      {
+        type: 'paragraph',
+        text: 'Chenell holds. The hedge eats itself, Allen spends the night splitting his touchdowns between the wrong pockets, and Jesse’s three don’t clear DJ Moore by 19.0. Jesse is 3-6, and I’m going against ESPN to say it.',
+      },
+      {
+        type: 'paragraph',
+        text: 'And the loud one. Will Reichard does not score 33.6, and by midnight four teams are tied at 6-3: Jay, James, Colin and Chenell. First place stops being a seat and becomes a bench, and nobody on it will admit they’re sharing.',
+      },
+      {
+        type: 'paragraph',
+        text: 'Kickoff is 8:15. Tyler, root for punts. Jesse, pick a side and tell us which. Jay, light a candle for a kicker. Doug, enjoy the Jefferson highlights, because none of them are going to cost you anything. The lab reopens Tuesday with the answers.',
+      },
+    ],
+  },
+  {
     slug: 'week-8-one-kicker-decides-the-top',
     series: 'miracles',
     week: 8,
