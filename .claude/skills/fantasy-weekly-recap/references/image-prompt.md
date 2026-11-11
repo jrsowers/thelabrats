@@ -39,6 +39,15 @@ despite an explicit prohibition. Keep both halves:
 If the week's story genuinely needs a scoreboard, blow it out into white glare
 rather than trying to make it legible.
 
+**The jersey back is the third thing that carries text.** Week 9's first cover
+came back with a legible `59` across the shoulders, despite the prohibition
+being in the prompt verbatim. The rule above is the fix, applied to a surface
+that is easy to forget: a player walking AWAY from camera is a number waiting
+to be rendered. Frame him in strict side profile, or in deep enough silhouette
+that the jersey has no readable surface, and say so explicitly — *"the player's
+jersey must be completely plain and unmarked"* — on top of the usual
+prohibition. The regenerated side-profile shot came back clean first time.
+
 ## What shipped for week 1
 
 > Gritty cinematic low-angle shot from the turf of a night football stadium. A
