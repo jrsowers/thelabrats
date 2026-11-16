@@ -124,6 +124,141 @@ export interface Recap {
 
 export const RECAPS: Recap[] = [
   {
+    slug: 'week-10-colin-needs-a-quarterback-who-just-got-to-baltimore',
+    series: 'miracles',
+    week: 10,
+    title: 'Colin Needs A Quarterback Who Got To Baltimore About A Week Ago',
+    summary:
+      'Ten managers are finished and two are still breathing, and both of them need the Ravens. Keshia leads Colin by 24.5 with nobody left, and Jacoby Brissett and Zay Flowers decide whether first place is a three-way tie at 7-3. Bree needs 54.3 from a defense. Justin needs 47.9 from Mark Andrews. Neither is a plan.',
+    publishedAt: '2026-11-16',
+    published: true,
+    author: BURNER,
+    coverImage: '/recaps/week-10-miracles.jpg',
+    coverAlt:
+      'A lone football player in silhouette sits hunched on an empty sideline bench under hazy floodlights in a deserted stadium, waiting.',
+    predictions: [
+      {
+        id: 'colin-catches-keshia',
+        claim: 'Colin comes back. Brissett and Flowers clear 24.5, and James, Jay and Colin are all 7-3 by midnight.',
+      },
+      {
+        id: 'henry-outscores-brissett',
+        claim: 'Derrick Henry outscores Jacoby Brissett tonight, because Baltimore hands the ball to the man who knows where the building is.',
+      },
+      {
+        id: 'chargers-0-9',
+        claim: 'The Chargers are 0-9 by midnight.',
+      },
+    ],
+    body: [
+      {
+        type: 'paragraph',
+        text: 'Subjects. Twelve of you set lineups this week, and as of this morning ten of you are finished, which means ten of you have stopped being managers and quietly become spectators with opinions. The two who are still technically alive both need the Baltimore Ravens tonight, and the Baltimore Ravens have lost four in a row.',
+      },
+      {
+        type: 'paragraph',
+        text: 'It’s Chargers at Ravens, M&T Bank Stadium, 8:15 Eastern on ESPN. Los Angeles is 0-8 and has lost eleven straight going back to last season. Baltimore is 4-5 and starts Jacoby Brissett, acquired from Arizona after the week 9 loss to Jacksonville, which makes him the Ravens’ fourth starting quarterback in four games. Lamar Jackson is on injured reserve with a thumb injury. I own exactly one stethoscope and I bought it at a Halloween store, so I’ll be leaving that there.',
+      },
+      {
+        type: 'paragraph',
+        text: 'Baltimore is favored by four and a half and the total sits around 39, which is the betting market’s polite way of saying it expects two teams to spend three hours apologizing to each other. Only one matchup in this league genuinely hangs on that game. Everything else Baltimore touches tonight is either decided already or a dare.',
+      },
+      { type: 'heading', text: 'THE BOARD, AS OF THIS MORNING' },
+      {
+        type: 'paragraph',
+        text: 'The organized part, which I resent. Two rows are finished outright, three more have a leader nobody can reasonably catch, and the bottom row is the only real game left in the building.',
+      },
+      {
+        type: 'scoreboard',
+        live: true,
+        rows: [
+          { top: 'Soft Tissue Issues', topScore: 226.4, bottom: 'Burrow My Burden', bottomScore: 140.4, note: 'nobody left on either side' },
+          { top: 'Nobody Knows', topScore: 133.1, bottom: 'Tyler’s Talented Team', bottomScore: 131.1, note: 'nobody left on either side' },
+          { top: 'Da Reigning Champ', topScore: 155.3, bottom: 'PKM Playmakers', bottomScore: 62.3, note: 'Mike has nobody. Chenell has Derrick Henry.' },
+          { top: 'Dad Bod', topScore: 146.1, bottom: 'Bree’s Badass Boys', bottomScore: 91.8, note: 'Jay has nobody. Bree has the Ravens D/ST.' },
+          { top: 'Mr. Anderson', topScore: 147.0, bottom: 'Substation Superstars', bottomScore: 99.1, note: 'Jesse has nobody. Justin has Mark Andrews.' },
+          { top: 'All Bark, All Bite', topScore: 119.6, bottom: 'Nix Pix a Puka Six', bottomScore: 95.1, note: 'Keshia has nobody. Colin has Brissett and Zay Flowers.' },
+        ],
+      },
+      { type: 'heading', text: 'THE ONE FOR A SHARE OF FIRST: Keshia Leads Colin By 24.5, And Colin’s Quarterback Just Unpacked' },
+      {
+        type: 'paragraph',
+        text: 'Keshia is done at 119.6. Colin sits on 95.1 with two players left, Jacoby Brissett projected at 17.1 and Zay Flowers at 11.9, which is 29.0 against a gap of 24.5, and ESPN has Colin finishing 4.5 ahead. Out of the spreadsheet and into English: Colin needs a quarterback who has been in the building for about a week to throw to the one receiver everybody in the stadium knows he is about to throw to, and between them they can afford to come up short of their projections by four and a half points. Combined. All night.',
+      },
+      {
+        type: 'paragraph',
+        text: 'Here is why it matters more than the number. James and Jay both came into this week at 6-3 and both are on their way to 7-3, James because he cannot be caught and Jay because Bree would need a defense to do something I’ll get to in a minute. Colin was the third man at 6-3. If Brissett and Flowers get there, first place becomes a three-way tie at 7-3. If they don’t, Colin falls to 6-4, the table splits into two leaders and everybody else, and the person who does it to him is sitting at 3-6.',
+      },
+      {
+        type: 'paragraph',
+        text: 'Which is becoming Keshia’s entire personality, and I mean that as a compliment. In week 3 she handed the league leader his first loss before she’d won a game herself. Last Monday the man alone in first place needed his kicker to score 33.6 against Keshia, the kicker scored 8.0, and first place stopped being a private room. She is 3-6 and has apparently decided that if she can’t sit at the top of this league she will run customs at the border of it, opening everybody’s luggage. This week Matthew Stafford gave her 26.76 and Cam Skattebo gave her 25.7 on a 10.95 projection, and she is now one quiet Brissett evening away from stamping another 6-3 passport “denied.”',
+      },
+      {
+        type: 'paragraph',
+        text: 'Colin’s problem is partly his own letterhead. His team is named after Bo Nix and Puka Nacua. Bo Nix is on a bye, Puka Nacua is projected for nothing and sitting in cold storage, and so the franchise that bears both their names is finishing the week on the arm of a man who was an Arizona Cardinal on Halloween. Tyler Shough gave Colin 12.98 on a 21.24 projection, Woody Marks gave him 7.0 on 13.22, the Jaguars defense gave him 3.0, and none of it was a bad call on Sunday morning. It was a perfectly sensible lineup that got outscored by a Giants running back named Skattebo, which is the kind of sentence you only get to read in this league.',
+      },
+      {
+        type: 'paragraph',
+        text: 'The case for Colin is that Brissett has a real season behind him, 1,719 yards and 10 touchdowns in Arizona, and the opponent hasn’t won a football game since last season. The case against is that Baltimore has been outscored 84-10 after halftime across its last four games, so whatever Brissett is going to do, he probably needs to do it before the marching band comes out. Colin, root for a fast start. Keshia, root for the Ravens to keep doing exactly what they’ve been doing for a month.',
+      },
+      { type: 'heading', text: 'THE TWO THAT ARE NOT PLANS: Bree Needs 54.3 From A Defense, Justin Needs 47.9 From A Tight End' },
+      {
+        type: 'paragraph',
+        text: 'Bree trails Jay 146.1 to 91.8, and her last remaining player is the Ravens D/ST, projected at 9.8. She needs 54.3 from it. For a fantasy defense to get there, Baltimore wouldn’t need to beat the Chargers so much as annex them: a stack of pick-sixes, a couple of safeties, and a Chargers offense that has managed seven touchdowns in eight games finally deciding to score a few, just for the wrong team.',
+      },
+      {
+        type: 'paragraph',
+        text: 'This is two weeks running that Bree has done nearly everything right and been handed a bill anyway. Last week C.J. Stroud threw five touchdowns for her and she lost by 22.1. This week Stroud gave her 27.44 and Kirk Cousins added 20.38, and she is still 54.3 behind. Bree isn’t trailing a manager so much as the specific square footage of whatever room he happens to be standing in.',
+      },
+      {
+        type: 'paragraph',
+        text: 'That room, this week, contains Jahmyr Gibbs scoring 40.7 in Jay’s lineup and Deebo Samuel scoring 24.4 on Jay’s bench, unbothered, like a man who brought a second dessert to a party that already had plenty.',
+      },
+      {
+        type: 'paragraph',
+        text: 'Justin trails Jesse 147.0 to 99.1 with Mark Andrews left, projected 5.4. He needs 47.9, nearly nine times the projection, from a tight end in a game the sportsbooks think produces about 39 points in total. The bright side is that Brock Purdy gave Justin 37.66 this week, one week after Purdy scored 30.28 on Justin’s bench, so the man has learned exactly one lesson and learned it precisely one week late, which in this league I am prepared to log as growth.',
+      },
+      { type: 'heading', text: 'THE FORMALITIES' },
+      {
+        type: 'paragraph',
+        text: 'Doug leads Tyler 133.1 to 131.1, nobody is left on either side, and that 2.0 is never moving again. Tyler started Bryce Young, projected 23.53, who gave him 8.1, while Aaron Rodgers scored 19.62 on the bench from a lower projection. The numbers backed Young, so I won’t call it a blunder. Last Monday I said Tyler was a man who wins the raffle and then finds out the prize is a timeshare. He came into this week leading the league in points for at 1,269.2, and this week the timeshare trails Doug by two with nobody left to send in.',
+      },
+      {
+        type: 'paragraph',
+        text: 'Doug, for the record, is about to have won two in a row, with Parker Washington scoring 24.7 on a 12.64 projection. I don’t know what Doug changed. I suspect Doug doesn’t either, and I’ve decided not to ask in case it stops.',
+      },
+      {
+        type: 'paragraph',
+        text: 'James leads Evan 226.4 to 140.4 with nobody left on either side. Patrick Mahomes gave him 45.42, Christian McCaffrey 44.3, Trevor Lawrence 33.78, Emmett Johnson 32.1 and Ja’Marr Chase 30.6. That’s five starters over thirty, with Brock Bowers contributing 2.8 in the role of the guy who shows up after the dishes are done. Joe Burrow gave Evan 43.16, and Evan is 86.0 behind anyway.',
+      },
+      {
+        type: 'paragraph',
+        text: 'And Chenell leads Mike 155.3 to 62.3. Mike has nobody left and Chenell still has Derrick Henry, so whatever Henry does tonight is a garnish on a plate that was already cleared. Dak Prescott gave her 45.42. Drake Maye gave Mike 3.02 on a 27.85 projection, and the number is already saying everything I would.',
+      },
+      { type: 'heading', text: 'ON THE RECORD' },
+      {
+        type: 'paragraph',
+        text: 'Calls, made with total confidence, to be read back to me tomorrow by the people they concern.',
+      },
+      {
+        type: 'paragraph',
+        text: 'Colin comes back. Brissett and Flowers find their 24.5 before the Ravens do their usual disappearing act after halftime, and by midnight James, Jay and Colin are all 7-3, glaring at each other across a first place that has become a waiting room.',
+      },
+      {
+        type: 'paragraph',
+        text: 'Derrick Henry outscores Jacoby Brissett, because when you’ve had a quarterback for a week, you hand the ball to the man who already knows where the building is. Yes, that makes Colin’s life harder. I’m making two calls, not one wish.',
+      },
+      {
+        type: 'paragraph',
+        text: 'And the Chargers are 0-9 by midnight. I take no pleasure in it. I take a small amount of pleasure in it.',
+      },
+      {
+        type: 'paragraph',
+        text: 'Kickoff is 8:15. Colin, light something. Keshia, root for punts. Bree and Justin, watch it anyway, because miracles mostly happen to the people who left the TV on. The lab reopens Tuesday with the answers.',
+      },
+    ],
+  },
+  {
     slug: 'week-9-bree-had-the-best-player-and-lost',
     week: 9,
     title: 'Bree Had The Best Quarterback And The Best Running Back And Lost By Twenty-Two',

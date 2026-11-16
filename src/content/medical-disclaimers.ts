@@ -119,6 +119,11 @@ export const MEDICAL_DISCLAIMERS: MedicalDisclaimer[] = [
     line: 'I am qualified to observe this and nothing else, a distinction my insurer has underlined twice.',
     fingerprint: /my insurer/i,
   },
+  {
+    id: 'halloween-stethoscope',
+    line: 'I own exactly one stethoscope and I bought it at a Halloween store, so I’ll be leaving that there.',
+    fingerprint: /Halloween store/i,
+  },
 ]
 
 /**
