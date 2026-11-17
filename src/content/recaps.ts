@@ -124,6 +124,210 @@ export interface Recap {
 
 export const RECAPS: Recap[] = [
   {
+    slug: 'week-10-james-cut-the-man-who-broke-the-record',
+    week: 10,
+    title: 'James Scored 226.4 With A Running Back He Cut On Thursday',
+    summary:
+      'James posted the highest score in the history of this league, and the rookie who made it possible spent twenty-two hours of the week as a free agent because James released him. Chenell won by 109.4, the largest margin ever recorded. Keshia ended Colin’s share of first by 3.3. Five teams are 5-5 with three weeks left and two playoff spots between them.',
+    publishedAt: '2026-11-17',
+    published: true,
+    coverImage: '/recaps/week-10.jpg',
+    coverAlt:
+      'A lone football player in side-profile silhouette sprints across an empty field through floodlit haze, the defenders far behind him in the mist.',
+    author: BURNER,
+    predictions: [
+      {
+        id: 'jesse-beats-james',
+        claim: 'Jesse beats James in week 11. Four straight wins, and the record score lasts exactly one week as anybody’s idea of momentum.',
+      },
+      {
+        id: 'chenell-beats-doug',
+        claim: 'Chenell beats Doug in week 11 and ends his winning streak at two.',
+      },
+      {
+        id: 'james-outscores-tyler',
+        claim: 'James finishes the regular season with more points than Tyler.',
+      },
+    ],
+    body: [
+      {
+        type: 'paragraph',
+        text: 'Subjects. At about nine o’clock on Wednesday night, James picked up a rookie running back from Kansas City named Emmett Johnson. On Thursday afternoon, after roughly nineteen hours of ownership and what I can only assume was a long, honest look in the mirror, he released him back into the wild for Chris Rodriguez Jr. On Friday afternoon he went and got him back, cutting Omarion Hampton to make room, like a man retrieving a sweater he’d donated to Goodwill and pretending nobody at the counter recognized him.',
+      },
+      {
+        type: 'paragraph',
+        text: 'On Sunday, Emmett Johnson scored 32.1 points in James’s lineup and James put up 226.4, which is the highest score anybody has ever recorded in this league. The most points in the history of the Lab Rats were assembled by a man who, at one point on Thursday, did not want any of them.',
+      },
+      { type: 'heading', text: 'CHIEFS 35, FALCONS 13 — The Free Agent Who Went Back To Work' },
+      {
+        type: 'paragraph',
+        text: 'Kenneth Walker III was ruled out on Saturday with a groin injury, which put Johnson in line for his first NFL start in Atlanta. He ran 22 times for 101 yards and caught six balls for 70 more, two of them for touchdowns, while Patrick Mahomes went 22 of 35 for 348 yards and five scores. Mahomes gave James 45.42 and The Prime Specimen. Johnson gave him The Waiver Wire Wizard, an award the engine hands out for picking a man up this week and which, technically, James earned twice.',
+      },
+      {
+        type: 'paragraph',
+        text: 'Here’s the part that belongs to Bree. Walker is on her roster, and when the Chiefs kicked off on Sunday he was still in her starting lineup, projected for zero and scoring exactly that. Saturday’s ruling was public a day before lock, which makes it a decision, though an expensive one only in principle: her best bench back scored 2.4 and she lost by 51.3. Bree made thirteen roster moves this week, which is The Galaxy Brain, and not one of them was dragging a man who wasn’t going to play out of a slot that was going to count. Thirteen swings. None at the ball sitting on the tee.',
+      },
+      { type: 'heading', text: 'BENGALS 38, STEELERS 18 — Evan’s Quarterback Spent Sunday Night Feeding James' },
+      {
+        type: 'paragraph',
+        text: 'Joe Burrow threw for 409 yards and four touchdowns on Sunday night and gave Evan 43.16. That’s the good news, and it is the only good news in this section.',
+      },
+      {
+        type: 'paragraph',
+        text: 'Ja’Marr Chase caught eleven of those passes for 231 yards. Chase is James’s, which means that on the one night Evan had the best quarterback in the building, the man most responsible for that quarterback’s stat line was standing on the other side of Evan’s matchup collecting the wide receiver crown. Every one of those 231 yards counted twice in the matchup. Once for Evan. Once against him. Evan scored 140.4 and lost by 86.0, and I’ve been waiting six weeks to say what that means.',
+      },
+      { type: 'heading', text: '49ERS 46, COWBOYS 40 — Seven Of You Were In This Game And Two Watched It From The Bench' },
+      {
+        type: 'paragraph',
+        text: 'In Dallas, Brock Purdy threw for 389 yards and three touchdowns, Christian McCaffrey piled up 221 yards from scrimmage and three scores of his own, and the 49ers led by nineteen in the fourth quarter. Then Dak Prescott threw five touchdowns and dragged Dallas close enough to try an onside kick, which failed. George Pickens caught eleven balls for 145 yards and three touchdowns. Deebo Samuel found the end zone twice, once on a 70-yard trick play.',
+      },
+      {
+        type: 'paragraph',
+        text: 'That one game reached seven rosters in this league. McCaffrey gave James 44.3 and the running back crown. Prescott gave Chenell 45.42, cleared his projection by 25.1, and took Fantasy Nostradamus. Purdy gave Justin 37.66, and Justin lost by 35.7 anyway, because in this league you can get the fourth-best quarterback score of the week and still be a footnote.',
+      },
+      {
+        type: 'paragraph',
+        text: 'Two more were paid in a currency they couldn’t spend. Deebo Samuel scored 24.4 on Jay’s bench, which is The Understudy, and Pickens scored 38.0 in Jesse’s injured reserve slot, which gets its own section further down. Jesse, I’m looking forward to it.',
+      },
+      { type: 'heading', text: 'CHARGERS 23, RAVENS 20 — Monday Night Answered Everybody, Mostly In The Negative' },
+      {
+        type: 'paragraph',
+        text: 'The Chargers came into Baltimore without a win since week 16 of last season and left with one. Omarion Hampton ran 22 times for 105 yards and a touchdown, yes, the same Omarion Hampton James cut on Friday to re-sign the rookie, and Justin Herbert scrambled for 51 yards and a score of his own while sitting on Jay’s bench. Jacoby Brissett threw for 340 yards in his first start for the Ravens, and a Hail Mary to end it was knocked down. Baltimore has lost five straight.',
+      },
+      {
+        type: 'paragraph',
+        text: 'Colin needed 24.5 from Brissett and Zay Flowers to share first place. Brissett gave him 12.8, Flowers gave him 8.4, Flowers was stripped of the ball with 2:03 left, and Colin lost to Keshia by 3.3. Bree needed 54.3 from the Ravens defense and got 3.0. Justin needed 47.9 from Mark Andrews and got a perfectly lovely 12.2 of no use to anybody. And Derrick Henry gave Chenell 16.5 on ten carries for ten yards and two touchdowns, the single most efficient garnish in the history of food.',
+      },
+      { type: 'heading', text: 'THE SCOREBOARD' },
+      {
+        type: 'paragraph',
+        text: 'The organized part. Two rows in here are now in the record book.',
+      },
+      {
+        type: 'scoreboard',
+        rows: [
+          { top: 'Soft Tissue Issues', topScore: 226.4, bottom: 'Burrow My Burden', bottomScore: 140.4, note: 'highest score in league history' },
+          { top: 'Da Reigning Champ', topScore: 171.8, bottom: 'PKM Playmakers', bottomScore: 62.3, note: 'largest margin in league history' },
+          { top: 'Mr. Anderson', topScore: 147.0, bottom: 'Substation Superstars', bottomScore: 111.3 },
+          { top: 'Dad Bod', topScore: 146.1, bottom: 'Bree’s Badass Boys', bottomScore: 94.8 },
+          { top: 'Nobody Knows', topScore: 133.1, bottom: 'Tyler’s Talented Team', bottomScore: 131.1, note: 'closest game of the week' },
+          { top: 'All Bark, All Bite', topScore: 119.6, bottom: 'Nix Pix a Puka Six', bottomScore: 116.3, note: 'lowest winning score of the week' },
+        ],
+      },
+      { type: 'heading', text: 'James Is The Most Successful Indecisive Person I Have Ever Studied' },
+      {
+        type: 'paragraph',
+        text: 'Let me tell you what 226.4 looks like from the inside. Five starters went over thirty: Mahomes at 45.42, McCaffrey at 44.3, Trevor Lawrence at 33.78 in a 40-23 win in Tennessee, Johnson at 32.1 and Chase at 30.6. Seven starters beat their projection, which is Slay Girl Slay. Brock Bowers, projected for 12.4, contributed 2.8, the way a man contributes to a group gift by signing the card.',
+      },
+      {
+        type: 'paragraph',
+        text: 'And I have now watched James for ten weeks, and I’m ready to give a diagnosis. James is a man who does his homework, hands it in, asks for it back, crosses out the right answer, and then at the last possible moment writes the right answer in again, slightly larger. He picked up Johnson, dropped Johnson, and picked up Johnson, and the man he cut to do it ran for 105 yards on national television. This is not a manager. It is a coin that keeps landing on its edge.',
+      },
+      {
+        type: 'paragraph',
+        text: 'It has also put him in first place, 7-3 and the top seed, level with Jay on record and 87.5 ahead of him on points.',
+      },
+      { type: 'heading', text: 'Chenell Held The Record For Worst Beating Ever. She Has Now Given It Away.' },
+      {
+        type: 'paragraph',
+        text: 'In week 8, Evan beat Chenell by 77.1, the largest margin anybody had ever recorded in this league. Two weeks later Chenell beat Mike by 109.4, which is The Public Execution and the new record, and I’d like you to appreciate the craftsmanship of that. She went out and found somebody to hand it to, with interest, like a woman regifting a fruitcake that has somehow gotten heavier.',
+      },
+      {
+        type: 'paragraph',
+        text: 'It was a genuinely ruthless lineup. Prescott at 45.42. Cam Ward, signed off waivers this week and started immediately, at 24.14. Isaiah Likely, who caught nine passes for 127 yards and a touchdown for the Giants on Thursday night, at 23.2 and the tight end crown. Cam Little, the Jacksonville kicker, at 16.0 and the kicker’s crown, and the Rams defense at 20.0. Chenell started the Titans’ quarterback and the kicker who beat the Titans by seventeen in the same game, and both of them paid, which is the kind of hedge that would get you fired from a bank and promoted in this league.',
+      },
+      {
+        type: 'paragraph',
+        text: 'Mike’s side of it I’ll take gently. Drake Maye left Munich on the first drive with an ankle injury, gave Mike 3.02 against a 27.9 projection, and took the rest of the lineup down with him to 62.3, which is The Dumpster Fire. There is an injunction that prevents me from going further and, for once, I think it is working. Starting him was correct. I roast bad methodology, not a subject who leaves the building on the opening possession.',
+      },
+      {
+        type: 'paragraph',
+        text: 'What I will say is that Mike is now the sixth seed, holding the last playoff spot with 1,033.3 points, which is 248 fewer than anybody else in the top six. In week 7 I predicted he’d finish top four with the fewest points of anybody in it, and he is currently a man in cargo shorts being shown to a table at a black-tie gala.',
+      },
+      { type: 'heading', text: 'Doug And Keshia Have Become A Customs Department' },
+      {
+        type: 'paragraph',
+        text: 'Doug trailed Tyler by 29.8 during the Sunday early games and won by 2.0, which is Sweatin’ It Out and The Photo Finish in one envelope. Parker Washington caught seven balls for a career-high 152 yards in Tennessee and gave him 24.7 on a 12.6 projection. But the winning margin was arguably banked on Thursday night, when Jayden Daniels found Stefon Diggs for 32 yards and a touchdown with 57 seconds left to beat the Giants, and Daniels gave Doug 28.76. Tyler lost by two points. That one throw was worth more than that by itself.',
+      },
+      {
+        type: 'paragraph',
+        text: 'Tyler, for his part, started Bryce Young at 23.5 projected, got 8.1, and watched Aaron Rodgers score 19.6 on his bench from a lower projection. The numbers backed Young. But Tyler is no longer leading this league in points. He has 1,400.4. James has 1,414.2. He spent ten weeks as the best team not in first place, and now he’s just a team not in first place.',
+      },
+      {
+        type: 'paragraph',
+        text: 'Keshia, meanwhile, beat Colin by 3.3 with the lowest winning score of the week, which is The Cat Burglar, and started the best lineup her roster allowed, which is The Mastermind, and finished 1.2 from her projection, which is The Control Group. Matthew Stafford gave her 26.76 and Cam Skattebo 25.7. On Monday I said she was running customs at the border of first place, and on Monday night she stamped Colin’s passport and sent him back to 6-4. She’s 4-6 with two straight wins, Doug is 3-7 with two straight wins, and the bottom of this table has decided that if it isn’t going to the playoffs, it’s going to decide who does.',
+      },
+      { type: 'heading', text: 'Jesse Keeps His Best Player In A Room Marked Injured' },
+      {
+        type: 'paragraph',
+        text: 'I promised this, so here it is. George Pickens missed week 9 with a hamstring, and on Tuesday Jesse moved him to injured reserve, which was reasonable. On Friday Pickens practiced in full and carried no injury designation into the weekend. On Sunday he scored three touchdowns and 38.0 points from the IR slot, where it counted for exactly as much as it would have in a drawer.',
+      },
+      {
+        type: 'paragraph',
+        text: 'It didn’t end there. Blake Corum scored 19.4 on the bench. Stefon Diggs scored 17.3 on the bench, including the late touchdown Doug’s quarterback threw to beat the Giants. DK Metcalf scored 14.4 on the bench. The engine calculates the gap between what Jesse played and what he could have played at 32.2, which is The Bench Bum, and that doesn’t even count Pickens.',
+      },
+      {
+        type: 'paragraph',
+        text: 'And Jesse won by 35.7. Chuba Hubbard ran for two touchdowns and caught five balls for 80 more in a 20-17 win in New Orleans and gave him 31.7, and the Vikings defense sacked Jordan Love eight times in Green Bay and gave him 23.0 and the defensive crown. In week 1 I wrote that Jesse had the most dangerous roster in the league and was its second-most dangerous manager. It remains the most accurate sentence I have ever published, and he’s won three straight proving it.',
+      },
+      {
+        type: 'paragraph',
+        text: 'His victim was Justin, who is 2-8 and, per ESPN, mathematically eliminated, the first team in the league to get there. I will note in his favor that Chicago was on bye and both of his Bears sat on the bench where they belonged. Justin started nobody projected for zero this week. It is a low bar. He cleared it cleanly, and I’m logging it.',
+      },
+      { type: 'heading', text: 'Jay Is 7-3 Because Of One Man, Again' },
+      {
+        type: 'paragraph',
+        text: 'Jahmyr Gibbs went for 252 total yards and two touchdowns against New England in Munich and gave Jay 40.7, which was 28 percent of the score that beat Bree. That’s The One Man Army. Jay is 7-3 and the second seed, and every time I look at how he got there I find one player holding the whole thing up like the last good tent pole at a campsite in the rain.',
+      },
+      {
+        type: 'paragraph',
+        text: 'Evan is the other side of that coin. He scored 140.4, lost by 86.0, took The Bad Beat, and fell three places from fifth to eighth, which is Free Fallin’. Geno Smith gave him 5.92 on an 18.4 projection while Fernando Mendoza’s first NFL start sat on his bench at 13.92, but the projections backed Geno, so that one goes in the file marked bad luck rather than bad judgment. He has the third-most points in the league and is eighth, which suggests something he did in a previous life, and that it was quite bad.',
+      },
+      { type: 'heading', text: 'THE INVOICE' },
+      {
+        type: 'paragraph',
+        text: 'Five calls came due. Three landed, two didn’t.',
+      },
+      {
+        type: 'paragraph',
+        text: 'I said Colin comes back and that Brissett and Flowers clear 24.5. They found 21.2. Keshia won by 3.3 and I was wrong. I said the Chargers would be 0-9 by midnight. They won the game. I was wrong about that too, and loudly, which is the house style.',
+      },
+      {
+        type: 'paragraph',
+        text: 'I said Derrick Henry would outscore Brissett. Henry scored 16.5 on ten yards, Brissett 12.8 on 340, and I was correct for reasons unrelated to football as it is commonly understood.',
+      },
+      {
+        type: 'paragraph',
+        text: 'Last week I said James would still be first at the end of week 10. Correct. And in week 4 I said Evan would score 130 or more and lose again before the season was out. He scored 140.4 and lost by 86.0. I’m collecting it with real sadness and no hesitation.',
+      },
+      {
+        type: 'paragraph',
+        text: 'The rest are open and some are aging like milk. Evan making the playoffs from 3-4: he’s eighth. Bree top four: she’s seventh. Evan out-moving everybody: James has forty acquisitions to his thirty-two. Tyler with the most points and no crown: as of this morning only the second half is true. The rest are still breathing.',
+      },
+      { type: 'heading', text: 'FINDINGS' },
+      {
+        type: 'paragraph',
+        text: 'Three calls for week 11. The byes are Atlanta, Cleveland, Green Bay, the Rams, New England and Seattle, and I read that list before writing a word, which is how I know Keshia and Mike both lose both of their starting quarterbacks this week and why I’m not making a call about either of their games. A call the schedule has already made is not a call.',
+      },
+      {
+        type: 'paragraph',
+        text: 'Jesse beats James. Jesse is losing Christian Watson and Zach Charbonnet to byes and James is losing nobody he starts, so the calendar is on James’s side and I am not. Three straight wins becomes four, and the highest score in league history buys James exactly one week of momentum.',
+      },
+      {
+        type: 'paragraph',
+        text: 'Chenell beats Doug and ends his winning streak at two. Doug has been good for a fortnight. Chenell just won a game by more than a hundred points.',
+      },
+      {
+        type: 'paragraph',
+        text: 'And James finishes the regular season with more points than Tyler. That makes me wrong about my own week 5 prediction, and I’m doing it on purpose, because a scientist who won’t bet against his own hypothesis is just a man defending a hunch. Tyler loses Bijan Robinson and Drake London to the Atlanta bye this week, which I noticed, and which is not why I’m saying it. I’m saying it because James has started dropping players just to feel something, and they keep coming back to him with thirty points.',
+      },
+      {
+        type: 'paragraph',
+        text: 'The laboratory is closed. Bree, check the injury report on Saturday. Colin, it was 3.3 and a fumble, and I’m sorry. James, please stop releasing people. It’s unsettling the rest of the specimens.',
+      },
+    ],
+  },
+  {
     slug: 'week-10-colin-needs-a-quarterback-who-just-got-to-baltimore',
     series: 'miracles',
     week: 10,
@@ -140,14 +344,28 @@ export const RECAPS: Recap[] = [
       {
         id: 'colin-catches-keshia',
         claim: 'Colin comes back. Brissett and Flowers clear 24.5, and James, Jay and Colin are all 7-3 by midnight.',
+        verdict: 'wrong',
+        resolvedWeek: 10,
+        resolution:
+          'Brissett gave him 12.8 and Flowers 8.4, which is 21.2 against 24.5. Keshia won '
+          + 'by 3.3 and Colin is 6-4.',
       },
       {
         id: 'henry-outscores-brissett',
         claim: 'Derrick Henry outscores Jacoby Brissett tonight, because Baltimore hands the ball to the man who knows where the building is.',
+        verdict: 'correct',
+        resolvedWeek: 10,
+        resolution:
+          'Henry 16.5, Brissett 12.8. Henry did it with ten yards on ten carries and two '
+          + 'touchdowns, which is the most technically correct I have ever been.',
       },
       {
         id: 'chargers-0-9',
         claim: 'The Chargers are 0-9 by midnight.',
+        verdict: 'wrong',
+        resolvedWeek: 10,
+        resolution:
+          'The Chargers won 23-20, their first win since week 16 of last season, and are 1-8.',
       },
     ],
     body: [
@@ -274,6 +492,11 @@ export const RECAPS: Recap[] = [
       {
         id: 'james-holds-first',
         claim: 'James is still in first at the end of week 10.',
+        verdict: 'correct',
+        resolvedWeek: 10,
+        resolution:
+          'He scored 226.4, the most anybody has ever scored here, and is 7-3 and the '
+          + 'top seed, level with Jay on record and 87.5 ahead of him on points.',
       },
       {
         id: 'bree-top-four',
@@ -2223,6 +2446,11 @@ export const RECAPS: Recap[] = [
       {
         id: 'evan-bad-beat-again',
         claim: 'Evan scores 130 or more and loses again before the season is out.',
+        verdict: 'correct',
+        resolvedWeek: 10,
+        resolution:
+          'Week 10: Evan scored 140.4 and lost to James by 86.0, which is The Bad Beat '
+          + 'and a six-week-old receipt finally cashed.',
       },
     ],
     body: [
